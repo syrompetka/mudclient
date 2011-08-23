@@ -1,0 +1,19 @@
+syntax: glob
+_ReSharper.Adan.Client/
+Adan.Client.Common/bin/
+Adan.Client.5.1.ReSharper
+Adan.Client.5.1.ReSharper.user
+Adan.Client.Common/StyleCop.Cache
+Adan.Client.Common/obj/
+Adan.Client.Plugins.OutputWindow/StyleCop.Cache
+Adan.Client.Plugins.OutputWindow/bin/
+Adan.Client.Plugins.OutputWindow/obj/
+Adan.Client.suo
+Adan.Client.vsmdi
+Adan.Client/Adan.Client.csproj.user
+Adan.Client/StyleCop.Cache
+Adan.Client/bin/
+Adan.Client/obj/
+Bin/
+Local.testsettings
+TraceAndTestImpact.testsettings

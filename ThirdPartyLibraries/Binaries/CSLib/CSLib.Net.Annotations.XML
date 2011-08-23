@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CSLib.Net.Annotations</name>
+    </assembly>
+    <members>
+        <member name="T:CSLib.Net.Annotations.LocalizationRequiredAttribute">
+            <summary>
+            Indicates that marked element should be localized or not.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.LocalizationRequiredAttribute.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.LocalizationRequiredAttribute"/> class.
+            </summary>
+            <param name="required">
+            <c>True</c> if a element should be localized; otherwise, <c>false</c>.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Annotations.LocalizationRequiredAttribute.Equals(System.Object)">
+            <summary>
+            Returns whether the value of the given object is equal to the current <see cref="T:CSLib.Net.Annotations.LocalizationRequiredAttribute"/>.
+            </summary>
+            <param name="obj">
+            The object to test the value equality of. 
+            </param>
+            <returns>
+            <c>true</c> if the value of the given object is equal to that of the current; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:CSLib.Net.Annotations.LocalizationRequiredAttribute.GetHashCode">
+            <summary>
+            Returns the hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for the current <see cref="T:CSLib.Net.Annotations.LocalizationRequiredAttribute"/>.
+            </returns>
+        </member>
+        <member name="P:CSLib.Net.Annotations.LocalizationRequiredAttribute.Required">
+            <summary>
+            Gets or sets a value indicating whether a element should be localized.
+            </summary>
+            <value>
+            <c>True</c> if a element should be localized; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:CSLib.Net.Annotations.AssertionConditionAttribute">
+            <summary>
+            Indicates the condition parameter of the assertion method. 
+            The method itself should be marked by <see cref="T:CSLib.Net.Annotations.AssertionMethodAttribute"/> attribute.
+            The mandatory argument of the attribute is the assertion type.
+            </summary>
+            <seealso cref="T:CSLib.Net.Annotations.AssertionConditionType"/>
+        </member>
+        <member name="M:CSLib.Net.Annotations.AssertionConditionAttribute.#ctor(CSLib.Net.Annotations.AssertionConditionType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.AssertionConditionAttribute"/> class. 
+            Initializes new instance of AssertionConditionAttribute.
+            </summary>
+            <param name="conditionType">
+            Specifies condition type.
+            </param>
+        </member>
+        <member name="P:CSLib.Net.Annotations.AssertionConditionAttribute.ConditionType">
+            <summary>
+            Gets condition type.
+            </summary>
+            <value>
+            The type of the condition.
+            </value>
+        </member>
+        <member name="T:CSLib.Net.Annotations.AssertionConditionType">
+            <summary>
+            Specifies assertion type. If the assertion method argument satisfies the condition, then the execution continues. 
+            Otherwise, execution is assumed to be halted.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.AssertionConditionType.IS_TRUE">
+            <summary>
+            Indicates that the marked parameter should be evaluated to true.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.AssertionConditionType.IS_FALSE">
+            <summary>
+            Indicates that the marked parameter should be evaluated to false.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.AssertionConditionType.IS_NULL">
+            <summary>
+            Indicates that the marked parameter should be evaluated to null value.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.AssertionConditionType.IS_NOT_NULL">
+            <summary>
+            Indicates that the marked parameter should be evaluated to not null value.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.AssertionMethodAttribute">
+            <summary>
+            Indicates that the marked method is assertion method, i.e. it halts control flow if one of the conditions is satisfied. 
+            To set the condition, mark one of the parameters with <see cref="T:CSLib.Net.Annotations.AssertionConditionAttribute"/> attribute.
+            </summary>
+            <seealso cref="T:CSLib.Net.Annotations.AssertionConditionAttribute"/>
+        </member>
+        <member name="T:CSLib.Net.Annotations.BaseTypeRequiredAttribute">
+            <summary>
+            When applied to target attribute, specifies a requirement for any type which is marked with 
+            target attribute to implement or inherit specific type or types.
+            </summary>
+            <example>
+            <code>
+            [BaseTypeRequired(typeof(IComponent)] // Specify requirement
+            public class ComponentAttribute : Attribute 
+            {}
+            [Component] // ComponentAttribute requires implementing IComponent interface
+            public class MyComponent : IComponent
+            {}
+            </code>
+            </example>
+        </member>
+        <member name="M:CSLib.Net.Annotations.BaseTypeRequiredAttribute.#ctor(System.Type[])">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.BaseTypeRequiredAttribute"/> class. 
+            Initializes new instance of BaseTypeRequiredAttribute.
+            </summary>
+            <param name="baseTypes">
+            Specifies which types are required.
+            </param>
+        </member>
+        <member name="P:CSLib.Net.Annotations.BaseTypeRequiredAttribute.BaseTypes">
+            <summary>
+            Gets enumerations of specified base types.
+            </summary>
+            <value>
+            The base types.
+            </value>
+        </member>
+        <member name="T:CSLib.Net.Annotations.CanBeNullAttribute">
+            <summary>
+            Indicates that the value of marked element could be <c>null</c> sometimes, so the check for <c>null</c> is necessary before its usage.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.CannotApplyEqualityOperatorAttribute">
+            <summary>
+            Indicates that the value of marked type (or its derivatives) cannot be compared using '==' or '!=' operators.
+            There is only exception to compare with <c>null</c>, it is permitted.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.ImplicitUseKindFlags">
+            <summary>
+            Defines the kind of implicit use.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseKindFlags.Default">
+            <summary>
+            Indicates implicit assignment to a member, implicit instantiation of a type and an entity marked with attribute considered used.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseKindFlags.Access">
+            <summary>
+            Only entity marked with attribute considered used.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseKindFlags.Assign">
+            <summary>
+            Indicates implicit assignment to a member.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseKindFlags.Instantiated">
+            <summary>
+            Indicates implicit instantiation of a type.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.ImplicitUseTargetFlags">
+            <summary>
+            Specify what is considered used implicitly when marked with <see cref="T:CSLib.Net.Annotations.MeansImplicitUseAttribute"/> or <see cref="T:CSLib.Net.Annotations.UsedImplicitlyAttribute"/>.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseTargetFlags.Default">
+            <summary>
+            Itself only.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseTargetFlags.Itself">
+            <summary>
+            Itself only.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseTargetFlags.Members">
+            <summary>
+            Members of entity marked with attribute are considered used.
+            </summary>
+        </member>
+        <member name="F:CSLib.Net.Annotations.ImplicitUseTargetFlags.WithMembers">
+            <summary>
+            Entity marked with attribute and all its members considered used.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.InvokerParameterNameAttribute">
+            <summary>
+            Indicates that the function argument should be string literal and match one  of the parameters of the caller function.
+            For example, <see cref="T:System.ArgumentNullException"/> has such parameter.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.MeansImplicitUseAttribute">
+            <summary>
+            Should be used on attributes and causes ReSharper to not mark symbols marked with such attributes as unused (as well as by other usage inspections).
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.MeansImplicitUseAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.MeansImplicitUseAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.MeansImplicitUseAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseKindFlags,CSLib.Net.Annotations.ImplicitUseTargetFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.MeansImplicitUseAttribute"/> class.
+            </summary>
+            <param name="useKindFlags">
+            The use kind flags.
+            </param>
+            <param name="targetFlags">
+            The target flags.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Annotations.MeansImplicitUseAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseKindFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.MeansImplicitUseAttribute"/> class.
+            </summary>
+            <param name="useKindFlags">
+            The use kind flags.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Annotations.MeansImplicitUseAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseTargetFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.MeansImplicitUseAttribute"/> class.
+            </summary>
+            <param name="targetFlags">
+            The target flags.
+            </param>
+        </member>
+        <member name="P:CSLib.Net.Annotations.MeansImplicitUseAttribute.TargetFlags">
+            <summary>
+            Gets value indicating what is meant to be used.
+            </summary>
+            <value>
+            The target flags.
+            </value>
+        </member>
+        <member name="P:CSLib.Net.Annotations.MeansImplicitUseAttribute.UseKindFlags">
+            <summary>
+            Gets the use kind flags.
+            </summary>
+            <value>
+            The use kind flags.
+            </value>
+        </member>
+        <member name="T:CSLib.Net.Annotations.NotNullAttribute">
+            <summary>
+            Indicates that the value of marked element could never be <c>null</c>.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.StringFormatMethodAttribute">
+            <summary>
+            Indicates that marked method builds string by format pattern and (optional) arguments. 
+            Parameter, which contains format string, should be given in constructor.
+            The format string should be in <see cref="M:System.String.Format(System.IFormatProvider,System.String,System.Object[])"/> -like form.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.StringFormatMethodAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.StringFormatMethodAttribute"/> class. 
+            Initializes new instance of StringFormatMethodAttribute.
+            </summary>
+            <param name="formatParameterName">
+            Specifies which parameter of an annotated method should be treated as format-string.
+            </param>
+        </member>
+        <member name="P:CSLib.Net.Annotations.StringFormatMethodAttribute.FormatParameterName">
+            <summary>
+            Gets format parameter name.
+            </summary>
+            <value>
+            The name of the format parameter.
+            </value>
+        </member>
+        <member name="T:CSLib.Net.Annotations.TerminatesProgramAttribute">
+            <summary>
+            Indicates that the marked method unconditionally terminates control flow execution.
+            For example, it could unconditionally throw exception.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Annotations.UsedImplicitlyAttribute">
+            <summary>
+            Indicates that the marked symbol is used implicitly (e.g. via reflection, in external library),
+            so this symbol will not be marked as unused (as well as by other usage inspections).
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.UsedImplicitlyAttribute.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.UsedImplicitlyAttribute"/> class.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Annotations.UsedImplicitlyAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseKindFlags,CSLib.Net.Annotations.ImplicitUseTargetFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.UsedImplicitlyAttribute"/> class.
+            </summary>
+            <param name="useKindFlags">
+            The use kind flags.
+            </param>
+            <param name="targetFlags">
+            The target flags.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Annotations.UsedImplicitlyAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseKindFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.UsedImplicitlyAttribute"/> class.
+            </summary>
+            <param name="useKindFlags">
+            The use kind flags.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Annotations.UsedImplicitlyAttribute.#ctor(CSLib.Net.Annotations.ImplicitUseTargetFlags)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CSLib.Net.Annotations.UsedImplicitlyAttribute"/> class.
+            </summary>
+            <param name="targetFlags">
+            The target flags.
+            </param>
+        </member>
+        <member name="P:CSLib.Net.Annotations.UsedImplicitlyAttribute.TargetFlags">
+            <summary>
+            Gets value indicating what is meant to be used.
+            </summary>
+            <value>
+            The target flags.
+            </value>
+        </member>
+        <member name="P:CSLib.Net.Annotations.UsedImplicitlyAttribute.UseKindFlags">
+            <summary>
+            Gets the use kind flags.
+            </summary>
+            <value>
+            The use kind flags.
+            </value>
+        </member>
+    </members>
+</doc>

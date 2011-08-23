@@ -1,0 +1,7 @@
+H:\ToolkitRelease\Toolkit-release\DataVisualization.VisualStudio.Design\obj\Debug\ResolveAssemblyReference.cache
+H:\ToolkitRelease\Toolkit-release\DataVisualization.VisualStudio.Design\obj\Debug\System.Windows.Controls.DataVisualization.Design.Properties.Resources.resources
+H:\ToolkitRelease\Toolkit-release\DataVisualization.VisualStudio.Design\obj\Debug\Controls.DataVisualization.Toolkit.VisualStudio.Design.csproj.GenerateResource.Cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\DataVisualization.VisualStudio.Design\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\DataVisualization.VisualStudio.Design\obj\Debug\System.Windows.Controls.DataVisualization.Design.Properties.Resources.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\DataVisualization.VisualStudio.Design\obj\Debug\ResGen.read.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\DataVisualization.VisualStudio.Design\obj\Debug\ResGen.write.1.tlog

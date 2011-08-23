@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Ionic.Zip.ZipFile" BaseTypeListCollapsed="true">
+    <Position X="0.5" Y="0.5" Width="1.5" />
+    <Members>
+      <Method Name="_AddOrUpdateSelectedFiles" Hidden="true" />
+      <Method Name="_InitInstance" Hidden="true" />
+      <Method Name="_InternalAddEntry" Hidden="true" />
+      <Method Name="_InternalExtractAll" Hidden="true" />
+      <Method Name="_SaveSfxStub" Hidden="true" />
+      <Method Name="~ZipFile" Hidden="true" />
+      <Method Name="AddOrUpdateDirectoryImpl" Hidden="true" />
+      <Method Name="AfterAddEntry" Hidden="true" />
+      <Property Name="ArchiveNameForEvent" Hidden="true" />
+      <Method Name="BlocksAreEqual" Hidden="true" />
+      <Method Name="CleanupAfterSaveOperation" Hidden="true" />
+      <Method Name="ExtractResourceToFile" Hidden="true" />
+      <Method Name="GenerateTempPathname" Hidden="true" />
+      <Method Name="InsureUniqueEntry" Hidden="true" />
+      <Method Name="NotifyEntryChanged" Hidden="true" />
+      <Method Name="OnAddCompleted" Hidden="true" />
+      <Method Name="OnAddStarted" Hidden="true" />
+      <Method Name="OnExtractAllCompleted" Hidden="true" />
+      <Method Name="OnExtractAllStarted" Hidden="true" />
+      <Method Name="OnExtractBlock" Hidden="true" />
+      <Method Name="OnExtractEntry" Hidden="true" />
+      <Method Name="OnExtractExisting" Hidden="true" />
+      <Method Name="OnReadBytes" Hidden="true" />
+      <Method Name="OnReadCompleted" Hidden="true" />
+      <Method Name="OnReadEntry" Hidden="true" />
+      <Method Name="OnReadStarted" Hidden="true" />
+      <Method Name="OnSaveBlock" Hidden="true" />
+      <Method Name="OnSaveCompleted" Hidden="true" />
+      <Method Name="OnSaveEntry" Hidden="true" />
+      <Method Name="OnSaveEvent" Hidden="true" />
+      <Method Name="OnSaveStarted" Hidden="true" />
+      <Method Name="OnSingleEntryExtract" Hidden="true" />
+      <Method Name="OnZipErrorSaving" Hidden="true" />
+      <Method Name="ReadCentralDirectory" Hidden="true" />
+      <Method Name="ReadCentralDirectoryFooter" Hidden="true" />
+      <Method Name="ReadIntoInstance" Hidden="true" />
+      <Method Name="ReadIntoInstance_Orig" Hidden="true" />
+      <Method Name="ReadZipFileComment" Hidden="true" />
+      <Method Name="RemoveTempFile" Hidden="true" />
+      <Method Name="Reset" Hidden="true" />
+      <Method Name="StreamForDiskNumber" Hidden="true" />
+      <Method Name="System.Collections.IEnumerable.GetEnumerator" Hidden="true" />
+      <Method Name="VerifyBeginningOfZipFile" Hidden="true" />
+      <Method Name="Zip64SeekToCentralDirectory" Hidden="true" />
+    </Members>
+    <NestedTypes>
+      <Class Name="Ionic.Zip.ZipFile.ExtractorSettings" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>ZipFile.SaveSelfExtractor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>/LEN7NMMAu+ORXMVq3EISzy+nISgg4kijxM4W9oglmo=</HashCode>
+      <FileName>ZipFile.AddUpdate.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Enum Name="Ionic.Zip.Zip64Option" Collapsed="true">
+    <Position X="6.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAIAAAAAAAAAAAAAAgCAAAAAA=</HashCode>
+      <FileName>ZipFile.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Ionic.Zip.AddOrUpdateAction" Collapsed="true">
+    <Position X="5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAgAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ZipFile.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
