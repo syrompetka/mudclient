@@ -1,0 +1,25 @@
+﻿<UserControl x:Class="Adan.Client.Controls.MainOutputWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:Controls="clr-namespace:Adan.Client.Controls" xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common" mc:Ignorable="d" Focusable="False" d:DesignHeight="300" d:DesignWidth="300">
+    <Grid  TextElement.FontFamily="../Resources/consola.ttf#Consolas" TextElement.FontSize="15" Focusable="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0" Name="scrollGridRow"></RowDefinition>
+            <RowDefinition Height="0" Name="splitterRow"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Background="Black"  Grid.Row="0" Focusable="False">
+            <Controls1:ScrollableFlowTextControl x:Name="secondaryScrollOutput" MaximumLinesToStore="5000" LinesOverflowPercentBeforeCleanup="10" AutoScroll="True"  Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+        <GridSplitter Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
+        <Grid Grid.Row="2" Background="Black">
+            <Controls1:ScrollableFlowTextControl x:Name="mainScrollOutput"  MaximumLinesToStore="500" LinesOverflowPercentBeforeCleanup="30" AutoScroll="True" Grid.Row="2"  Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+        </Grid>
+    </Grid>
+</UserControl>

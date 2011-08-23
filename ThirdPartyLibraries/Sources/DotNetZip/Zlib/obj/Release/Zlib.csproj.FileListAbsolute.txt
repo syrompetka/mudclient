@@ -1,0 +1,5 @@
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\bin\Release\Ionic.Zlib.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\bin\Release\Ionic.Zlib.pdb
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Release\ResolveAssemblyReference.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Release\Ionic.Zlib.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Release\Ionic.Zlib.pdb
