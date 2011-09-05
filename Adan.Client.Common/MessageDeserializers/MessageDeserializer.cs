@@ -50,10 +50,8 @@ namespace Adan.Client.Common.MessageDeserializers
         /// <param name="offset">The offset.</param>
         /// <param name="bytesReceived">The bytes received.</param>
         /// <param name="data">The get data.</param>
-        /// <param name="isGagReceived">indicates whether <c>GAG</c> sequence was recieved or not.</param>
         /// <returns>Number of bytes that were read from <paramref name="data"/> buffer.</returns>
-        public abstract int DeserializeDataFromServer(
-            int offset, int bytesReceived, [NotNull] byte[] data, bool isGagReceived);
+        public abstract int DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data);
 
         #endregion
 

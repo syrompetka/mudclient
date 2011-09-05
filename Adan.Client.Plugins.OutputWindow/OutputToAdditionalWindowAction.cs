@@ -101,7 +101,7 @@ namespace Adan.Client.Plugins.OutputWindow
                 var textMessage = context.CurrentMessage as TextMessage;
                 if (textMessage != null)
                 {
-                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(textMessage.MessageBlocks) { SkipTriggers = true });
+                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(textMessage) { SkipTriggers = true });
                 }
             }
             else

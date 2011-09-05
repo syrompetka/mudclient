@@ -10,6 +10,7 @@
 namespace Adan.Client.Common.Messages
 {
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
 
     using CSLib.Net.Annotations;
@@ -23,6 +24,20 @@ namespace Adan.Client.Common.Messages
     {
         private bool _isInnerTextComputed;
         private string _innerText;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextMessage"/> class.
+        /// </summary>
+        /// <param name="originalMessage">The original message.</param>
+        protected TextMessage([NotNull] TextMessage originalMessage)
+        {
+            Assert.ArgumentNotNull(originalMessage, "originalMessage");
+
+            var blocks = originalMessage.MessageBlocks.Select(textMessageBlock => new TextMessageBlock(textMessageBlock.Text, textMessageBlock.Foreground, textMessageBlock.Background)).ToList();
+
+            MessageBlocks = blocks;
+            _isInnerTextComputed = false;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
@@ -60,7 +75,7 @@ namespace Adan.Client.Common.Messages
             _isInnerTextComputed = true;
             _innerText = text;
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
         /// </summary>

@@ -25,5 +25,16 @@ namespace Adan.Client.Common.Commands
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets the type of this command.
+        /// </summary>
+        /// <value>
+        /// The type of this command.
+        /// </value>
+        public abstract int CommandType
+        {
+            get;
+        }
     }
 }

@@ -27,15 +27,14 @@ namespace Adan.Client.Common.Messages
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this message shouldn't be processed by conveoyor units or not.
+        /// Gets the type of this message.
         /// </summary>
         /// <value>
-        ///   <c>true</c> ifoc message shouldn't be processed by conveoyor units; otherwise, <c>false</c>.
+        /// The type of this message.
         /// </value>
-        public bool SkipProcessing
+        public abstract int MessageType
         {
             get;
-            set;
         }
 
         /// <summary>

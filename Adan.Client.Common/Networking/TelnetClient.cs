@@ -117,10 +117,7 @@ namespace Adan.Client.Common.Networking
             if (_theSocket != null)
             {
                 Dispose(true);
-                if (Disconnected != null)
-                {
-                    Disconnected(this, EventArgs.Empty);
-                }
+                OnDisconnected();
             }
         }
 
@@ -187,9 +184,20 @@ namespace Adan.Client.Common.Networking
             }
         }
 
+        /// <summary>
+        /// Called when this client looses connection.
+        /// </summary>
+        protected virtual void OnDisconnected()
+        {
+            if (Disconnected != null)
+            {
+                Disconnected(this, EventArgs.Empty);
+            }
+        }
+
         private void OnDataReceived(int count)
         {
-            OnDataReceived(this, new DataReceivedEventArgs(count, 0, _buffer, true));
+            OnDataReceived(this, new DataReceivedEventArgs(count, 0, _buffer));
         }
 
         private void Initialize()
@@ -215,10 +223,7 @@ namespace Adan.Client.Common.Networking
                     }
                     else
                     {
-                        if (Disconnected != null)
-                        {
-                            Disconnected(this, EventArgs.Empty);
-                        }
+                        OnDisconnected();
                     }
                 }
             }

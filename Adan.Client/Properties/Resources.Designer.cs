@@ -88,6 +88,15 @@ namespace Adan.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bytes recieved: {0}, Bytes decompressed: {1}, Compression ratio: {2:0.0}%..
+        /// </summary>
+        internal static string ConnectionStatistic {
+            get {
+                return ResourceManager.GetString("ConnectionStatistic", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Logging started. Log name: &apos;{0}&apos;..
         /// </summary>
         internal static string LoggingStarted {

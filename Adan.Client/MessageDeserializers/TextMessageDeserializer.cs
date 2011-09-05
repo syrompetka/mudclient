@@ -19,6 +19,7 @@ namespace Adan.Client.MessageDeserializers
     using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
+    using Common.Networking;
     using Common.Themes;
 
     using CSLib.Net.Annotations;
@@ -82,18 +83,31 @@ namespace Adan.Client.MessageDeserializers
         /// <param name="offset">The offset.</param>
         /// <param name="bytesReceived">The bytes received.</param>
         /// <param name="data">The get data.</param>
-        /// <param name="isGagReceived">indicates whether <c>GAG</c> sequence was recieved or not.</param>
         /// <returns>
         /// Number of bytes that were read from <paramref name="data"/> buffer.
         /// </returns>
         /// <exception cref="InvalidDataException"><c>InvalidDataException</c>.</exception>
-        public override int DeserializeDataFromServer(
-            int offset, int bytesReceived, [NotNull] byte[] data, bool isGagReceived)
+        public override int DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data)
         {
             Assert.ArgumentNotNull(data, "data");
 
-            int currentDataBufferPosition = 0;
-            var incomingCharsCount = _encoding.GetChars(data, offset, bytesReceived, _charBuffer, 0);
+            int currentDataBufferPosition = offset;
+            int bytesToRead = 0;
+
+            for (int i = 0; i < bytesReceived; i++)
+            {
+                if (i < bytesReceived - 1)
+                {
+                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode)
+                    {
+                        break;
+                    }
+                }
+
+                bytesToRead++;
+            }
+
+            var incomingCharsCount = _encoding.GetChars(data, offset, bytesToRead, _charBuffer, 0);
             while (currentDataBufferPosition < incomingCharsCount)
             {
                 char currentChar = _charBuffer[currentDataBufferPosition];
@@ -152,9 +166,10 @@ namespace Adan.Client.MessageDeserializers
                     {
                         if (currentChar != _asciCsiCharacter)
                         {
-                            throw new InvalidDataException(
-                                string.Format(
-                                    CultureInfo.InvariantCulture, "Wrong character after ESC - '{0}'", currentChar));
+                            // error wrong ascii sequence - flushing content.
+                            FlushCurrentBlockToBlocksList();
+                            _isAfterCsi = false;
+                            _isAfterEscapeChar = false;
                         }
 
                         _isAfterCsi = true;
@@ -164,21 +179,7 @@ namespace Adan.Client.MessageDeserializers
                 currentDataBufferPosition++;
             }
 
-            if (isGagReceived)
-            {
-                if (_stringBuilder.Length > 0)
-                {
-                    FlushCurrentBlockToBlocksList();
-                }
-
-                if (_messageBlocks.Count > 0)
-                {
-                    PushMessageToConveyor(new OutputToMainWindowMessage(new List<TextMessageBlock>(_messageBlocks)));
-                    _messageBlocks.Clear();
-                }
-            }
-
-            return bytesReceived;
+            return bytesToRead;
         }
 
         #endregion

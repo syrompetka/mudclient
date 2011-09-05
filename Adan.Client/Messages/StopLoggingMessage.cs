@@ -16,5 +16,18 @@ namespace Adan.Client.Messages
     /// </summary>
     public class StopLoggingMessage : Message
     {
+        /// <summary>
+        /// Gets the type of this message.
+        /// </summary>
+        /// <value>
+        /// The type of this message.
+        /// </value>
+        public override int MessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.LoggingMessage;
+            }
+        }
     }
 }

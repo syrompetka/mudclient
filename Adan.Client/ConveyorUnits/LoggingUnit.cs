@@ -9,8 +9,10 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     using Common.Conveyor;
@@ -53,12 +55,43 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledMessageTypes
+        {
+            get
+            {
+                return new[] { BuiltInMessageTypes.LoggingMessage, BuiltInMessageTypes.TextMessage, BuiltInMessageTypes.ConnectionMessages };
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledCommandTypes
+        {
+            get
+            {
+                return Enumerable.Empty<int>();
+            }
+        }
+
+        /// <summary>
         /// Handles the message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         public override void HandleMessage(Message message)
         {
             Assert.ArgumentNotNull(message, "message");
+            if (_isLogging)
+            {
+                var outputMessage = message as OutputToMainWindowMessage;
+                if (outputMessage != null)
+                {
+                    _streamWriter.WriteLine(outputMessage.InnerText);
+                }
+            }
+
             var startLogMessage = message as StartLoggingMessage;
             if (startLogMessage != null)
             {
@@ -81,13 +114,16 @@ namespace Adan.Client.ConveyorUnits
                 stopLogMessage.Handled = true;
             }
 
-            if (_isLogging)
+            var connectedMessage = message as ConnectedMessage;
+            if (connectedMessage != null)
             {
-                var outputMessage = message as OutputToMainWindowMessage;
-                if (outputMessage != null)
-                {
-                    _streamWriter.WriteLine(outputMessage.InnerText);
-                }
+                StopLogging();
+            }
+
+            var disconnectedMessage = message as DisconnectedMessage;
+            if (disconnectedMessage != null)
+            {
+                StopLogging();
             }
         }
 

@@ -517,6 +517,10 @@ namespace Ionic.Zlib
                 }
             }
 
+            if (rc == ZlibConstants.Z_STREAM_END)
+            {
+                return -1;
+            }
 
             rc = (count - _z.AvailableBytesOut);
 

@@ -9,7 +9,9 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
 
     using Common.Commands;
@@ -34,6 +36,28 @@ namespace Adan.Client.ConveyorUnits
             : base(messageConveyor)
         {
             Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
+        }
+
+        /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledMessageTypes
+        {
+            get
+            {
+                return Enumerable.Empty<int>();
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledCommandTypes
+        {
+            get
+            {
+                return new[] { BuiltInCommandTypes.TextCommand };
+            }
         }
 
         /// <summary>

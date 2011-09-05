@@ -9,7 +9,6 @@
 
 namespace Adan.Client.Commands
 {
-    using System;
     using System.Windows.Input;
 
     using Common.Commands;
@@ -53,6 +52,20 @@ namespace Adan.Client.Commands
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Gets the type of this command.
+        /// </summary>
+        /// <value>
+        /// The type of this command.
+        /// </value>
+        public override int CommandType
+        {
+            get
+            {
+                return BuiltInCommandTypes.HotkeyCommand;
+            }
         }
     }
 }

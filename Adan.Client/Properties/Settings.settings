@@ -6,10 +6,10 @@
       <Value Profile="(Default)">100</Value>
     </Setting>
     <Setting Name="ConnectHostName" Type="System.String" Scope="User">
-      <Value Profile="(Default)">adan.ru</Value>
+      <Value Profile="(Default)">localhost</Value>
     </Setting>
     <Setting Name="ConnectPort" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9000</Value>
+      <Value Profile="(Default)">4000</Value>
     </Setting>
   </Settings>
 </SettingsFile>

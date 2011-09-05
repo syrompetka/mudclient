@@ -26,7 +26,20 @@ namespace Adan.Client.Common.Messages
             : base(text, TextColor.BrightWhite)
         {
             Assert.ArgumentNotNullOrWhiteSpace(text, "text");
-            SkipProcessing = true;
+        }
+
+        /// <summary>
+        /// Gets the type of this message.
+        /// </summary>
+        /// <value>
+        /// The type of this message.
+        /// </value>
+        public override int MessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.SystemMessage;
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ namespace Adan.Client.Common.Conveyor
 
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Commands;
     using CommandSerializers;
@@ -37,9 +38,11 @@ namespace Adan.Client.Common.Conveyor
         #region Constants and Fields
 
         private readonly IList<CommandSerializer> _commandSerializers = new List<CommandSerializer>();
-        private readonly IList<ConveyorUnit> _conveyorUnits = new List<ConveyorUnit>();
         private readonly MccpClient _mccpClient;
         private readonly IList<MessageDeserializer> _messageDeserializers = new List<MessageDeserializer>();
+        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType = new Dictionary<int, IList<ConveyorUnit>>();
+        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
+        private readonly byte[] _buffer = new byte[32767];
 
         #endregion
 
@@ -92,7 +95,25 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
 
-            _conveyorUnits.Add(conveyorUnit);
+            foreach (var handledMessageType in conveyorUnit.HandledMessageTypes)
+            {
+                if (!_conveyorUnitsByMessageType.ContainsKey(handledMessageType))
+                {
+                    _conveyorUnitsByMessageType[handledMessageType] = new List<ConveyorUnit>();
+                }
+
+                _conveyorUnitsByMessageType[handledMessageType].Add(conveyorUnit);
+            }
+
+            foreach (var handledCommandType in conveyorUnit.HandledCommandTypes)
+            {
+                if (!_conveyorUnitsByCommandType.ContainsKey(handledCommandType))
+                {
+                    _conveyorUnitsByCommandType[handledCommandType] = new List<ConveyorUnit>();
+                }
+
+                _conveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
+            }
         }
 
         /// <summary>
@@ -134,12 +155,15 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(command, "command");
 
-            foreach (var conveyorUnit in _conveyorUnits)
+            if (_conveyorUnitsByCommandType.ContainsKey(command.CommandType))
             {
-                conveyorUnit.HandleCommand(command);
-                if (command.Handled)
+                foreach (var conveyorUnit in _conveyorUnitsByCommandType[command.CommandType])
                 {
-                    break;
+                    conveyorUnit.HandleCommand(command);
+                    if (command.Handled)
+                    {
+                        break;
+                    }
                 }
             }
 
@@ -164,9 +188,9 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(message, "message");
 
-            if (!message.SkipProcessing)
+            if (_conveyorUnitsByMessageType.ContainsKey(message.MessageType))
             {
-                foreach (var conveyorUnit in _conveyorUnits)
+                foreach (var conveyorUnit in _conveyorUnitsByMessageType[message.MessageType])
                 {
                     conveyorUnit.HandleMessage(message);
                     if (message.Handled)
@@ -206,7 +230,18 @@ namespace Adan.Client.Common.Conveyor
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            foreach (var conveyorUnit in _conveyorUnits)
+            var allUnits = new List<ConveyorUnit>();
+            foreach (var unitList in _conveyorUnitsByMessageType.Values)
+            {
+                allUnits.AddRange(unitList);
+            }
+
+            foreach (var unitList in _conveyorUnitsByCommandType.Values)
+            {
+                allUnits.AddRange(unitList);
+            }
+
+            foreach (var conveyorUnit in allUnits.Distinct())
             {
                 conveyorUnit.Dispose();
             }
@@ -222,11 +257,58 @@ namespace Adan.Client.Common.Conveyor
 
             int offset = e.Offset;
             int bytesRecieved = e.BytesReceived;
+            int actualBytesReceived = 0;
+            byte[] data = e.GetData();
 
+            for (int i = 0; i < bytesRecieved; i++)
+            {
+                // removing double IAC and processing IAC GA
+                if (i < bytesRecieved - 1)
+                {
+                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
+                    {
+                        _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
+                        i++;
+                        actualBytesReceived++;
+                        continue;
+                    }
+
+                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
+                    {
+                        // new line
+                        _buffer[actualBytesReceived] = 0xA;
+                        i++;
+                        actualBytesReceived++;
+                        continue;
+                    }
+                }
+
+                // handling echo mode on/off
+                if (i < bytesRecieved - 2)
+                {
+                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    {
+                        PushMessage(new ChangeEchoModeMessage(false));
+                        i += 2;
+                        continue;
+                    }
+                
+                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    {
+                        PushMessage(new ChangeEchoModeMessage(true));
+                        i += 2;
+                        continue;
+                    }
+                }
+
+                _buffer[actualBytesReceived] = data[offset + i];
+                actualBytesReceived++;
+            }
+
+            offset = 0;
             foreach (var messageDeserializer in _messageDeserializers)
             {
-                var processedBytes = messageDeserializer.DeserializeDataFromServer(
-                    offset, bytesRecieved, e.GetData(), e.IsGagReceived);
+                var processedBytes = messageDeserializer.DeserializeDataFromServer(offset, actualBytesReceived, _buffer);
                 offset += processedBytes;
                 bytesRecieved -= processedBytes;
                 if (bytesRecieved == 0)
@@ -249,7 +331,7 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            PushMessage(new DisconnectedMessage());
+            PushMessage(new DisconnectedMessage(_mccpClient.TotalBytesReceived, _mccpClient.BytesDecompressed));
         }
 
         private void HandleNetworkError([NotNull] object sender, [NotNull] NetworkErrorEventArgs e)

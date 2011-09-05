@@ -12,6 +12,7 @@ namespace Adan.Client.Common.ConveyorUnits
     #region Namespace Imports
 
     using System;
+    using System.Collections.Generic;
 
     using Commands;
 
@@ -46,6 +47,28 @@ namespace Adan.Client.Common.ConveyorUnits
             Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
 
             _messageConveyor = messageConveyor;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        [NotNull]
+        public abstract IEnumerable<int> HandledMessageTypes
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        [NotNull]
+        public abstract IEnumerable<int> HandledCommandTypes
+        {
+            get;
         }
 
         #endregion
