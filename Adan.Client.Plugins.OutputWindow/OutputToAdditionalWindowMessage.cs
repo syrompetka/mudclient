@@ -9,8 +9,6 @@
 
 namespace Adan.Client.Plugins.OutputWindow
 {
-    using System.Collections.Generic;
-
     using Common.Messages;
     using Common.Themes;
 
@@ -25,11 +23,11 @@ namespace Adan.Client.Plugins.OutputWindow
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputToAdditionalWindowMessage"/> class.
         /// </summary>
-        /// <param name="messageBlocks">The message blocks.</param>
-        public OutputToAdditionalWindowMessage([NotNull] IEnumerable<TextMessageBlock> messageBlocks)
-            : base(messageBlocks)
+        /// <param name="originalMessage">The original message.</param>
+        public OutputToAdditionalWindowMessage([NotNull] TextMessage originalMessage)
+            : base(originalMessage)
         {
-            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
+            Assert.ArgumentNotNull(originalMessage, "originalMessage");
         }
 
         /// <summary>
@@ -42,6 +40,20 @@ namespace Adan.Client.Plugins.OutputWindow
             : base(text, foregroundColor, backgroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
+        }
+
+        /// <summary>
+        /// Gets the type of this message.
+        /// </summary>
+        /// <value>
+        /// The type of this message.
+        /// </value>
+        public override int MessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.TextMessage;
+            }
         }
     }
 }

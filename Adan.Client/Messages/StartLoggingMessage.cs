@@ -42,5 +42,19 @@ namespace Adan.Client.Messages
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets the type of this message.
+        /// </summary>
+        /// <value>
+        /// The type of this message.
+        /// </value>
+        public override int MessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.LoggingMessage;
+            }
+        }
     }
 }

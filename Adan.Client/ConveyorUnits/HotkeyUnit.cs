@@ -9,6 +9,7 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System.Collections.Generic;
     using System.Linq;
 
     using Commands;
@@ -21,9 +22,6 @@ namespace Adan.Client.ConveyorUnits
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
-    using Model;
-    using Model.Actions;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> that handles hotkeys.
@@ -47,6 +45,28 @@ namespace Adan.Client.ConveyorUnits
         }
 
         #region Overrides of ConveyorUnit
+
+        /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledMessageTypes
+        {
+            get
+            {
+                return Enumerable.Empty<int>();
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledCommandTypes
+        {
+            get
+            {
+                return new[] { BuiltInCommandTypes.HotkeyCommand };
+            }
+        }
 
         /// <summary>
         /// Handles the command.

@@ -6,7 +6,6 @@
 
 namespace Adan.Client.Common.Networking
 {
-    using System;
     using System.IO;
 
     using CSLib.Net.Annotations;
@@ -19,24 +18,14 @@ namespace Adan.Client.Common.Networking
     /// </summary>
     public class MccpClient : TelnetClient
     {
-        private const byte _iacCode = 0xFF;
-        private const byte _willCode = 0xFB;
-        private const byte _willNotCode = 0xFC;
-        private const byte _doCode = 0xFD;
-        private const byte _compressCode = 0x55;
-        private const byte _subNegotioationStartCode = 0xFA;
-        private const byte _subNegotioationEndCode = 0xF0;
-        private const byte _goaheadCode = 0xF9;
-
         private readonly byte[] _buffer = new byte[32767];
         private readonly MemoryStream _compressedDataStream;
         private readonly byte[] _inputPostProcessingBuffer = new byte[32767];
-        private readonly byte[] _pingBackBuffer = new byte[] { _iacCode, _doCode, 0 };
-        private readonly byte[] _postprocessingBuffer = new byte[32767];
         private readonly byte[] _unpackBuffer = new byte[32767];
-        private readonly ZlibStream _zlibDecompressionStream;
+        private ZlibStream _zlibDecompressionStream;
 
         private bool _compressionEnabled;
+        private bool _customProtocolEnabled;
         private bool _compressionInProgress;
 
         /// <summary>
@@ -45,7 +34,24 @@ namespace Adan.Client.Common.Networking
         public MccpClient()
         {
             _compressedDataStream = new MemoryStream(_buffer);
-            _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);
+        }
+
+        /// <summary>
+        /// Gets the number of bytes recieved.
+        /// </summary>
+        public int TotalBytesReceived
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the number of bytes decompressed.
+        /// </summary>
+        public int BytesDecompressed
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -63,6 +69,11 @@ namespace Adan.Client.Common.Networking
 
             _compressionEnabled = false;
             _compressionInProgress = false;
+            _customProtocolEnabled = false;
+            _zlibDecompressionStream = null;
+            TotalBytesReceived = 0;
+            BytesDecompressed = 0;
+
             base.Connect(host, port);
         }
 
@@ -107,44 +118,52 @@ namespace Adan.Client.Common.Networking
 
             int offset = e.Offset;
             int bytesReceived = e.BytesReceived;
+            TotalBytesReceived += bytesReceived;
             byte[] data = e.GetData();
             if (!_compressionEnabled)
             {
                 if (bytesReceived >= 3
-                    && data[offset] == _iacCode
-                    && data[offset + 1] == _willCode
-                    && data[offset + 2] == _compressCode)
+                    && data[offset] == TelnetConstants.InterpretAsCommandCode
+                    && data[offset + 1] == TelnetConstants.WillCode
+                    && data[offset + 2] == TelnetConstants.CompressCode)
                 {
                     // negotiation packet received IAC WILL COMPRESS
                     // will send responce IAC DO COMPRESS
                     _compressionEnabled = true;
-                    base.Send(new[] { _iacCode, _doCode, _compressCode }, 0, 3);
+                    base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CompressCode }, 0, 3);
                     offset += 3;
+                }
+            }
+
+            if (!_customProtocolEnabled)
+            {
+                if (bytesReceived >= 3
+                    && data[offset] == TelnetConstants.InterpretAsCommandCode
+                    && data[offset + 1] == TelnetConstants.WillCode
+                    && data[offset + 2] == TelnetConstants.CustomProtocolCode)
+                {
+                    _customProtocolEnabled = true;
+                    base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CustomProtocolCode }, 0, 3);
+                    offset += 3;
+                    bytesReceived -= 3;
                 }
             }
 
             if (_compressionEnabled && !_compressionInProgress)
             {
                 // Checking for subnegotiation packet IAC SB COMPRESS WILL SE
-                if (e.BytesReceived >= 5
-                    && data[offset] == _iacCode
-                    && data[offset + 1] == _subNegotioationStartCode
-                    && data[offset + 2] == _compressCode
-                    && data[offset + 3] == _willCode
-                    && data[offset + 4] == _subNegotioationEndCode)
+                if (bytesReceived >= 5
+                    && data[offset] == TelnetConstants.InterpretAsCommandCode
+                    && data[offset + 1] == TelnetConstants.SubNegotiationStartCode
+                    && data[offset + 2] == TelnetConstants.CompressCode
+                    && data[offset + 3] == TelnetConstants.WillCode
+                    && data[offset + 4] == TelnetConstants.SubNegotiationEndCode)
                 {
                     _compressionInProgress = true;
+                    _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);
                     offset += 5;
+                    bytesReceived -= 5;
                 }
-            }
-
-            if (bytesReceived >= 3
-                && data[offset] == _iacCode
-                && data[offset + 1] == _willCode)
-            {
-                _pingBackBuffer[2] = data[offset + 2];
-                base.Send(_pingBackBuffer, 0, 3);
-                offset += 3;
             }
 
             if (bytesReceived - offset > 0)
@@ -156,101 +175,24 @@ namespace Adan.Client.Common.Networking
                     _compressedDataStream.SetLength(bytesReceived);
                     _compressedDataStream.Seek(0, SeekOrigin.Begin);
                     bytesReceived = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
-                    offset = 0;
-                    PostProcess(bytesReceived, offset, _unpackBuffer);
-                }
-                else
-                {
-                    PostProcess(bytesReceived, offset, data);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Posts the process received data (removing double Iac and processing ping requests).
-        /// </summary>
-        /// <param name="bytesReceived">
-        /// The bytes received.
-        /// </param>
-        /// <param name="offset">
-        /// The offset.
-        /// </param>
-        /// <param name="data">
-        /// The data from server.
-        /// </param>
-        /// <exception cref="InvalidOperationException">
-        /// Invalid Iac sequence detected.
-        /// </exception>
-        private void PostProcess(int bytesReceived, int offset, [NotNull] byte[] data)
-        {
-            Validate.ArgumentNotNull(data, "data");
-            int currentInDataBuffer = offset;
-            int currentInWorkingBuffer = 0;
-            bool isInIacSequence = false;
-            bool isInIacWillSequence = false;
-            bool isInIacWillNotSequence = false;
-            bool isGoageadReceived = false;
-
-            while (currentInDataBuffer < bytesReceived)
-            {
-                if (isInIacSequence)
-                {
-                    if (data[currentInDataBuffer] == _iacCode)
+                    if (bytesReceived < 0)
                     {
-                        _postprocessingBuffer[currentInWorkingBuffer] = _iacCode;
-                        isInIacSequence = false;
-                        currentInWorkingBuffer++;
-                    }
-                    else if (data[currentInDataBuffer] == _willCode)
-                    {
-                        isInIacSequence = false;
-                        isInIacWillSequence = true;
-                    }
-                    else if (data[currentInDataBuffer] == _willNotCode)
-                    {
-                        isInIacSequence = false;
-                        isInIacWillNotSequence = true;
-                    }
-                    else if (data[currentInDataBuffer] == _goaheadCode)
-                    {
-                        if (currentInDataBuffer == bytesReceived - 1)
-                        {
-                            isGoageadReceived = true;
-                        }
-
-                        isInIacSequence = false;
+                        _compressionInProgress = false;
+                        _zlibDecompressionStream.Dispose();
+                        _zlibDecompressionStream = null;
                     }
                     else
                     {
-                        isInIacSequence = false;
+                        offset = 0;
+                        BytesDecompressed += bytesReceived;
+                        base.OnDataReceived(this, new DataReceivedEventArgs(bytesReceived, offset, _unpackBuffer));
                     }
-                }
-                else if (isInIacWillSequence)
-                {
-                    _pingBackBuffer[2] = data[currentInDataBuffer];
-                    base.Send(_pingBackBuffer, 0, 3);
-                    isInIacWillSequence = false;
-                }
-                else if (isInIacWillNotSequence)
-                {
-                    isInIacWillNotSequence = false;
-                }
-                else if (data[currentInDataBuffer] == _iacCode)
-                {
-                    isInIacSequence = true;
                 }
                 else
                 {
-                    _postprocessingBuffer[currentInWorkingBuffer] = data[currentInDataBuffer];
-                    currentInWorkingBuffer++;
+                    BytesDecompressed += bytesReceived;
+                    base.OnDataReceived(this, new DataReceivedEventArgs(bytesReceived, offset, data));
                 }
-
-                currentInDataBuffer++;
-            }
-
-            if (currentInWorkingBuffer > 0)
-            {
-                base.OnDataReceived(this, new DataReceivedEventArgs(currentInWorkingBuffer, 0, _postprocessingBuffer, isGoageadReceived));
             }
         }
     }

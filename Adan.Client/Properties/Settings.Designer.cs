@@ -37,7 +37,7 @@ namespace Adan.Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("adan.ru")]
+        [global::System.Configuration.DefaultSettingValueAttribute("localhost")]
         public string ConnectHostName {
             get {
                 return ((string)(this["ConnectHostName"]));
@@ -49,7 +49,7 @@ namespace Adan.Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9000")]
+        [global::System.Configuration.DefaultSettingValueAttribute("4000")]
         public int ConnectPort {
             get {
                 return ((int)(this["ConnectPort"]));

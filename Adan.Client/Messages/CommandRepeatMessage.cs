@@ -28,8 +28,22 @@ namespace Adan.Client.Messages
             : base(commandText, TextColor.RepeatCommandTextColor)
         {
             Assert.ArgumentNotNull(commandText, "commandText");
-            SkipProcessing = true;
+
             SkipTriggers = true;
+        }
+
+        /// <summary>
+        /// Gets the type of this message.
+        /// </summary>
+        /// <value>
+        /// The type of this message.
+        /// </value>
+        public override int MessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.SystemMessage;
+            }
         }
     }
 }

@@ -144,4 +144,7 @@
   <data name="TryingToConnect" xml:space="preserve">
     <value>Trying to connect. host - {0}; port - {1}</value>
   </data>
+  <data name="ConnectionStatistic" xml:space="preserve">
+    <value>Bytes recieved: {0}, Bytes decompressed: {1}, Compression ratio: {2:0.0}%.</value>
+  </data>
 </root>

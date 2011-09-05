@@ -9,6 +9,7 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System.Collections.Generic;
     using System.Globalization;
 
     using Commands;
@@ -48,6 +49,28 @@ namespace Adan.Client.ConveyorUnits
         #region Overrides of ConveyorUnit
 
         /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledMessageTypes
+        {
+            get
+            {
+                return new[] { BuiltInCommandTypes.TextCommand, BuiltInCommandTypes.ConnectionCommands };
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledCommandTypes
+        {
+            get
+            {
+                return new[] { BuiltInMessageTypes.ConnectionMessages, BuiltInMessageTypes.TextMessage };
+            }
+        }
+
+        /// <summary>
         /// Handles the command.
         /// </summary>
         /// <param name="command">The command to handle.</param>
@@ -61,7 +84,7 @@ namespace Adan.Client.ConveyorUnits
                 connectCommand.Handled = true;
                 if (_connectionStatus.Connected || _connectionStatus.ConnectionInProgress)
                 {
-                    PushMessageToConveyor(new ErrorMessage(Resources.AlreadyConnected) { SkipProcessing = true });
+                    PushMessageToConveyor(new ErrorMessage(Resources.AlreadyConnected));
                 }
                 else
                 {
@@ -107,8 +130,7 @@ namespace Adan.Client.ConveyorUnits
             var connectedMessage = message as ConnectedMessage;
             if (connectedMessage != null)
             {
-                message.Handled = true;
-                PushMessageToConveyor(new InfoMessage(Resources.ConnectionEstablished) { SkipProcessing = true });
+                PushMessageToConveyor(new InfoMessage(Resources.ConnectionEstablished));
                 _connectionStatus.Connected = true;
                 _connectionStatus.ConnectionInProgress = false;
                 return;
@@ -117,13 +139,19 @@ namespace Adan.Client.ConveyorUnits
             var disconnectedMessage = message as DisconnectedMessage;
             if (disconnectedMessage != null)
             {
-                message.Handled = true;
-
                 if (_connectionStatus.Connected)
                 {
                     _connectionStatus.Connected = false;
                     _connectionStatus.ConnectionInProgress = false;
                     PushMessageToConveyor(new InfoMessage(Resources.ConnectionLost));
+                    PushMessageToConveyor(
+                        new InfoMessage(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.ConnectionStatistic,
+                                disconnectedMessage.TotalBytesReceived,
+                                disconnectedMessage.BytesDecompressed,
+                                100.0f * (disconnectedMessage.TotalBytesReceived / (float)disconnectedMessage.BytesDecompressed))));
                 }
 
                 return;
@@ -132,7 +160,6 @@ namespace Adan.Client.ConveyorUnits
             var networkErrorMessage = message as NetworkErrorMessage;
             if (networkErrorMessage != null)
             {
-                message.Handled = true;
                 PushMessageToConveyor(new ErrorMessage(networkErrorMessage.SocketException.Message));
                 _connectionStatus.Connected = false;
                 _connectionStatus.ConnectionInProgress = false;

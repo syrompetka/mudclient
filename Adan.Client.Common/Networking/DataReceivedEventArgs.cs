@@ -34,22 +34,6 @@ namespace Adan.Client.Common.Networking
             Offset = offset;
             BytesReceived = count;
             _data = buffer;
-            IsGagReceived = false;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DataReceivedEventArgs"/> class.
-        /// </summary>
-        /// <param name="count">The count.</param>
-        /// <param name="offset">The offset.</param>
-        /// <param name="buffer">The buffer.</param>
-        /// <param name="isGagRecieved">Set to <c>true</c> if gag sequence was recieved.</param>
-        internal DataReceivedEventArgs(int count, int offset, [NotNull] byte[] buffer, bool isGagRecieved)
-            : this(count, offset, buffer)
-        {
-            Validate.ArgumentNotNull(buffer, "buffer");
-
-            IsGagReceived = isGagRecieved;
         }
 
         /// <summary>
@@ -62,18 +46,6 @@ namespace Adan.Client.Common.Networking
         /// Gets the offset in buffer.
         /// </summary>
         public int Offset
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether gag sequence was recieved or not.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if gag sequence was recieved; otherwise, <c>false</c>.
-        /// </value>
-        public bool IsGagReceived
         {
             get;
             private set;

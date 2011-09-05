@@ -9,6 +9,9 @@
 
 namespace Adan.Client.Plugins.OutputWindow
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
@@ -35,6 +38,28 @@ namespace Adan.Client.Plugins.OutputWindow
             Assert.ArgumentNotNull(window, "window");
 
             _window = window;
+        }
+
+        /// <summary>
+        /// Gets a set of message types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledMessageTypes
+        {
+            get
+            {
+                return new[] { BuiltInMessageTypes.TextMessage };
+            }
+        }
+
+        /// <summary>
+        /// Gets a set of command types that this unit can handle.
+        /// </summary>
+        public override IEnumerable<int> HandledCommandTypes
+        {
+            get
+            {
+                return Enumerable.Empty<int>();
+            }
         }
 
         /// <summary>
