@@ -9,6 +9,7 @@
       <Word>utils</Word>
       <Word>plugin</Word>
       <Word>plugins</Word>
+      <Word>Yaml</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""></Term>

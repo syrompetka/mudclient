@@ -44,6 +44,8 @@ namespace Adan.Client.Common.Conveyor
         private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
         private readonly byte[] _buffer = new byte[32767];
 
+        private int _currentMessageType = BuiltInMessageTypes.TextMessage;
+
         #endregion
 
         #region Constructors and Destructors
@@ -257,65 +259,88 @@ namespace Adan.Client.Common.Conveyor
 
             int offset = e.Offset;
             int bytesRecieved = e.BytesReceived;
-            int actualBytesReceived = 0;
             byte[] data = e.GetData();
 
+            int actualBytesReceived = 0;
             for (int i = 0; i < bytesRecieved; i++)
             {
                 // removing double IAC and processing IAC GA
-                if (i < bytesRecieved - 1)
+                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
                 {
-                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
-                    {
-                        _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
-                        i++;
-                        actualBytesReceived++;
-                        continue;
-                    }
+                    _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
+                    i++;
+                    actualBytesReceived++;
+                    continue;
+                }
 
-                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
-                    {
-                        // new line
-                        _buffer[actualBytesReceived] = 0xA;
-                        i++;
-                        actualBytesReceived++;
-                        continue;
-                    }
+                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
+                {
+                    // new line
+                    _buffer[actualBytesReceived] = 0xA;
+                    i++;
+                    actualBytesReceived++;
+                    continue;
                 }
 
                 // handling echo mode on/off
-                if (i < bytesRecieved - 2)
+                if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
                 {
-                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
-                    {
-                        PushMessage(new ChangeEchoModeMessage(false));
-                        i += 2;
-                        continue;
-                    }
-                
-                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
-                    {
-                        PushMessage(new ChangeEchoModeMessage(true));
-                        i += 2;
-                        continue;
-                    }
+                    PushMessage(new ChangeEchoModeMessage(false));
+                    i += 2;
+                    continue;
+                }
+
+                if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                {
+                    PushMessage(new ChangeEchoModeMessage(true));
+                    i += 2;
+                    continue;
+                }
+
+                // handling custom message header
+                if (i < bytesRecieved - 3 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
+                {
+                    var messageType = data[offset + i + 3];
+                    FlushBufferToSerializer(actualBytesReceived, true);
+                    actualBytesReceived = 0;
+                    _currentMessageType = messageType;
+                    i += 3;
+                    continue;
+                }
+
+                // handling custom message footer
+                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
+                {
+                    FlushBufferToSerializer(actualBytesReceived, true);
+
+                    _currentMessageType = BuiltInMessageTypes.TextMessage;
+                    actualBytesReceived = 0;
+                    i++;
+                    continue;
                 }
 
                 _buffer[actualBytesReceived] = data[offset + i];
                 actualBytesReceived++;
             }
 
-            offset = 0;
-            foreach (var messageDeserializer in _messageDeserializers)
+            FlushBufferToSerializer(actualBytesReceived, false);
+        }
+
+        private void FlushBufferToSerializer(int actualBytesReceived, bool isComplete)
+        {
+            if (actualBytesReceived <= 0)
             {
-                var processedBytes = messageDeserializer.DeserializeDataFromServer(offset, actualBytesReceived, _buffer);
-                offset += processedBytes;
-                bytesRecieved -= processedBytes;
-                if (bytesRecieved == 0)
-                {
-                    break;
-                }
+                return;
             }
+
+            var deserializer = _messageDeserializers.FirstOrDefault(d => d.DeserializedMessageType == _currentMessageType);
+            if (deserializer == null)
+            {
+                // falling back to text if there is no
+                deserializer = _messageDeserializers.First(d => d.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+            }
+
+            deserializer.DeserializeDataFromServer(0, actualBytesReceived, _buffer, isComplete);
         }
 
         private void HandleConnected([NotNull] object sender, [NotNull] EventArgs e)

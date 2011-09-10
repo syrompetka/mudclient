@@ -142,6 +142,15 @@ namespace Adan.Client.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Client is outdated. Please download latest version at http://mudclient.codeplex.com.
+        /// </summary>
+        internal static string ProtocolVersionMismatch {
+            get {
+                return ResourceManager.GetString("ProtocolVersionMismatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Trying to connect. host - {0}; port - {1}.
         /// </summary>
         internal static string TryingToConnect {

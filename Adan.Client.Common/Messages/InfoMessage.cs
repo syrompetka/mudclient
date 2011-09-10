@@ -9,6 +9,8 @@
 
 namespace Adan.Client.Common.Messages
 {
+    using System.Collections.Generic;
+
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Themes;
@@ -26,6 +28,16 @@ namespace Adan.Client.Common.Messages
             : base(text, TextColor.BrightWhite)
         {
             Assert.ArgumentNotNullOrWhiteSpace(text, "text");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoMessage"/> class.
+        /// </summary>
+        /// <param name="messageBlocks">The message blocks.</param>
+        public InfoMessage([NotNull]IEnumerable<TextMessageBlock> messageBlocks)
+            : base(messageBlocks)
+        {
+            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
         }
 
         /// <summary>

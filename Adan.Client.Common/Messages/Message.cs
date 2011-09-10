@@ -9,6 +9,8 @@
 
 namespace Adan.Client.Common.Messages
 {
+    using System.Xml.Serialization;
+
     /// <summary>
     /// Base class for all messages.
     /// </summary>
@@ -20,6 +22,7 @@ namespace Adan.Client.Common.Messages
         /// <value>
         ///   <c>true</c> if handled; otherwise, <c>false</c>.
         /// </value>
+        [XmlIgnore]
         public bool Handled
         {
             get;
@@ -32,6 +35,7 @@ namespace Adan.Client.Common.Messages
         /// <value>
         /// The type of this message.
         /// </value>
+        [XmlIgnore]
         public abstract int MessageType
         {
             get;
@@ -43,6 +47,7 @@ namespace Adan.Client.Common.Messages
         /// <value>
         /// <c>true</c> if triggers should be skipped; otherwise, <c>false</c>.
         /// </value>
+        [XmlIgnore]
         public bool SkipTriggers
         {
             get;

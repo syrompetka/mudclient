@@ -19,7 +19,6 @@ namespace Adan.Client.MessageDeserializers
     using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-    using Common.Networking;
     using Common.Themes;
 
     using CSLib.Net.Annotations;
@@ -75,6 +74,24 @@ namespace Adan.Client.MessageDeserializers
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the type of deserialized message.
+        /// </summary>
+        /// <value>
+        /// The type of deserialized message.
+        /// </value>
+        public override int DeserializedMessageType
+        {
+            get
+            {
+                return BuiltInMessageTypes.TextMessage;
+            }
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -83,31 +100,14 @@ namespace Adan.Client.MessageDeserializers
         /// <param name="offset">The offset.</param>
         /// <param name="bytesReceived">The bytes received.</param>
         /// <param name="data">The get data.</param>
-        /// <returns>
-        /// Number of bytes that were read from <paramref name="data"/> buffer.
-        /// </returns>
-        /// <exception cref="InvalidDataException"><c>InvalidDataException</c>.</exception>
-        public override int DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data)
+        /// <param name="isComplete">Indicates whether message should be completed or wait for next data.</param>
+        public override void DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
 
-            int currentDataBufferPosition = offset;
-            int bytesToRead = 0;
+            int currentDataBufferPosition = 0;
 
-            for (int i = 0; i < bytesReceived; i++)
-            {
-                if (i < bytesReceived - 1)
-                {
-                    if (data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode)
-                    {
-                        break;
-                    }
-                }
-
-                bytesToRead++;
-            }
-
-            var incomingCharsCount = _encoding.GetChars(data, offset, bytesToRead, _charBuffer, 0);
+            var incomingCharsCount = _encoding.GetChars(data, offset, bytesReceived, _charBuffer, 0);
             while (currentDataBufferPosition < incomingCharsCount)
             {
                 char currentChar = _charBuffer[currentDataBufferPosition];
@@ -178,8 +178,6 @@ namespace Adan.Client.MessageDeserializers
 
                 currentDataBufferPosition++;
             }
-
-            return bytesToRead;
         }
 
         #endregion

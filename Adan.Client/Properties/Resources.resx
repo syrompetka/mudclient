@@ -147,4 +147,7 @@
   <data name="ConnectionStatistic" xml:space="preserve">
     <value>Bytes recieved: {0}, Bytes decompressed: {1}, Compression ratio: {2:0.0}%.</value>
   </data>
+  <data name="ProtocolVersionMismatch" xml:space="preserve">
+    <value>Client is outdated. Please download latest version at http://mudclient.codeplex.com</value>
+  </data>
 </root>
