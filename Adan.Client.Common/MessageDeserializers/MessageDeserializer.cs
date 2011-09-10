@@ -42,6 +42,21 @@ namespace Adan.Client.Common.MessageDeserializers
 
         #endregion
 
+        #region Properties
+
+        /// <summary>
+        /// Gets the type of deserialized message.
+        /// </summary>
+        /// <value>
+        /// The type of deserialized message.
+        /// </value>
+        public abstract int DeserializedMessageType
+        {
+            get;
+        }
+
+        #endregion
+
         #region Public Methods
 
         /// <summary>
@@ -50,8 +65,8 @@ namespace Adan.Client.Common.MessageDeserializers
         /// <param name="offset">The offset.</param>
         /// <param name="bytesReceived">The bytes received.</param>
         /// <param name="data">The get data.</param>
-        /// <returns>Number of bytes that were read from <paramref name="data"/> buffer.</returns>
-        public abstract int DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data);
+        /// <param name="isComplete">Indicates whether message should be completed or wait for next data.</param>
+        public abstract void DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data, bool isComplete);
 
         #endregion
 

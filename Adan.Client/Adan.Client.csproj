@@ -108,6 +108,7 @@
     <Compile Include="ConveyorUnits\HighlightUnit.cs" />
     <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
     <Compile Include="ConveyorUnits\LoggingUnit.cs" />
+    <Compile Include="ConveyorUnits\ProtocolVersionUnit.cs" />
     <Compile Include="ConveyorUnits\SubstitutionUnit.cs" />
     <Compile Include="ConveyorUnits\TriggerUnit.cs" />
     <Compile Include="Dialogs\AliasEditDialog.xaml.cs">
@@ -144,8 +145,10 @@
       <DependentUpon>TriggersEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TriggerTemplateSelector.cs" />
+    <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\Enums.cs" />
+    <Compile Include="Messages\ProtocolVersionMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
     <Compile Include="Controls\MainOutputWindow.xaml.cs">

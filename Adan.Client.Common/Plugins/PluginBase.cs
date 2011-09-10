@@ -127,6 +127,17 @@ namespace Adan.Client.Common.Plugins
         }
 
         /// <summary>
+        /// Gets the required protocol version.
+        /// </summary>
+        public virtual int RequiredProtocolVersion
+        {
+            get
+            {
+                return -1;
+            }
+        }
+
+        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>

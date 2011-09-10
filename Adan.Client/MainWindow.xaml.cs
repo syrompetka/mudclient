@@ -92,13 +92,13 @@ namespace Adan.Client
 
             _converyor.AddCommandSerializer(new TextCommandSerializer(_converyor));
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
+            _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
 
             _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, model));
             _converyor.AddConveyorUnit(new AliasUnit(_converyor, model));
             _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor));
             _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
             _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
-            _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
             _converyor.AddConveyorUnit(new TriggerUnit(_converyor, model));
             _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, model));
             _converyor.AddConveyorUnit(new HighlightUnit(_converyor, model));
@@ -123,7 +123,11 @@ namespace Adan.Client
             }
 
             PluginHost.Instance.InitializePlugins(_converyor, model);
+            
+            int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);            
+            _converyor.AddConveyorUnit(new ProtocolVersionUnit(_converyor, maxProtocolVersion));
 
+            _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
             _model = new MainWindowModel(allGroups, allVariables, model);
             DataContext = _model;
 
@@ -364,7 +368,7 @@ namespace Adan.Client
                 RelativeSource = RelativeSource.Self,
                 Converter = new InverseBooleanConverter()
             };
-            TreeHelper.FindVisualChildren<DocumentPane>(dockManager).First().SetBinding(Pane.ShowHeaderProperty, singleItemBinding);            
+            TreeHelper.FindVisualChildren<DocumentPane>(dockManager).First().SetBinding(Pane.ShowHeaderProperty, singleItemBinding);
         }
 
         private void HandleHideShowWidget([NotNull] object sender, [NotNull] RoutedEventArgs e)

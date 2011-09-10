@@ -33,6 +33,7 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNull(originalMessage, "originalMessage");
 
+            // need to deep copy original message to prevent double substitution for example.
             var blocks = originalMessage.MessageBlocks.Select(textMessageBlock => new TextMessageBlock(textMessageBlock.Text, textMessageBlock.Foreground, textMessageBlock.Background)).ToList();
 
             MessageBlocks = blocks;

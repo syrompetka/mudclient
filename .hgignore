@@ -17,3 +17,6 @@ Adan.Client/obj/
 Bin/
 Local.testsettings
 TraceAndTestImpact.testsettings
+Adan.Client.Plugins.StuffDatabase/Adan.Client.Plugins.StuffDatabase.csproj.user
+Adan.Client.Plugins.StuffDatabase/obj/
+Adan.Client.Plugins.StuffDatabase/StyleCop.Cache

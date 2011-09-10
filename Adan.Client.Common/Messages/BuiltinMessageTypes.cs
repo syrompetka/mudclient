@@ -38,5 +38,10 @@ namespace Adan.Client.Common.Messages
         /// Type of message to turn echoing on/off.
         /// </summary>
         public const int EchoModeMessage = 5;
+
+        /// <summary>
+        /// Type of message with protocol version.
+        /// </summary>
+        public const int ProtocolVersionMessage = 11;
     }
 }
