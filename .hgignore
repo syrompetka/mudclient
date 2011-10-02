@@ -20,3 +20,6 @@ TraceAndTestImpact.testsettings
 Adan.Client.Plugins.StuffDatabase/Adan.Client.Plugins.StuffDatabase.csproj.user
 Adan.Client.Plugins.StuffDatabase/obj/
 Adan.Client.Plugins.StuffDatabase/StyleCop.Cache
+Adan.Client.Plugins.GroupWidget/Adan.Client.Plugins.GroupWidget.csproj.user
+Adan.Client.Plugins.GroupWidget/obj/
+Adan.Client.Plugins.GroupWidget/StyleCop.Cache

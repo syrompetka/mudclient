@@ -28,6 +28,8 @@ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     
     <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource WhiteColor}" />
     <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource BlackColor}" />
+    <SolidColorBrush x:Key="WidgetBackgroundBrush"
+                     Color="White" />
     <SolidColorBrush x:Key="WindowBrush" Color="{StaticResource WindowColor}" />
     <LinearGradientBrush x:Key="NormalBrush" EndPoint="0,1" StartPoint="0,0">
         <GradientStop Color="#FFE9ECEE" Offset="0.0" />
@@ -656,10 +658,10 @@ xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ListBox}">
                     <Grid>
-                        <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" />
-                        <ScrollViewer Margin="1" Focusable="false" Background="{TemplateBinding Background}">
+                        <Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" />
+                        <ScrollViewer Margin="0" Focusable="false" Background="{TemplateBinding Background}">
 
-                            <StackPanel Margin="2" IsItemsHost="true" />
+                            <StackPanel Margin="0" IsItemsHost="true" />
 
                         </ScrollViewer>
                     </Grid>

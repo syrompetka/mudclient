@@ -53,6 +53,9 @@
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AvalonDock, Version=1.3.3592.0, Culture=neutral, PublicKeyToken=85a1e0ada7ec13e4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -145,6 +148,7 @@
       <DependentUpon>TriggersEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TriggerTemplateSelector.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\Enums.cs" />
@@ -345,6 +349,7 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="icon.ico" />
     <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>

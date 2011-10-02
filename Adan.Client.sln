@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.OutputW
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.StuffDatabase", "Adan.Client.Plugins.StuffDatabase\Adan.Client.Plugins.StuffDatabase.csproj", "{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.GroupWidget", "Adan.Client.Plugins.GroupWidget\Adan.Client.Plugins.GroupWidget.csproj", "{95218378-19CB-419E-92F1-0D6E2A2897A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,16 @@ Global
 		{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

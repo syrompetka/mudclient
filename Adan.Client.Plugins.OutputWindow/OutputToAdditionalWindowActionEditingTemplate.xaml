@@ -34,12 +34,277 @@
                     <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Background color:</Label>
                     <Controls1:BackgroundColorSelector Grid.Column="1" Grid.Row="1" Margin="5,5,0,0"  SelectedColor="{Binding Path=BackgroundColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="150"/>
 
-                    <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontSize="22" Text="Sample text" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15,0,15,0" FontFamily="../Resources/consola.ttf#Consolas" Foreground="{Binding Path=TextColor, Converter={StaticResource TextColorToBrushConverter}}" Background="{Binding Path=BackgroundColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" />
+                    <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontSize="22" Text="Sample text" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15,0,15,0" FontFamily="Consolas,Lucida Console" Foreground="{Binding Path=TextColor, Converter={StaticResource TextColorToBrushConverter}}" Background="{Binding Path=BackgroundColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" />
                 </Grid>
                 <Controls1:ActionParametersEditorControl Grid.Row="3" DataContext="{Binding Path=ParametersModel}" />
             </Grid>
         </StackPanel>
     </DataTemplate>
+    
+    <VisualBrush x:Key="Brush_OutputToAditionalWindowWidgetIcond"
+                 Stretch="Uniform">
+        <VisualBrush.Visual>
+            <Canvas Width="26"
+                    Height="26">
+                <Ellipse Fill="#FF818080"
+                         Height="1.029"
+                         Canvas.Left="1.707"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="21.489"
+                         Width="21.966" />
+                <Path Data="M3.7626263,21.535354 C4.2452458,20.196246 5.1638814,19.060016 5.2104848,17.518029 5.2570881,15.976043 4.3384218,15.150621 3.9023903,13.966917 L9.4611917,15.882603 z"
+                      Height="7.568"
+                      Canvas.Left="4.134"
+                      Stretch="Fill"
+                      Stroke="Red"
+                      StrokeThickness="0"
+                      Canvas.Top="14.354"
+                      Width="5.699">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF747474"
+                                          Offset="0" />
+                            <GradientStop Color="#FFCECECE"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Path Data="M3.4354291,21.488988 C3.9180486,20.14988 5.2572169,19.059494 5.3038203,17.517507 5.3504236,15.975521 5.3194138,16.038427 4.8833823,14.854723 L9.321339,16.209374 z"
+                      Height="6.634"
+                      Canvas.Left="4.274"
+                      Stretch="Fill"
+                      Stroke="Red"
+                      StrokeThickness="0"
+                      Canvas.Top="15.242"
+                      Width="5.886">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF747474"
+                                          Offset="0" />
+                            <GradientStop Color="#FF747474"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Ellipse Height="12.52"
+                         Canvas.Left="0.913"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="3.456"
+                         Width="18.033"
+                         Fill="#FF818080" />
+                <Ellipse Height="12.52"
+                         Canvas.Left="1.707"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="3.923"
+                         Width="18.033">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF747474"
+                                          Offset="0" />
+                            <GradientStop Color="#FFCECECE"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="2.803"
+                         Canvas.Left="5.024"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="8.922"
+                         Width="3.037">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.813,0.292"
+                                             StartPoint="0.038,1.083">
+                            <GradientStop Color="#FF474747"
+                                          Offset="0" />
+                            <GradientStop Color="#FF747474"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="2.803"
+                         Canvas.Left="14.18"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="8.922"
+                         Width="3.037">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF747474"
+                                          Offset="0" />
+                            <GradientStop Color="#FF747474"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Path Data="M19.23954,21.875778 L17.43894,18.797484 20.923576,18.274735 C20.633283,18.913669 20.110661,19.030135 19.762213,20.249758 19.405464,21.498432 19.355591,21.256122 19.23954,21.875778 z"
+                      Height="3.601"
+                      Canvas.Left="18.078"
+                      Stretch="Fill"
+                      Stroke="Red"
+                      StrokeThickness="0"
+                      Canvas.Top="18.275"
+                      Width="3.485">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF3193FF"
+                                          Offset="0" />
+                            <GradientStop Color="#FF2400AB"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Path Data="M19.936548,22.05001 L17.43894,18.797484 20.923576,18.274735 C20.633283,18.913669 20.401146,18.855524 20.052698,20.075147 19.695949,21.323821 20.052599,21.430354 19.936548,22.05001 z"
+                      Height="3.776"
+                      Canvas.Left="17.439"
+                      Stretch="Fill"
+                      Stroke="Red"
+                      StrokeThickness="0"
+                      Canvas.Top="18.275"
+                      Width="3.485">
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF3193FF"
+                                          Offset="0" />
+                            <GradientStop Color="#FF00FFED"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Ellipse Height="2.803"
+                         Canvas.Left="9.556"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="8.922"
+                         Width="3.037">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.759,0.155"
+                                             StartPoint="0.066,1.063">
+                            <GradientStop Color="#FF232323"
+                                          Offset="0" />
+                            <GradientStop Color="#FF747474"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="9.998"
+                         Canvas.Left="10.583"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="8.548"
+                         Width="14.95"
+                         Fill="#FF20BDFF" />
+                <Ellipse Height="9.998"
+                         Canvas.Left="10.16"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="9.157"
+                         Width="14.95">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.259,0.14"
+                                             StartPoint="0.741,0.86">
+                            <GradientStop Color="#FF3193FF"
+                                          Offset="0" />
+                            <GradientStop Color="#FF00FFED"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="2.57"
+                         Canvas.Left="12.392"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="12.496"
+                         Width="2.569"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.153,0.144"
+                                             StartPoint="1.444,1.518">
+                            <GradientStop Color="Black"
+                                          Offset="0" />
+                            <GradientStop Color="White"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform AngleY="0.586" />
+                            <RotateTransform />
+                            <TranslateTransform Y="0.013" />
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Height="2.57"
+                         Canvas.Left="20.639"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="12.496"
+                         Width="2.569"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.153,0.144"
+                                             StartPoint="1.444,1.518">
+                            <GradientStop Color="Black"
+                                          Offset="0" />
+                            <GradientStop Color="White"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform AngleY="0.586" />
+                            <RotateTransform />
+                            <TranslateTransform Y="0.013" />
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Height="2.57"
+                         Canvas.Left="16.457"
+                         Stroke="Red"
+                         StrokeThickness="0"
+                         Canvas.Top="12.554"
+                         Width="2.569"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.153,0.144"
+                                             StartPoint="1.444,1.518">
+                            <GradientStop Color="Black"
+                                          Offset="0" />
+                            <GradientStop Color="White"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform AngleY="0.586" />
+                            <RotateTransform />
+                            <TranslateTransform Y="0.013" />
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <GeometryDrawing x:Key="Drawing_OutputToAditionalWindowWidgetIcond"
+                     Brush="{StaticResource Brush_OutputToAditionalWindowWidgetIcond}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
+    <DrawingImage x:Key="ImageSource_OutputToAditionalWindowWidgetIcond"
+                  Drawing="{StaticResource Drawing_OutputToAditionalWindowWidgetIcond}" />
     <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter1" />
 </ResourceDictionary>

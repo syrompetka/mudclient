@@ -18,6 +18,7 @@ namespace Adan.Client
     using System.Windows.Controls;
     using System.Windows.Data;
     using System.Windows.Input;
+    using System.Windows.Media;
 
     using AvalonDock;
 
@@ -123,8 +124,23 @@ namespace Adan.Client
             }
 
             PluginHost.Instance.InitializePlugins(_converyor, model);
-            
-            int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);            
+
+            foreach (var plugin in PluginHost.Instance.Plugins)
+            {
+                if (plugin.HasOptions)
+                {
+                    var menuItem = new MenuItem
+                    {
+                        Header = plugin.OptionsMenuItemText
+                    };
+
+                    var pluginClosure = plugin;
+                    menuItem.Click += (o, e) => pluginClosure.ShowOptionsDialog(this);
+                    optionsMenuItem.Items.Add(menuItem);
+                }
+            }
+
+            int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);
             _converyor.AddConveyorUnit(new ProtocolVersionUnit(_converyor, maxProtocolVersion));
 
             _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
@@ -342,6 +358,12 @@ namespace Adan.Client
                     Name = widgetDescription.Name,
                     Content = widgetDescription.Control
                 };
+
+                if (!string.IsNullOrEmpty(widgetDescription.Icon))
+                {
+                    dockContent.Icon = (ImageSource)FindResource(widgetDescription.Icon);
+                }
+
                 _allWidgets.Add(dockContent);
 
                 var menuItem = new MenuItem { Header = widgetDescription.Description, Tag = dockContent };

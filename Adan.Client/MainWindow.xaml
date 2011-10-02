@@ -8,7 +8,8 @@
         FocusManager.FocusedElement="{Binding ElementName=txtCommandInput}"
         Title="Adamant mud client" 
         xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
-        Closing="HandleWindowClosing">
+        Closing="HandleWindowClosing"
+        Icon="icon.ico">
     <Window.Resources>
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
@@ -25,7 +26,7 @@
                 <Separator />
                 <MenuItem Header="Exit" Click="HandleExit" />
             </MenuItem>
-            <MenuItem Header="Options">
+            <MenuItem Header="Options" Name="optionsMenuItem">
                 <MenuItem Header="Groups" Click="HandleEditGroups" />
                 <MenuItem Header="Triggers" Click="HandleEditTriggers" />
                 <MenuItem Header="Aliases" Click="HandleEditAliases" />
@@ -34,6 +35,7 @@
                 <MenuItem Header="Substitutions" Click="HandleEditSubstitutions" />
                 <Separator />
                 <MenuItem Header="Theme" Name="themesMenuItem" />
+                <Separator />
             </MenuItem>
             <MenuItem Header="View" Name="viewMenuItem" />
             <MenuItem Header="Help"/>

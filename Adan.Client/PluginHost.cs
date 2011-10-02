@@ -38,11 +38,17 @@ namespace Adan.Client
         private PluginHost()
         {
             Plugins = new List<PluginBase>();
-            _catalog = new AggregateCatalog();
-            _catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
+            try
+            {
+                _catalog = new AggregateCatalog();
+                _catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
 
-            _container = new CompositionContainer(_catalog);
-            _container.ComposeParts(this);
+                _container = new CompositionContainer(_catalog);
+                _container.ComposeParts(this);
+            }
+            catch
+            {
+            }
         }
 
         /// <summary>
@@ -53,12 +59,7 @@ namespace Adan.Client
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new PluginHost();
-                }
-
-                return _instance;
+                return _instance ?? (_instance = new PluginHost());
             }
         }
 
