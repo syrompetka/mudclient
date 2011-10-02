@@ -132,6 +132,14 @@
     <Compile Include="Utils\DelegateCommand.cs" />
     <Compile Include="Utils\DelegateCommandWithCanExecute.cs" />
     <Compile Include="Utils\InverseBooleanConverter.cs" />
+    <Compile Include="Utils\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Utils\MultiplierConverter.cs" />
+    <Compile Include="Utils\PercentageConverter.cs" />
+    <Compile Include="Utils\SecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utils\SwitchCase.cs" />
+    <Compile Include="Utils\SwitchCaseCollection.cs" />
+    <Compile Include="Utils\SwitchConverter.cs" />
+    <Compile Include="Utils\SwitchedContent.cs" />
     <Compile Include="Utils\TextColorToBrushConverter.cs" />
     <Compile Include="Utils\TreeHelper.cs" />
     <Compile Include="Utils\WildcardStringHelper.cs" />

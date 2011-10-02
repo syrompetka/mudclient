@@ -30,9 +30,31 @@ namespace Adan.Client.Common.Plugins
             Assert.ArgumentNotNullOrWhiteSpace(name, "name");
             Assert.ArgumentNotNullOrWhiteSpace(description, "description");
             Assert.ArgumentNotNull(control, "control");
+
             Name = name;
             Description = description;
             Control = control;
+            Icon = string.Empty;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WidgetDescription"/> class.
+        /// </summary>
+        /// <param name="name">The name of the widget.</param>
+        /// <param name="description">The description of the widget.</param>
+        /// <param name="control">The control that displays data.</param>
+        /// <param name="icon">The icon of this widget.</param>
+        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] Control control, [NotNull] string icon)
+        {
+            Assert.ArgumentNotNullOrWhiteSpace(name, "name");
+            Assert.ArgumentNotNullOrWhiteSpace(description, "description");
+            Assert.ArgumentNotNull(control, "control");
+            Assert.ArgumentNotNullOrWhiteSpace(icon, "icon");
+
+            Name = name;
+            Description = description;
+            Control = control;
+            Icon = icon;
         }
 
         /// <summary>
@@ -62,6 +84,16 @@ namespace Adan.Client.Common.Plugins
         /// </summary>
         [NotNull]
         public Control Control
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the icon of this widge.
+        /// </summary>
+        [NotNull]
+        public string Icon
         {
             get;
             private set;

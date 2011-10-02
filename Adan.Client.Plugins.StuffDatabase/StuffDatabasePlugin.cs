@@ -63,7 +63,7 @@ namespace Adan.Client.Plugins.StuffDatabase
                 return 1;
             }
         }
-        
+
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
@@ -84,7 +84,10 @@ namespace Adan.Client.Plugins.StuffDatabase
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            _conveyorUnit.Dispose();
+            if (_conveyorUnit != null)
+            {
+                _conveyorUnit.Dispose();
+            }
         }
     }
 }

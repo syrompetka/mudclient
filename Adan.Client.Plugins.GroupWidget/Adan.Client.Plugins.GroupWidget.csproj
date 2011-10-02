@@ -5,14 +5,13 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}</ProjectGuid>
+    <ProjectGuid>{95218378-19CB-419E-92F1-0D6E2A2897A6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Adan.Client.Plugins.StuffDatabase</RootNamespace>
-    <AssemblyName>Adan.Client.Plugins.StuffDatabase</AssemblyName>
+    <RootNamespace>Adan.Client.Plugins.GroupWidget</RootNamespace>
+    <AssemblyName>Adan.Client.Plugins.GroupWidget</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,7 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Bin\Plugins\Adan.Client.Plugins.StuffDatabase.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>..\..\Adan.Client\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -32,49 +31,56 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\Bin\Plugins\Adan.Client.Plugins.StuffDatabase.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRuleSet>..\..\Adan.Client\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="CSLib.Net.Annotations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL" />
     <Reference Include="CSLib.Net.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppliedAffect.cs" />
-    <Compile Include="ArmorStats.cs" />
-    <Compile Include="Constants.cs" />
-    <Compile Include="CraftBook.cs" />
-    <Compile Include="Enhance.cs" />
-    <Compile Include="Envenom.cs" />
-    <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Ingredient.cs" />
-    <Compile Include="LoreMessage.cs" />
-    <Compile Include="LoreMessageDeserializer.cs" />
-    <Compile Include="MagicArrows.cs" />
+    <Compile Include="Affect.cs" />
+    <Compile Include="OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScrollOrPotionSpell.cs" />
-    <Compile Include="SkillEnhance.cs" />
-    <Compile Include="SkillResist.cs" />
-    <Compile Include="SpellBook.cs" />
-    <Compile Include="StuffDatabasePlugin.cs" />
-    <Compile Include="StuffDatabaseUnit.cs" />
-    <Compile Include="WandOrStaffSpell.cs" />
-    <Compile Include="WeaponStats.cs" />
-    <Compile Include="WearingAffect.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">
-      <Link>Dictionary.xml</Link>
-    </CodeAnalysisDictionary>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModel\AffectDescription.cs" />
+    <Compile Include="CharacterStatus.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="GroupStatusMessage.cs" />
+    <Compile Include="GroupStatusMessageDeserializer.cs" />
+    <Compile Include="GroupStatusUnit.cs" />
+    <Compile Include="GroupWidgetControl.xaml.cs">
+      <DependentUpon>GroupWidgetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GroupWidgetPlugin.cs" />
+    <Compile Include="PetStatus.cs" />
+    <Compile Include="Position.cs" />
+    <Compile Include="ViewModel\AffectViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModel\GroupMateViewModel.cs" />
+    <Compile Include="ViewModel\GroupStatusViewModel.cs" />
+    <Compile Include="ViewModel\GroupWidgetOptionsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">
@@ -82,13 +88,37 @@
       <Name>Adan.Client.Common</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="GroupWidgetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OptionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">
+      <Link>Dictionary.xml</Link>
+    </CodeAnalysisDictionary>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

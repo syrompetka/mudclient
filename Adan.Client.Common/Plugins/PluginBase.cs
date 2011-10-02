@@ -12,6 +12,7 @@ namespace Adan.Client.Common.Plugins
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Windows;
 
     using CommandSerializers;
 
@@ -20,6 +21,7 @@ namespace Adan.Client.Common.Plugins
     using ConveyorUnits;
 
     using CSLib.Net.Annotations;
+    using CSLib.Net.Diagnostics;
 
     using MessageDeserializers;
 
@@ -138,10 +140,45 @@ namespace Adan.Client.Common.Plugins
         }
 
         /// <summary>
+        /// Gets a value indicating whether this plugin has options dialog.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this plugin has options dialog; otherwise, <c>false</c>.
+        /// </value>
+        public virtual bool HasOptions
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Gets the options menu item text.
+        /// </summary>
+        [NotNull]
+        public virtual string OptionsMenuItemText
+        {
+            get
+            {
+                return string.Empty;
+            }
+        }
+
+        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
         public abstract void Initialize([NotNull] MessageConveyor conveyor, [NotNull] RootModel model);
+
+        /// <summary>
+        /// Shows the options dialog.
+        /// </summary>
+        /// <param name="parentWindow">The parent window.</param>
+        public virtual void ShowOptionsDialog([NotNull]Window parentWindow)
+        {
+            Assert.ArgumentNotNull(parentWindow, "parentWindow");
+        }
     }
 }

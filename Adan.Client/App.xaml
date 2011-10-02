@@ -9,8 +9,8 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="Resources/Icons.xaml" />
                 <ResourceDictionary Source="Resources/CommonTemplates.xaml" />
-<!--                <ResourceDictionary Source="/AvalonDock.Themes;component/themes/ExpressionDark.xaml"/>-->
-<!--                <ResourceDictionary Source="Resources/ExpressionDark.xaml" />-->
+                <ResourceDictionary Source="/AvalonDock.Themes;component/themes/ExpressionDark.xaml"/>
+                <ResourceDictionary Source="Resources/ExpressionDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <Client:SettingsHolder x:Key="SettingsHolder" />
