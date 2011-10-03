@@ -23,7 +23,7 @@ namespace Adan.Client.Common.Controls.TextFormatting
     public class CustomTextRunProperties : TextRunProperties
     {
         // private readonly Typeface _typeface = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "/Resources/consola.ttf#Consolas"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
-        private readonly Typeface _typeface = new Typeface("Consolas");
+        private readonly Typeface _typeface = new Typeface("Consolas, Lucida Console");
         private readonly TextDecorationCollection _textDecorations = new TextDecorationCollection();
         private readonly TextEffectCollection _textEffects = new TextEffectCollection();
         private readonly Brush _foregroundBrush;

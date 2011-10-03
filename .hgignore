@@ -23,3 +23,5 @@ Adan.Client.Plugins.StuffDatabase/StyleCop.Cache
 Adan.Client.Plugins.GroupWidget/Adan.Client.Plugins.GroupWidget.csproj.user
 Adan.Client.Plugins.GroupWidget/obj/
 Adan.Client.Plugins.GroupWidget/StyleCop.Cache
+Adan.Client.Setup/Debug/
+Adan.Client.Setup/Release/

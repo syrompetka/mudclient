@@ -9,9 +9,10 @@
 
 namespace Adan.Client.Model.Actions
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     using ActionParameters;
 
@@ -23,7 +24,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that executes only if certain condition is true.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class ConditionalAction : ActionBase
     {
         /// <summary>
@@ -44,7 +45,6 @@ namespace Adan.Client.Model.Actions
         /// The left condition parameter.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase LeftConditionParameter
         {
             get;
@@ -58,7 +58,6 @@ namespace Adan.Client.Model.Actions
         /// The right condition parameter.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase RightConditionParameter
         {
             get;
@@ -71,7 +70,7 @@ namespace Adan.Client.Model.Actions
         /// <value>
         /// The condition.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public ActionCondition Condition
         {
             get;
@@ -85,7 +84,6 @@ namespace Adan.Client.Model.Actions
         /// The actions to execute.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<ActionBase> ActionsToExecute
         {
             get;

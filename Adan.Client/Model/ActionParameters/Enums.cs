@@ -9,36 +9,32 @@
 
 namespace Adan.Client.Model.ActionParameters
 {
-    using System.Runtime.Serialization;
+    using System;
 
     /// <summary>
     /// Possible types of math operations.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public enum MathOperation
     {
         /// <summary>
         /// Addition operation.
         /// </summary>
-        [EnumMember]
         Plus,
 
         /// <summary>
         /// Substraction operation.
         /// </summary>
-        [EnumMember]
         Minus,
 
         /// <summary>
         /// Division operation.
         /// </summary>
-        [EnumMember]
         Division,
 
         /// <summary>
         /// Multiplication operation.
         /// </summary>
-        [EnumMember]
         Multiplication,
     }
 }

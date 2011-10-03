@@ -241,6 +241,24 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Monsters.
+        /// </summary>
+        public static string Monsters {
+            get {
+                return ResourceManager.GetString("Monsters", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monsters widget options.
+        /// </summary>
+        public static string MonstersWidgetOptions {
+            get {
+                return ResourceManager.GetString("MonstersWidgetOptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ok.
         /// </summary>
         public static string Ok {

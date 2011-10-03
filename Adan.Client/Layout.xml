@@ -1,0 +1,19 @@
+<DockingManager version="1.3.0">
+    <ResizingPanel ResizeWidth="*" ResizeHeight="*" EffectiveSize="1296,714.04" Orientation="Horizontal">
+        <DocumentPaneResizingPanel ResizeWidth="*" ResizeHeight="*" EffectiveSize="842,714.04" Orientation="Vertical">
+            <DocumentPane IsMain="true" ResizeWidth="*" ResizeHeight="*" EffectiveSize="842,714.04" />
+        </DocumentPaneResizingPanel>
+        <ResizingPanel ResizeWidth="448" ResizeHeight="*" EffectiveSize="448,714.04" Orientation="Vertical">
+            <DockablePane ResizeWidth="0.485600408483684*" ResizeHeight="0.395076440767003*" EffectiveSize="448,343.824513222787" ID="e4bfc971-6b39-461b-acb6-04dfdcdcac41" Anchor="Right" SelectedIndex="0" IsAutoHidden="false">
+                <DockableContent Name="MonstersWidget" FloatingWindowSize="447,279" ChildIndex="0" Width="448" Height="361,523776035603" Anchor="Right" State="Docked" />
+                <DockableContent Name="AdditionalOutputWindow" FloatingWindowSize="589,179" ChildIndex="0" Width="448" Height="130,871896286623" Anchor="Right" State="Docked" ContainerPaneID="f9b8696a-eeba-4b8c-bebc-4deea29d52d7" />
+            </DockablePane>
+            <DockablePane ResizeWidth="0.514399591516316*" ResizeHeight="0.418506978572887*" EffectiveSize="448,364.215486777213" ID="a411530e-1a03-4a5a-b2e6-0446c002a105" Anchor="Right" IsAutoHidden="false">
+                <DockableContent Name="GroupWidget" FloatingWindowSize="448,316" ChildIndex="0" Width="100" Height="100" Anchor="None" State="Docked" />
+            </DockablePane>
+            <DockablePane ResizeWidth="0.186416580660109*" ResizeHeight="0.186416580660109*" EffectiveSize="448,130.871896286623" ID="f9b8696a-eeba-4b8c-bebc-4deea29d52d7" Anchor="Right" IsAutoHidden="false" />
+        </ResizingPanel>
+    </ResizingPanel>
+    <Hidden />
+    <Windows />
+</DockingManager>

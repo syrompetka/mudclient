@@ -11,6 +11,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
 {
     using System;
 
+    using Common.Model;
     using Common.ViewModel;
 
     using CSLib.Net.Annotations;
@@ -210,8 +211,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             {
                 if (_lastServerDuration != affect.Duration)
                 {
-                    _lastServerDuration = affect.Duration;
-                    SecondsLeft = affect.Duration;
+                    _lastServerDuration = affect.Duration == -1.0f ? float.PositiveInfinity : affect.Duration;
+                    SecondsLeft = _lastServerDuration;
                     _lastTimerUpdate = DateTime.Now;
                     SecondsLeftVisible = SecondsLeft <= 9.0f;
                     IsBlinking = SecondsLeft <= 5.0f;
@@ -221,7 +222,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
             else
             {
-                RoundsLeft = affect.Rounds;
+                RoundsLeft = affect.Rounds <= 0 ? int.MaxValue : affect.Rounds;
                 RoundsLeftVisible = RoundsLeft <= 6;
                 IsBlinking = RoundsLeft <= 2;
                 SecondsLeftVisible = false;

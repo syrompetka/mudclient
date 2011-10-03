@@ -12,9 +12,9 @@ namespace Adan.Client
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Xml;
+    using System.Xml.Serialization;
 
     using Common.Model;
     using Common.Themes;
@@ -35,8 +35,8 @@ namespace Adan.Client
 
         private static readonly SettingsHolder _instance = new SettingsHolder();
         private readonly Settings _settings;
-        private readonly DataContractSerializer _groupsSerializer;
-        private readonly DataContractSerializer _variablesSerializer;
+        private readonly XmlSerializer _groupsSerializer;
+        private readonly XmlSerializer _variablesSerializer;
         private IList<Group> _groups;
         private IList<Variable> _variables;
 
@@ -80,8 +80,8 @@ namespace Adan.Client
                 }
             }
 
-            _groupsSerializer = new DataContractSerializer(typeof(List<Group>), types);
-            _variablesSerializer = new DataContractSerializer(typeof(List<Variable>));
+            _groupsSerializer = new XmlSerializer(typeof(List<Group>), types.ToArray());
+            _variablesSerializer = new XmlSerializer(typeof(List<Variable>));
         }
 
         #endregion
@@ -202,7 +202,7 @@ namespace Adan.Client
                 {
                     stream = null;
                     streamWriter.Formatting = Formatting.Indented;
-                    _groupsSerializer.WriteObject(streamWriter, _groups);
+                    _groupsSerializer.Serialize(streamWriter, _groups);
                 }
             }
             finally
@@ -224,7 +224,7 @@ namespace Adan.Client
 
             using (var stream = File.OpenRead("Settings.xml"))
             {
-                _groups = (IList<Group>)_groupsSerializer.ReadObject(stream);
+                _groups = (IList<Group>)_groupsSerializer.Deserialize(stream);
             }
         }
 
@@ -239,7 +239,7 @@ namespace Adan.Client
 
             using (var stream = File.OpenRead("Variables.xml"))
             {
-                _variables = (IList<Variable>)_variablesSerializer.ReadObject(stream);
+                _variables = (IList<Variable>)_variablesSerializer.Deserialize(stream);
                 return _variables;
             }
         }
@@ -252,9 +252,9 @@ namespace Adan.Client
                 stream = File.Open("Variables.xml", FileMode.Create, FileAccess.Write);
                 using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
                 {
-                    stream = null; 
+                    stream = null;
                     streamWriter.Formatting = Formatting.Indented;
-                    _variablesSerializer.WriteObject(streamWriter, _variables);
+                    _variablesSerializer.Serialize(streamWriter, _variables);
                 }
             }
             finally

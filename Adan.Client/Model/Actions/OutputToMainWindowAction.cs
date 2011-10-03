@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Messages;
     using Common.Model;
@@ -21,7 +22,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that outputs some text to main window.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class OutputToMainWindowAction : ActionWithParameters
     {
         /// <summary>
@@ -41,7 +42,7 @@ namespace Adan.Client.Model.Actions
         /// The text to ouput.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string TextToOutput
         {
             get;
@@ -54,7 +55,7 @@ namespace Adan.Client.Model.Actions
         /// <value>
         /// The color of the text.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public TextColor TextColor
         {
             get;
@@ -67,7 +68,7 @@ namespace Adan.Client.Model.Actions
         /// <value>
         /// The color of the background.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public TextColor BackgroundColor
         {
             get;

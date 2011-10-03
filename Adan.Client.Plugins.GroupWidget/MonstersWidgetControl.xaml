@@ -1,0 +1,317 @@
+﻿<UserControl x:Class="Adan.Client.Plugins.GroupWidget.MonstersWidgetControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Properties="clr-namespace:Adan.Client.Plugins.GroupWidget.Properties"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Focusable="False"
+             Background="{DynamicResource WidgetBackgroundBrush}">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Resources.xaml"
+                            x:Key="WidgetResources" />
+    </UserControl.Resources>
+    <StackPanel>
+        <ListBox ItemsSource="{Binding Monsters}"
+                 Focusable="False"
+                 SelectedValue="{Binding SelectedMonster}">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="SnapsToDevicePixels"
+                            Value="true" />
+                    <Setter Property="OverridesDefaultStyle"
+                            Value="true" />
+                    <Setter Property="Focusable"
+                            Value="True" />
+                    <EventSetter Event="PreviewMouseDown"
+                                 Handler="CancelFocusingListBoxItem" />
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                <ControlTemplate.Resources>
+                                    <Storyboard x:Key="HoverOn">
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="HoverRectangle"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                                  Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                    <Storyboard x:Key="HoverOff">
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="HoverRectangle"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.4000000"
+                                                                  Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                    <Storyboard x:Key="SelectedOn">
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="SelectedRectangle"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
+                                                                  Value="1" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                    <Storyboard x:Key="SelectedOff">
+                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                       Storyboard.TargetName="SelectedRectangle"
+                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
+                                            <SplineDoubleKeyFrame KeyTime="00:00:00.4000000"
+                                                                  Value="0" />
+                                        </DoubleAnimationUsingKeyFrames>
+                                    </Storyboard>
+                                </ControlTemplate.Resources>
+                                <Grid SnapsToDevicePixels="true"
+                                      Margin="0,1,0,0">
+                                    <Rectangle x:Name="Background"
+                                               IsHitTestVisible="False"
+                                               Opacity="1"
+                                               Fill="{DynamicResource WidgetBackgroundBrush}"
+                                               RadiusX="1"
+                                               RadiusY="1" />
+                                    <Rectangle x:Name="HoverRectangle"
+                                               IsHitTestVisible="False"
+                                               Opacity="0"
+                                               Fill="#FF060606"
+                                               RadiusX="1"
+                                               RadiusY="1" />
+                                    <Rectangle x:Name="SelectedRectangle"
+                                               IsHitTestVisible="False"
+                                               Opacity="0"
+                                               Fill="#FF1B1B1B"
+                                               RadiusX="1"
+                                               RadiusY="1" />
+                                    <ContentPresenter HorizontalAlignment="Stretch"
+                                                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                      Margin="5,2,0,2"
+                                                      x:Name="contentPresenter" />
+                                </Grid>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsSelected"
+                                             Value="true">
+
+                                        <Trigger.ExitActions>
+                                            <BeginStoryboard x:Name="SelectedOff_BeginStoryboard"
+                                                             Storyboard="{StaticResource SelectedOff}" />
+                                        </Trigger.ExitActions>
+                                        <Trigger.EnterActions>
+                                            <BeginStoryboard x:Name="SelectedOn_BeginStoryboard"
+                                                             Storyboard="{StaticResource SelectedOn}" />
+                                        </Trigger.EnterActions>
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver"
+                                                       Value="True" />
+                                            <Condition Property="Selector.IsSelected"
+                                                       Value="False" />
+                                        </MultiTrigger.Conditions>
+
+                                        <MultiTrigger.EnterActions>
+                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
+                                        </MultiTrigger.EnterActions>
+                                        <MultiTrigger.ExitActions>
+                                            <BeginStoryboard x:Name="HoverOff_BeginStoryboard"
+                                                             Storyboard="{StaticResource HoverOff}" />
+                                        </MultiTrigger.ExitActions>
+
+                                    </MultiTrigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Height="26"
+                                Name="ItemStack"
+                                HorizontalAlignment="Stretch"
+                                Margin="0,0,5,0"
+                                Orientation="Horizontal"
+                                Background="Transparent">
+                        <TextBlock Text="{Binding Name}"
+                                   Width="150"
+                                   FontSize="17"
+                                   FontFamily="Lucida Console"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   TextTrimming="CharacterEllipsis"
+                                   Foreground="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" />
+                        <Grid Width="60">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Width="60"
+                                    HorizontalAlignment="Left"
+                                    Height="13"
+                                    Grid.Row="0"
+                                    Background="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
+                                    Panel.ZIndex="0" />
+                            <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=HitsPercent}"
+                                    HorizontalAlignment="Left"
+                                    Height="13"
+                                    Grid.Row="0"
+                                    Panel.ZIndex="1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1"
+                                                         StartPoint="0.5,0">
+                                        <GradientStop Color="#FFBA0202" />
+                                        <GradientStop Color="White"
+                                                      Offset="0.5" />
+                                        <GradientStop Color="#FFBA0202"
+                                                      Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <TextBlock Text="{Binding HitsPercent, StringFormat=\{0\,4:##0\\%\}}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Foreground="Black"
+                                       FontFamily="Lucida Console"
+                                       FontSize="11"
+                                       Grid.Row="0"
+                                       Panel.ZIndex="1" />
+                            <Border Width="60"
+                                    HorizontalAlignment="Left"
+                                    Height="13"
+                                    Grid.Row="1"
+                                    Background="{Binding MovesColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
+                                    Panel.ZIndex="0" />
+                            <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=MovesPercent}"
+                                    HorizontalAlignment="Left"
+                                    Height="13"
+                                    Grid.Row="1"
+                                    Panel.ZIndex="1">
+                                <Border.Background>
+                                    <LinearGradientBrush EndPoint="0.5,1"
+                                                         StartPoint="0.5,0">
+                                        <GradientStop Color="#FF226E01" />
+                                        <GradientStop Color="White"
+                                                      Offset="0.5" />
+                                        <GradientStop Color="#FF226E01"
+                                                      Offset="1" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <TextBlock Text="{Binding Path=MovesPercent, StringFormat=\{0\,4:##0\\%\}}"
+                                       VerticalAlignment="Center"
+                                       HorizontalAlignment="Center"
+                                       Foreground="Black"
+                                       FontFamily="Lucida Console"
+                                       FontSize="11"
+                                       Grid.Row="1"
+                                       Panel.ZIndex="1" />
+                        </Grid>
+                        <Image Style="{StaticResource SmallIcon}"
+                               Margin="5,0,0,0"
+                               SnapsToDevicePixels="True"
+                               Source="{Binding Position, Converter={StaticResource PositionToIconConverter}, NotifyOnTargetUpdated=True}">
+                        </Image>
+                        <Image Style="{StaticResource SmallIcon}"
+                               SnapsToDevicePixels="True"
+                               Source="{Binding IsAttacked, Converter={StaticResource AttackedToIconConverter}, NotifyOnTargetUpdated=True}">
+                        </Image>
+                        <ItemsControl ItemsSource="{Binding Path=Affects}"
+                                      VerticalAlignment="Stretch"
+                                      HorizontalAlignment="Stretch">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <DataTemplate.Triggers>
+                                        <DataTrigger Binding="{Binding IsBlinking}"
+                                                     Value="true">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard Name="BlinkingAnimation">
+                                                    <Storyboard>
+                                                        <DoubleAnimation From="1"
+                                                                         To="0"
+                                                                         RepeatBehavior="Forever"
+                                                                         AutoReverse="True"
+                                                                         Duration="0:0:0.1"
+                                                                         Storyboard.TargetProperty="Opacity"
+                                                                         Storyboard.TargetName="AffectImage" />
+                                                    </Storyboard>
+                                                </BeginStoryboard>
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <StopStoryboard BeginStoryboardName="BlinkingAnimation" />
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                    <Grid Width="26"
+                                          Height="26"
+                                          Margin="3,0,0,0">
+                                        <Grid.ToolTip>
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Style="{StaticResource MediumIcon}"
+                                                       SnapsToDevicePixels="True"
+                                                       Source="{Binding DisplayIcon, Converter={StaticResource AffectToIconConverter}, NotifyOnTargetUpdated=True}" />
+                                                <Grid Margin="5,0,0,0">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition />
+                                                        <ColumnDefinition />
+                                                    </Grid.ColumnDefinitions>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition />
+                                                        <RowDefinition />
+                                                    </Grid.RowDefinitions>
+                                                    <TextBlock Text="{x:Static Properties:Resources.Affect}"
+                                                               Grid.Row="0"
+                                                               Grid.Column="0" />
+                                                    <TextBlock Text="{x:Static Properties:Resources.Duration}"
+                                                               Grid.Row="1"
+                                                               Grid.Column="0" />
+                                                    <TextBlock Text="{Binding RealAffectName}"
+                                                               Grid.Row="0"
+                                                               Grid.Column="1"
+                                                               Margin="5,0,0,0" />
+                                                    <TextBlock Text="{Binding SecondsLeft, Converter={StaticResource SecondsToTimeSpanConverter}, StringFormat=\{0:mm\\:ss\}}"
+                                                               Visibility="{Binding AffectDescription.IsRoundBased, Converter={StaticResource InverseBooleanToVisibilityConverter}}"
+                                                               Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Margin="5,0,0,0" />
+                                                    <TextBlock Text="{Binding StringFormat=\{0\} round(s), Path=RoundsLeft}"
+                                                               Visibility="{Binding AffectDescription.IsRoundBased, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                                               Grid.Row="1"
+                                                               Grid.Column="1"
+                                                               Margin="5,0,0,0" />
+                                                </Grid>
+                                            </StackPanel>
+                                        </Grid.ToolTip>
+                                        <Image SnapsToDevicePixels="True"
+                                               Source="{Binding DisplayIcon, Converter={StaticResource AffectToIconConverter}, NotifyOnTargetUpdated=True}"
+                                               HorizontalAlignment="Right"
+                                               Name="AffectImage"
+                                               Style="{StaticResource SmallIcon}" />
+
+                                        <TextBlock Text="{Binding SecondsLeft, StringFormat=\{0:#\}}"
+                                                   HorizontalAlignment="Right"
+                                                   VerticalAlignment="Bottom"
+                                                   FontSize="10"
+                                                   Foreground="Yellow"
+                                                   Visibility="{Binding SecondsLeftVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                        <Border HorizontalAlignment="Right"
+                                                VerticalAlignment="Bottom"
+                                                Width="4"
+                                                Height="{Binding RoundsLeft, Converter={StaticResource MultiplierConverter}, ConverterParameter=4}"
+                                                Background="{StaticResource RoundIndicatorBrush}"
+                                                Visibility="{Binding RoundsLeftVisible, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </StackPanel>
+</UserControl>

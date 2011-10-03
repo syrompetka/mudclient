@@ -9,8 +9,9 @@
 
 namespace Adan.Client.Model.ActionParameters
 {
+    using System;
     using System.Globalization;
-    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     using Common.Model;
 
@@ -20,7 +21,7 @@ namespace Adan.Client.Model.ActionParameters
     /// <summary>
     /// A parameter value of which is a result of evaluating some math expression.
     /// </summary>
-   [DataContract]
+   [Serializable]
     public class MathExpressionParameter : ActionParameterBase
     {
         /// <summary>
@@ -40,7 +41,6 @@ namespace Adan.Client.Model.ActionParameters
         /// The first operand.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase FirstOperand
         {
             get;
@@ -54,7 +54,6 @@ namespace Adan.Client.Model.ActionParameters
         /// The second operand.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase SecondOperand
         {
             get;
@@ -67,7 +66,7 @@ namespace Adan.Client.Model.ActionParameters
         /// <value>
         /// The operation.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public MathOperation Operation
         {
             get;

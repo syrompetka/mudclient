@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.Plugins.GroupWidget
+namespace Adan.Client.Common.Model
 {
     using System;
     using System.ComponentModel;

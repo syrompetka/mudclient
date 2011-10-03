@@ -9,14 +9,14 @@
 
 namespace Adan.Client.Common.Model
 {
-    using System.Runtime.Serialization;
+    using System;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// Base class for all action parameters.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public abstract class ActionParameterBase
     {
         /// <summary>

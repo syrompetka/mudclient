@@ -25,6 +25,7 @@ namespace Adan.Client
     using Commands;
     using CommandSerializers;
 
+    using Common.Commands;
     using Common.Conveyor;
     using Common.Messages;
     using Common.Model;
@@ -162,7 +163,7 @@ namespace Adan.Client
             _hotkeyCommand.ModifierKeys = Keyboard.Modifiers;
             _hotkeyCommand.Handled = false;
             _converyor.PushCommand(_hotkeyCommand);
-            if (_hotkeyCommand.HotkeyProcessed)
+            if (_hotkeyCommand.Handled)
             {
                 e.Handled = true;
                 return;
@@ -255,7 +256,13 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            _converyor.PushCommand(new ConnectCommand(SettingsHolder.Instance.ConnectHostName, SettingsHolder.Instance.ConnectPort));
+            var connectionDialogViewModel = new ConnectionDialogViewModel { HostName = "adan.ru", Port = 4000 };
+            var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                _converyor.PushCommand(new ConnectCommand(connectionDialogViewModel.HostName, connectionDialogViewModel.Port));
+            }
         }
 
         private void HandleDisconnect([NotNull] object sender, [NotNull] RoutedEventArgs e)

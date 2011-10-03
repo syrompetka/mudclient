@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.ActionParameters
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Model;
 
@@ -19,7 +20,7 @@ namespace Adan.Client.Model.ActionParameters
     /// <summary>
     /// Parameter that references trigger or command parameter.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class TriggerOrCommandParameter : ActionParameterBase
     {
         /// <summary>
@@ -28,7 +29,7 @@ namespace Adan.Client.Model.ActionParameters
         /// <value>
         /// The parameter number.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public int ParameterNumber
         {
             get;

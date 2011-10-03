@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.ActionParameters
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Model;
 
@@ -19,7 +20,7 @@ namespace Adan.Client.Model.ActionParameters
     /// <summary>
     /// A constant string parameter.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class ConstantStringParameter : ActionParameterBase
     {
         /// <summary>
@@ -37,7 +38,7 @@ namespace Adan.Client.Model.ActionParameters
         /// The constant string.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string ConstantString
         {
             get;

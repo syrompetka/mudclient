@@ -15,6 +15,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     using System.Linq;
     using System.Windows.Threading;
 
+    using Common.Model;
     using Common.ViewModel;
 
     using CSLib.Net.Annotations;
@@ -27,18 +28,46 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class GroupStatusViewModel : ViewModelBase
     {
+        private readonly RootModel _rootModel;
         private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
+        private GroupMateViewModel _selectedGroupMate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStatusViewModel"/> class.
         /// </summary>
-        public GroupStatusViewModel()
+        /// <param name="rootModel">The root model.</param>
+        public GroupStatusViewModel([NotNull] RootModel rootModel)
         {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
             GroupMates = new ObservableCollection<GroupMateViewModel>();
+            _rootModel = rootModel;
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+        }
+
+        /// <summary>
+        /// Gets or sets the selected group mate.
+        /// </summary>
+        /// <value>
+        /// The selected group mate.
+        /// </value>
+        [CanBeNull]
+        public GroupMateViewModel SelectedGroupMate
+        {
+            get
+            {
+                return _selectedGroupMate;
+            }
+
+            set
+            {
+                _selectedGroupMate = value;
+                _rootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
+                OnPropertyChanged("SelectedGroupMate");
+            }
         }
 
         /// <summary>
@@ -69,6 +98,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
+                    _rootModel.GroupStatus.Insert(position, characterStatus);
                     GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList));
                 }
 
@@ -87,6 +117,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                     timer.Tick += (o, e) =>
                                   {
                                       timer.Stop();
+                                      _rootModel.GroupStatus.Remove(groupMateToRemove.GroupMate);
                                       GroupMates.Remove(groupMateToRemove);
                                   };
                     timer.Interval = TimeSpan.FromSeconds(1);

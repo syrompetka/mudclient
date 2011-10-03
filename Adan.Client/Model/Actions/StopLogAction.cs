@@ -9,7 +9,7 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
 
     using Common.Model;
 
@@ -18,7 +18,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that stops logging to file.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class StopLogAction : ActionBase
     {
         #region Overrides of ActionBase

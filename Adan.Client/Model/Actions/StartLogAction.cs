@@ -9,7 +9,7 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
 
     using ActionParameters;
 
@@ -21,7 +21,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Actions that starts logging to file.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class StartLogAction : ActionBase
     {
         /// <summary>
@@ -39,7 +39,6 @@ namespace Adan.Client.Model.Actions
         /// The log name parameter.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase LogNameParameter
         {
             get;

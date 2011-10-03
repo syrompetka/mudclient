@@ -7,11 +7,9 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.Commands
+namespace Adan.Client.Common.Commands
 {
     using System.Windows.Input;
-
-    using Common.Commands;
 
     /// <summary>
     /// A command of pressing some key on the keyboard.
@@ -37,18 +35,6 @@ namespace Adan.Client.Commands
         /// The modifier keys.
         /// </value>
         public ModifierKeys ModifierKeys
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether thos command was processed or not.
-        /// </summary>
-        /// <value>
-        ///  <c>true</c> if this hot key was processed; otherwise, <c>false</c>.
-        /// </value>
-        public bool HotkeyProcessed
         {
             get;
             set;

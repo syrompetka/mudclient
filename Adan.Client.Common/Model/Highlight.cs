@@ -11,8 +11,8 @@ namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -23,7 +23,7 @@ namespace Adan.Client.Common.Model
     /// <summary>
     /// A highlight of all incoming strings that match certain pattern with a specific color and background.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class Highlight
     {
         private string _textToHighlight;
@@ -45,7 +45,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The color of the background.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public TextColor BackgroundColor
         {
             get;
@@ -58,7 +58,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The color of the text.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public TextColor TextColor
         {
             get;
@@ -72,7 +72,7 @@ namespace Adan.Client.Common.Model
         /// The text to highlight.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string TextToHighlight
         {
             get
