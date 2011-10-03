@@ -55,6 +55,8 @@ namespace Adan.Client.Common.Model
             _variables = variables;
             AllActionDescriptions = allActionDescriptions;
             AllParameterDescriptions = allParameterDescriptions;
+            GroupStatus = new List<CharacterStatus>(10);
+            RoomMonstersStatus = new List<MonsterStatus>(20);
 
             foreach (var variable in _variables)
             {
@@ -105,6 +107,52 @@ namespace Adan.Client.Common.Model
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets the group status.
+        /// </summary>
+        [NotNull]
+        public IList<CharacterStatus> GroupStatus
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected group mate.
+        /// </summary>
+        /// <value>
+        /// The selected group mate.
+        /// </value>
+        [CanBeNull]
+        public CharacterStatus SelectedGroupMate
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets the room monsters status.
+        /// </summary>
+        [NotNull]
+        public IList<MonsterStatus> RoomMonstersStatus
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected room monster.
+        /// </summary>
+        /// <value>
+        /// The selected room monster.
+        /// </value>
+        [CanBeNull]
+        public MonsterStatus SelectedRoomMonster
+        {
+            get;
+            set;
         }
 
         /// <summary>

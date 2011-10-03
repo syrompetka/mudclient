@@ -9,8 +9,9 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using Messages;
@@ -18,8 +19,8 @@ namespace Adan.Client.Common.Model
     /// <summary>
     /// Class that performs actions depending on server message.
     /// </summary>
-    [DataContract]
-    [KnownType(typeof(TextTrigger))]
+    [Serializable]
+    [XmlInclude(typeof(TextTrigger))]
     public abstract class TriggerBase
     {
         /// <summary>
@@ -36,7 +37,6 @@ namespace Adan.Client.Common.Model
         /// Gets or sets the actions to be performed when this trigger toggles.
         /// </summary>
         [NotNull]
-        [DataMember]
         public List<ActionBase> Actions
         {
             get;
@@ -49,7 +49,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The priority.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public int Priority
         {
             get;
@@ -62,7 +62,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// <c>true</c> if message should not be processed against triggers; otherwise, <c>false</c>.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public bool StopProcessingTriggersAfterThis
         {
             get;
@@ -75,7 +75,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// <c>true</c> if to hide original message; otherwise, <c>false</c>.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public bool DoNotDisplayOriginalMessage
         {
             get;

@@ -14,6 +14,7 @@ namespace Adan.Client.Plugins.GroupWidget
     using System.Xml.Serialization;
 
     using Common.Messages;
+    using Common.Model;
 
     using CSLib.Net.Annotations;
 

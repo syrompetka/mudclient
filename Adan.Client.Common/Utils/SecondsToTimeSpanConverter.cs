@@ -39,6 +39,11 @@ namespace Adan.Client.Common.Utils
             Assert.ArgumentNotNull(culture, "culture");
 
             var floatValue = (float)value;
+            if (floatValue == float.PositiveInfinity)
+            {
+                return TimeSpan.MaxValue;
+            }
+
             return floatValue <= 0 ? TimeSpan.Zero : TimeSpan.FromSeconds(floatValue);
         }
 

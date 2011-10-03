@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.ActionParameters
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Model;
 
@@ -19,7 +20,7 @@ namespace Adan.Client.Model.ActionParameters
     /// <summary>
     /// Parameter value of which equals to some variable.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class VariableReferenceParameter : ActionParameterBase
     {
         /// <summary>
@@ -37,7 +38,7 @@ namespace Adan.Client.Model.ActionParameters
         /// The name of the variable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string VariableName
         {
             get;

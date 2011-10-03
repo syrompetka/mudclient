@@ -12,6 +12,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
 
+    using Common.Model;
     using Common.Themes;
     using Common.ViewModel;
 
@@ -23,7 +24,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class GroupMateViewModel : ViewModelBase
     {
-        private readonly CharacterStatus _groupMate;
         private readonly List<AffectViewModel> _notProcessedAffects = new List<AffectViewModel>();
 
         private bool _isDeleting;
@@ -40,7 +40,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             Assert.ArgumentNotNull(groupMate, "groupMate");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
 
-            _groupMate = groupMate;
+            GroupMate = groupMate;
             _hitsColor = GetColor(groupMate.HitsPercent);
             _movesColor = GetColor(groupMate.MovesPercent);
             Affects = new ObservableCollection<AffectViewModel>();
@@ -51,6 +51,16 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         }
 
         /// <summary>
+        /// Gets the group mate.
+        /// </summary>
+        [NotNull]
+        public CharacterStatus GroupMate
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets the name of group mate.
         /// </summary>
         [NotNull]
@@ -58,7 +68,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.Name;
+                return GroupMate.Name;
             }
         }
 
@@ -115,14 +125,14 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.HitsPercent;
+                return GroupMate.HitsPercent;
             }
 
             private set
             {
-                if (value != _groupMate.HitsPercent)
+                if (value != GroupMate.HitsPercent)
                 {
-                    _groupMate.HitsPercent = value;
+                    GroupMate.HitsPercent = value;
                     OnPropertyChanged("HitsPercent");
                 }
             }
@@ -135,14 +145,14 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.MovesPercent;
+                return GroupMate.MovesPercent;
             }
 
             private set
             {
-                if (value != _groupMate.MovesPercent)
+                if (value != GroupMate.MovesPercent)
                 {
-                    _groupMate.MovesPercent = value;
+                    GroupMate.MovesPercent = value;
                     OnPropertyChanged("MovesPercent");
                 }
             }
@@ -155,14 +165,14 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.Position;
+                return GroupMate.Position;
             }
 
             private set
             {
-                if (value != _groupMate.Position)
+                if (value != GroupMate.Position)
                 {
-                    _groupMate.Position = value;
+                    GroupMate.Position = value;
                     OnPropertyChanged("Position");
                 }
             }
@@ -178,14 +188,14 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.IsAttacked;
+                return GroupMate.IsAttacked;
             }
 
             private set
             {
-                if (value != _groupMate.IsAttacked)
+                if (value != GroupMate.IsAttacked)
                 {
-                    _groupMate.IsAttacked = value;
+                    GroupMate.IsAttacked = value;
                     OnPropertyChanged("IsAttacked");
                 }
             }
@@ -201,14 +211,14 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get
             {
-                return _groupMate.InSameRoom;
+                return GroupMate.InSameRoom;
             }
 
             set
             {
-                if (value != _groupMate.InSameRoom)
+                if (value != GroupMate.InSameRoom)
                 {
-                    _groupMate.InSameRoom = value;
+                    GroupMate.InSameRoom = value;
                     OnPropertyChanged("InSameRoom");
                 }
             }
@@ -248,7 +258,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// Updates this view model from model.
         /// </summary>
         /// <param name="characterStatus">The character status model.</param>
-        public void UpdateFromModel([NotNull] CharacterStatus characterStatus)
+        public virtual void UpdateFromModel([NotNull] CharacterStatus characterStatus)
         {
             Assert.ArgumentNotNull(characterStatus, "characterStatus");
             if (characterStatus.Name != Name)

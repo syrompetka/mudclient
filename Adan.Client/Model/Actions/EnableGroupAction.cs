@@ -9,8 +9,9 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
-    
+    using System;
+    using System.Xml.Serialization;
+
     using Common.Model;
 
     using CSLib.Net.Annotations;
@@ -19,7 +20,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that enables certain group.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class EnableGroupAction : ActionBase
     {
         /// <summary>
@@ -37,7 +38,7 @@ namespace Adan.Client.Model.Actions
         /// The group to enable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string GroupNameToEnable
         {
             get;

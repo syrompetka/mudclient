@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Commands;
     using Common.Model;
@@ -20,7 +21,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that sends text to server.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class SendTextAction : ActionWithParameters
     {
         /// <summary>
@@ -38,8 +39,7 @@ namespace Adan.Client.Model.Actions
         /// The command text.
         /// </value>
         [NotNull]
-        [DataMember]
-
+        [XmlAttribute]
         public string CommandText
         {
             get;

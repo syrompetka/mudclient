@@ -27,6 +27,11 @@ namespace Adan.Client.Plugins.GroupWidget
         /// </summary>
         public const int GroupStatusMessageType = 12;
 
+        /// <summary>
+        /// Type of "Room monsters" custom message;
+        /// </summary>
+        public const int RoomMonstersMessage = 13;
+
         private static readonly List<AffectDescription> _allAffects = new List<AffectDescription>
                               {
                                   new AffectDescription("Invisibility", Resources.Invisibility, "невидимость", "Invisibility"),

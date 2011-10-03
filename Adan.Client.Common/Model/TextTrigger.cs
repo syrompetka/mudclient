@@ -9,9 +9,10 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Globalization;
-    using System.Runtime.Serialization;
     using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -22,9 +23,10 @@ namespace Adan.Client.Common.Model
     /// <summary>
     /// Trigger that handles text messages from server.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class TextTrigger : TriggerBase
     {
+        [NonSerialized]
         private ActionExecutionContext _context;
         private string _matchingPattern;
         private Regex _regex;
@@ -44,8 +46,8 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The matching pattern.
         /// </value>
-        [DataMember]
         [NotNull]
+        [XmlAttribute]
         public string MatchingPattern
         {
             get

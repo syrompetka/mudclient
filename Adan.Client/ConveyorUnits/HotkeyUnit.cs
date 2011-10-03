@@ -81,8 +81,6 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            hotKeyCommand.Handled = true;
-            hotKeyCommand.HotkeyProcessed = false;
             foreach (var group in _rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var hotkey in group.Hotkeys)
@@ -97,7 +95,7 @@ namespace Adan.Client.ConveyorUnits
                         action.Execute(_rootModel, _context);
                     }
 
-                    hotKeyCommand.HotkeyProcessed = true;
+                    hotKeyCommand.Handled = true;
                     return;
                 }
             }

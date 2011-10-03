@@ -9,14 +9,15 @@
 
 namespace Adan.Client.Common.Model
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// A user defined variable.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class Variable
     {
         /// <summary>
@@ -26,7 +27,7 @@ namespace Adan.Client.Common.Model
         /// The name of this variable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string Name
         {
             get;
@@ -40,7 +41,7 @@ namespace Adan.Client.Common.Model
         /// The value of this variable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string Value
         {
             get;

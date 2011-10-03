@@ -41,7 +41,7 @@ namespace Adan.Client.Plugins.GroupWidget
             Dispatcher.BeginInvoke((Action)(() => ((GroupStatusViewModel)DataContext).UpdateModel(groupStatusMessage.GroupMates)));
         }
 
-        private void CancelFocusStealing([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
+        private void CancelFocusingListBoxItem([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");

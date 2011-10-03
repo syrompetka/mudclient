@@ -9,8 +9,8 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
 
@@ -20,7 +20,7 @@ namespace Adan.Client.Common.Model
     /// <summary>
     /// Base class for actions that have parameters.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public abstract class ActionWithParameters : ActionBase
     {
         private StringBuilder _parametersStringBuilder;
@@ -34,7 +34,6 @@ namespace Adan.Client.Common.Model
         /// The parameters.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<ActionParameterBase> Parameters
         {
             get

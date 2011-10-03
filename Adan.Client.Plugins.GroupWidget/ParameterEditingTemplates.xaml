@@ -1,0 +1,11 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <DataTemplate x:Key="SelectedGroupMateParameterViewModelTemplate">
+        <StackPanel>
+        </StackPanel>
+    </DataTemplate>
+    <DataTemplate x:Key="SelectedMonsterParameterViewModelTemplate">
+        <StackPanel>
+        </StackPanel>
+    </DataTemplate>
+</ResourceDictionary>

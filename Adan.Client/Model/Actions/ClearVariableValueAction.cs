@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using Common.Model;
 
@@ -19,7 +20,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that clears value of some variable.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class ClearVariableValueAction : ActionBase
     {
         /// <summary>
@@ -37,7 +38,7 @@ namespace Adan.Client.Model.Actions
         /// The name of the variable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string VariableName
         {
             get;

@@ -46,7 +46,6 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -59,6 +58,7 @@
     <Compile Include="CommandSerializers\CommandSerializer.cs" />
     <Compile Include="Commands\BuiltinCommandTypes.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
     <Compile Include="Controls\ActionParametersEditorControl.xaml.cs">
       <DependentUpon>ActionParametersEditorControl.xaml</DependentUpon>
@@ -93,10 +93,15 @@
     <Compile Include="Messages\ChangeEchoModeMessage.cs" />
     <Compile Include="Model\ActionBase.cs" />
     <Compile Include="Model\ActionExecutionContext.cs" />
+    <Compile Include="Model\Affect.cs" />
+    <Compile Include="Model\CharacterStatus.cs" />
     <Compile Include="Model\CommandAlias.cs" />
     <Compile Include="Model\Group.cs" />
     <Compile Include="Model\Highlight.cs" />
     <Compile Include="Model\Hotkey.cs" />
+    <Compile Include="Model\MonsterStatus.cs" />
+    <Compile Include="Model\PetStatus.cs" />
+    <Compile Include="Model\Position.cs" />
     <Compile Include="Model\RootModel.cs" />
     <Compile Include="Model\Substitution.cs" />
     <Compile Include="Model\TextTrigger.cs" />

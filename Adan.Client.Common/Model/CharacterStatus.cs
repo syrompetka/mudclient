@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.Plugins.GroupWidget
+namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
@@ -50,7 +50,7 @@ namespace Adan.Client.Plugins.GroupWidget
         /// Gets or sets characters position.
         /// </summary>
         /// <value>
-        /// <see cref="GroupWidget.Position"/> enumeration representing character position.
+        /// <see cref="Position"/> enumeration representing character position.
         /// </value>
         [XmlAttribute]
         public Position Position

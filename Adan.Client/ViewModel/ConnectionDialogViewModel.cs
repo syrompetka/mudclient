@@ -1,42 +1,41 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PetStatus.cs" company="Adamand MUD">
+// <copyright file="ConnectionDialogViewModel.cs" company="Adamand MUD">
 //   Copyright (c) Adamant MUD
 // </copyright>
 // <summary>
-//   Defines the PetStatus type.
+//   Defines the ConnectionDialogViewModel type.
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.Plugins.GroupWidget
+namespace Adan.Client.ViewModel
 {
-    using System;
-    using System.Xml.Serialization;
-
     using CSLib.Net.Annotations;
 
     /// <summary>
-    /// A class to describe status of single pet in a group.
+    /// View model for connection dialog.
     /// </summary>
-    [Serializable]
-    public class PetStatus : CharacterStatus
+    public class ConnectionDialogViewModel
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PetStatus"/> class.
+        /// Gets or sets the name of the host.
         /// </summary>
-        public PetStatus()
+        /// <value>
+        /// The name of the host.
+        /// </value>
+        [NotNull]
+        public string HostName
         {
-            Owner = string.Empty;
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets or sets the owner name of this pet.
+        /// Gets or sets the port.
         /// </summary>
         /// <value>
-        /// The owner.
+        /// The port to connect to.
         /// </value>
-        [NotNull]
-        [XmlAttribute]
-        public string Owner
+        public int Port
         {
             get;
             set;

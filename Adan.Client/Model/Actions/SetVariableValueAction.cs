@@ -9,7 +9,8 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using ActionParameters;
 
@@ -21,7 +22,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that set value of some variable.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class SetVariableValueAction : ActionBase
     {
         /// <summary>
@@ -40,7 +41,7 @@ namespace Adan.Client.Model.Actions
         /// The name of the variable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string VariableName
         {
             get;
@@ -54,7 +55,6 @@ namespace Adan.Client.Model.Actions
         /// The value to set.
         /// </value>
         [NotNull]
-        [DataMember]
         public ActionParameterBase ValueToSet
         {
             get;

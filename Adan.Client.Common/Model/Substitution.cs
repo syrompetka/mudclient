@@ -9,8 +9,9 @@
 
 namespace Adan.Client.Common.Model
 {
-    using System.Runtime.Serialization;
+    using System;
     using System.Text.RegularExpressions;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -20,7 +21,7 @@ namespace Adan.Client.Common.Model
     /// <summary>
     /// A replacement of all incoming strings that match certain pattern to specific one.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class Substitution
     {
         private Regex _regex;
@@ -46,7 +47,7 @@ namespace Adan.Client.Common.Model
         /// The pattern.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string Pattern
         {
             get
@@ -70,7 +71,7 @@ namespace Adan.Client.Common.Model
         /// The substitute with.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string SubstituteWith
         {
             get

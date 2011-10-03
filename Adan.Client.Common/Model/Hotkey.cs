@@ -9,16 +9,17 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
     using System.Windows.Input;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// A hot key to a set of actions to perform.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class Hotkey
     {
         /// <summary>
@@ -37,7 +38,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The key that should be pressed.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public Key Key
         {
             get;
@@ -50,7 +51,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// The modifier keys.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public ModifierKeys ModifierKeys
         {
             get;
@@ -61,7 +62,6 @@ namespace Adan.Client.Common.Model
         /// Gets or sets the actions to be performed when user uses hits this hotkey.
         /// </summary>
         [NotNull]
-        [DataMember]
         public List<ActionBase> Actions
         {
             get;

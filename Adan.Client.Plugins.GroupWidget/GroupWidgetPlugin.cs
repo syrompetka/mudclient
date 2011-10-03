@@ -33,10 +33,11 @@ namespace Adan.Client.Plugins.GroupWidget
     [Export(typeof(PluginBase))]
     public sealed class GroupWidgetPlugin : PluginBase, IDisposable
     {
-        private readonly GroupStatusViewModel _viewModel = new GroupStatusViewModel();
         private readonly GroupWidgetControl _groupWidgetControl = new GroupWidgetControl();
+        private GroupStatusViewModel _viewModel;
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
+        private RootModel _rootModel;
 
         /// <summary>
         /// Gets the widgets of this plugin.
@@ -97,6 +98,39 @@ namespace Adan.Client.Plugins.GroupWidget
         }
 
         /// <summary>
+        /// Gets the plugin xaml resources to merge.
+        /// </summary>
+        public override IEnumerable<string> PluginXamlResourcesToMerge
+        {
+            get
+            {
+                return Enumerable.Repeat(@"/Adan.Client.Plugins.GroupWidget;component/ParameterEditingTemplates.xaml", 1);
+            }
+        }
+
+        /// <summary>
+        /// Gets the custom action parameters descriptions of this plugin.
+        /// </summary>
+        public override IEnumerable<ParameterDescription> CustomActionParameters
+        {
+            get
+            {
+                return Enumerable.Repeat(new SelectedGroupMateParameterDescription(_rootModel.AllParameterDescriptions), 1);
+            }
+        }
+
+        /// <summary>
+        /// Gets the custom serialization types of this plugin.
+        /// </summary>
+        public override IEnumerable<Type> CustomSerializationTypes
+        {
+            get
+            {
+                return Enumerable.Repeat(typeof(SelectedGroupMateParameter), 1);
+            }
+        }
+
+        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
@@ -106,9 +140,11 @@ namespace Adan.Client.Plugins.GroupWidget
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
 
+            _rootModel = model;
             _deserializer = new GroupStatusMessageDeserializer(conveyor);
+            _viewModel = new GroupStatusViewModel(model);
             _groupWidgetControl.DataContext = _viewModel;
-            _conveyorUnit = new GroupStatusUnit(conveyor, _groupWidgetControl);
+            _conveyorUnit = new GroupStatusUnit(conveyor, _groupWidgetControl, _viewModel);
         }
 
         /// <summary>
@@ -136,7 +172,7 @@ namespace Adan.Client.Plugins.GroupWidget
             var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.GroupWidgetOptions, allAffects, displayedAffects);
             var window = new OptionsDialog { DataContext = optionsViewModel, Owner = parentWindow };
             var result = window.ShowDialog();
-            
+
             if (result.HasValue && result.Value)
             {
                 Settings.Default.GroupWidgetAffects = optionsViewModel.DisplayedAffects.Select(af => af.Name).ToArray();

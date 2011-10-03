@@ -9,7 +9,9 @@
 
 namespace Adan.Client.Model.Actions
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
+
     using Common.Model;
 
     using CSLib.Net.Annotations;
@@ -18,7 +20,7 @@ namespace Adan.Client.Model.Actions
     /// <summary>
     /// Action that disables a group.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class DisableGroupAction : ActionBase
     {
         /// <summary>
@@ -36,7 +38,7 @@ namespace Adan.Client.Model.Actions
         /// The group to disable.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string GroupNameToDisable
         {
             get;

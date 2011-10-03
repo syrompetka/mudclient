@@ -9,15 +9,16 @@
 
 namespace Adan.Client.Common.Model
 {
-    using System.Runtime.Serialization;
+    using System;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// Base class for all actions issued by triggers, aliases etc.
     /// </summary>
-    [DataContract]
-    [KnownType(typeof(ActionWithParameters))]
+    [Serializable]
+    [XmlInclude(typeof(ActionWithParameters))]
     public abstract class ActionBase
     {
         /// <summary>

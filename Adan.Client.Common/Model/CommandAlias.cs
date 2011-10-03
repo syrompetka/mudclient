@@ -9,15 +9,16 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// A "shortcut" to a command or a set of commands. Whenever the user types an alias command, it will be replaces by actions of the alias.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class CommandAlias
     {
         /// <summary>
@@ -36,7 +37,7 @@ namespace Adan.Client.Common.Model
         /// The command.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string Command
         {
             get;
@@ -47,7 +48,6 @@ namespace Adan.Client.Common.Model
         /// Gets or sets the actions to be performed when user uses this alias.
         /// </summary>
         [NotNull]
-        [DataMember]
         public List<ActionBase> Actions
         {
             get;

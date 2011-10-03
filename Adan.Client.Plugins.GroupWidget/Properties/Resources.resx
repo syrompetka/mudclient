@@ -177,6 +177,12 @@
   <data name="Invisibility" xml:space="preserve">
     <value>Invisibility</value>
   </data>
+  <data name="Monsters" xml:space="preserve">
+    <value>Monsters</value>
+  </data>
+  <data name="MonstersWidgetOptions" xml:space="preserve">
+    <value>Monsters widget options</value>
+  </data>
   <data name="Ok" xml:space="preserve">
     <value>Ok</value>
   </data>

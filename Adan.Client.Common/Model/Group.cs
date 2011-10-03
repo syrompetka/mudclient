@@ -9,15 +9,16 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
-    using System.Runtime.Serialization;
+    using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
 
     /// <summary>
     /// A group of triggers, aliases etc.
     /// </summary>
-    [DataContract]
+    [Serializable]
     public class Group
     {
         /// <summary>
@@ -39,7 +40,7 @@ namespace Adan.Client.Common.Model
         /// The name of this group.
         /// </value>
         [NotNull]
-        [DataMember]
+        [XmlAttribute]
         public string Name
         {
             get;
@@ -52,7 +53,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// <c>true</c> if this group is enabled; otherwise, <c>false</c>.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public bool IsEnabled
         {
             get;
@@ -66,7 +67,7 @@ namespace Adan.Client.Common.Model
         /// <value>
         /// <c>true</c> if this instance is build in; otherwise, <c>false</c>.
         /// </value>
-        [DataMember]
+        [XmlAttribute]
         public bool IsBuildIn
         {
             get;
@@ -80,7 +81,6 @@ namespace Adan.Client.Common.Model
         /// The triggers.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<TriggerBase> Triggers
         {
             get;
@@ -94,7 +94,6 @@ namespace Adan.Client.Common.Model
         /// The aliases.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<CommandAlias> Aliases
         {
             get;
@@ -108,7 +107,6 @@ namespace Adan.Client.Common.Model
         /// The hotkeys.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<Hotkey> Hotkeys
         {
             get;
@@ -122,7 +120,6 @@ namespace Adan.Client.Common.Model
         /// The highlights.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<Highlight> Highlights
         {
             get;
@@ -136,7 +133,6 @@ namespace Adan.Client.Common.Model
         /// The substitutions.
         /// </value>
         [NotNull]
-        [DataMember]
         public List<Substitution> Substitutions
         {
             get;
