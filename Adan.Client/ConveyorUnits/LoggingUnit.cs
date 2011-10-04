@@ -9,6 +9,7 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
@@ -143,13 +144,19 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
+        [NotNull]
+        private static string GetLogsFolder()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Logs");
+        }
+
         private void StartLogging([NotNull] string logName)
         {
             Assert.ArgumentNotNullOrEmpty(logName, "logName");
 
-            if (!Directory.Exists("Logs"))
+            if (!Directory.Exists(GetLogsFolder()))
             {
-                Directory.CreateDirectory("Logs");
+                Directory.CreateDirectory(GetLogsFolder());
             }
 
             if (_isLogging)
@@ -159,10 +166,11 @@ namespace Adan.Client.ConveyorUnits
 
             try
             {
-                _fileStream = File.Open(@"Logs\" + logName + ".log", FileMode.Append, FileAccess.Write, FileShare.Read);
+                var fullLogPath = Path.Combine(GetLogsFolder(), logName + ".log");
+                _fileStream = File.Open(fullLogPath, FileMode.Append, FileAccess.Write, FileShare.Read);
                 _streamWriter = new StreamWriter(_fileStream, Encoding.Unicode);
                 _isLogging = true;
-                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.LoggingStarted, @"Logs\" + logName + ".log")));
+                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.LoggingStarted, fullLogPath)));
             }
             catch (IOException ex)
             {

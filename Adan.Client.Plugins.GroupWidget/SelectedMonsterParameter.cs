@@ -41,7 +41,7 @@ namespace Adan.Client.Plugins.GroupWidget
             int i = 0;
             foreach (var roomMonstersStatus in rootModel.RoomMonstersStatus)
             {
-                if (roomMonstersStatus.Name == rootModel.SelectedRoomMonster.Name)
+                if (roomMonstersStatus.TargetName == rootModel.SelectedRoomMonster.TargetName)
                 {
                     i++;
                 }
@@ -52,7 +52,7 @@ namespace Adan.Client.Plugins.GroupWidget
                 }
             }
 
-            var result = rootModel.SelectedRoomMonster.Name.Replace(' ', '.');
+            var result = rootModel.SelectedRoomMonster.TargetName.Replace(' ', '.');
             if (i > 1)
             {
                 result = i + "." + result;

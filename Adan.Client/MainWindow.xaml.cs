@@ -382,9 +382,10 @@ namespace Adan.Client
                 dockContent.Show(dockManager);
             }
 
-            if (File.Exists("Layout.xml"))
+            var layoutFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings", "Layout.xml");
+            if (File.Exists(layoutFullPath))
             {
-                dockManager.RestoreLayout("Layout.xml");
+                dockManager.RestoreLayout(layoutFullPath);
             }
 
             Dispatcher.BeginInvoke((Action)BindDockumentPane);
@@ -428,7 +429,14 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
-            dockManager.SaveLayout("Layout.xml");
+            var layoutFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+            if (!Directory.Exists(layoutFullPath))
+            {
+                Directory.CreateDirectory(layoutFullPath);
+            }
+
+            layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
+            dockManager.SaveLayout(layoutFullPath);
         }
     }
 }

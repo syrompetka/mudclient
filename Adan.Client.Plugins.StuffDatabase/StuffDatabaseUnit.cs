@@ -99,7 +99,7 @@ namespace Adan.Client.Plugins.StuffDatabase
             {
                 if (!string.IsNullOrEmpty(_lastShownObjectName))
                 {
-                    var fileName = "Stuff/" + _lastShownObjectName.Replace(" ", "_");
+                    var fileName = Path.Combine(GetStuffDbFolder(), _lastShownObjectName.Replace(" ", "_"));
                     LoreMessage lore = null;
                     if (File.Exists(fileName))
                     {
@@ -131,9 +131,9 @@ namespace Adan.Client.Plugins.StuffDatabase
                 var searchQuery = commandText.Remove(0, Resources.LoreCommentCommand.Length + 1).Trim().Replace(" ", "_");
                 const int maxDisplayItems = 4;
                 int foundItems = 0;
-                if (Directory.Exists("Stuff"))
+                if (Directory.Exists(GetStuffDbFolder()))
                 {
-                    foreach (var file in Directory.GetFiles("Stuff"))
+                    foreach (var file in Directory.GetFiles(GetStuffDbFolder()))
                     {
                         if (file.IndexOf(searchQuery, StringComparison.CurrentCultureIgnoreCase) < 0)
                         {
@@ -194,16 +194,22 @@ namespace Adan.Client.Plugins.StuffDatabase
             }
         }
 
+        [NotNull]
+        private static string GetStuffDbFolder()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Stuff");
+        }
+
         private void SaveOrUpdateObjectLore([NotNull]LoreMessage loreMessage)
         {
             Assert.ArgumentNotNull(loreMessage, "loreMessage");
 
-            if (!Directory.Exists("Stuff"))
+            if (!Directory.Exists(GetStuffDbFolder()))
             {
-                Directory.CreateDirectory("Stuff");
+                Directory.CreateDirectory(GetStuffDbFolder());
             }
 
-            var fileName = "Stuff/" + loreMessage.ObjectName.Replace(" ", "_");
+            var fileName = Path.Combine(GetStuffDbFolder(), loreMessage.ObjectName.Replace(" ", "_"));
             bool isUpdated = false;
             if (File.Exists(fileName))
             {

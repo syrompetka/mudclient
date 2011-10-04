@@ -25,7 +25,6 @@ namespace Adan.Client.Common.Model
     public class Substitution
     {
         private Regex _regex;
-
         private string _pattern = string.Empty;
         private string _substituteWith = string.Empty;
         private string _substituteWithRegexPattern = string.Empty;
@@ -93,7 +92,7 @@ namespace Adan.Client.Common.Model
         {
             get
             {
-                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(Pattern)));
+                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(Pattern), RegexOptions.Compiled));
             }
         }
 

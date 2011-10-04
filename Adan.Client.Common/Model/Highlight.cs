@@ -96,7 +96,7 @@ namespace Adan.Client.Common.Model
             {
                 if (_textToHighlightRegex == null)
                 {
-                    _textToHighlightRegex = new Regex(WildcardStringHelper.ConvertToValidRegex(TextToHighlight));
+                    _textToHighlightRegex = new Regex(WildcardStringHelper.ConvertToValidRegex(TextToHighlight), RegexOptions.Compiled);
                 }
 
                 return _textToHighlightRegex;

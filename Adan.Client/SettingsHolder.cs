@@ -192,12 +192,23 @@ namespace Adan.Client
 
         #region Methods
 
+        [NotNull]
+        private static string GetSettingsFolder()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+        }
+
         private void SaveGroups()
         {
             FileStream stream = null;
             try
             {
-                stream = File.Open("Settings.xml", FileMode.Create, FileAccess.Write);
+                if (!Directory.Exists(GetSettingsFolder()))
+                {
+                    Directory.CreateDirectory(GetSettingsFolder());
+                }
+
+                stream = File.Open(Path.Combine(GetSettingsFolder(), "Settings.xml"), FileMode.Create, FileAccess.Write);
                 using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     stream = null;
@@ -216,13 +227,14 @@ namespace Adan.Client
 
         private void ReadGroups()
         {
-            if (!File.Exists("Settings.xml"))
+            var settingsFileFullPath = Path.Combine(GetSettingsFolder(), "Settings.xml");
+            if (!File.Exists(settingsFileFullPath))
             {
                 _groups = new List<Group>();
                 return;
             }
 
-            using (var stream = File.OpenRead("Settings.xml"))
+            using (var stream = File.OpenRead(settingsFileFullPath))
             {
                 _groups = (IList<Group>)_groupsSerializer.Deserialize(stream);
             }
@@ -231,13 +243,14 @@ namespace Adan.Client
         [NotNull]
         private IList<Variable> ReadVariables()
         {
-            if (!File.Exists("Variables.xml"))
+            var variablesFileFullPath = Path.Combine(GetSettingsFolder(), "Variables.xml");
+            if (!File.Exists(variablesFileFullPath))
             {
                 _variables = new List<Variable>();
                 return _variables;
             }
 
-            using (var stream = File.OpenRead("Variables.xml"))
+            using (var stream = File.OpenRead(variablesFileFullPath))
             {
                 _variables = (IList<Variable>)_variablesSerializer.Deserialize(stream);
                 return _variables;
@@ -249,7 +262,12 @@ namespace Adan.Client
             FileStream stream = null;
             try
             {
-                stream = File.Open("Variables.xml", FileMode.Create, FileAccess.Write);
+                if (!Directory.Exists(GetSettingsFolder()))
+                {
+                    Directory.CreateDirectory(GetSettingsFolder());
+                }
+
+                stream = File.Open(Path.Combine(GetSettingsFolder(), "Variables.xml"), FileMode.Create, FileAccess.Write);
                 using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
                 {
                     stream = null;
