@@ -47,6 +47,20 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
+        /// Gets or sets the name to use to attack this character.
+        /// </summary>
+        /// <value>
+        /// The name to use to attack this character.
+        /// </value>
+        [NotNull]
+        [XmlAttribute]
+        public string TargetName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets characters position.
         /// </summary>
         /// <value>

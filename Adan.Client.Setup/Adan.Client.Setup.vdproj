@@ -581,6 +581,61 @@
                     }
                 }
             }
+            "{1525181F-901A-416C-8A58-119130FE478E}:_1CD1EA131B2945C0A24B56881D97B1E5"
+            {
+            "Name" = "8:#1918"
+            "AlwaysCreate" = "11:FALSE"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Property" = "8:PersonalFolder"
+                "Folders"
+                {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_241F5A35EB3C40A9B3450ED1A69B19D9"
+                    {
+                    "Name" = "8:Adan client"
+                    "AlwaysCreate" = "11:TRUE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_463505107A804BF980553900451B9E93"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_765F8B6BC9D34A398697C7058CEA594D"
+                            {
+                            "Name" = "8:Stuff"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_14A346358C73464498691A5631A60AF2"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_972226DE206548C9B53F8BF4FD3E6CE9"
+                            {
+                            "Name" = "8:Logs"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_3030FB04D6FD4E4E9B42A6E5B76A7721"
+                                "Folders"
+                                {
+                                }
+                            }
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_D5AF9CA49CD741FF9A715D86E2BBF6FC"
+                            {
+                            "Name" = "8:Settings"
+                            "AlwaysCreate" = "11:TRUE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_319D72AB5D1F4744B21EE866BC82D7E5"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             "{1525181F-901A-416C-8A58-119130FE478E}:_96154350B5EE48A898CEFC8DEB7A9A5C"
             {
             "Name" = "8:#1916"
@@ -602,32 +657,10 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_14993C255C964E159C5B8107BAA63562"
-                    {
-                    "Name" = "8:Stuff"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_14A346358C73464498691A5631A60AF2"
-                        "Folders"
-                        {
-                        }
-                    }
-                    "{9EF0B969-E518-4E46-987F-47570745A589}:_3DD2F52192564D9EB362932C346CEC81"
-                    {
-                    "Name" = "8:Logs"
-                    "AlwaysCreate" = "11:FALSE"
-                    "Condition" = "8:"
-                    "Transitive" = "11:FALSE"
-                    "Property" = "8:_3030FB04D6FD4E4E9B42A6E5B76A7721"
-                        "Folders"
-                        {
-                        }
-                    }
                     "{9EF0B969-E518-4E46-987F-47570745A589}:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"
                     {
                     "Name" = "8:Plugins"
-                    "AlwaysCreate" = "11:FALSE"
+                    "AlwaysCreate" = "11:TRUE"
                     "Condition" = "8:"
                     "Transitive" = "11:FALSE"
                     "Property" = "8:_E7CB675DDD564AAD88252F8AFD60A9B3"
@@ -654,7 +687,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Adamant mud client"
         "ProductCode" = "8:{E33BEC1B-9FBB-49E1-A6F7-862D4860DEBB}"
-        "PackageCode" = "8:{D885FC46-AD14-4C95-93E1-4C2B58476F12}"
+        "PackageCode" = "8:{7BF05172-8C75-4266-8360-E4821E60AABC}"
         "UpgradeCode" = "8:{57566A6A-532F-4B87-AC64-05A74AA4919D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -662,12 +695,12 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Petka"
+        "Manufacturer" = "8:Adan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Adamant mud client"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Petka"
+        "ARPCONTACT" = "8:Adan"
         "Keywords" = "8:"
         "ARPCOMMENTS" = "8:"
         "ARPURLINFOABOUT" = "8:"
@@ -776,7 +809,7 @@
         {
             "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_5CC97994504742B8AD815790302E3114"
             {
-            "Name" = "8:Adamant mud clien"
+            "Name" = "8:Adamant mud client"
             "Arguments" = "8:"
             "Description" = "8:"
             "ShowCmd" = "3:1"
@@ -1257,12 +1290,12 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_52B5FB00F86044E8AE3C5AE7C7F4E730"
+            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_41618B16F1924863A23DE35506D245F6"
             {
             "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
-            "Folder" = "8:_F1CE5BB9037945A8910DC98BAC370B8A"
+            "Folder" = "8:_D5AF9CA49CD741FF9A715D86E2BBF6FC"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"

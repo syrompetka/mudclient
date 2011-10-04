@@ -69,7 +69,7 @@ namespace Adan.Client.Common.Model
         {
             get
             {
-                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(MatchingPattern)));
+                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(MatchingPattern), RegexOptions.Compiled));
             }
         }
 
