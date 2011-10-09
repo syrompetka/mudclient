@@ -10,13 +10,15 @@
 namespace Adan.Client.Common.Model
 {
     using System;
-    using System.Text.RegularExpressions;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
-    using Utils;
+
+    using Utils.PatternMatching;
 
     /// <summary>
     /// A replacement of all incoming strings that match certain pattern to specific one.
@@ -24,10 +26,16 @@ namespace Adan.Client.Common.Model
     [Serializable]
     public class Substitution
     {
-        private Regex _regex;
+        [NonSerialized]
+        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
+
+        [NonSerialized]
+        private PatternToken _rootPatternToken;
+        [NonSerialized]
+        private PatternToken _rootSubstituteWithPatternToken;
+
         private string _pattern = string.Empty;
         private string _substituteWith = string.Empty;
-        private string _substituteWithRegexPattern = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Substitution"/> class.
@@ -36,7 +44,6 @@ namespace Adan.Client.Common.Model
         {
             _pattern = string.Empty;
             _substituteWith = string.Empty;
-            _substituteWithRegexPattern = string.Empty;
         }
 
         /// <summary>
@@ -59,7 +66,7 @@ namespace Adan.Client.Common.Model
                 Assert.ArgumentNotNull(value, "value");
 
                 _pattern = value;
-                _regex = null;
+                _rootPatternToken = null;
             }
         }
 
@@ -83,16 +90,21 @@ namespace Adan.Client.Common.Model
                 Assert.ArgumentNotNull(value, "value");
 
                 _substituteWith = value;
-                _substituteWithRegexPattern = WildcardStringHelper.ConvertToValidRegexSubstitutePattern(value);
+                _rootSubstituteWithPatternToken = WildcardParser.ParseWildcardString(value);
             }
         }
 
         [NotNull]
-        private Regex Regex
+        private PatternToken RootPatternToken
         {
             get
             {
-                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(Pattern), RegexOptions.Compiled));
+                if (_rootPatternToken == null)
+                {
+                    _rootPatternToken = WildcardParser.ParseWildcardString(Pattern);
+                }
+
+                return _rootPatternToken;
             }
         }
 
@@ -106,14 +118,32 @@ namespace Adan.Client.Common.Model
 
             foreach (var block in message.MessageBlocks)
             {
-                var replaceResult = Regex.Replace(block.Text, _substituteWithRegexPattern);
-                if (replaceResult == block.Text)
+                ClearMatchingResults();
+                int position = 0;
+                var res = RootPatternToken.Match(block.Text, position, _matchingResults);
+                while (res.IsSuccess)
                 {
-                    continue;
-                }
+                    var replaceResult = block.Text.Substring(0, res.StartPosition)
+                                 + _rootSubstituteWithPatternToken.GetValue(_matchingResults)
+                                 + block.Text.Substring(res.EndPosition);
+                    if (replaceResult != block.Text)
+                    {
+                        block.ChangeInnerText(replaceResult);
+                        message.UpdateInnerText();
+                    }
 
-                block.ChangeInnerText(replaceResult);
-                message.UpdateInnerText();
+                    position = res.StartPosition + _rootSubstituteWithPatternToken.GetValue(_matchingResults).Length;
+                    ClearMatchingResults();
+                    res = RootPatternToken.Match(block.Text, position, _matchingResults);
+                }
+            }
+        }
+
+        private void ClearMatchingResults()
+        {
+            for (int i = 0; i < _matchingResults.Count; i++)
+            {
+                _matchingResults[i] = null;
             }
         }
     }

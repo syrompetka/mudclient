@@ -11,14 +11,15 @@ namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
+    using System.Linq;
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
     using Themes;
-    using Utils;
+
+    using Utils.PatternMatching;
 
     /// <summary>
     /// A highlight of all incoming strings that match certain pattern with a specific color and background.
@@ -26,8 +27,11 @@ namespace Adan.Client.Common.Model
     [Serializable]
     public class Highlight
     {
+        [NonSerialized]
+        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
         private string _textToHighlight;
-        private Regex _textToHighlightRegex;
+        [NonSerialized]
+        private PatternToken _rootPatternToken;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Highlight"/> class.
@@ -85,21 +89,20 @@ namespace Adan.Client.Common.Model
                 Assert.ArgumentNotNull(value, "value");
 
                 _textToHighlight = value;
-                _textToHighlightRegex = null;
             }
         }
 
         [NotNull]
-        private Regex TextToHighlightRegex
+        private PatternToken RootPatternToken
         {
             get
             {
-                if (_textToHighlightRegex == null)
+                if (_rootPatternToken == null)
                 {
-                    _textToHighlightRegex = new Regex(WildcardStringHelper.ConvertToValidRegex(TextToHighlight), RegexOptions.Compiled);
+                    _rootPatternToken = WildcardParser.ParseWildcardString(_textToHighlight);
                 }
 
-                return _textToHighlightRegex;
+                return _rootPatternToken;
             }
         }
 
@@ -113,12 +116,17 @@ namespace Adan.Client.Common.Model
 
             var messageBlocks = textMessage.MessageBlocks;
             bool matchSuccess = false;
-            foreach (Match match in TextToHighlightRegex.Matches(textMessage.InnerText))
+            int position = 0;
+            ClearMatchingResults();
+            var res = RootPatternToken.Match(textMessage.InnerText, position, _matchingResults);
+
+            while (res.IsSuccess)
             {
                 matchSuccess = true;
                 var newBlocks = new List<TextMessageBlock>();
-                var matchIndex = match.Index;
-                var matchLength = match.Length;
+                var matchIndex = res.StartPosition;
+                var matchLength = res.EndPosition - res.StartPosition;
+                position = res.EndPosition;
                 bool matchTextAdded = false;
                 foreach (var block in messageBlocks)
                 {
@@ -129,16 +137,22 @@ namespace Adan.Client.Common.Model
                     else if (matchIndex < block.Text.Length)
                     {
                         var charsToRemove = Math.Min(block.Text.Length - matchIndex, matchLength);
-                        newBlocks.Add(new TextMessageBlock(block.Text.Remove(matchIndex), block.Foreground, block.Background));
+                        newBlocks.Add(
+                            new TextMessageBlock(block.Text.Remove(matchIndex), block.Foreground, block.Background));
                         if (!matchTextAdded)
                         {
-                            newBlocks.Add(new TextMessageBlock(match.Value, TextColor, BackgroundColor));
+                            newBlocks.Add(new TextMessageBlock(textMessage.InnerText.Substring(res.StartPosition, res.EndPosition - res.StartPosition), TextColor, BackgroundColor));
                             matchTextAdded = true;
                         }
 
                         if (matchLength + matchIndex < block.Text.Length)
                         {
-                            newBlocks.Add(new TextMessageBlock(block.Text.Substring(matchLength + matchIndex, block.Text.Length - matchLength - matchIndex), block.Foreground, block.Background));
+                            newBlocks.Add(
+                                new TextMessageBlock(
+                                    block.Text.Substring(
+                                        matchLength + matchIndex, block.Text.Length - matchLength - matchIndex),
+                                    block.Foreground,
+                                    block.Background));
                         }
 
                         matchLength -= charsToRemove;
@@ -157,11 +171,21 @@ namespace Adan.Client.Common.Model
                 }
 
                 messageBlocks = newBlocks;
+                ClearMatchingResults();
+                res = RootPatternToken.Match(textMessage.InnerText, position, _matchingResults);
             }
 
             if (matchSuccess)
             {
                 textMessage.UpdateMessageBlocks(messageBlocks);
+            }
+        }
+
+        private void ClearMatchingResults()
+        {
+            for (int i = 0; i < _matchingResults.Count; i++)
+            {
+                _matchingResults[i] = null;
             }
         }
     }

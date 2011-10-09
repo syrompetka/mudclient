@@ -139,6 +139,12 @@
     <Compile Include="Utils\InverseBooleanConverter.cs" />
     <Compile Include="Utils\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Utils\MultiplierConverter.cs" />
+    <Compile Include="Utils\PatternMatching\ConstantStringToken.cs" />
+    <Compile Include="Utils\PatternMatching\FaultToken.cs" />
+    <Compile Include="Utils\PatternMatching\MatchingResult.cs" />
+    <Compile Include="Utils\PatternMatching\PatternToken.cs" />
+    <Compile Include="Utils\PatternMatching\WildcardParser.cs" />
+    <Compile Include="Utils\PatternMatching\WildcardToken.cs" />
     <Compile Include="Utils\PercentageConverter.cs" />
     <Compile Include="Utils\SecondsToTimeSpanConverter.cs" />
     <Compile Include="Utils\SwitchCase.cs" />
