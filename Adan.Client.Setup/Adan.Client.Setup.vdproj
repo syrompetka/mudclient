@@ -687,7 +687,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Adamant mud client"
         "ProductCode" = "8:{E33BEC1B-9FBB-49E1-A6F7-862D4860DEBB}"
-        "PackageCode" = "8:{7BF05172-8C75-4266-8360-E4821E60AABC}"
+        "PackageCode" = "8:{F8249D8A-743B-445C-8B38-BA5D4C1667CB}"
         "UpgradeCode" = "8:{57566A6A-532F-4B87-AC64-05A74AA4919D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1264,7 +1264,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_3616A32DE7114B64B9939F13333286CC"
             {
-            "SourcePath" = "8:..\\Adan.Client\\obj\\x86\\Release\\Adan.Client.exe"
+            "SourcePath" = "8:"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_F1CE5BB9037945A8910DC98BAC370B8A"
@@ -1320,7 +1320,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_716616B535DA4E8C8B518AFD174B51B1"
             {
-            "SourcePath" = "8:..\\Adan.Client.Plugins.GroupWidget\\obj\\Release\\Adan.Client.Plugins.GroupWidget.dll"
+            "SourcePath" = "8:..\\Adan.Client.Plugins.GroupWidget\\obj\\Debug\\Adan.Client.Plugins.GroupWidget.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"
@@ -1348,7 +1348,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BB744CC075B44ABA8F211FACA82C811C"
             {
-            "SourcePath" = "8:..\\Adan.Client.Plugins.StuffDatabase\\obj\\Release\\Adan.Client.Plugins.StuffDatabase.dll"
+            "SourcePath" = "8:..\\Adan.Client.Plugins.StuffDatabase\\obj\\Debug\\Adan.Client.Plugins.StuffDatabase.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"
@@ -1376,7 +1376,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_F7937E9DDE0249DE80360358D57C3B1D"
             {
-            "SourcePath" = "8:..\\Adan.Client.Plugins.OutputWindow\\obj\\Release\\Adan.Client.Plugins.OutputWindow.dll"
+            "SourcePath" = "8:..\\Adan.Client.Plugins.OutputWindow\\obj\\Debug\\Adan.Client.Plugins.OutputWindow.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"

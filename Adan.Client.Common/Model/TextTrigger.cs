@@ -10,15 +10,15 @@
 namespace Adan.Client.Common.Model
 {
     using System;
-    using System.Globalization;
-    using System.Text.RegularExpressions;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
 
-    using Utils;
+    using Utils.PatternMatching;
 
     /// <summary>
     /// Trigger that handles text messages from server.
@@ -27,9 +27,14 @@ namespace Adan.Client.Common.Model
     public class TextTrigger : TriggerBase
     {
         [NonSerialized]
+        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
+
+        [NonSerialized]
+        private PatternToken _rootPatternToken;
+
+        [NonSerialized]
         private ActionExecutionContext _context;
         private string _matchingPattern;
-        private Regex _regex;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextTrigger"/> class.
@@ -60,16 +65,21 @@ namespace Adan.Client.Common.Model
                 Assert.ArgumentNotNull(value, "value");
 
                 _matchingPattern = value;
-                _regex = null;
+                _rootPatternToken = null;
             }
         }
 
         [NotNull]
-        private Regex Regex
+        private PatternToken RootPatternToken
         {
             get
             {
-                return _regex ?? (_regex = new Regex(WildcardStringHelper.ConvertToValidRegex(MatchingPattern), RegexOptions.Compiled));
+                if (_rootPatternToken == null)
+                {
+                    _rootPatternToken = WildcardParser.ParseWildcardString(MatchingPattern);
+                }
+
+                return _rootPatternToken;
             }
         }
 
@@ -98,15 +108,16 @@ namespace Adan.Client.Common.Model
                 return;
             }
 
-            var match = Regex.Match(textMessage.InnerText);
-            if (!match.Success)
+            ClearMatchingResults();
+            var res = RootPatternToken.Match(textMessage.InnerText, 0, _matchingResults);
+            if (!res.IsSuccess)
             {
                 return;
             }
 
             for (int i = 0; i < 10; i++)
             {
-                Context.Parameters[i] = match.Groups[i.ToString(CultureInfo.InvariantCulture)].Value;
+                Context.Parameters[i] = _matchingResults[i];
             }
 
             Context.CurrentMessage = message;
@@ -124,6 +135,14 @@ namespace Adan.Client.Common.Model
             if (DoNotDisplayOriginalMessage)
             {
                 textMessage.Handled = true;
+            }
+        }
+
+        private void ClearMatchingResults()
+        {
+            for (int i = 0; i < _matchingResults.Count; i++)
+            {
+                _matchingResults[i] = null;
             }
         }
     }
