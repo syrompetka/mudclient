@@ -288,6 +288,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Resources\AvalonDockExpressionDark.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Resources\CommonTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -357,6 +361,11 @@
   <ItemGroup>
     <Resource Include="icon.ico" />
     <Content Include="Layout.xml" />
+    <Resource Include="Resources\Images\DockBottom.png" />
+    <Resource Include="Resources\Images\DockLeft.png" />
+    <Resource Include="Resources\Images\DockPane.png" />
+    <Resource Include="Resources\Images\DockRight.png" />
+    <Resource Include="Resources\Images\DockTop.png" />
     <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>

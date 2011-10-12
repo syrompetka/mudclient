@@ -79,6 +79,7 @@
     <Compile Include="ConveyorUnits\ConveyorUnit.cs" />
     <Compile Include="Conveyor\MessageConveyor.cs" />
     <Compile Include="Conveyor\MessageReceivedEventArgs.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\MessageDeserializer.cs" />
     <Compile Include="Messages\BuiltinMessageTypes.cs" />
     <Compile Include="Messages\ConnectedMessage.cs" />

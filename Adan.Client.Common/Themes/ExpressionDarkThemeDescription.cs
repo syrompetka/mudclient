@@ -27,7 +27,7 @@ namespace Adan.Client.Common.Themes
         public ExpressionDarkThemeDescription()
             : base("ExpressionDark", "Expression dark")
         {
-            _dictionariesToMerge.Add(@"/AvalonDock.Themes;component/themes/ExpressionDark.xaml");
+            _dictionariesToMerge.Add(@"Resources/AvalonDockExpressionDark.xaml");
             _dictionariesToMerge.Add(@"Resources/ExpressionDark.xaml");
 
             _textColors[TextColor.Black] = Brushes.Black;

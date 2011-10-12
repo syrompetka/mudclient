@@ -118,105 +118,105 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Acceleration" xml:space="preserve">
-    <value>Acceleration</value>
+    <value>Ускорение</value>
   </data>
   <data name="Affect" xml:space="preserve">
-    <value>Affect:</value>
+    <value>Аффект:</value>
   </data>
   <data name="ArmorCurse" xml:space="preserve">
-    <value>Armor сurse</value>
+    <value>Проклятие защиты</value>
   </data>
   <data name="AvailableAffects" xml:space="preserve">
-    <value>Available affects:</value>
+    <value>Доступные аффеты:</value>
   </data>
   <data name="Blessing" xml:space="preserve">
-    <value>Blessing</value>
+    <value>Благословление</value>
   </data>
   <data name="Blindness" xml:space="preserve">
-    <value>Blindness</value>
+    <value>Слепота</value>
   </data>
   <data name="Cancel" xml:space="preserve">
-    <value>Cancel</value>
+    <value>Отмена</value>
   </data>
   <data name="Curse" xml:space="preserve">
-    <value>Curse</value>
+    <value>Проклятие</value>
   </data>
   <data name="Disease" xml:space="preserve">
-    <value>Disease</value>
+    <value>Болезнь</value>
   </data>
   <data name="DisplayedAffects" xml:space="preserve">
-    <value>Displayed affects:</value>
+    <value>Отображаемые аффекты:</value>
   </data>
   <data name="Duration" xml:space="preserve">
-    <value>Duration:</value>
+    <value>Длительность:</value>
   </data>
   <data name="EntsPower" xml:space="preserve">
-    <value>Ents power</value>
+    <value>Сила энтов</value>
   </data>
   <data name="Fear" xml:space="preserve">
-    <value>Fear</value>
+    <value>Страх</value>
   </data>
   <data name="Flight" xml:space="preserve">
-    <value>Flight</value>
+    <value>Полет</value>
   </data>
   <data name="Fresh" xml:space="preserve">
-    <value>Fresh</value>
+    <value>Восстановление</value>
   </data>
   <data name="Group" xml:space="preserve">
-    <value>Group</value>
+    <value>Группа</value>
   </data>
   <data name="GroupWidgetOptions" xml:space="preserve">
-    <value>Group widget options</value>
+    <value>Настройки виджета группы</value>
   </data>
   <data name="Healings" xml:space="preserve">
-    <value>Healings</value>
+    <value>Заживления</value>
   </data>
   <data name="Hold" xml:space="preserve">
-    <value>Hold</value>
+    <value>Холды</value>
   </data>
   <data name="Invisibility" xml:space="preserve">
-    <value>Invisibility</value>
+    <value>Невидимость</value>
   </data>
   <data name="Monsters" xml:space="preserve">
-    <value>Monsters</value>
+    <value>Монстры</value>
   </data>
   <data name="MonstersWidgetOptions" xml:space="preserve">
-    <value>Monsters widget options</value>
+    <value>Настройки виджета монстров</value>
   </data>
   <data name="Ok" xml:space="preserve">
-    <value>Ok</value>
+    <value>Ок</value>
   </data>
   <data name="Paralysis" xml:space="preserve">
-    <value>Paralysis</value>
+    <value>Паралич</value>
   </data>
   <data name="Poison" xml:space="preserve">
-    <value>Poison</value>
+    <value>Яд</value>
   </data>
   <data name="Power" xml:space="preserve">
-    <value>Power</value>
+    <value>Сила</value>
   </data>
   <data name="Protection" xml:space="preserve">
-    <value>Protection</value>
+    <value>Защита</value>
   </data>
   <data name="Renewals" xml:space="preserve">
-    <value>Renewals</value>
+    <value>Обновления</value>
   </data>
   <data name="Shock" xml:space="preserve">
-    <value>Shock</value>
+    <value>Шок</value>
   </data>
   <data name="Silence" xml:space="preserve">
-    <value>Silence</value>
+    <value>Молчание</value>
   </data>
   <data name="Slowness" xml:space="preserve">
-    <value>Slowness</value>
+    <value>Замедление</value>
   </data>
   <data name="StoneCurse" xml:space="preserve">
-    <value>StoneCurse</value>
+    <value>Каменное проклятие</value>
   </data>
   <data name="Stun" xml:space="preserve">
-    <value>Stun</value>
+    <value>Оглушение</value>
   </data>
   <data name="Weakness" xml:space="preserve">
-    <value>Weakness</value>
+    <value>Слабость</value>
   </data>
 </root>

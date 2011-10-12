@@ -42,10 +42,20 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
             GroupMates = new ObservableCollection<GroupMateViewModel>();
+            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
             _rootModel = rootModel;
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+        }
+
+        /// <summary>
+        /// Gets the minimum width.
+        /// </summary>
+        public double MinimumWidth
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -133,6 +143,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             GroupMates.Clear();
             _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
+            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
+            OnPropertyChanged("MinimumWidth");
         }
 
         private void UpdateTimings()

@@ -366,6 +366,9 @@ namespace Adan.Client
                     Content = widgetDescription.Control
                 };
 
+                dockContent.FloatingWindowSizeToContent = widgetDescription.ResizeToContent
+                                                              ? SizeToContent.WidthAndHeight
+                                                              : SizeToContent.Manual;
                 if (!string.IsNullOrEmpty(widgetDescription.Icon))
                 {
                     dockContent.Icon = (ImageSource)FindResource(widgetDescription.Icon);
