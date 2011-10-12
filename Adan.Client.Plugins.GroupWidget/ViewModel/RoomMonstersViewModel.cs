@@ -47,6 +47,16 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 155;
+        }
+
+        /// <summary>
+        /// Gets the minimum width.
+        /// </summary>
+        public double MinimumWidth
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -121,6 +131,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             Monsters.Clear();
             _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
+            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 155;
+            OnPropertyChanged("MinimumWidth");
         }
 
         private void UpdateTimings()

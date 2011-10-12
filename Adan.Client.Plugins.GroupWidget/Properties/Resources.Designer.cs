@@ -79,7 +79,7 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ArmorCurse.
+        ///   Looks up a localized string similar to Armor сurse.
         /// </summary>
         public static string ArmorCurse {
             get {
@@ -160,7 +160,7 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to EntsPower.
+        ///   Looks up a localized string similar to Ents power.
         /// </summary>
         public static string EntsPower {
             get {

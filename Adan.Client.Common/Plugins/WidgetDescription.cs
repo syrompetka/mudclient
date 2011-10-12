@@ -25,7 +25,8 @@ namespace Adan.Client.Common.Plugins
         /// <param name="name">The name of the widget.</param>
         /// <param name="description">The description of the widget.</param>
         /// <param name="control">The control that displays data.</param>
-        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] Control control)
+        /// <param name="resizeToContent">if set to <c>true</c> then flyout window will be resized to content.</param>
+        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] Control control, bool resizeToContent)
         {
             Assert.ArgumentNotNullOrWhiteSpace(name, "name");
             Assert.ArgumentNotNullOrWhiteSpace(description, "description");
@@ -34,6 +35,7 @@ namespace Adan.Client.Common.Plugins
             Name = name;
             Description = description;
             Control = control;
+            ResizeToContent = resizeToContent;
             Icon = string.Empty;
         }
 
@@ -84,6 +86,18 @@ namespace Adan.Client.Common.Plugins
         /// </summary>
         [NotNull]
         public Control Control
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the flyout window should be resized to content.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if flyout window should be resized to content; otherwise, <c>false</c>.
+        /// </value>
+        public bool ResizeToContent
         {
             get;
             private set;

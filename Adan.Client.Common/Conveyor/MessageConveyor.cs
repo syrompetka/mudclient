@@ -257,73 +257,80 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            int offset = e.Offset;
-            int bytesRecieved = e.BytesReceived;
-            byte[] data = e.GetData();
-
-            int actualBytesReceived = 0;
-            for (int i = 0; i < bytesRecieved; i++)
+            try
             {
-                // removing double IAC and processing IAC GA
-                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
+                int offset = e.Offset;
+                int bytesRecieved = e.BytesReceived;
+                byte[] data = e.GetData();
+
+                int actualBytesReceived = 0;
+                for (int i = 0; i < bytesRecieved; i++)
                 {
-                    _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
-                    i++;
+                    // removing double IAC and processing IAC GA
+                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
+                    {
+                        _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
+                        i++;
+                        actualBytesReceived++;
+                        continue;
+                    }
+
+                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
+                    {
+                        // new line
+                        _buffer[actualBytesReceived] = 0xA;
+                        i++;
+                        actualBytesReceived++;
+                        continue;
+                    }
+
+                    // handling echo mode on/off
+                    if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    {
+                        PushMessage(new ChangeEchoModeMessage(false));
+                        i += 2;
+                        continue;
+                    }
+
+                    if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    {
+                        PushMessage(new ChangeEchoModeMessage(true));
+                        i += 2;
+                        continue;
+                    }
+
+                    // handling custom message header
+                    if (i < bytesRecieved - 3 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
+                    {
+                        var messageType = data[offset + i + 3];
+                        FlushBufferToSerializer(actualBytesReceived, true);
+                        actualBytesReceived = 0;
+                        _currentMessageType = messageType;
+                        i += 3;
+                        continue;
+                    }
+
+                    // handling custom message footer
+                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
+                    {
+                        FlushBufferToSerializer(actualBytesReceived, true);
+
+                        _currentMessageType = BuiltInMessageTypes.TextMessage;
+                        actualBytesReceived = 0;
+                        i++;
+                        continue;
+                    }
+
+                    _buffer[actualBytesReceived] = data[offset + i];
                     actualBytesReceived++;
-                    continue;
                 }
 
-                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
-                {
-                    // new line
-                    _buffer[actualBytesReceived] = 0xA;
-                    i++;
-                    actualBytesReceived++;
-                    continue;
-                }
-
-                // handling echo mode on/off
-                if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
-                {
-                    PushMessage(new ChangeEchoModeMessage(false));
-                    i += 2;
-                    continue;
-                }
-
-                if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
-                {
-                    PushMessage(new ChangeEchoModeMessage(true));
-                    i += 2;
-                    continue;
-                }
-
-                // handling custom message header
-                if (i < bytesRecieved - 3 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
-                {
-                    var messageType = data[offset + i + 3];
-                    FlushBufferToSerializer(actualBytesReceived, true);
-                    actualBytesReceived = 0;
-                    _currentMessageType = messageType;
-                    i += 3;
-                    continue;
-                }
-
-                // handling custom message footer
-                if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
-                {
-                    FlushBufferToSerializer(actualBytesReceived, true);
-
-                    _currentMessageType = BuiltInMessageTypes.TextMessage;
-                    actualBytesReceived = 0;
-                    i++;
-                    continue;
-                }
-
-                _buffer[actualBytesReceived] = data[offset + i];
-                actualBytesReceived++;
+                FlushBufferToSerializer(actualBytesReceived, false);
             }
-
-            FlushBufferToSerializer(actualBytesReceived, false);
+            catch (Exception ex)
+            {
+                PushMessage(new ErrorMessage(ex.ToString()));
+            }
         }
 
         private void FlushBufferToSerializer(int actualBytesReceived, bool isComplete)

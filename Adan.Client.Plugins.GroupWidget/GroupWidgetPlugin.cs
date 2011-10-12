@@ -46,7 +46,7 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             get
             {
-                return Enumerable.Repeat(new WidgetDescription("GroupWidget", Resources.Group, _groupWidgetControl), 1);
+                return Enumerable.Repeat(new WidgetDescription("GroupWidget", Resources.Group, _groupWidgetControl, true), 1);
             }
         }
 

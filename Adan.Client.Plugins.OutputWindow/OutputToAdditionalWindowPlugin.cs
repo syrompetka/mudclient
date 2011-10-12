@@ -96,7 +96,7 @@ namespace Adan.Client.Plugins.OutputWindow
             Assert.ArgumentNotNull(model, "model");
 
             var control = new AdditionalOutputWindow();
-            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", control, "ImageSource_OutputToAditionalWindowWidgetIcond");
+            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", control, false);
             _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(conveyor, control);
             _rootModel = model;
         }
