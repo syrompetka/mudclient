@@ -908,7 +908,7 @@
                                         <ColumnDefinition Width="20" />
                                     </Grid.ColumnDefinitions>
                                     <Border Background="{StaticResource ManagedContentTabItemHotBackground}"
-                                            CornerRadius="3,0,0,0">
+                                            CornerRadius="3,3,0,0">
                                         <StackPanel Orientation="Horizontal">
                                             <TextBlock x:Name="tabItemTitle"
                                                        Grid.Column="0"
@@ -918,27 +918,24 @@
                                                        Margin="5,0,0,0"
                                                        VerticalAlignment="Center"
                                                        Foreground="{StaticResource ResourceKey=LightForegroundBrush}" />
+
+                                            <Button x:Name="PART_CloseButton"
+                                                    Grid.Row="0"
+                                                    Style="{StaticResource PaneHeaderCommandStyle}"
+                                                    HorizontalAlignment="Right"
+                                                    Width="14"
+                                                    Height="13"
+                                                    Margin="5,0,2,0"
+                                                    Command="ad:DockablePaneCommands.Close"
+                                                    CommandTarget="{Binding HostedPane, RelativeSource={RelativeSource TemplatedParent}}"
+                                                    Opacity="0.8">
+                                                <ad:ImageEx Source="/AvalonDock.Themes;component/Images/ExpDark/PinClose.png"
+                                                            Width="13" />
+                                            </Button>
                                         </StackPanel>
                                     </Border>
-                                    <Path x:Name="intPathLabel"
-                                          Stretch="Fill"
-                                          Grid.Column="1"
-                                          Fill="{StaticResource ManagedContentTabItemHotBackground}"
-                                          Data="M0,0 L20,20 L0,20 L0,0" />
                                 </Grid>
                             </Border>
-                            <Button x:Name="PART_CloseButton"
-                                    Grid.Row="0"
-                                    Style="{StaticResource PaneHeaderCommandStyle}"
-                                    HorizontalAlignment="Right"
-                                    Width="14"
-                                    Height="13"
-                                    Command="ad:DockablePaneCommands.Close"
-                                    CommandTarget="{Binding HostedPane, RelativeSource={RelativeSource TemplatedParent}}"
-                                    Opacity="0.8">
-                                <ad:ImageEx Source="/AvalonDock.Themes;component/Images/ExpDark/PinClose.png"
-                                            Width="13" />
-                            </Button>
                             <Border x:Name="ExtBorder"
                                     Background="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.DefaultBackgroundBrush}}}"
                                     BorderBrush="{DynamicResource {ComponentResourceKey {x:Type ad:DockingManager}, {x:Static ad:AvalonDockBrushes.DefaultBackgroundBrush}}}"

@@ -70,20 +70,6 @@ namespace Adan.Client.Common.Model
         }
 
         [NotNull]
-        private PatternToken RootPatternToken
-        {
-            get
-            {
-                if (_rootPatternToken == null)
-                {
-                    _rootPatternToken = WildcardParser.ParseWildcardString(MatchingPattern);
-                }
-
-                return _rootPatternToken;
-            }
-        }
-
-        [NotNull]
         private ActionExecutionContext Context
         {
             get
@@ -109,7 +95,7 @@ namespace Adan.Client.Common.Model
             }
 
             ClearMatchingResults();
-            var res = RootPatternToken.Match(textMessage.InnerText, 0, _matchingResults);
+            var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
             if (!res.IsSuccess)
             {
                 return;
@@ -144,6 +130,19 @@ namespace Adan.Client.Common.Model
             {
                 _matchingResults[i] = null;
             }
+        }
+
+        [NotNull]
+        private PatternToken GetRootPatternToken([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            if (_rootPatternToken == null)
+            {
+                _rootPatternToken = WildcardParser.ParseWildcardString(MatchingPattern, rootModel);
+            }
+
+            return _rootPatternToken;
         }
     }
 }

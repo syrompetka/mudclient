@@ -28,8 +28,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class RoomMonstersViewModel : ViewModelBase
     {
-        private readonly RootModel _rootModel;
         private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
+        private RootModel _rootModel;
 
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
         private MonsterViewModel _selectedMonster;
@@ -37,12 +37,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomMonstersViewModel"/> class.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        public RoomMonstersViewModel([NotNull] RootModel rootModel)
+        public RoomMonstersViewModel()
         {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rootModel = rootModel;
             Monsters = new ObservableCollection<MonsterViewModel>();
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
@@ -135,6 +131,17 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             OnPropertyChanged("MinimumWidth");
         }
 
+        /// <summary>
+        /// Updates the root model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        public void UpdateRootModel([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            _rootModel = rootModel;
+        }
+        
         private void UpdateTimings()
         {
             foreach (var monster in Monsters)

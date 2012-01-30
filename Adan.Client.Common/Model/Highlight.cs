@@ -92,33 +92,21 @@ namespace Adan.Client.Common.Model
             }
         }
 
-        [NotNull]
-        private PatternToken RootPatternToken
-        {
-            get
-            {
-                if (_rootPatternToken == null)
-                {
-                    _rootPatternToken = WildcardParser.ParseWildcardString(_textToHighlight);
-                }
-
-                return _rootPatternToken;
-            }
-        }
-
         /// <summary>
         /// Processes the message.
         /// </summary>
         /// <param name="textMessage">The text message.</param>
-        public void ProcessMessage([NotNull] TextMessage textMessage)
+        /// <param name="rootModel">The root model.</param>
+        public void ProcessMessage([NotNull] TextMessage textMessage, [NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(textMessage, "textMessage");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var messageBlocks = textMessage.MessageBlocks;
             bool matchSuccess = false;
             int position = 0;
             ClearMatchingResults();
-            var res = RootPatternToken.Match(textMessage.InnerText, position, _matchingResults);
+            var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
 
             while (res.IsSuccess)
             {
@@ -172,7 +160,7 @@ namespace Adan.Client.Common.Model
 
                 messageBlocks = newBlocks;
                 ClearMatchingResults();
-                res = RootPatternToken.Match(textMessage.InnerText, position, _matchingResults);
+                res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
             }
 
             if (matchSuccess)
@@ -187,6 +175,19 @@ namespace Adan.Client.Common.Model
             {
                 _matchingResults[i] = null;
             }
+        }
+
+        [NotNull]
+        private PatternToken GetRootPatternToken([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            if (_rootPatternToken == null)
+            {
+                _rootPatternToken = WildcardParser.ParseWildcardString(_textToHighlight, rootModel);
+            }
+
+            return _rootPatternToken;
         }
     }
 }

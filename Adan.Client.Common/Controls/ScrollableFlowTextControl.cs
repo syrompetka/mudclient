@@ -370,7 +370,7 @@ namespace Adan.Client.Common.Controls
             }
             else
             {
-                _currentLineNumber -= _currentNumberOfLinesInView - 1;
+                _currentLineNumber -= (_currentNumberOfLinesInView / 2) - 1;
             }
 
             if (_currentLineNumber == _messages.Count)
@@ -401,7 +401,7 @@ namespace Adan.Client.Common.Controls
                 return;
             }
 
-            _currentLineNumber += _currentNumberOfLinesInView - 1;
+            _currentLineNumber += (_currentNumberOfLinesInView / 2) - 1;
             if (_currentLineNumber > _messages.Count)
             {
                 _currentLineNumber = _messages.Count;
@@ -533,7 +533,14 @@ namespace Adan.Client.Common.Controls
                 _selectionSettings.SelectedMessages.Add(_messages[lineNumber - 1]);
                 _selectionSettings.SelectionStartCharacterNumber = 0;
                 _selectionSettings.SelectionEndCharacterNumber = _messages[lineNumber - 1].InnerText.Length;
-                Clipboard.SetText(_messages[lineNumber - 1].InnerText);
+                try
+                {
+                    Clipboard.SetText(_messages[lineNumber - 1].InnerText);
+                }
+                catch
+                {
+                }
+
                 _doubleClickTimer.Start();
             }
 
@@ -844,7 +851,13 @@ namespace Adan.Client.Common.Controls
                 result += text.Substring(0, length);
             }
 
-            Clipboard.SetText(result);
+            try
+            {
+                Clipboard.SetText(result);
+            }
+            catch
+            {
+            }
         }
 
         private void CheckMessagesOverflow()

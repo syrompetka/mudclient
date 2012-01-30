@@ -13,6 +13,7 @@ namespace Adan.Client.Plugins.StuffDatabase
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
+    using System.Windows;
 
     using Common.Conveyor;
     using Common.ConveyorUnits;
@@ -69,11 +70,15 @@ namespace Adan.Client.Plugins.StuffDatabase
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model)
+        /// <param name="initializationStatusModel">The initialization status model.</param>
+        /// <param name="mainWindow">The main window.</param>
+        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
+            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 
+            initializationStatusModel.CurrentPluginName = "Stuff database";
             _deserializer = new LoreMessageDeserializer(conveyor);
             _conveyorUnit = new StuffDatabaseUnit(conveyor);
         }

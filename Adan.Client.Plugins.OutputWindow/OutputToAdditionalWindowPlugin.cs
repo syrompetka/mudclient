@@ -13,11 +13,13 @@ namespace Adan.Client.Plugins.OutputWindow
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
+    using System.Windows;
 
     using Common.Conveyor;
     using Common.Model;
     using Common.Plugins;
 
+    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
@@ -26,7 +28,9 @@ namespace Adan.Client.Plugins.OutputWindow
     [Export(typeof(PluginBase))]
     public sealed class OutputToAdditionalWindowPlugin : PluginBase, IDisposable
     {
+        private readonly AdditionalOutputWindow _additionalOutputWindowControl = new AdditionalOutputWindow();
         private WidgetDescription _widget;
+
         private OutputToAdditionalWindowConveyorUnit _conveyorUnit;
         private RootModel _rootModel;
 
@@ -90,14 +94,17 @@ namespace Adan.Client.Plugins.OutputWindow
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model)
+        /// <param name="initializationStatusModel">The initialization status model.</param>
+        /// <param name="mainWindow">The main window.</param>
+        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
+            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 
-            var control = new AdditionalOutputWindow();
-            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", control, false);
-            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(conveyor, control);
+            initializationStatusModel.CurrentPluginName = "Additional window";
+            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl, false);
+            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(conveyor, _additionalOutputWindowControl);
             _rootModel = model;
         }
 

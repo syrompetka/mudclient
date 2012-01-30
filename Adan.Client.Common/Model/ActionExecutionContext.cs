@@ -20,12 +20,26 @@ namespace Adan.Client.Common.Model
     /// </summary>
     public class ActionExecutionContext
     {
+        private static readonly ActionExecutionContext _empty = new ActionExecutionContext();
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ActionExecutionContext"/> class.
         /// </summary>
         public ActionExecutionContext()
         {
             Parameters = new Dictionary<int, string>();
+        }
+
+        /// <summary>
+        /// Gets empty action execution context.
+        /// </summary>
+        [NotNull]
+        public static ActionExecutionContext Empty
+        {
+            get
+            {
+                return _empty;
+            }
         }
 
         /// <summary>

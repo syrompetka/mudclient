@@ -30,7 +30,7 @@ namespace Adan.Client.Common.Themes
         /// </summary>
         public ThemeManager()
         {
-            var themes = new List<ThemeDescription> { new ExpressionDarkThemeDescription(), new NormalThemeDescription() };
+            var themes = new List<ThemeDescription> { new ExpressionDarkThemeDescription() };
             AvailableThemes = themes;
             SwitchToTheme(themes.Where(theme => theme.Name == Settings.Default.SelectedThemeName).Single());
             _instance = this;

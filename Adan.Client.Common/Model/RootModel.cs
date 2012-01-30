@@ -65,6 +65,8 @@ namespace Adan.Client.Common.Model
                     _variablesDictionary.Add(variable.Name, variable);
                 }
             }
+
+            CustomSerializationTypes = new List<Type>();
         }
 
         /// <summary>
@@ -77,6 +79,16 @@ namespace Adan.Client.Common.Model
             {
                 return _enabledTriggersOrderedByPriority ?? RecalculatedEnabledTriggersPriorities();
             }
+        }
+
+        /// <summary>
+        /// Gets the custom serialization types.
+        /// </summary>
+        [NotNull]
+        public IList<Type> CustomSerializationTypes
+        {
+            get;
+            private set;
         }
 
         /// <summary>

@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.ViewModel.Actions
+namespace Adan.Client.Common.ViewModel
 {
     #region Namespace Imports
 
@@ -19,13 +19,12 @@ namespace Adan.Client.ViewModel.Actions
     using System.Linq;
     using System.Windows.Input;
 
-    using Common.Model;
-    using Common.Plugins;
-    using Common.Utils;
-    using Common.ViewModel;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+
+    using Model;
+    using Plugins;
+    using Utils;
 
     #endregion
 
@@ -38,7 +37,8 @@ namespace Adan.Client.ViewModel.Actions
 
         private readonly ObservableCollection<ActionViewModelBase> _actions;
         private readonly IList<ActionBase> _originalActions;
-        private readonly IEnumerable<ActionDescription> _actionDescriptions;
+        private readonly bool _allowDeleteLastAction;
+        private ActionDescription _selectedActionDescriptor;
 
         #endregion
 
@@ -49,16 +49,19 @@ namespace Adan.Client.ViewModel.Actions
         /// </summary>
         /// <param name="actions">The actions.</param>
         /// <param name="actionDescriptions">The action descriptions.</param>
-        public ActionsViewModel([NotNull] IList<ActionBase> actions, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
+        /// <param name="allowDeleteLastAction">if set to <c>true</c> [allow delete last action].</param>
+        public ActionsViewModel([NotNull] IList<ActionBase> actions, [NotNull] IEnumerable<ActionDescription> actionDescriptions, bool allowDeleteLastAction = false)
         {
             Assert.ArgumentNotNull(actions, "actions");
             Assert.ArgumentNotNull(actionDescriptions, "actionDescriptions");
 
             _originalActions = actions;
-            _actionDescriptions = actionDescriptions;
+            _allowDeleteLastAction = allowDeleteLastAction;
+            ActionDescriptions = actionDescriptions;
             _actions = new ObservableCollection<ActionViewModelBase>();
             Actions = new ReadOnlyObservableCollection<ActionViewModelBase>(_actions);
             AddActionCommand = new DelegateCommand(AddActionCommandExecute, true);
+            AddFirstActionCommand = new DelegateCommand(AddFirstActionCommandExecute, true);
             RemoveActionCommand = new DelegateCommandWithCanExecute(RemoveActionCommandExecute, RemoveActionCommandCanExecute);
             MoveActionUpCommand = new DelegateCommandWithCanExecute(MoveActionUpCommandExecute, MoveActionUpCommandCanExecute);
             MoveActionDownCommand = new DelegateCommandWithCanExecute(MoveActionDownCommandExecute, MoveActionDownCommandCanExecute);
@@ -77,6 +80,58 @@ namespace Adan.Client.ViewModel.Actions
         #region Properties
 
         /// <summary>
+        /// Gets the action descriptions.
+        /// </summary>
+        [NotNull]
+        public IEnumerable<ActionDescription> ActionDescriptions
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets or sets the selected action descriptor.
+        /// </summary>
+        /// <value>
+        /// The selected action descriptor.
+        /// </value>
+        [NotNull]
+        public ActionDescription SelectedActionDescriptor
+        {
+            get
+            {
+                if (_selectedActionDescriptor == null)
+                {
+                    _selectedActionDescriptor = ActionDescriptions.First();
+                }
+
+                return _selectedActionDescriptor;
+            }
+
+            set
+            {
+                Assert.ArgumentNotNull(value, "value");
+
+                _selectedActionDescriptor = value;
+                OnPropertyChanged("SelectedActionDescriptor");
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether actions collection is empty or not.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if actions collection is empty; otherwise, <c>false</c>.
+        /// </value>
+        public bool ActionsCollectionEmpty
+        {
+            get
+            {
+                return Actions.Count == 0;
+            }
+        }
+
+        /// <summary>
         /// Gets the actions description.
         /// </summary>
         [NotNull]
@@ -84,6 +139,11 @@ namespace Adan.Client.ViewModel.Actions
         {
             get
             {
+                if (!Actions.Any())
+                {
+                    return "None";
+                }
+
                 var res = string.Empty;
                 bool firstAction = true;
                 foreach (var action in Actions)
@@ -117,6 +177,16 @@ namespace Adan.Client.ViewModel.Actions
         /// </summary>
         [NotNull]
         public ICommand AddActionCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the add first action command.
+        /// </summary>
+        [NotNull]
+        public DelegateCommand AddFirstActionCommand
         {
             get;
             private set;
@@ -180,6 +250,7 @@ namespace Adan.Client.ViewModel.Actions
             _actions.Insert(position, newAction);
             _originalActions.Insert(position, newAction.Action);
             OnPropertyChanged("ActionsDescription");
+            OnPropertyChanged("ActionsCollectionEmpty");
         }
 
         /// <summary>
@@ -194,7 +265,7 @@ namespace Adan.Client.ViewModel.Actions
         {
             Assert.ArgumentNotNull(actions, "actions");
 
-            var res = new ActionsViewModel(actions, _actionDescriptions);
+            var res = new ActionsViewModel(actions, ActionDescriptions, _allowDeleteLastAction);
             foreach (var action in Actions)
             {
                 res.AddAction(action.Clone());
@@ -251,6 +322,7 @@ namespace Adan.Client.ViewModel.Actions
             actionToAdd.ActionTypeChanged += ChangeActionType;
             _actions.Add(actionToAdd);
             _originalActions.Add(actionToAdd.Action);
+            OnPropertyChanged("ActionsCollectionEmpty");
         }
 
         private void ChangeActionType([NotNull] ActionViewModelBase action, [NotNull] ActionDescription newactiontype)
@@ -261,6 +333,7 @@ namespace Adan.Client.ViewModel.Actions
             var currentIndex = Actions.IndexOf(action);
             RemoveAction(action);
             AddAction(newactiontype, currentIndex);
+            OnPropertyChanged("ActionsCollectionEmpty");
         }
 
         private void RemoveAction([NotNull] ActionViewModelBase actionToRemove)
@@ -272,6 +345,7 @@ namespace Adan.Client.ViewModel.Actions
             _originalActions.Remove(actionToRemove.Action);
             _actions.Remove(actionToRemove);
             OnPropertyChanged("ActionsDescription");
+            OnPropertyChanged("ActionsCollectionEmpty");
         }
 
         private void HandleActionDescriptionChange([NotNull] object sender, [NotNull] PropertyChangedEventArgs e)
@@ -295,9 +369,17 @@ namespace Adan.Client.ViewModel.Actions
             if (castedAction != null)
             {
                 var originalActionIndex = Actions.IndexOf(castedAction);
-                AddAction(_actionDescriptions.First(), originalActionIndex + 1);
+                AddAction(ActionDescriptions.First(), originalActionIndex + 1);
             }
 
+            OnPropertyChanged("ActionsCollectionEmpty");
+            UpdateCommandsCanExectue();
+        }
+
+        private void AddFirstActionCommandExecute([CanBeNull]object obj)
+        {
+            AddAction(SelectedActionDescriptor, 0);
+            OnPropertyChanged("ActionsCollectionEmpty");
             UpdateCommandsCanExectue();
         }
 
@@ -327,6 +409,11 @@ namespace Adan.Client.ViewModel.Actions
 
         private bool RemoveActionCommandCanExecute([CanBeNull] object arg)
         {
+            if (_allowDeleteLastAction)
+            {
+                return true;
+            }
+
             return Actions.Count > 1;
         }
 

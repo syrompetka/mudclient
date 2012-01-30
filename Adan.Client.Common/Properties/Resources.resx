@@ -123,10 +123,19 @@
   <data name="GroupEnabled" xml:space="preserve">
     <value>Group '{0}' enabled.</value>
   </data>
+  <data name="No" xml:space="preserve">
+    <value>No</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>OK</value>
+  </data>
   <data name="VariableValueClear" xml:space="preserve">
     <value>Variable '{0}' value cleared.</value>
   </data>
   <data name="VariableValueSet" xml:space="preserve">
     <value>Variable '{0}' value set to '{1}'.</value>
+  </data>
+  <data name="Yes" xml:space="preserve">
+    <value>Yes</value>
   </data>
 </root>

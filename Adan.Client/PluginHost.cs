@@ -121,14 +121,18 @@ namespace Adan.Client
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
-        public void InitializePlugins([NotNull] MessageConveyor conveyor, [NotNull] RootModel model)
+        /// <param name="initializationStatusModel">The initialization status model.</param>
+        /// <param name="mainWindow">The main window.</param>
+        public void InitializePlugins([NotNull] MessageConveyor conveyor, [NotNull] RootModel model, [NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
+            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
+            Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
             foreach (var plugin in Plugins)
             {
-                plugin.Initialize(conveyor, model);
+                plugin.Initialize(conveyor, model, initializationStatusModel, mainWindow);
 
                 foreach (var actionDescription in plugin.CustomActions)
                 {

@@ -29,7 +29,7 @@ namespace Adan.Client.Dialogs
         {
             InitializeComponent();
         }
-    
+
         private void HandleOkClicked([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
@@ -44,7 +44,9 @@ namespace Adan.Client.Dialogs
             Assert.ArgumentNotNull(e, "e");
 
             var hotkeyViewModel = (HotkeyViewModel)DataContext;
-            hotkeyViewModel.SetHotkey(e.Key, Keyboard.Modifiers);
+
+            hotkeyViewModel.SetHotkey(e.Key == Key.System ? e.SystemKey : e.Key, Keyboard.Modifiers);
+
             e.Handled = true;
         }
     }

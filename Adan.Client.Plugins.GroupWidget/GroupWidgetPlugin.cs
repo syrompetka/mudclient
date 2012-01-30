@@ -34,10 +34,19 @@ namespace Adan.Client.Plugins.GroupWidget
     public sealed class GroupWidgetPlugin : PluginBase, IDisposable
     {
         private readonly GroupWidgetControl _groupWidgetControl = new GroupWidgetControl();
-        private GroupStatusViewModel _viewModel;
+        private readonly GroupStatusViewModel _viewModel;
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
         private RootModel _rootModel;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupWidgetPlugin"/> class.
+        /// </summary>
+        public GroupWidgetPlugin()
+        {
+            _viewModel = new GroupStatusViewModel();
+            _groupWidgetControl = new GroupWidgetControl { DataContext = _viewModel };
+        }
 
         /// <summary>
         /// Gets the widgets of this plugin.
@@ -135,15 +144,19 @@ namespace Adan.Client.Plugins.GroupWidget
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model)
+        /// <param name="initializationStatusModel">The initialization status model.</param>
+        /// <param name="mainWindow">The main window.</param>
+        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
+            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
+            Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
+            initializationStatusModel.CurrentPluginName = Resources.Group;
             _rootModel = model;
             _deserializer = new GroupStatusMessageDeserializer(conveyor);
-            _viewModel = new GroupStatusViewModel(model);
-            _groupWidgetControl.DataContext = _viewModel;
+            _viewModel.UpdateRootModel(model);
             _conveyorUnit = new GroupStatusUnit(conveyor, _groupWidgetControl, _viewModel);
         }
 

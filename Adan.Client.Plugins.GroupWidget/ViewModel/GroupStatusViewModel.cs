@@ -28,22 +28,18 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class GroupStatusViewModel : ViewModelBase
     {
-        private readonly RootModel _rootModel;
         private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
+        private RootModel _rootModel;
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
         private GroupMateViewModel _selectedGroupMate;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStatusViewModel"/> class.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        public GroupStatusViewModel([NotNull] RootModel rootModel)
+        public GroupStatusViewModel()
         {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
             GroupMates = new ObservableCollection<GroupMateViewModel>();
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
-            _rootModel = rootModel;
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
@@ -145,6 +141,17 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
             OnPropertyChanged("MinimumWidth");
+        }
+
+        /// <summary>
+        /// Updates the root model.
+        /// </summary>
+        /// <param name="rootModel">The root model.</param>
+        public void UpdateRootModel([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            _rootModel = rootModel;
         }
 
         private void UpdateTimings()

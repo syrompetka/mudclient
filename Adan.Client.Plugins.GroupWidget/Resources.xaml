@@ -1,7 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
-                    xmlns:GroupWidget="clr-namespace:Adan.Client.Plugins.GroupWidget"
                     xmlns:Model="clr-namespace:Adan.Client.Common.Model;assembly=Adan.Client.Common"
                     xmlns:System="clr-namespace:System;assembly=mscorlib">
     <VisualBrush x:Key="Brush_Standing"
@@ -5922,6 +5921,117 @@
             </Canvas>
         </VisualBrush.Visual>
     </VisualBrush>
+    <VisualBrush x:Key="Brush_Accuracy"
+                 Stretch="Uniform">
+        <VisualBrush.Visual>
+            <Canvas Height="26"
+                    Width="26">
+                <Path Data="M12.96,6.73 C12.96,10.170734 10.170734,12.96 6.73,12.96 C3.289266,12.96 0.5,10.170734 0.5,6.73 C0.5,3.289266 3.289266,0.5 6.73,0.5 C10.170734,0.5 12.96,3.289266 12.96,6.73 z"
+                      Height="13.46"
+                      Canvas.Left="3.34"
+                      Stretch="Fill"
+                      Canvas.Top="3.271"
+                      Width="13.46">
+                    <Path.Stroke>
+                        <LinearGradientBrush EndPoint="0.985,1.004"
+                                             StartPoint="0.182,0.025">
+                            <GradientStop Color="#FFFFF261"
+                                          Offset="0" />
+                            <GradientStop Color="#FF96EEFF"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+                <Path Data="M0.5,0.5 L5.028,0.5 L5.028,1.324 L0.5,1.324 z"
+                      Height="1.824"
+                      Canvas.Left="1.156"
+                      Stretch="Fill"
+                      Canvas.Top="8.803"
+                      Width="5.528">
+                    <Path.Stroke>
+                        <LinearGradientBrush EndPoint="0.985,1.004"
+                                             StartPoint="0.182,0.025">
+                            <GradientStop Color="#FFFFF261"
+                                          Offset="0" />
+                            <GradientStop Color="#FF96EEFF"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+                <Path Data="M0.5,0.5 L5.028,0.5 L5.028,1.324 L0.5,1.324 z"
+                      Height="1.824"
+                      Canvas.Left="13.511"
+                      Stretch="Fill"
+                      Canvas.Top="8.803"
+                      Width="5.528">
+                    <Path.Stroke>
+                        <LinearGradientBrush EndPoint="0.985,1.004"
+                                             StartPoint="0.182,0.025">
+                            <GradientStop Color="#FFFFF261"
+                                          Offset="0" />
+                            <GradientStop Color="#FF96EEFF"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                </Path>
+                <Path Data="M0.5,0.5 L5.028,0.5 L5.028,1.324 L0.5,1.324 z"
+                      Height="1.824"
+                      Canvas.Left="7.344"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stretch="Fill"
+                      Canvas.Top="15.381"
+                      Width="5.528">
+                    <Path.Stroke>
+                        <LinearGradientBrush EndPoint="0.985,1.004"
+                                             StartPoint="0.182,0.025">
+                            <GradientStop Color="#FFFFF261"
+                                          Offset="0" />
+                            <GradientStop Color="#FF96EEFF"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M0.5,0.5 L5.028,0.5 L5.028,1.324 L0.5,1.324 z"
+                      Height="1.824"
+                      Canvas.Left="7.345"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stretch="Fill"
+                      Canvas.Top="2.888"
+                      Width="5.528">
+                    <Path.Stroke>
+                        <LinearGradientBrush EndPoint="0.985,1.004"
+                                             StartPoint="0.182,0.025">
+                            <GradientStop Color="#FFFFF261"
+                                          Offset="0" />
+                            <GradientStop Color="#FF96EEFF"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Path.Stroke>
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Ellipse Height="2.017"
+                         Canvas.Left="9.157"
+                         Stroke="White"
+                         Canvas.Top="8.836"
+                         Width="2.017" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
     <VisualBrush x:Key="Brush_Empty"
                  Stretch="Uniform">
         <VisualBrush.Visual>
@@ -6166,7 +6276,13 @@
             <RectangleGeometry Rect="0,0,100,100" />
         </GeometryDrawing.Geometry>
     </GeometryDrawing>
-
+    <GeometryDrawing x:Key="Drawing_Accuracy"
+                     Brush="{StaticResource Brush_Accuracy}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
+    
     <DrawingImage x:Key="ImageSource_Standing"
                   Drawing="{StaticResource Drawing_Standing}" />
     <DrawingImage x:Key="ImageSource_Sitting"
@@ -6245,6 +6361,8 @@
                   Drawing="{StaticResource Drawing_Stun}" />
     <DrawingImage x:Key="ImageSource_Weakness"
                   Drawing="{StaticResource Drawing_Weakness}" />
+    <DrawingImage x:Key="ImageSource_Accuracy"
+                  Drawing="{StaticResource Drawing_Accuracy}" />  
     <DrawingBrush Stretch="None"
                   TileMode="Tile"
                   Viewport="0,0,6,4"
@@ -6381,6 +6499,8 @@
                            Then="{StaticResource ImageSource_EntsPower}" />
         <Utils:SwitchCase  When="Stun"
                            Then="{StaticResource ImageSource_Stun}" />
+        <Utils:SwitchCase  When="Accuracy"
+                           Then="{StaticResource ImageSource_Accuracy}" />
         <Utils:SwitchCase  When="Weakness"
                            Then="{StaticResource ImageSource_Weakness}" />
     </Utils:SwitchConverter>

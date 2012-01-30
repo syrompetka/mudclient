@@ -130,7 +130,7 @@
     <value>Доступные аффеты:</value>
   </data>
   <data name="Blessing" xml:space="preserve">
-    <value>Благословление</value>
+    <value>Благословление/Точность</value>
   </data>
   <data name="Blindness" xml:space="preserve">
     <value>Слепота</value>

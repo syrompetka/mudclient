@@ -33,11 +33,20 @@ namespace Adan.Client.Plugins.GroupWidget
     [Export(typeof(PluginBase))]
     public sealed class MonstersWidgetPlugin : PluginBase, IDisposable
     {
-        private readonly MonstersWidgetControl _monstersWidgetControl = new MonstersWidgetControl();
-        private RoomMonstersViewModel _viewModel;
+        private readonly MonstersWidgetControl _monstersWidgetControl;
+        private readonly RoomMonstersViewModel _viewModel;
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
         private RootModel _rootModel;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MonstersWidgetPlugin"/> class.
+        /// </summary>
+        public MonstersWidgetPlugin()
+        {
+            _viewModel = new RoomMonstersViewModel();
+            _monstersWidgetControl = new MonstersWidgetControl { DataContext = _viewModel };
+        }
 
         /// <summary>
         /// Gets the widgets of this plugin.
@@ -124,15 +133,19 @@ namespace Adan.Client.Plugins.GroupWidget
         /// </summary>
         /// <param name="conveyor">The conveyor.</param>
         /// <param name="model">The model.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model)
+        /// <param name="initializationStatusModel">The initialization status model.</param>
+        /// <param name="mainWindow">The main window.</param>
+        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
             Assert.ArgumentNotNull(model, "model");
+            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
+            Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
+            initializationStatusModel.CurrentPluginName = Resources.Monsters;
             _rootModel = model;
             _deserializer = new RoomMonstersMessageDeserializer(conveyor);
-            _viewModel = new RoomMonstersViewModel(model);
-            _monstersWidgetControl.DataContext = _viewModel;
+            _viewModel.UpdateRootModel(model);
             _conveyorUnit = new RoomMonstersUnit(conveyor, _monstersWidgetControl, _viewModel);
         }
 

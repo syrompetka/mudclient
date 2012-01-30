@@ -94,7 +94,7 @@ namespace Adan.Client.Common.Utils.PatternMatching
         /// </returns>
         public bool TryToSetValue([NotNull] string valueToSet, [NotNull]IList<string> matchingResults)
         {
-            Assert.ArgumentNotNullOrWhiteSpace(valueToSet, "valueToSet");
+            Assert.ArgumentNotNull(valueToSet, "valueToSet");
             Assert.ArgumentNotNull(matchingResults, "matchingResults");
 
             if (matchingResults[_wildcardNumber] != null)

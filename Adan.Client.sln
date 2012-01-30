@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.GroupWi
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Adan.Client.Setup", "Adan.Client.Setup\Adan.Client.Setup.vdproj", "{0C13F056-F3E1-4B85-B072-BD3AD8828293}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Map", "Adan.Client.Map\Adan.Client.Map.csproj", "{BF656B2E-A08B-446C-923A-C3AB523F9387}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,7 +93,18 @@ Global
 		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|Any CPU.ActiveCfg = Release
 		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|Mixed Platforms.ActiveCfg = Release
 		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|x86.ActiveCfg = Release
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|x86.Build.0 = Release
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|x86.Build.0 = Debug|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|x86.ActiveCfg = Release|Any CPU
+		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,6 +10,9 @@
       <Word>plugin</Word>
       <Word>plugins</Word>
       <Word>Yaml</Word>
+      <Word>quester</Word>
+      <Word>sklad</Word>
+      <Word>doska</Word>
     </Recognized>
     <Deprecated>
       <Term PreferredAlternate=""></Term>

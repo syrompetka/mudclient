@@ -33,6 +33,17 @@ namespace Adan.Client.Common.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="InfoMessage"/> class.
         /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="textColor">Color of the text.</param>
+        public InfoMessage([NotNull] string text, TextColor textColor)
+            : base(text, textColor)
+        {
+            Assert.ArgumentNotNullOrWhiteSpace(text, "text");
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="InfoMessage"/> class.
+        /// </summary>
         /// <param name="messageBlocks">The message blocks.</param>
         public InfoMessage([NotNull]IEnumerable<TextMessageBlock> messageBlocks)
             : base(messageBlocks)

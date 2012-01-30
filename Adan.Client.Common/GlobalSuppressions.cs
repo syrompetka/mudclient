@@ -8,3 +8,5 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Adan.Client.Common.Conveyor.MessageConveyor.#HandleDataReceived(System.Object,Adan.Client.Common.Networking.DataReceivedEventArgs)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Adan.Client.Common.Controls.ScrollableFlowTextControl.#CopySelectedMessagesToClipboard()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Adan.Client.Common.Controls.ScrollableFlowTextControl.#OnMouseDoubleClick(System.Windows.Input.MouseButtonEventArgs)")]

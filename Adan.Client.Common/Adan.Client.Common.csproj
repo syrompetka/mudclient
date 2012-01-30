@@ -60,6 +60,9 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="Controls\ActionEditorControl.xaml.cs">
+      <DependentUpon>ActionEditorControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ActionParametersEditorControl.xaml.cs">
       <DependentUpon>ActionParametersEditorControl.xaml</DependentUpon>
     </Compile>
@@ -79,6 +82,12 @@
     <Compile Include="ConveyorUnits\ConveyorUnit.cs" />
     <Compile Include="Conveyor\MessageConveyor.cs" />
     <Compile Include="Conveyor\MessageReceivedEventArgs.cs" />
+    <Compile Include="Dialogs\OkDialog.xaml.cs">
+      <DependentUpon>OkDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\YesNoDialog.xaml.cs">
+      <DependentUpon>YesNoDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\MessageDeserializer.cs" />
     <Compile Include="Messages\BuiltinMessageTypes.cs" />
@@ -100,6 +109,7 @@
     <Compile Include="Model\Group.cs" />
     <Compile Include="Model\Highlight.cs" />
     <Compile Include="Model\Hotkey.cs" />
+    <Compile Include="Model\InitializationStatusModel.cs" />
     <Compile Include="Model\MonsterStatus.cs" />
     <Compile Include="Model\PetStatus.cs" />
     <Compile Include="Model\Position.cs" />
@@ -137,6 +147,7 @@
     <Compile Include="Utils\BackgroundTextColorToBrushConverter.cs" />
     <Compile Include="Utils\DelegateCommand.cs" />
     <Compile Include="Utils\DelegateCommandWithCanExecute.cs" />
+    <Compile Include="Utils\EqualityToBooleanConverter.cs" />
     <Compile Include="Utils\InverseBooleanConverter.cs" />
     <Compile Include="Utils\InverseBooleanToVisibilityConverter.cs" />
     <Compile Include="Utils\MultiplierConverter.cs" />
@@ -144,6 +155,7 @@
     <Compile Include="Utils\PatternMatching\FaultToken.cs" />
     <Compile Include="Utils\PatternMatching\MatchingResult.cs" />
     <Compile Include="Utils\PatternMatching\PatternToken.cs" />
+    <Compile Include="Utils\PatternMatching\VariableReferenceToken.cs" />
     <Compile Include="Utils\PatternMatching\WildcardParser.cs" />
     <Compile Include="Utils\PatternMatching\WildcardToken.cs" />
     <Compile Include="Utils\PercentageConverter.cs" />
@@ -157,6 +169,7 @@
     <Compile Include="Utils\WildcardStringHelper.cs" />
     <Compile Include="ViewModel\ActionParametersViewModel.cs" />
     <Compile Include="ViewModel\ActionParameterViewModelBase.cs" />
+    <Compile Include="ViewModel\ActionsViewModel.cs" />
     <Compile Include="ViewModel\ActionViewModelBase.cs" />
     <Compile Include="ViewModel\ActionWithParametersViewModelBase.cs" />
     <Compile Include="ViewModel\ViewModelBase.cs" />
@@ -169,6 +182,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ActionEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ActionParametersEditorControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -181,6 +198,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Dialogs\OkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\YesNoDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">
@@ -190,9 +215,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+      <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

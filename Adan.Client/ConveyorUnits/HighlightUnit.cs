@@ -82,7 +82,7 @@ namespace Adan.Client.ConveyorUnits
             {
                 foreach (var highlight in group.Highlights)
                 {
-                    highlight.ProcessMessage(textMessage);
+                    highlight.ProcessMessage(textMessage, _rootModel);
                 }
             }
         }

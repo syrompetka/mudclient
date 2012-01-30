@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Common.Plugins
 {
+    using System.Windows;
     using System.Windows.Controls;
 
     using CSLib.Net.Annotations;
@@ -26,7 +27,7 @@ namespace Adan.Client.Common.Plugins
         /// <param name="description">The description of the widget.</param>
         /// <param name="control">The control that displays data.</param>
         /// <param name="resizeToContent">if set to <c>true</c> then flyout window will be resized to content.</param>
-        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] Control control, bool resizeToContent)
+        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] FrameworkElement control, bool resizeToContent)
         {
             Assert.ArgumentNotNullOrWhiteSpace(name, "name");
             Assert.ArgumentNotNullOrWhiteSpace(description, "description");
@@ -46,7 +47,7 @@ namespace Adan.Client.Common.Plugins
         /// <param name="description">The description of the widget.</param>
         /// <param name="control">The control that displays data.</param>
         /// <param name="icon">The icon of this widget.</param>
-        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] Control control, [NotNull] string icon)
+        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] FrameworkElement control, [NotNull] string icon)
         {
             Assert.ArgumentNotNullOrWhiteSpace(name, "name");
             Assert.ArgumentNotNullOrWhiteSpace(description, "description");
@@ -85,7 +86,7 @@ namespace Adan.Client.Common.Plugins
         /// Gets the control that displays widget data.
         /// </summary>
         [NotNull]
-        public Control Control
+        public FrameworkElement Control
         {
             get;
             private set;
