@@ -130,7 +130,7 @@
     <value>Available affects:</value>
   </data>
   <data name="Blessing" xml:space="preserve">
-    <value>Blessing</value>
+    <value>Blessing/Accuracy</value>
   </data>
   <data name="Blindness" xml:space="preserve">
     <value>Blindness</value>

@@ -1,0 +1,345 @@
+﻿<UserControl x:Class="Adan.Client.Map.MapControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:Render="clr-namespace:Adan.Client.Map.Render"
+             mc:Ignorable="d"
+             d:DesignHeight="300"
+             d:DesignWidth="300"
+             Background="{DynamicResource WidgetBackgroundBrush}"
+             MinHeight="200"
+             MinWidth="200"
+             ClipToBounds="True">
+    <UserControl.Resources>
+        <ResourceDictionary Source="Resources.xaml"
+                            x:Key="MapResources" />
+    </UserControl.Resources>
+    <Grid>
+        <Render:ZoneVisual HorizontalAlignment="Stretch"
+                           VerticalAlignment="Stretch"
+                           x:Name="zoneVisual">
+            <Render:ZoneVisual.RenderTransform>
+                <TransformGroup>
+                    <TranslateTransform x:Name="translateTransform"
+                                        X="100"
+                                        Y="100" />
+                    <ScaleTransform ScaleX="{Binding ZoomLevel}"
+                                    ScaleY="{Binding ZoomLevel}"
+                                    x:Name="scaleTransform" />
+                </TransformGroup>
+            </Render:ZoneVisual.RenderTransform>
+        </Render:ZoneVisual>
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Left"
+                    Margin="5,0,0,0">
+            <TextBlock Text="{Binding Path=ZoomLevel, StringFormat=\{0:0.0x\}}"
+                       VerticalAlignment="Top"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource NormalBrush}" />
+            <Slider Orientation="Vertical"
+                    HorizontalAlignment="Right"
+                    VerticalAlignment="Stretch"
+                    Minimum="0.1"
+                    Maximum="2"
+                    Value="{Binding ZoomLevel}"
+                    TickPlacement="Both"
+                    TickFrequency="0.1"
+                    Height="150" />
+        </StackPanel>
+        <StackPanel Orientation="Vertical"
+                    HorizontalAlignment="Right"
+                    Margin="0,5,5,0">
+            <Button Click="ShowRoadMap">
+                <Canvas Width="20"
+                        Height="20">
+                    <Ellipse Height="20"
+                             Width="20">
+                        <Ellipse.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF021CF3"
+                                              Offset="0" />
+                                <GradientStop Color="#FF000E81"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Ellipse.Fill>
+                        <Ellipse.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="1" />
+                                <GradientStop Color="#FFCACACA" />
+                            </LinearGradientBrush>
+                        </Ellipse.Stroke>
+                    </Ellipse>
+                    <Path Data="M10,0.5 C12.377413,0.49999994 14.550858,1.373296 16.217043,2.8165998 L16.358788,2.9423754 L16.377548,2.9680138 C17.40188,4.4044228 18,6.1360383 18,7.999999 C18,12.970562 13.746704,17 8.499999,17 C5.712687,17 3.2057419,15.862785 1.4679271,14.051396 L1.3432597,13.918294 L1.3391992,13.909597 C0.80009806,12.71722 0.49999988,11.393656 0.5,10 C0.49999988,4.7532949 4.7532949,0.49999994 10,0.5 z"
+                          Height="17.5"
+                          Stretch="Fill"
+                          UseLayoutRounding="False"
+                          Width="18.5"
+                          StrokeThickness="0"
+                          Opacity="0.3">
+                        <Path.Fill>
+                            <LinearGradientBrush EndPoint="0.65,0.939"
+                                                 StartPoint="0.113,0.072">
+                                <GradientStop Color="#FFA5F5FF"
+                                              Offset="0" />
+                                <GradientStop Color="#FF081C5A"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="1" />
+                                <GradientStop Color="#FFCACACA" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                    </Path>
+                    <Path Data="M15.558261,3.0271318 C15.382563,2.4758136 11.95712,0.93686974 11.348221,1.1113181 C11.184035,1.1406568 11.114954,1.4018896 10.826,1.5463665 C10.615714,1.6515093 10.653671,1.8179758 10.361456,1.7205706 C10.145487,1.6485809 9.9754486,1.6574895 9.7517405,1.7496046 C9.456871,1.8710216 9.6524525,1.7252311 9.8388433,2.0980129 C9.6101618,2.1894855 9.3312292,2.3349636 9.0839586,2.4173872 C9.0009861,2.5833311 8.6069231,2.9192371 8.241971,2.7367616 C8.195014,2.7132828 8.1524382,2.5883956 8.1839037,2.5044894 C8.2187557,2.4115498 8.2955904,2.4479043 8.3871412,2.4173872 C8.4843664,2.3849792 8.691802,2.156081 8.2129374,2.156081 C7.8526835,2.156081 7.6412396,2.2338107 7.4580526,2.6786935 C7.2632632,3.1517534 7.333365,3.0396304 6.7612362,3.23034 C6.7612362,3.249696 6.7612362,3.269052 6.7612362,3.288408 C6.083673,3.4239206 5.3763046,3.0435572 4.7288542,3.2593741 C4.6244197,3.7815456 4.0871754,3.3621917 3.8287992,3.7239184 C3.6249549,4.0093007 3.7468133,4.5641999 3.3932889,4.6820412 C3.3932889,4.7013974 3.3932889,4.7207532 3.3932889,4.7401094 C3.1307697,4.8276157 2.9236369,4.9912004 3.1610167,5.46596 C3.3565352,5.856997 3.3061869,5.9427614 3.3061869,6.3950491 C3.3061869,6.8191848 4.1975069,7.9762468 3.2481189,8.1661243 C3.2253048,8.303009 3.1112988,8.3152781 3.0739148,8.4274311 C3.0330489,8.5500288 2.9793212,8.7322454 3.2190847,8.7758389 C3.4339356,8.8149033 3.7612681,8.7042761 3.9449356,8.5435667 C4.1765332,8.3409195 4.3034472,8.2234478 4.583684,8.108057 C4.8557816,7.9960165 5.0059099,7.9048185 5.3385687,7.9048185 C5.3385687,8.1964273 4.9341769,8.1718197 4.6707864,8.3693628 C4.4416747,8.5411968 4.2019916,8.5892429 3.9449356,8.7177715 C3.2818644,9.0493069 3.3464015,9.0848141 3.9449356,10.082371 C4.0726147,10.29517 4.2810249,10.371463 4.496582,10.604983 C4.6810107,10.804781 4.6490593,11.188586 4.9320922,11.3018 C5.5375066,11.543965 6.2644024,10.511371 6.6741343,11.330833 C7.0860505,11.330833 6.7361975,11.367859 6.9354401,11.766344 C7.0190053,11.933475 7.0688477,12.063428 7.2548146,12.17282 C7.4943838,12.313744 7.9436011,12.608331 8.241971,12.608331 C8.4885759,13.101539 8.6714592,12.846933 8.3871412,13.537419 C8.2763414,13.806507 8.2886629,13.79363 8.3871412,14.089067 C8.4710064,14.340662 8.5903797,14.282461 8.5903797,14.640713 C8.9827585,14.640713 9.2510729,14.379406 9.6936731,14.379406 C10.159576,14.379406 10.1175,14.129783 10.477592,13.769691 C10.628839,14.223435 10.473269,14.603801 10.274353,15.076223 C10.111329,15.463407 10.054421,15.89353 9.867877,16.266619 C10.288508,16.056303 10.695183,15.848339 11.116341,15.656903 C11.653049,15.412945 11.355918,14.82703 12.190599,15.105257 C12.374837,15.16667 12.454089,15.377319 12.655144,15.395597 C12.790311,15.407886 12.903112,15.313049 13.003551,15.453666 C13.058258,15.530253 13.07171,15.713737 13.032586,15.831108 C13.00595,15.911016 12.810758,16.458725 13.20679,16.295652 C13.465261,16.189222 13.439062,16.243179 13.439062,16.818264 C12.841107,17.017584 13.439955,18.15383 12.48094,18.15383 C12.629683,18.302574 13.267308,18.217617 13.467336,18.240965 C20.201923,15.773441 20.37558,6.2504382 15.586607,3.0563793"
+                          Height="14.723"
+                          Canvas.Left="5.825"
+                          Stretch="Fill"
+                          StrokeThickness="0"
+                          Canvas.Top="1.701"
+                          UseLayoutRounding="False"
+                          Width="13.615">
+                        <Path.Fill>
+                            <LinearGradientBrush EndPoint="0.65,0.939"
+                                                 StartPoint="0.113,0.072">
+                                <GradientStop Color="#FF01AD0C"
+                                              Offset="0" />
+                                <GradientStop Color="#FF016A01"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="1" />
+                                <GradientStop Color="#FFCACACA" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                    </Path>
+                    <Path Data="M16.22633,3.5206802"
+                          Height="0"
+                          Canvas.Left="16.226"
+                          Stretch="Fill"
+                          StrokeThickness="0"
+                          Canvas.Top="3.521"
+                          UseLayoutRounding="False"
+                          Width="0">
+                        <Path.Fill>
+                            <LinearGradientBrush EndPoint="0.65,0.939"
+                                                 StartPoint="0.113,0.072">
+                                <GradientStop Color="#FFA5F5FF"
+                                              Offset="0" />
+                                <GradientStop Color="#FF081C5A"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Fill>
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="1" />
+                                <GradientStop Color="#FFCACACA" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                    </Path>
+                </Canvas>
+            </Button>
+            <Button Margin="0,5,0,0"
+                    Click="CenterToCurrentRoom">
+                <Canvas Width="20"
+                        Height="20">
+                    <Rectangle Height="10"
+                               Canvas.Left="5"
+                               StrokeThickness="2"
+                               Canvas.Top="5"
+                               Width="10">
+                        <Rectangle.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="0" />
+                                <GradientStop Color="#FFCACACA"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Rectangle.Stroke>
+                    </Rectangle>
+                    <Path Data="M0,9.3999939 L5.7000122,9.3999939"
+                          Height="2"
+                          Canvas.Left="-1"
+                          Stretch="Fill"
+                          StrokeThickness="2"
+                          Canvas.Top="8.95"
+                          UseLayoutRounding="False"
+                          Width="7.7">
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="0" />
+                                <GradientStop Color="#FFCACACA"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                    </Path>
+                    <Path Data="M0,9.3999939 L5.7000122,9.3999939"
+                          Height="2"
+                          Canvas.Left="13.35"
+                          Stretch="Fill"
+                          StrokeThickness="2"
+                          Canvas.Top="8.95"
+                          UseLayoutRounding="False"
+                          Width="7.7">
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="0" />
+                                <GradientStop Color="#FFCACACA"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                    </Path>
+                    <Path Data="M0,9.3999939 L5.7000122,9.3999939"
+                          Height="2"
+                          Canvas.Left="6.1"
+                          Stretch="Fill"
+                          StrokeThickness="2"
+                          Canvas.Top="1.85"
+                          UseLayoutRounding="False"
+                          Width="7.7"
+                          RenderTransformOrigin="0.5,0.5">
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="0" />
+                                <GradientStop Color="#FFCACACA"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                        <Path.RenderTransform>
+                            <RotateTransform Angle="90" />
+                        </Path.RenderTransform>
+                    </Path>
+                    <Path Data="M0,9.3999939 L5.7000122,9.3999939"
+                          Height="2"
+                          Canvas.Left="6.2"
+                          Stretch="Fill"
+                          StrokeThickness="2"
+                          Canvas.Top="16.15"
+                          UseLayoutRounding="False"
+                          Width="7.7"
+                          RenderTransformOrigin="0.5,0.5">
+                        <Path.Stroke>
+                            <LinearGradientBrush EndPoint="0.5,1"
+                                                 StartPoint="0.5,0">
+                                <GradientStop Color="#FF7A7878"
+                                              Offset="0" />
+                                <GradientStop Color="#FFCACACA"
+                                              Offset="1" />
+                            </LinearGradientBrush>
+                        </Path.Stroke>
+                        <Path.RenderTransform>
+                            <RotateTransform Angle="90" />
+                        </Path.RenderTransform>
+                    </Path>
+                </Canvas>
+            </Button>
+            <Button Margin="0,5,0,0"
+                    Click="OpenRoutesDialog">
+                <Border Background="{StaticResource Brush_MapIcon_Route}"
+                        Width="16"
+                        Height="16"
+                        Margin="2"/>
+            </Button>
+            <Button Width="22"
+                    Height="22"
+                    Margin="0,25,0,0"
+                    Click="IncreaseCurrentLevel">
+                <ContentControl Style="{StaticResource UpIcon}"
+                                Width="14"
+                                Height="14" />
+            </Button>
+            <TextBlock Text="{Binding Path=CurrentLevel}"
+                       HorizontalAlignment="Center"
+                       Foreground="{DynamicResource NormalBrush}"
+                       FontWeight="Bold"
+                       FontSize="13" />
+
+            <Button Width="22"
+                    Height="22"
+                    Click="DecreaseCurrentLevel">
+                <ContentControl Style="{StaticResource DownIcon}"
+                                Width="14"
+                                Height="14" />
+            </Button>
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Left"
+                    VerticalAlignment="Bottom">
+            <TextBlock Text="{Binding Path=Name}"
+                       Foreground="{DynamicResource TextBrush}"
+                       FontSize="14"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="5,0,0,0"
+                       Background="#90000000" />
+            <TextBlock Text="{Binding Path=CurrentRoom.Name}"
+                       Foreground="{DynamicResource TextBrush}"
+                       FontSize="14"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="5,0,5,0"
+                       Background="#90000000" />
+            <TextBlock Text="{Binding Path=CurrentRoom.RoomId}"
+                       Foreground="{DynamicResource TextBrush}"
+                       FontSize="14"
+                       TextTrimming="CharacterEllipsis"
+                       Margin="5,0,5,0"
+                       Visibility="Collapsed"
+                       Name="roomIdLabel"
+                       Background="#90000000" />
+        </StackPanel>
+        <Grid Name="debugModeButtons"
+              HorizontalAlignment="Right"
+              VerticalAlignment="Bottom"
+              Visibility="Hidden">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"
+                    Grid.Row="1"
+                    Click="MoveSelectedRoomsLeft">&lt;</Button>
+            <Button Grid.Column="1"
+                    Grid.Row="0"
+                    Click="MoveSelectedRoomsNorth">^</Button>
+            <Button Grid.Column="1"
+                    Grid.Row="1"
+                    Click="MoveSelectedRoomsRight">&gt;</Button>
+            <Button Grid.Column="1"
+                    Grid.Row="2"
+                    Click="MoveSelectedRoomsSouth">v</Button>
+            <Button Grid.Column="2"
+                    Grid.Row="0"
+                    Click="MoveSelectedRoomsUp">Up</Button>
+            <Button Grid.Column="2"
+                    Grid.Row="1"
+                    Click="ClearSelection">Clear</Button>
+            <Button Grid.Column="2"
+                    Grid.Row="2"
+                    Click="MoveSelectedRoomsDown">Down</Button>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,1743 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
+                    xmlns:Model="clr-namespace:Adan.Client.Map.Model" xmlns:Map="clr-namespace:Adan.Client.Map">
+    <VisualBrush x:Key="Brush_MapIcon_None"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Quester"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M6.293,5.5855 C6.293,8.6702865 4.8842691,10.04008 3.1465052,10.04008 1.4087412,10.04008 0,8.6702865 0,5.5855 0,2.5007135 1.408736,0 3.1465,0 4.884264,0 6.293,2.5007135 6.293,5.5855 z"
+                      Fill="Red"
+                      Height="9.484"
+                      Canvas.Left="5.236"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Width="6.02"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="-1"
+                                            ScaleX="1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="0" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Ellipse Fill="Red"
+                         Height="5.162"
+                         Canvas.Left="5.236"
+                         Stroke="Black"
+                         StrokeThickness="0.25"
+                         Canvas.Top="10.838"
+                         Width="5.622" />
+            </Canvas>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_WeaponShop"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M9.25,-0.41666667 C8.0141931,2.8493045 7.206358,6.2514679 6.8333333,9.792 9.0417289,11.791602 8.9211442,12.753355 8.1712136,19.961453 9.188183,19.590903 10.307175,19.727113 11.212529,20.086449 10.25438,13.961983 9.8460944,11.924547 12.374653,9.541675 11.86439,5.9983287 10.76321,2.5701615 9.25,-0.41666667 z"
+                      Height="23.453"
+                      Canvas.Left="6.874"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0"
+                      Width="6.237"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="-3.486"
+                      Fill="Black">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="0.991"
+                                            ScaleX="1.009" />
+                            <SkewTransform AngleY="0.913" />
+                            <RotateTransform Angle="48.518" />
+                            <TranslateTransform X="1.0203574437791723"
+                                                Y="0.46473486387196061" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M9.25,-0.29166667 L9.4583333,14.208667 C10.204304,10.365681 11.093147,8.0993535 11.96267,7.7088507 11.435402,4.728931 10.465921,2.125505 9.25,-0.29166667 z"
+                      Height="18.664"
+                      Canvas.Left="9.126"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0"
+                      Canvas.Top="-3.258"
+                      Width="3.048"
+                      RenderTransformOrigin="0.5,0.5"
+                      Fill="Black">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="0.991"
+                                            ScaleX="1.009" />
+                            <SkewTransform AngleY="0.913" />
+                            <RotateTransform Angle="48.518" />
+                            <TranslateTransform X="2.693"
+                                                Y="2.214" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M10.375,5.8125 L15.1875,2.8755 C14.532941,3.7773627 12.954476,4.7542749 10.375,5.8125 z"
+                      Height="3.36"
+                      Canvas.Left="9.467"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0"
+                      Canvas.Top="2.833"
+                      Width="5.417"
+                      Fill="Black" />
+                <Ellipse Height="3.663"
+                         Stroke="Black"
+                         StrokeThickness="0"
+                         Canvas.Top="14.871"
+                         Width="3.337"
+                         Canvas.Left="0.49"
+                         Fill="Black" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_FoodShop"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M2.489054,2.6818278 C1.1229342,6.4273219 1.6026665,12.124423 2.4885609,13.147814 3.3744553,14.171206 8.9289729,15.049983 11.923598,13.011 13.065334,9.7767278 13.00651,6.3889499 11.855296,2.8860094 8.7315116,1.9891598 5.6095624,1.984985 2.489054,2.6818278 z"
+                      Fill="Black"
+                      Height="11.565"
+                      Canvas.Left="1.634"
+                      Stretch="Fill"
+                      Canvas.Top="2.678"
+                      Width="10.632" />
+                <Path Data="M12.511732,6.1257098 C15.730202,7.6707685 15.694067,9.2046142 12.58064,10.455542 18.039158,10.640903 17.591984,5.8348998 12.511732,6.1257098 z"
+                      Fill="Black"
+                      Height="8.699"
+                      Canvas.Left="10.26"
+                      Stretch="Fill"
+                      Canvas.Top="3.803"
+                      Width="4.997" />
+                <Path Data="M2.9029709,3.8615676 C1.9052516,6.747741 1.9016306,9.7575744 2.7065309,12.867983 3.5045446,13.267424 4.9920768,13.570947 5.5646819,13.391495 5.224734,10.200425 5.0689816,6.7779163 5.2834913,3.5144148 4.6526986,3.3897108 3.3996391,3.5580277 2.9029709,3.8615676 z"
+                      Fill="#FF4C5C66"
+                      Height="9.969"
+                      Canvas.Left="2.128"
+                      Stretch="Fill"
+                      Canvas.Top="3.474"
+                      Width="3.431" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Archer"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M7.1237374,-0.31818182 C7.7887019,-0.41098847 8.2783102,-0.23889089 8.571707,0.22961617 L12.79886,3.7117158 C14.753764,5.7318123 14.633693,7.2095838 12.994813,8.2903929 13.267118,9.3354231 13.290391,10.278714 13.033904,11.10771 14.958362,12.404817 14.555173,13.937794 12.79914,15.607859 L8.5326054,19.208349 C8.0792919,19.813308 7.6065463,19.917894 7.1234747,19.756587 6.9648,19.504658 6.8958655,18.960002 6.9724737,18.562188 7.3554204,17.114982 12.569486,14.690183 12.609267,13.592276 12.649049,12.494369 12.4524,12.265254 11.664017,11.734652 12.146396,10.36401 12.103644,8.9518358 11.664017,7.50827 12.697796,7.139919 12.487822,6.4768568 12.649049,5.993302 12.595307,4.5426376 8.6561537,3.3467267 7.0452346,0.93389778 6.8563212,0.52180636 6.8973164,0.10408329&#xd;&#xa;7.1237374,-0.31818182 z"
+                      Fill="Black"
+                      Height="19.66"
+                      Canvas.Left="6.397"
+                      Stretch="Fill"
+                      Canvas.Top="0.169"
+                      Width="9.46"
+                      StrokeThickness="0.5" />
+                <Path Data="M8.2962974,17.710076 L3.7825156,9.5955596 8.3234626,1.6162706 8.6191906,1.8583142 4.1320143,9.5424262 8.5383187,17.360876 z"
+                      Fill="Black"
+                      Height="15.688"
+                      Canvas.Left="2.367"
+                      Stretch="Fill"
+                      Canvas.Top="2.076"
+                      Width="6.2" />
+                <Path Data="M3.2985672,8.5475712 L6.0925643,8.5740119 6.7911677,9.3942061 14.340243,9.4210338 C14.393809,9.2004638 14.080925,8.8661003 13.641657,8.4924913 14.661283,8.6481251 15.714938,9.0368332 16.81188,9.7220324 15.805515,10.420784 14.734753,10.806086 13.614741,10.951664 14.055042,10.634829 14.314974,10.336191 14.340087,10.061243 L6.790695,10.033916 6.2265463,10.678484 3.2712684,10.705811 4.5068372,9.8040187 z"
+                      Fill="Black"
+                      Height="2.357"
+                      Canvas.Left="1.714"
+                      Stretch="Fill"
+                      Canvas.Top="8.781"
+                      Width="17.357"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Barbarian"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M12.124415,0 C12.020114,1.4344939 12.489758,2.6166447 13.758845,3.4473101 L16.314291,1.1886794 16.469618,3.1955152 18.406857,3.4410997 15.980065,5.8374301 C16.722721,7.1599465 17.870287,7.7087079 19.308552,7.7019635 18.569248,13.619021 15.901625,16.349865 11.412456,16.070921 11.947474,14.086104 12.015899,12.074174 10.926235,10.080752 L1.1125413,18.617088 0.71298359,18.223307 0.70376102,18.232 0.60350213,18.115408 0.34376449,17.859427 0.36581672,17.839003 0,17.413593 9.1824417,8.201624 C7.2675361,6.9792353 5.2556,6.9110108 3.2390582,7.3101436 3.2653084,2.8123935 6.1708345,0.33617892 12.124415,0 z"
+                      Fill="Black"
+                      Height="18.617"
+                      Canvas.Left="0.655"
+                      Stretch="Fill"
+                      Canvas.Top="0.242"
+                      Width="19.309" />
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="1.768"
+                         Canvas.Top="15.791"
+                         Width="3.056"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="3.155"
+                         Canvas.Top="14.501"
+                         Width="3.056"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="2.735"
+                         Canvas.Top="14.92"
+                         Width="3.056"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="2.252"
+                         Canvas.Top="15.275"
+                         Width="3.056"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="13.846"
+                         Canvas.Top="4.144"
+                         Width="4.01"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Ellipse Fill="White"
+                         Height="0.936"
+                         Canvas.Left="14.391"
+                         Canvas.Top="3.667"
+                         Width="4.01"
+                         RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <RotateTransform Angle="46.776" />
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Cleric"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M7.4109936,2.122802 C9.1853628,1.2517193 10.959725,1.2422259 12.73408,2.1224684 12.09155,4.2112676 11.945267,6.3932998 12.53482,8.7135778 16.579053,11.000916 16.631816,14.063375 13.132669,17.815593 11.101483,18.770928 9.1098266,18.75663 7.1547956,17.843934 3.6061271,13.449051 3.6985589,10.341481 7.8949047,8.6848519 8.7265125,6.7019888 8.4354342,4.4879122 7.4109936,2.122802 z"
+                      Fill="Black"
+                      Height="15.885"
+                      Canvas.Left="9.821"
+                      Stretch="Fill"
+                      Width="7.602"
+                      Canvas.Top="0.958" />
+                <Path Data="M1.6123596,1.9227061 C3.7558634,1.4631316 6.002242,1.3871945 8.3747816,1.8353923 8.9099247,5.914926 8.3621414,9.452379 5.6181255,9.9521216 5.9325642,12.194737 6.279765,13.396274 5.9627075,15.638448 5.9627075,15.638448 4.9705192,15.265594 4.9289615,15.638448 4.8874038,16.011303 4.3615667,12.221058 4.7135977,9.9087145 2.3359842,9.9730044 1.1958695,6.8039445 1.6123596,1.9227061 z"
+                      Fill="Black"
+                      Height="14.02"
+                      Canvas.Left="3.236"
+                      Stretch="Fill"
+                      Canvas.Top="2.362"
+                      Width="7.031" />
+                <Ellipse Fill="Black"
+                         Height="4.226"
+                         Canvas.Left="3.236"
+                         Canvas.Top="15.253"
+                         Width="7.487" />
+                <Path Data="M3.4867257,3.1238938 C3.952407,2.8152289 5.1404916,2.7089676 6.6722919,2.6990088 5.5599831,4.8841632 5.430975,7.4072459 6.1940471,10.236907 4.2711204,10.238108 3.331899,7.952604 3.4867257,3.1238938 z"
+                      Fill="#FFB1B1B1"
+                      Height="7.54"
+                      Canvas.Left="3.471"
+                      Stretch="Fill"
+                      Canvas.Top="2.699"
+                      Width="3.202"
+                      Opacity="0.55" />
+                <Path Data="M3.5929204,16.876106 C4.3601039,16.526585 5.2987649,16.382139 6.3273539,16.345239 6.2517222,16.676521 6.6963366,16.768229 7.6819847,16.610792 7.1112372,17.450962 6.6642046,18.197599 6.3546216,18.840321 4.1923184,18.806036 3.4429564,18.065753 3.5929204,16.876106 z"
+                      Fill="#FFB1B1B1"
+                      Height="2.496"
+                      Canvas.Left="3.575"
+                      Stretch="Fill"
+                      Canvas.Top="16.345"
+                      Width="4.106"
+                      Opacity="0.52" />
+                <Path Data="M12.035398,1.6637168 C12.911155,0.95785016 13.934584,1.068938 15.035797,1.6103363 13.404086,1.7244737 12.490307,2.2290108 12.460632,3.214309 z"
+                      Fill="#FFB1B1B1"
+                      Height="2.031"
+                      Canvas.Left="12.035"
+                      Stretch="Fill"
+                      Canvas.Top="1.173"
+                      Width="3"
+                      Opacity="0.495" />
+                <Path Data="M12.221239,8.0353982 C9.273367,9.3913791 9.7989159,12.370507 11.717053,16.000398 11.862595,13.187987 12.122042,10.669795 13.921574,8.4074781 12.80987,8.6179423 12.452649,8.3782721 12.221239,8.0353982 z"
+                      Fill="#FFB1B1B1"
+                      Height="7.965"
+                      Canvas.Left="10.145"
+                      Stretch="Fill"
+                      Canvas.Top="8.035"
+                      Width="3.775"
+                      Opacity="0.575" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_DarkKnight"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M7.7907393,7.8776705 C11.021205,8.742919 14.427436,8.9708257 18.12865,8.1100328 18.468757,12.645985 16.73848,15.969873 12.909658,18.065208 8.9612857,15.664435 6.9372364,12.40961 7.7907393,7.8776705 z"
+                      Fill="Black"
+                      Height="10.172"
+                      Canvas.Left="9.427"
+                      Stretch="Fill"
+                      Canvas.Top="9.516"
+                      Width="10.573"
+                      StrokeThickness="0.25" />
+                <Path Data="M7.7907393,7.8776705 C11.021205,8.742919 14.427436,8.9708257 18.12865,8.1100328 18.468757,12.645985 16.73848,15.969873 12.909658,18.065208 8.9612857,15.664435 6.9372364,12.40961 7.7907393,7.8776705 z"
+                      Fill="Black"
+                      Height="10.172"
+                      Canvas.Left="9.427"
+                      Stretch="Fill"
+                      Canvas.Top="9.516"
+                      Width="10.573"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M1.3177801,3.3830179 L2.4128515,1.7417282 C2.9278703,2.4867897 3.322635,2.6697818 3.7602734,3.0469871 4.1841133,2.7271064 4.648877,2.1244445 5.1507694,1.2652271 L6.7842165,2.8494828 C7.1365437,2.8714096 7.7746131,2.2545404 8.4573118,1.1521134 L9.7586082,3.0086111 C10.32936,2.6992542 11.180719,2.5116737 11.67957,1.7884156 L12.649696,3.635797 11.18698,8.4799313 C7.5633147,9.3397966 6.1314223,9.1676815 2.8436072,8.1822769 z"
+                      Fill="Black"
+                      Height="7.89"
+                      Canvas.Left="0.608"
+                      Stretch="Fill"
+                      Canvas.Top="0.602"
+                      Width="9.71"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M13.441271,2.1488335 C14.908964,1.5085539 16.390407,1.1172073 17.892927,1.1074074 17.890971,2.4344899 17.535829,3.8969882 17.16377,5.1699265 L7.548689,14.321951 5.4407151,12.290671 z"
+                      Fill="Black"
+                      Height="13.208"
+                      Canvas.Left="5.44"
+                      Stretch="Fill"
+                      Canvas.Top="1.108"
+                      Width="12.453"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M5.2256812,13.130819 C3.832294,13.939035 2.7847149,15.0188 2.0394204,16.335938 0.60665635,16.48054 0.26616236,17.226663 0.94684545,18.444694 1.8982826,18.867068 2.6647456,18.686384 3.0549998,17.403388 4.4374082,16.464691 5.6003995,15.341675 6.5529771,14.041903 z"
+                      Fill="Black"
+                      Height="5.518"
+                      Canvas.Left="0.608"
+                      Stretch="Fill"
+                      Canvas.Top="13.131"
+                      Width="5.946"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M14.72991,11.005706 C13.128712,10.992717 14.510311,11.466328 14.400512,11.696639 L14.314455,13.160357 12.804109,13.210981 C12.587718,13.319189 12.155008,12.129188 12.154936,13.535605 12.154865,14.942023 12.587718,13.752022 12.804109,13.86023 L14.318846,13.887282 14.345854,16.457223 C14.454051,16.727743 13.128638,17.26924 14.670445,17.268783 16.212252,17.268327 14.904872,16.691411 15.022085,16.402725 L15.103663,13.995648 16.64529,13.941546 C16.825673,13.81525 17.213906,15.023546 17.186441,13.562657 17.158976,12.101769 16.771658,13.364276 16.564266,13.265085 L15.103508,13.238033 15.054523,11.681975 C14.946318,11.456552 16.331107,11.018694 14.72991,11.005706 z"
+                      Fill="Red"
+                      Height="6.266"
+                      Canvas.Left="12.154"
+                      Stretch="Fill"
+                      Canvas.Top="11.006"
+                      Width="5.035"
+                      StrokeThickness="0.25" />
+                <Path Data="M13.772727,2.3333333 L17.124727,1.3071514 6.4353326,12.577906 5.855372,12.062431 z"
+                      Fill="Red"
+                      Height="11.519"
+                      Canvas.Left="5.856"
+                      Stretch="Fill"
+                      StrokeThickness="0.25"
+                      Canvas.Top="1.307"
+                      Width="11.519" />
+                <Path Data="M3.939777,9.3855879 C5.4060476,11.92571 7.5840647,13.789742 10.551553,14.903852 L8.2866656,16.934669 C7.4800925,14.380107 5.5934633,12.751848 2.2735953,12.352798 z"
+                      Fill="Black"
+                      Height="7.549"
+                      Canvas.Left="2.04"
+                      Stretch="Fill"
+                      Canvas.Top="9.516"
+                      Width="8.278"
+                      Stroke="White"
+                      StrokeThickness="0.5" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Druid"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Ellipse Fill="Black"
+                         Height="2.928"
+                         Canvas.Left="6.497"
+                         Canvas.Top="6.558"
+                         Width="2.815"
+                         Stroke="White" />
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.33"
+                      Canvas.Left="5.593"
+                      Stretch="Fill"
+                      Width="4.515"
+                      Stroke="White" />
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.286"
+                      Canvas.Left="9.475"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="1.672"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="45" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.305"
+                      Canvas.Left="11.055"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="5.216"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.286"
+                      Canvas.Left="9.721"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="9.026"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="135" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.124"
+                      Canvas.Left="5.593"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="10.941"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="180" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.286"
+                      Canvas.Left="1.682"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="1.556"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="-45" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.305"
+                      Canvas.Left="0.443"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="5.272"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="-90" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M3.776091,3.5068527 C3.776091,5.4050553 2.4436827,6.0513415 1.5597509,6.0513415 0.67581919,6.0513415 -0.73869362,5.5692379 -0.73869362,3.6710353 -0.73869362,1.7728326 0.71656826,0 1.6005,0 2.4844317,0 3.776091,1.60865 3.776091,3.5068527 z"
+                      Fill="Black"
+                      Height="5.286"
+                      Canvas.Left="1.276"
+                      Stretch="Fill"
+                      Width="4.515"
+                      RenderTransformOrigin="0.5,0.5"
+                      Canvas.Top="9.526"
+                      Stroke="White">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="-135" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Mage"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M19.179,9.5895 C19.179,10.986053 18.880465,12.31288 18.343731,13.509645 17.967123,14.349374 10.883323,9.5460854 10.29301,10.236904 9.6682576,10.968025 15.525411,17.183062 14.709345,17.699336 13.227965,18.636514 11.472085,19.179 9.5895,19.179 7.8149171,19.179 6.1529179,18.696972 4.7272927,17.856706 3.8350074,17.330791 9.1551437,11.106997 8.4784038,10.330763 7.7594055,9.5060573 1.059365,14.114747 0.65433194,13.078143 0.23187784,11.996955 0,10.820306&#xd;&#xa;0,9.5895 0,7.7212306 0.53426758,5.9777461 1.4583532,4.503496 1.9329381,3.7463618 7.9116106,8.7049771 8.5722627,8.1094345 9.176874,7.5644098 4.4499402,1.4505119 5.1790047,1.072213 6.4993667,0.38709985 7.9992273,0 9.5895,0 11.569703,0 13.409721,0.6002046 14.937554,1.6286145 15.576861,2.0589424 9.8381998,7.5417575 10.355583,8.1094345 10.870406,8.6743033 17.641938,4.3234184 18.011148,4.9993879 18.755767,6.3626761&#xd;&#xa;19.179,7.9266623 19.179,9.5895 z"
+                      Fill="Black"
+                      Height="19.179"
+                      Canvas.Left="0.423"
+                      Stretch="Fill"
+                      Canvas.Top="0.48"
+                      Width="19.179"
+                      Stroke="White" />
+                <Path Data="M10.026831,0.96839608 L11.138155,8.165714 18.559866,9.611038 11.055038,11.111926 10.137837,18.698043 8.7203447,11.111543 1.3824313,9.3608764 8.8035349,7.9436701 z"
+                      Fill="Red"
+                      Height="17.729"
+                      Canvas.Left="1.385"
+                      Stretch="Fill"
+                      StrokeThickness="0.25"
+                      Canvas.Top="0.968"
+                      Width="17.173"
+                      Stroke="White" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Paladin"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M2.4452649,0.40445543 L1.5827936,1.860778 1.5283717,11.245434 3.4980148,11.325907 3.4980148,1.8341385 z"
+                      Fill="Black"
+                      Height="12.66"
+                      Canvas.Left="1.535"
+                      Stretch="Fill"
+                      Width="2.728"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M1.8108947,0.00011877552 C2.1635882,0.0033083248 2.5381321,0.070815399 2.8841745,0.21270317 1.1978493,1.0934478 0.71861893,2.0416018 2.614814,3.1241054 3.3365969,1.8130926 4.3226511,1.2595603 5.4187061,1.0213212 L5.984877,-2.3228578 6.038798,-2.2684674 6.4433147,1.0483059 C7.5394112,1.2865453 8.5255024,1.8400786 9.2473127,3.1510932 11.143579,2.0685879 10.664331,1.1204326 8.9779417,0.23968638 9.5931513,-0.012558812 10.460301,-0.029684536 10.810896,0.13164952 11.161492,0.29298344 11.969804,0.53792736 11.862225,1.7768591 11.754646,3.0157909 10.883808,3.7184774 9.8673059,3.8257653 L9.8673059,5.7127058 10.379606,5.8743512 10.352643,10.484 9.3550064,9.9986302 C8.6946566,9.445151 7.7758557,9.2325694 6.5238759,9.4594552 L5.9308807,10.349096 5.93072,10.321494 5.3381488,9.4324566 C4.0862157,9.2055718 3.1674499,9.4181525 2.5071241,9.9716326 L1.5095252,10.457 1.4825631,5.8473584 1.9948433,5.6857134 1.9948433,3.7987765 C0.97837991,3.6914887 -0.00035451096,2.8002724 9.6329572E-08,1.7498732 0.00035430395,0.69947431 0.53885555,0.2660397 1.0512889,0.10466632 1.2754785,0.034065522 1.5365774,-0.0023619088 1.8108947,0.00011877552 z"
+                      Fill="Black"
+                      Height="15.712"
+                      Canvas.Left="4.602"
+                      Stretch="Fill"
+                      Canvas.Top="-0.018"
+                      Width="11.872"
+                      Stroke="White"
+                      StrokeThickness="0.25" />
+                <Path Data="M17.839712,10.083276 C15.548657,10.550891 13.25697,10.502704 10.964859,10.110572 L10.776319,15.380272 C11.703231,17.120422 13.159856,18.104412 14.523716,18.569113 16.089844,17.948009 17.167994,16.871829 18.216852,15.461342 18.271639,13.668508 18.20749,11.87577 17.839712,10.083276 z"
+                      Fill="Black"
+                      Height="10.387"
+                      Canvas.Left="11.827"
+                      Stretch="Fill"
+                      Canvas.Top="9.475"
+                      Width="7.458" />
+                <Path Data="M14.146582,11.351307 L14.928061,11.350878 14.847159,12.939285 16.51866,12.939285 16.545263,13.678707 14.793044,13.678707 14.820259,16.581375 14.065741,16.581501 14.038794,13.624115 12.287386,13.624115 12.287538,12.802618 14.066006,12.912151 z"
+                      Fill="White"
+                      Height="6.319"
+                      Canvas.Left="13.337"
+                      Stretch="Fill"
+                      Canvas.Top="11.029"
+                      Width="4.26" />
+                <Path Data="M7.4059974,8.9509348 C7.9626418,8.6555925 8.557928,8.6254327 9.1853878,8.8160667 9.0982814,8.9476819 9.2008538,9.5076418 9.0783077,9.543064 8.0535838,9.8392621 7.9152032,9.590979 7.4059974,8.9509348 z"
+                      Fill="White"
+                      Height="1.193"
+                      Canvas.Left="8.187"
+                      Stretch="Fill"
+                      Canvas.Top="8.071"
+                      Width="1.779" />
+                <Path Data="M7.4059974,8.9509348 C7.9626418,8.6555925 8.557928,8.6254327 9.1853878,8.8160667 9.0982814,8.9476819 9.2008538,9.5076418 9.0783077,9.543064 8.0535838,9.8392621 7.9152032,9.590979 7.4059974,8.9509348 z"
+                      Fill="White"
+                      Height="1.193"
+                      Canvas.Left="11.353"
+                      Stretch="Fill"
+                      Canvas.Top="8.071"
+                      Width="1.779"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="0" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M0.60429836,10.91024 L0.69562073,12.215158 C1.1548696,11.983355 1.6217011,11.854921 2.0958863,11.826734 2.7309547,11.788983 3.3792132,11.931044 4.0401116,12.245416 L4.1311859,10.940826 C2.9557314,11.679304 1.7801022,11.669119 0.60429836,10.91024 z"
+                      Fill="Black"
+                      Height="1.548"
+                      Canvas.Left="0.604"
+                      Stretch="Fill"
+                      Canvas.Top="12.65"
+                      Width="4.878" />
+                <Path Data="M2.0606827,15.491783 L1.574904,15.521906 1.574904,16.436024 2.0603656,16.497346 2.1816757,17.137468 2.6366726,17.076717 2.7581798,16.497526 3.1822324,16.497526 3.2432018,15.491564 2.8185966,15.369394 2.6972823,11.834072 2.151368,11.711967 z"
+                      Fill="Black"
+                      Height="6.262"
+                      Canvas.Left="1.95"
+                      Stretch="Fill"
+                      Canvas.Top="13.6"
+                      Width="2.313" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_PathFinder"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M2.4144192,13.585124 L8.4686029,13.613939 C9.285739,16.885339 8.6691915,18.630194 5.5133484,18.65908 2.3575053,18.687966 1.758035,17.171127 2.4144192,13.585124 z"
+                      Fill="Black"
+                      Height="3.641"
+                      Canvas.Left="3.986"
+                      Stretch="Fill"
+                      Canvas.Top="15.629"
+                      Width="5.059"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stroke="White"
+                      StrokeThickness="0.25">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="-17.387" />
+                            <TranslateTransform X="1.431"
+                                                Y="-0.199" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M2.3283467,11.834984 L8.4972213,11.806277 C9.0196642,9.5669947 9.5114699,4.8126958 9.4438736,4.7348412 9.3762772,4.6569867 9.9887062,1.1492483 5.5992301,1.0431923 1.2097541,0.93713639 1.3444591,3.8561975 1.3532701,4.5650321 1.3620812,5.2738668 1.7620977,9.5142011 2.3283467,11.834984 z"
+                      Fill="Black"
+                      Height="7.774"
+                      Canvas.Left="3.485"
+                      Stretch="Fill"
+                      Canvas.Top="6.074"
+                      Width="6.189"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stroke="White"
+                      StrokeThickness="0.25">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="-17.387" />
+                            <TranslateTransform X="-0.81"
+                                                Y="0.124" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M2.4144192,13.585124 L8.4686029,13.613939 C9.285739,16.885339 8.6691915,18.630194 5.5133484,18.65908 2.3575053,18.687966 1.758035,17.171127 2.4144192,13.585124 z"
+                      Fill="Black"
+                      Height="3.641"
+                      Canvas.Left="12.475"
+                      Stretch="Fill"
+                      Canvas.Top="10.129"
+                      Width="5.059"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stroke="White"
+                      StrokeThickness="0.25">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="15.083" />
+                            <TranslateTransform X="-1.241"
+                                                Y="-0.181" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M2.3283467,11.834984 L8.4972213,11.806277 C9.0196642,9.5669947 9.5114699,4.8126958 9.4438736,4.7348412 9.3762772,4.6569867 9.9887062,1.1492483 5.5992301,1.0431923 1.2097541,0.93713639 1.3444591,3.8561975 1.3532701,4.5650321 1.3620812,5.2738668 1.7620977,9.5142011 2.3283467,11.834984 z"
+                      Fill="Black"
+                      Height="7.774"
+                      Canvas.Left="11.974"
+                      Stretch="Fill"
+                      Canvas.Top="0.574"
+                      Width="6.189"
+                      RenderTransformOrigin="0.5,0.5"
+                      Stroke="White"
+                      StrokeThickness="0.25">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="15.083" />
+                            <TranslateTransform X="0.705"
+                                                Y="0.093" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Thief"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Ellipse Height="4.267"
+                         Canvas.Left="2.914"
+                         StrokeThickness="0.25"
+                         Canvas.Top="7.303"
+                         Width="3.986"
+                         RenderTransformOrigin="0.414,0.538"
+                         Fill="Black" />
+                <Ellipse Height="4.267"
+                         Canvas.Left="12.818"
+                         StrokeThickness="0.25"
+                         Canvas.Top="7.303"
+                         Width="3.986"
+                         RenderTransformOrigin="0.414,0.538"
+                         Fill="Black" />
+                <Path Data="M4.4239971,3.2129999 C2.293246,3.2130001 2.0901204,4.4346032 2.0901205,4.4346032 2.0901204,4.4346032 3.7166469,5.8730001 5.8473977,5.8730001 7.9781489,5.8730001 8.9940004,4.3367326 8.9940004,4.3367325 8.9940004,4.3367326 6.5547485,3.2130001 4.4239971,3.2129999 z M15.904003,3.177 C13.773252,3.177 11.334001,4.3007325 11.334001,4.3007325 11.334001,4.3007325 12.349852,5.8369999 14.480603,5.8370001 16.611354,5.8369999 18.35794,4.3520863 18.35794,4.3520862 18.35794,4.3520863 18.034756,3.177 15.904003,3.177 z M9.9962434,0 C15.516838,0 20.148312,0.52508235 19.992165,5.2256825 19.909792,7.705404 16.661567,9.7836268 12.244123,10.318038 11.523087,10.405267 10.663545,7.510596 9.8888883,7.510596 9.2041911,7.510596 8.6422448,10.415371 7.9951357,10.346805 3.4247236,9.8625381 -0.038594663,7.7535007 0.00032478571,5.2256825 0.07096535,0.63745999 4.4756498,0 9.9962434,0 z"
+                      Fill="Black"
+                      Height="10.348"
+                      Canvas.Left="10.028"
+                      RenderTransformOrigin="0.249349896171041,0.439022026738039"
+                      Stretch="Fill"
+                      Canvas.Top="4.823"
+                      Width="19.996"
+                      Stroke="White"
+                      StrokeThickness="0.25">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="0" />
+                            <TranslateTransform />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Warrior"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M6.5270005,0 L8.6558545,2.0131664 C9.2438002,2.6648617 10.864404,2.994622 13.053001,3.1473084 13.043715,7.0977774 11.563,10.471697 8.3555614,13.169035 7.0692382,14.124883 6.5403694,14.731642 6.5504816,15.09 M6.5025193,15.09 C6.5126318,14.731643 5.9837629,14.124882 4.6974392,13.169034 1.4900007,10.471697 0.0092859268,7.0977774 0,3.1473084 2.1885972,2.994622 3.8092005,2.6648617 4.3971472,2.0131667 L6.5260004,0"
+                      Fill="Black"
+                      Height="15.09"
+                      Canvas.Left="1.661"
+                      Stretch="Fill"
+                      Canvas.Top="0.584"
+                      Width="13.053" />
+                <Path Data="M6.5270005,0 L8.6558545,2.0131664 C9.2438002,2.6648617 10.864404,2.994622 13.053001,3.1473084 13.043715,7.0977774 11.563,10.471697 8.3555614,13.169035 7.0692382,14.124883 6.5403694,14.731642 6.5504816,15.09 M6.5025193,15.09 C6.5126318,14.731643 5.9837629,14.124882 4.6974392,13.169034 1.4900007,10.471697 0.0092859268,7.0977774 0,3.1473084 2.1885972,2.994622 3.8092005,2.6648617 4.3971472,2.0131667 L6.5260004,0"
+                      Fill="Black"
+                      Height="11.108"
+                      Canvas.Left="3.205"
+                      Stretch="Fill"
+                      Canvas.Top="2.64"
+                      Width="10.111"
+                      Stroke="White"
+                      StrokeThickness="0.5" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Bank"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="10.875"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="9.295"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="7.686"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="6.125"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="4.75"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="3.17"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="1.561"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Canvas.Left="8.981"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Width="9.876">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="14.045"
+                         Width="11.112"
+                         Canvas.Left="0.888">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="12.465"
+                         Width="11.112"
+                         Canvas.Left="0.888">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="10.856"
+                         Width="11.112"
+                         Canvas.Left="0.888">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+                <Ellipse Height="5.295"
+                         Stroke="#FF4D4118"
+                         StrokeThickness="0.5"
+                         Canvas.Top="9.295"
+                         Width="11.112"
+                         Canvas.Left="0.888">
+                    <Ellipse.Fill>
+                        <LinearGradientBrush EndPoint="0.02,0.466"
+                                             StartPoint="1.037,0.391">
+                            <GradientStop Color="#FFF4D165"
+                                          Offset="0" />
+                            <GradientStop Color="#FFF8E671"
+                                          Offset="0.492" />
+                            <GradientStop Color="#FFFFD400"
+                                          Offset="1" />
+                        </LinearGradientBrush>
+                    </Ellipse.Fill>
+                </Ellipse>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_MagicShop"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M1.5340909,10.113636 C1.5265454,9.0491211 0.97423927,8.9312648 1.5114545,6.9200906 2.0486698,4.9089164 8.6696505,5.6932376 12.248749,5.0798112 L15.1343,7.1928153 8.6250326,13.840075 z"
+                      Fill="#FF6A00A9"
+                      Height="10.018"
+                      Canvas.Left="-0.054"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="5.573"
+                      Width="15.906"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="0.385" />
+                            <TranslateTransform X="-0.016" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M2.7613636,7.7954545 L8.4321819,10.670909 14.704527,4.6704152 C14.488326,5.5486538 14.515675,6.213717 14.806338,6.6483054 L8.6021392,12.682893 2.500386,9.5120675 C1.5498487,8.6297713 1.6367683,8.0575452 2.7613636,7.7954545 z"
+                      Height="9.185"
+                      Canvas.Left="0.583"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="5.117"
+                      Width="14.664"
+                      Fill="White"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="0.385" />
+                            <TranslateTransform X="-0.011" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M8.0562918,0.68191528 C6.4199003,0.81809612 1.716184,6.1025008 1.5793635,6.6478182 1.442543,7.1931356 6.124496,9.4427759 8.3972483,10.499453 L14.806406,4.3635642 C13.788836,3.3335488 10.425984,0.5001507 8.0562918,0.68191528 z"
+                      Fill="#FF6A00A9"
+                      Height="11.202"
+                      Canvas.Left="0.283"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="0.674"
+                      Width="14.964"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="0.385" />
+                            <TranslateTransform X="0.012"
+                                                Y="-0.001" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_LeatherShop"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M6.3190001,0 L6.3210002,3.4481469E-05 6.3230003,0 7.6130019,0.022308903 C8.5319418,2.7344121 9.6686339,1.5311587 12.095234,1.2029384 L13.310671,2.7299417 C9.1121121,5.0134032 10.003736,8.8918164 12.807633,11.409753 L10.97293,13.022699 C10.018195,12.724027 8.9176976,12.148552 8.1087229,12.126687 7.3503093,12.10619 6.8324528,13.300882 6.4073041,13.607475 L6.3230003,13.662948 6.3230003,13.66558 6.3210002,13.664264 6.3190001,13.66558 6.3190001,13.662948 6.2346963,13.607475 C5.8095477,13.300882 5.3573321,12.012774 4.5989185,12.033272 3.789944,12.055135 2.689447,12.630612 1.7347115,12.929282 L-0.19050444,11.63471 C2.6282506,9.3405816 3.5937652,5.488775 -0.6935419,2.9548988 L0.5467658,1.2029384 C2.9733665,1.5311588 4.4979227,2.8240569 5.0289986,0.022308903 z"
+                      Fill="Black"
+                      Height="13.666"
+                      Canvas.Left="-3.945"
+                      RenderTransformOrigin="0.749920906136934,0.499999989966457"
+                      Stretch="Fill"
+                      Canvas.Top="1.181"
+                      Width="14.005">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="0" />
+                            <TranslateTransform X="-2.0442843901292846" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Route"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M0.125,0.125 L4.820313,0.017756253 4.8868791,1.279607 0.125,1.45 -1.395179,0.70142513 z"
+                      Fill="#FF2B1400"
+                      Height="2.408"
+                      Canvas.Left="7.949"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="4.612"
+                      Width="6.676"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform ScaleY="1"
+                                            ScaleX="-1" />
+                            <SkewTransform AngleY="0"
+                                           AngleX="0" />
+                            <RotateTransform Angle="-1.521" />
+                            <TranslateTransform X="0.22199085447397593"
+                                                Y="-0.001340856144453062" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Rectangle Fill="#FF2B1400"
+                           Height="12.113"
+                           Canvas.Left="6.321"
+                           Stroke="Black"
+                           StrokeThickness="0.25"
+                           Canvas.Top="2.581"
+                           Width="1.679" />
+                <Rectangle Fill="#FF2B1400"
+                           Height="12.113"
+                           Canvas.Left="8"
+                           Stroke="Black"
+                           StrokeThickness="0.25"
+                           Canvas.Top="2.581"
+                           Width="0.835" />
+                <Path Data="M0.13781313,-0.2697238 L4.9925448,0.30111609 4.8868791,1.279607 0.125,1.45 -1.4974095,0.32720053 z"
+                      Fill="#FF2B1400"
+                      Height="2.549"
+                      Canvas.Left="0.433"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="3.35"
+                      Width="6.888"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="-4.864" />
+                            <TranslateTransform X="0.016523742596370017"
+                                                Y="-0.0049489868004547466" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M2.388224,0.64514461 L4.8731068,-0.043090282 4.7247578,1.2660963 2.4845537,2.7835332 1.0937878,2.0294565 z"
+                      Fill="#FF2B1400"
+                      Height="4.03"
+                      Canvas.Left="3.182"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="7.267"
+                      Width="4.185"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="-4.864" />
+                            <TranslateTransform X="0.073152859748056631"
+                                                Y="0.10838184161000752" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+
+    <VisualBrush x:Key="Brush_MapIcon_Question"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M3.2272727,5.1590909 C4.2251915,7.0183611 5.2184117,6.7371389 6.2090074,5.2603352 8.3719855,2.4833695 12.079807,3.2034339 12.155517,5.2226966 12.231227,7.2419592 7.597051,9.4084276 6.7392665,10.980079 6.916985,12.700394 9.8703125,13.072511 10.413521,10.831017 10.954589,9.7411205 15.110376,8.363837 14.618046,4.2133694 14.125717,0.062901929 4.1803014,0.39042815 3.2272727,5.1590909 z"
+                      Fill="Red"
+                      Height="11.203"
+                      Canvas.Left="3.151"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Width="10.184" />
+                <Ellipse Fill="Red"
+                         Height="3.909"
+                         Canvas.Left="5.798"
+                         Stroke="Black"
+                         StrokeThickness="0.25"
+                         Canvas.Top="12.091"
+                         Width="3.99" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Horse"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M8.75,7.625 C8.2340141,8.40988 7.1954091,8.6062878 7,9.5833333 6.8087366,10.539651 6.4999141,11.459365 6.4166667,12.458333 6.3645279,13.083999 6.4879142,13.349237 5.5833333,13.5 5.3212562,13.54368 5.0544248,13.631379 4.7916667,13.5 4.6507797,13.429557 4.4546464,13.24876 4.3333333,13.083333 4.1000866,12.76527 3.5806749,12.384765 3.5416667,11.916667 3.498212,11.395211 3.3844253,10.963793 3.2916667,10.5 3.092586,9.5045967 2.8756792,8.2049373&#xd;&#xa;3.0833333,7.1666667 3.2013453,6.5766069 2.7916667,6.4309426 2.7916667,5.8333333 2.7916667,5.2218166 2.8286698,4.7377673 3,4.1666667 3.1589035,3.6369883 2.896095,3.359048 3.25,2.9166667 3.5686667,2.5183333 3.5494723,2.0599163 3.7083333,1.5833333 3.7490793,1.4610955 3.8973096,-0.076079212 4.2916667,0.625 4.5120309,1.0167586 4.5825973,1.4851298 4.875,1.875 5.0353208,1.5543585 4.8781937,1.0929528 5.375,0.91666667 5.6079085,0.83402172&#xd;&#xa;5.3875185,1.3023403 5.6666667,1.25 5.8554488,1.2146033 6.1168243,0.8366036 6.3333333,0.75 6.5665957,0.65669506 6.881028,0.429216 7.125,0.375 7.3130239,0.3332169 7.2255006,0.66666667 7.5,0.66666667 8.0670355,0.66666667 8.5356417,0.4508868 9.125,0.5 9.309983,0.51541525 9.2335025,0.75838972 9.4583333,0.83333333 9.6670589,0.90290854 9.8830005,0.875 10.125,0.875 10.387773,0.875 10.642702,0.77854035 10.916667,0.83333333&#xd;&#xa;11.086617,0.86732343 11.192051,1.1056837 11.375,1.1666667 12.249997,1.4583325 13.059042,1.8243533 13.875,2.2083333 14.683643,2.5888713 15.175321,2.6621537 15.833333,3.375 16.098273,3.6620185 16.346406,3.9340973 16.583333,4.25 16.860146,4.6190835 17.968767,5.5864261 17.968767,6.1133489 17.968767,7.3162206 18.632764,6.8984095 18.632764,8.1226921 18.632764,9.136581 22.612396,7.8263839 22.612396,8.8402728 22.612396,9.3786261 22.47241,14.453497&#xd;&#xa;22.47241,14.972914 22.47241,15.594322 22.132852,16.73585 21.946115,17.296062 21.700294,18.033525 19.402879,17.034702 18.520341,17.211209 17.645554,17.386167 17.017416,17.678401 16.137194,17.678401 15.536283,17.678401 14.514873,17.812367 13.92314,17.727834 13.15155,17.617607 9.3849435,17.886245 9.3849435,16.57548 9.3849435,15.605434 8.8288659,15.300728 8.8288659,14.345814 8.8288659,13.838727 9.1576917,12.025741 9.4770791,11.578599 9.7055693,11.258713&#xd;&#xa;10.059255,10.964103 10.25,10.625 10.666588,9.884399 10.238358,9.336704 9.625,8.4166667 9.0017692,7.4818204 8.8333333,7.7429189 8.8333333,6.3333333 8.6254794,6.7490412 8.9166667,7.1482867 8.9166667,7.625 8.8082213,7.6430742 8.7317935,7.61649 8.6666667,7.75"
+                      Fill="Black"
+                      Height="14.332"
+                      Stretch="Fill"
+                      Width="15.607"
+                      Canvas.Top="1.578"
+                      Canvas.Left="0.35" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Doska"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Rectangle Fill="#FF431200"
+                           Height="7.569"
+                           Canvas.Left="4.114"
+                           Canvas.Top="8"
+                           Width="1.05" />
+                <Rectangle Fill="#FF431200"
+                           Height="7.569"
+                           Canvas.Left="10.664"
+                           Canvas.Top="8"
+                           Width="1.05" />
+                <Rectangle Fill="#FF431200"
+                           Height="9.131"
+                           Canvas.Left="0.593"
+                           Canvas.Top="1.132"
+                           Width="14.545"
+                           RadiusX="1"
+                           RadiusY="1" />
+                <Rectangle Fill="#FF979100"
+                           Height="7.097"
+                           Canvas.Left="1.725"
+                           Canvas.Top="2.06"
+                           Width="12.229"
+                           RadiusX="1"
+                           RadiusY="1" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Sklad"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16">
+                <Path Data="M6.6111111,5.8935185 L14.333444,4.3328518 C14.333444,6.4467088 14.448855,10.466156 14.333444,10.674423 14.218034,10.88269 6.6481533,13.451429 6.4862169,13.196929 6.3242804,12.942429 6.5694797,8.3279887 6.6111111,5.8935185 z"
+                      Fill="#FF622800"
+                      Height="9.134"
+                      Canvas.Left="6.431"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      Canvas.Top="4.333"
+                      Width="8.203" />
+                <Path Data="M1.6342593,11.587963 C1.4178008,11.301081 1.5665308,7.121889 1.5326666,4.888852 3.2055669,3.2067724 4.8811118,3.5853117 6.5592103,5.9535735 6.4822642,8.3610208 6.5358609,12.689874 6.328372,13.175915 6.120883,13.661956 1.8507177,11.874845 1.6342593,11.587963 z"
+                      Fill="#FF622800"
+                      Height="9.655"
+                      Canvas.Left="1.513"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      Canvas.Top="3.854"
+                      Width="5.316" />
+                <Path Data="M12.305556,3 L4.1014072,3.7314815 C5.1903565,4.0681723 6.0291413,4.7328784 6.6013041,5.7471789 L14.309777,4.2880587 C13.809682,3.469809 13.121402,3.0872353 12.305556,3 z"
+                      Fill="#FF622800"
+                      Height="2.995"
+                      Canvas.Left="4.102"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="3"
+                      Width="10.458" />
+                <Path Data="M8.0080812,3.4724004 L9.4484997,3.27879 11.138275,5.1597469 11.166149,7.7315544 C10.812214,8.9670347 10.280881,8.9800044 9.6147072,8.0637234 L9.3930973,5.463973 z"
+                      Fill="#FFD88000"
+                      Height="5.691"
+                      Canvas.Left="8.008"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="3.278"
+                      Width="3.409" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_Post"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="16"
+                    Height="16"
+                    SnapsToDevicePixels="True">
+                <Rectangle Height="8.427"
+                           Canvas.Left="1.597"
+                           Canvas.Top="4.167"
+                           Width="12.981"
+                           Stroke="Black"
+                           RadiusX="1"
+                           RadiusY="1"
+                           SnapsToDevicePixels="True">
+                    <Rectangle.Fill>
+                        <RadialGradientBrush>
+                            <GradientStop Color="Black"
+                                          Offset="0" />
+                            <GradientStop Color="White"
+                                          Offset="1" />
+                        </RadialGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Path Data="M9.6217862,7.4960643 L14.981277,11.710658 C16.07383,13.023494 0.78079664,13.092203 1.2243781,11.641643 L6.6177631,7.5994352"
+                      Height="4.87"
+                      Canvas.Left="1.63"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      Canvas.Top="7.961"
+                      Width="12.833"
+                      SnapsToDevicePixels="True" />
+                <Path Data="M1.4867257,3.8318584 C1.5444727,3.99573 5.7496064,7.0025394 7.8810468,8.5878799 10.213761,6.9722034 14.738256,4.0309337 14.879191,3.7408504 15.414512,2.8832942 0.94044563,2.7460237 1.4867257,3.8318584 z"
+                      Height="5.208"
+                      Canvas.Left="1.864"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      Canvas.Top="3.962"
+                      Width="12.468"
+                      SnapsToDevicePixels="True" />
+            </Canvas>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_MapIcon_MiscShop"
+                 Stretch="Uniform"
+                 RenderOptions.CachingHint="Cache">
+        <VisualBrush.Visual>
+            <Canvas Width="20"
+                    Height="20">
+                <Path Data="M18.44697,17.685606 L17.633808,18.527384 5.7828029,9.1205537 9.849509,5.8103984 z"
+                      Height="12.72"
+                      Canvas.Left="6.859"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0"
+                      Canvas.Top="6.853"
+                      Width="12.662"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90.297" />
+                            <TranslateTransform X="-6.234"
+                                                Y="0.067" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.702,0.813"
+                                             StartPoint="0.83,0.683">
+                            <GradientStop Color="#FF271606"
+                                          Offset="0" />
+                            <GradientStop Color="#FF251202"
+                                          Offset="1" />
+                            <GradientStop Color="#FF4D2B0C"
+                                          Offset="0.671" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Path Data="M2.5615047,8.9451038 L8.9797213,2.9908211 10.54785,6.5333336 6.1917166,10.832926 z"
+                      Height="7.841"
+                      Canvas.Left="4.101"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0"
+                      Canvas.Top="3.746"
+                      Width="7.986"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90.297" />
+                            <TranslateTransform X="4.433"
+                                                Y="0.546" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.24,0.897"
+                                             StartPoint="0.869,0.204">
+                            <GradientStop Color="#FF271606"
+                                          Offset="0" />
+                            <GradientStop Color="#FF4D2B0C"
+                                          Offset="0.435" />
+                            <GradientStop Color="#FF43280D"
+                                          Offset="0.745" />
+                            <GradientStop Color="#FF68370E"
+                                          Offset="0.988" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+                <Path Data="M5.491469,8.2853401 C3.5020172,9.2805339 1.9338523,8.6610856 0.78691323,6.427229 1.0355548,5.7125711 2.4925249,5.5630123 4.8561134,5.837452 3.6931103,6.1156801 2.2506357,4.378985 0.55853956,0.84257653 2.603053,0.50272786 4.5528012,0.78313557 6.2789465,2.5270685 6.0345366,1.9331688 6.286138,1.3645076 6.8887721,0.81370821 9.2060504,1.0533851 10.517448,2.0003661 9.6181279,4.501855 z"
+                      Height="8.029"
+                      Canvas.Left="0.558"
+                      Stretch="Fill"
+                      Stroke="Black"
+                      StrokeThickness="0.25"
+                      Canvas.Top="0.716"
+                      Width="9.347"
+                      RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform />
+                            <SkewTransform />
+                            <RotateTransform Angle="90.297" />
+                            <TranslateTransform X="10.247"
+                                                Y="0.634" />
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                    <Path.Fill>
+                        <LinearGradientBrush EndPoint="0.24,0.897"
+                                             StartPoint="0.869,0.204">
+                            <GradientStop Color="#FFDC590D"
+                                          Offset="0" />
+                            <GradientStop Color="#FFE7D86E"
+                                          Offset="0.435" />
+                            <GradientStop Color="#FFD0A50D"
+                                          Offset="0.745" />
+                            <GradientStop Color="#FFD2540B"
+                                          Offset="0.988" />
+                        </LinearGradientBrush>
+                    </Path.Fill>
+                </Path>
+            </Canvas>
+
+        </VisualBrush.Visual>
+    </VisualBrush>
+   
+    
+    <LinearGradientBrush x:Key="Brush_Room_Default"
+                         EndPoint="-0.016,0.894"
+                         StartPoint="0.554,0.224">
+        <GradientStop Color="#FF006D91"
+                      Offset="1" />
+        <GradientStop Color="#FF008B89"
+                      Offset="0.43" />
+        <GradientStop Color="#FF1E6C9D"
+                      Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush_Room_Purple"
+                         EndPoint="-0.016,0.894"
+                         StartPoint="0.554,0.224">
+        <GradientStop Color="#FF780B83"
+                      Offset="1" />
+        <GradientStop Color="#FFAA27B8"
+                      Offset="0.496" />
+        <GradientStop Color="#FF8819B4"
+                      Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush_Room_Red"
+                         EndPoint="-0.016,0.894"
+                         StartPoint="0.554,0.224">
+        <GradientStop Color="#FF91000D"
+                      Offset="1" />
+        <GradientStop Color="#FFBA282F"
+                      Offset="0.43" />
+        <GradientStop Color="#FF9D1E1E"
+                      Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush_Room_Green"
+                         EndPoint="-0.016,0.894"
+                         StartPoint="0.554,0.224">
+        <GradientStop Color="#FF155213"
+                      Offset="1" />
+        <GradientStop Color="#FF27B830"
+                      Offset="0.496" />
+        <GradientStop Color="#FF138509"
+                      Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush_Room_Yellow"
+                         EndPoint="-0.016,0.894"
+                         StartPoint="0.554,0.224">
+        <GradientStop Color="#FF918B00"
+                      Offset="1" />
+        <GradientStop Color="#FFD8D241"
+                      Offset="0.43" />
+        <GradientStop Color="#FF9D981E"
+                      Offset="0" />
+    </LinearGradientBrush>
+    <LinearGradientBrush x:Key="Brush_Room_Brown"
+                         EndPoint="0.118,0.962"
+                         StartPoint="1.02,-0.141">
+        <GradientStop Color="#FF5C3300" />
+        <GradientStop Color="#FF472B0A"
+                      Offset="1" />
+        <GradientStop Color="#FF744F20"
+                      Offset="0.556" />
+    </LinearGradientBrush>
+
+    <Utils:SwitchConverter x:Key="RoomColorToBrushConverter">
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Default}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Default</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Purple}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Purple</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Red}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Red</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Green}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Green</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Yellow}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Yellow</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_Room_Brown}">
+            <Utils:SwitchCase.When>
+                <Model:RoomColor>Brown</Model:RoomColor>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+    </Utils:SwitchConverter>
+    <Utils:SwitchConverter x:Key="RoomIconToBrushConverter">
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_None}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>None</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_WeaponShop}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>WeaponShop</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_FoodShop}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>FoodShop</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_MagicShop}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>MagicShop</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_LeatherShop}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>LeatherShop</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Bank}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Bank</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Route}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Route</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Archer}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Archer</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Barbarian}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Barbarian</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Cleric}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Cleric</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_DarkKnight}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>DarkKnight</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Druid}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Druid</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Mage}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Mage</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Paladin}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Paladin</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_PathFinder}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Pathfinder</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Thief}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Thief</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Warrior}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Warrior</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Quester}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Quester</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Question}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Question</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Horse}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Horse</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Doska}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Doska</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Sklad}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Sklad</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_Post}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>Post</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+        <Utils:SwitchCase Then="{StaticResource Brush_MapIcon_MiscShop}">
+            <Utils:SwitchCase.When>
+                <Model:RoomIcon>MiscShop</Model:RoomIcon>
+            </Utils:SwitchCase.When>
+        </Utils:SwitchCase>
+    </Utils:SwitchConverter>
+   
+    <x:Array x:Key="ColorsList"
+                  Type="{x:Type Model:RoomColor}">
+        <Model:RoomColor>Default</Model:RoomColor>
+        <Model:RoomColor>Red</Model:RoomColor>
+        <Model:RoomColor>Yellow</Model:RoomColor>
+        <Model:RoomColor>Purple</Model:RoomColor>
+        <Model:RoomColor>Brown</Model:RoomColor>
+        <Model:RoomColor>Green</Model:RoomColor>
+    </x:Array>
+ 
+    <x:Array x:Key="IconsList"
+             Type="{x:Type Model:RoomIcon}">
+        <Model:RoomIcon>None</Model:RoomIcon>
+        <Model:RoomIcon>WeaponShop</Model:RoomIcon>
+        <Model:RoomIcon>FoodShop</Model:RoomIcon>
+        <Model:RoomIcon>MagicShop</Model:RoomIcon>
+        <Model:RoomIcon>LeatherShop</Model:RoomIcon>
+        <Model:RoomIcon>MiscShop</Model:RoomIcon>
+        <Model:RoomIcon>Horse</Model:RoomIcon>
+        <Model:RoomIcon>Sklad</Model:RoomIcon>
+        <Model:RoomIcon>Post</Model:RoomIcon>
+        <Model:RoomIcon>Doska</Model:RoomIcon>
+        <Model:RoomIcon>Bank</Model:RoomIcon>
+        <Model:RoomIcon>Route</Model:RoomIcon>
+        <Model:RoomIcon>Quester</Model:RoomIcon>
+        <Model:RoomIcon>Question</Model:RoomIcon>
+        <Model:RoomIcon>Archer</Model:RoomIcon>
+        <Model:RoomIcon>Barbarian</Model:RoomIcon>
+        <Model:RoomIcon>Cleric</Model:RoomIcon>
+        <Model:RoomIcon>DarkKnight</Model:RoomIcon>
+        <Model:RoomIcon>Druid</Model:RoomIcon>
+        <Model:RoomIcon>Mage</Model:RoomIcon>
+        <Model:RoomIcon>Paladin</Model:RoomIcon>
+        <Model:RoomIcon>Pathfinder</Model:RoomIcon>
+        <Model:RoomIcon>Thief</Model:RoomIcon>
+        <Model:RoomIcon>Warrior</Model:RoomIcon>
+    </x:Array>
+
+    <Style TargetType="Map:RoomContextMenu"
+           BasedOn="{StaticResource {x:Type ContextMenu}}" />
+
+    <Utils:EqualityToBooleanConverter x:Key="equalityToBooleanConverter" />
+</ResourceDictionary>

@@ -20,25 +20,36 @@ namespace Adan.Client.Common.Utils.PatternMatching
     /// </summary>
     public class ConstantStringToken : PatternToken
     {
-        private readonly WildcardToken _previousWildcardToken;
+        private readonly PatternToken _previousToken;
         private readonly bool _anchored;
-        private readonly string _searchValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConstantStringToken"/> class.
         /// </summary>
-        /// <param name="previousWildcardToken">The previous wild card token.</param>
+        /// <param name="previousToken">The previous token.</param>
         /// <param name="anchored">if set to <c>true</c> [anchored].</param>
         /// <param name="searchValue">The constant string.</param>
-        public ConstantStringToken([CanBeNull] WildcardToken previousWildcardToken, bool anchored, [NotNull] string searchValue)
+        public ConstantStringToken([CanBeNull] PatternToken previousToken, bool anchored, [NotNull] string searchValue)
         {
-            Assert.ArgumentNotNullOrWhiteSpace(searchValue, "searchValue");
+            Assert.ArgumentNotNull(searchValue, "searchValue");
 
-            _previousWildcardToken = previousWildcardToken;
+            _previousToken = previousToken;
             _anchored = anchored;
-            _searchValue = searchValue;
+            SearchValue = searchValue;
         }
 
+        /// <summary>
+        /// Gets or sets values to search.
+        /// </summary>
+        /// <value>
+        /// The search value.
+        /// </value>
+        protected string SearchValue
+        {
+            get;
+            set;
+        }
+        
         /// <summary>
         /// Matches the specified string.
         /// </summary>
@@ -53,7 +64,7 @@ namespace Adan.Client.Common.Utils.PatternMatching
             Assert.ArgumentNotNull(target, "target");
             Assert.ArgumentNotNull(matchingResults, "matchingResults");
 
-            var foundPosition = target.IndexOf(_searchValue, position, StringComparison.Ordinal);
+            var foundPosition = target.IndexOf(SearchValue, position, StringComparison.Ordinal);
             if (foundPosition < 0)
             {
                 return new MatchingResult { IsSuccess = false };
@@ -64,20 +75,21 @@ namespace Adan.Client.Common.Utils.PatternMatching
                 return new MatchingResult { IsSuccess = false };
             }
 
-            if (_previousWildcardToken != null && !_previousWildcardToken.TryToSetValue(target.Substring(position, foundPosition - position), matchingResults))
+            var previousWildcardToken = _previousToken as WildcardToken;
+            if (previousWildcardToken != null && !previousWildcardToken.TryToSetValue(target.Substring(position, foundPosition - position), matchingResults))
             {
                 return new MatchingResult { IsSuccess = false };
             }
 
             if (NextToken != null)
             {
-                var res = NextToken.Match(target, foundPosition + _searchValue.Length, matchingResults);
+                var res = NextToken.Match(target, foundPosition + SearchValue.Length, matchingResults);
                 return res.IsSuccess
                            ? new MatchingResult { IsSuccess = true, StartPosition = foundPosition, EndPosition = res.EndPosition }
                            : new MatchingResult { IsSuccess = false };
             }
 
-            return new MatchingResult { IsSuccess = true, StartPosition = foundPosition, EndPosition = foundPosition + _searchValue.Length };
+            return new MatchingResult { IsSuccess = true, StartPosition = foundPosition, EndPosition = foundPosition + SearchValue.Length };
         }
 
         /// <summary>
@@ -93,10 +105,10 @@ namespace Adan.Client.Common.Utils.PatternMatching
 
             if (NextToken != null)
             {
-                return _searchValue + NextToken.GetValue(matchingResults);
+                return SearchValue + NextToken.GetValue(matchingResults);
             }
 
-            return _searchValue;
+            return SearchValue;
         }
     }
 }

@@ -35,7 +35,7 @@ namespace Adan.Client.Plugins.GroupWidget
         private static readonly List<AffectDescription> _allAffects = new List<AffectDescription>
                               {
                                   new AffectDescription("Invisibility", Resources.Invisibility, "невидимость", "Invisibility"),
-                                  new AffectDescription("Blessing", Resources.Blessing, "благословение", "Blessing"),
+                                  new AffectDescription("Blessing", Resources.Blessing, new List<string> { "благословение", "точность" }, new List<string> { "Blessing", "Accuracy" }),
                                   new AffectDescription("Poison", Resources.Poison, "яд", "Poison") { IsRoundBased = true },
                                   new AffectDescription("Protection", Resources.Protection, "защита", "Protection"),
                                   new AffectDescription("Flight", Resources.Flight, "полет", "Flying"),

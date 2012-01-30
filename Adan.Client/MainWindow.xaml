@@ -34,8 +34,8 @@
                 <MenuItem Header="Highlights" Click="HandleEditHighlights" />
                 <MenuItem Header="Substitutions" Click="HandleEditSubstitutions" />
                 <Separator />
-                <MenuItem Header="Theme" Name="themesMenuItem" />
-                <Separator />
+                <MenuItem Header="Theme" Name="themesMenuItem" Visibility="Collapsed" />
+                <Separator  Visibility="Collapsed" />
             </MenuItem>
             <MenuItem Header="View" Name="viewMenuItem" />
             <MenuItem Header="Help"/>

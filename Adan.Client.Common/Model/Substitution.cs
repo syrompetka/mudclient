@@ -90,21 +90,7 @@ namespace Adan.Client.Common.Model
                 Assert.ArgumentNotNull(value, "value");
 
                 _substituteWith = value;
-                _rootSubstituteWithPatternToken = WildcardParser.ParseWildcardString(value);
-            }
-        }
-
-        [NotNull]
-        private PatternToken RootPatternToken
-        {
-            get
-            {
-                if (_rootPatternToken == null)
-                {
-                    _rootPatternToken = WildcardParser.ParseWildcardString(Pattern);
-                }
-
-                return _rootPatternToken;
+                _rootSubstituteWithPatternToken = null;
             }
         }
 
@@ -112,19 +98,21 @@ namespace Adan.Client.Common.Model
         /// Handles the message.
         /// </summary>
         /// <param name="message">The message.</param>
-        public void HandleMessage([NotNull] TextMessage message)
+        /// <param name="rootModel">The root model.</param>
+        public void HandleMessage([NotNull] TextMessage message, [NotNull]RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             foreach (var block in message.MessageBlocks)
             {
                 ClearMatchingResults();
                 int position = 0;
-                var res = RootPatternToken.Match(block.Text, position, _matchingResults);
+                var res = GetRootPatternToken(rootModel).Match(block.Text, position, _matchingResults);
                 while (res.IsSuccess)
                 {
                     var replaceResult = block.Text.Substring(0, res.StartPosition)
-                                 + _rootSubstituteWithPatternToken.GetValue(_matchingResults)
+                                 + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults)
                                  + block.Text.Substring(res.EndPosition);
                     if (replaceResult != block.Text)
                     {
@@ -132,9 +120,9 @@ namespace Adan.Client.Common.Model
                         message.UpdateInnerText();
                     }
 
-                    position = res.StartPosition + _rootSubstituteWithPatternToken.GetValue(_matchingResults).Length;
+                    position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
                     ClearMatchingResults();
-                    res = RootPatternToken.Match(block.Text, position, _matchingResults);
+                    res = GetRootPatternToken(rootModel).Match(block.Text, position, _matchingResults);
                 }
             }
         }
@@ -145,6 +133,32 @@ namespace Adan.Client.Common.Model
             {
                 _matchingResults[i] = null;
             }
+        }
+
+        [NotNull]
+        private PatternToken GetSubstituteWithPatternToken([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            if (_rootSubstituteWithPatternToken == null)
+            {
+                _rootSubstituteWithPatternToken = WildcardParser.ParseWildcardString(SubstituteWith, rootModel);
+            }
+
+            return _rootSubstituteWithPatternToken;            
+        }
+
+        [NotNull]
+        private PatternToken GetRootPatternToken([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            if (_rootPatternToken == null)
+            {
+                _rootPatternToken = WildcardParser.ParseWildcardString(Pattern, rootModel);
+            }
+
+            return _rootPatternToken;
         }
     }
 }

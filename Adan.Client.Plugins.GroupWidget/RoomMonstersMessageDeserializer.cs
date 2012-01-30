@@ -9,12 +9,14 @@
 
 namespace Adan.Client.Plugins.GroupWidget
 {
+    using System;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
 
     using Common.Conveyor;
     using Common.MessageDeserializers;
+    using Common.Messages;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -62,18 +64,25 @@ namespace Adan.Client.Plugins.GroupWidget
         public override void DeserializeDataFromServer(int offset, int bytesReceived, byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
-
-            var messageXml = _encoding.GetString(data, offset, bytesReceived);
-            _builder.Append(messageXml);
-            if (isComplete)
+            try
             {
-                using (var stringReader = new StringReader(_builder.ToString()))
+                var messageXml = _encoding.GetString(data, offset, bytesReceived);
+                _builder.Append(messageXml);
+                if (isComplete)
                 {
-                    var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
-                    PushMessageToConveyor(message);
-                }
+                    using (var stringReader = new StringReader(_builder.ToString()))
+                    {
+                        var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
+                        PushMessageToConveyor(message);
+                    }
 
+                    _builder.Clear();
+                }
+            }
+            catch (Exception ex)
+            {
                 _builder.Clear();
+                PushMessageToConveyor(new ErrorMessage(ex.ToString()));
             }
         }
     }

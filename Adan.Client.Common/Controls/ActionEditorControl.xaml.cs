@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Adan.Client.Controls
+namespace Adan.Client.Common.Controls
 {
     /// <summary>
     /// Interaction logic for ActionEditorControl.xaml

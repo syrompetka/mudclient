@@ -97,9 +97,6 @@
     <Compile Include="CommandSerializers\TextCommandSerializer.cs" />
     <Compile Include="Commands\ConnectCommand.cs" />
     <Compile Include="Commands\DisconnectCommand.cs" />
-    <Compile Include="Controls\ActionEditorControl.xaml.cs">
-      <DependentUpon>ActionEditorControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\TextBoxWithHistory.cs" />
     <Compile Include="ConveyorUnits\AliasUnit.cs" />
     <Compile Include="ConveyorUnits\CommandMultiplierUnit.cs" />
@@ -135,6 +132,9 @@
     </Compile>
     <Compile Include="Dialogs\HotkeysEditDialog.xaml.cs">
       <DependentUpon>HotkeysEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PluginInitializationStatusDialog.xaml.cs">
+      <DependentUpon>PluginInitializationStatusDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SubstitutionEditDialog.xaml.cs">
       <DependentUpon>SubstitutionEditDialog.xaml</DependentUpon>
@@ -193,7 +193,6 @@
     <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\TriggerOrCommandParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\VariableReferenceParameterViewModel.cs" />
-    <Compile Include="ViewModel\Actions\ActionsViewModel.cs" />
     <Compile Include="ViewModel\Actions\ConditionalActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\DisableGroupActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\EnableGroupActionViewModel.cs" />
@@ -220,10 +219,6 @@
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
     <Compile Include="SettingsHolder.cs" />
-    <Page Include="Controls\ActionEditorControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\AliasEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -253,6 +248,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\HotkeysEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PluginInitializationStatusDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

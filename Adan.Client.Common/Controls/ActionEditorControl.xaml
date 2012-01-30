@@ -1,14 +1,14 @@
-﻿<UserControl x:Class="Adan.Client.Controls.ActionEditorControl"
+﻿<UserControl x:Class="Adan.Client.Common.Controls.ActionEditorControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Controls="clr-namespace:Adan.Client.Controls" 
-             xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common" 
-             xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common" mc:Ignorable="d" 
+             xmlns:Controls="clr-namespace:Adan.Client.Common.Controls" 
+             xmlns:Utils="clr-namespace:Adan.Client.Common.Utils"
+             mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
-        <Controls1:GenericTemplateSelector x:Key="actionTemplateSelector" />
+        <Controls:GenericTemplateSelector x:Key="actionTemplateSelector" />
     	<Utils:TextColorToBrushConverter x:Key="TextColorToBrushConverter" />
         <Utils:BackgroundTextColorToBrushConverter x:Key="BackgroundTextColorToBrushConverter" />
 
@@ -21,7 +21,7 @@
                 </Grid.RowDefinitions>
                 <Label Grid.Row="0">Command:</Label>
                 <TextBox Grid.Row="1" Text="{Binding Path=CommandText, UpdateSourceTrigger=PropertyChanged}" />
-                <Controls1:ActionParametersEditorControl Grid.Row="2" DataContext="{Binding Path=ParametersModel}" />
+                <Controls:ActionParametersEditorControl Grid.Row="2" DataContext="{Binding Path=ParametersModel}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="OutputToMainWindowActionViewModelTemplate" DataType="OutputToMainWindowActionViewModel" >
@@ -45,12 +45,12 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <Label Grid.Column="0" Grid.Row="0" VerticalAlignment="Center">Text color:</Label>
-                    <Controls1:ColorSelector Grid.Column="1"  Grid.Row="0" Margin="5,5,0,0" SelectedColor="{Binding Path=TextColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Width="150"/>
+                    <Controls:ColorSelector Grid.Column="1"  Grid.Row="0" Margin="5,5,0,0" SelectedColor="{Binding Path=TextColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"  Width="150"/>
                     <Label Grid.Column="0" Grid.Row="1" VerticalAlignment="Center">Background color:</Label>
-                    <Controls1:BackgroundColorSelector Grid.Column="1" Grid.Row="1" Margin="5,5,0,0"  SelectedColor="{Binding Path=BackgroundColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="150"/>
+                    <Controls:BackgroundColorSelector Grid.Column="1" Grid.Row="1" Margin="5,5,0,0"  SelectedColor="{Binding Path=BackgroundColor, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" Width="150"/>
                     <TextBlock Grid.Column="2" Grid.Row="0" Grid.RowSpan="2" FontSize="22" Text="Sample text" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="15,0,15,0" FontFamily="../Resources/consola.ttf#Consolas" Foreground="{Binding Path=TextColor, Converter={StaticResource TextColorToBrushConverter}}" Background="{Binding Path=BackgroundColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" />
                 </Grid>
-                <Controls1:ActionParametersEditorControl Grid.Row="3" DataContext="{Binding Path=ParametersModel}" />
+                <Controls:ActionParametersEditorControl Grid.Row="3" DataContext="{Binding Path=ParametersModel}" />
             </Grid>
         </DataTemplate>
         <DataTemplate x:Key="ConditionalActionViewModelTemplate" DataType="ConditionalActionViewModel">

@@ -81,7 +81,7 @@ namespace Adan.Client.ConveyorUnits
             {
                 foreach (var substitution in group.Substitutions)
                 {
-                    substitution.HandleMessage(textMessage);
+                    substitution.HandleMessage(textMessage, _rootModel);
                 }
             }
         }

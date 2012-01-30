@@ -10,11 +10,14 @@
 namespace Adan.Client.ConveyorUnits
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Common.Conveyor;
     using Common.ConveyorUnits;
@@ -32,7 +35,11 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public sealed class LoggingUnit : ConveyorUnit
     {
+        private readonly object _syncRoot = new object();
+        private readonly ConcurrentQueue<TextMessage> _messageQueue = new ConcurrentQueue<TextMessage>();
+        
         private bool _isLogging;
+        private bool _disposed;
         private FileStream _fileStream;
         private StreamWriter _streamWriter;
 
@@ -44,6 +51,7 @@ namespace Adan.Client.ConveyorUnits
             : base(messageConveyor)
         {
             Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
+            Task.Factory.StartNew(MessageWriterFunction);
         }
 
         /// <summary>
@@ -89,7 +97,7 @@ namespace Adan.Client.ConveyorUnits
                 var outputMessage = message as OutputToMainWindowMessage;
                 if (outputMessage != null)
                 {
-                    _streamWriter.WriteLine(outputMessage.InnerText);
+                    _messageQueue.Enqueue(outputMessage);
                 }
             }
 
@@ -137,9 +145,14 @@ namespace Adan.Client.ConveyorUnits
             base.Dispose(disposing);
             if (disposing)
             {
-                if (_streamWriter != null)
+                lock (_syncRoot)
                 {
-                    _streamWriter.Dispose();
+                    if (_streamWriter != null)
+                    {
+                        _streamWriter.Dispose();
+                    }
+
+                    _disposed = true;
                 }
             }
         }
@@ -154,45 +167,84 @@ namespace Adan.Client.ConveyorUnits
         {
             Assert.ArgumentNotNullOrEmpty(logName, "logName");
 
-            if (!Directory.Exists(GetLogsFolder()))
+            lock (_syncRoot)
             {
-                Directory.CreateDirectory(GetLogsFolder());
-            }
+                if (!Directory.Exists(GetLogsFolder()))
+                {
+                    Directory.CreateDirectory(GetLogsFolder());
+                }
 
-            if (_isLogging)
-            {
-                StopLogging();
-            }
+                if (_isLogging)
+                {
+                    StopLogging();
+                }
 
-            try
-            {
-                var fullLogPath = Path.Combine(GetLogsFolder(), logName + ".log");
-                _fileStream = File.Open(fullLogPath, FileMode.Append, FileAccess.Write, FileShare.Read);
-                _streamWriter = new StreamWriter(_fileStream, Encoding.Unicode);
-                _isLogging = true;
-                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.LoggingStarted, fullLogPath)));
-            }
-            catch (IOException ex)
-            {
-                PushMessageToConveyor(new ErrorMessage(ex.Message));
-                _isLogging = true;
-                _fileStream = null;
+                try
+                {
+                    var fullLogPath = Path.Combine(GetLogsFolder(), logName + ".log");
+                    _fileStream = File.Open(fullLogPath, FileMode.Append, FileAccess.Write, FileShare.Read);
+                    _streamWriter = new StreamWriter(_fileStream, Encoding.Unicode);
+                    _isLogging = true;
+                    PushMessageToConveyor(
+                        new InfoMessage(
+                            string.Format(CultureInfo.InvariantCulture, Resources.LoggingStarted, fullLogPath)));
+                }
+                catch (IOException ex)
+                {
+                    PushMessageToConveyor(new ErrorMessage(ex.Message));
+                    _isLogging = true;
+                    _fileStream = null;
+                }
             }
         }
 
         private void StopLogging()
         {
-            if (!_isLogging)
+            lock (_syncRoot)
             {
-                return;
+                if (!_isLogging)
+                {
+                    return;
+                }
+
+                TextMessage message;
+                while (_messageQueue.TryDequeue(out message))
+                {
+                    _streamWriter.WriteLine(message.InnerText);
+                }
+
+                _streamWriter.Dispose();
+                _streamWriter = null;
+                _fileStream = null;
+
+                _isLogging = false;
+                PushMessageToConveyor(new InfoMessage(Resources.LoggingStopped));
             }
+        }
 
-            _streamWriter.Dispose();
-            _streamWriter = null;
-            _fileStream = null;
+        private void MessageWriterFunction()
+        {
+            while (true)
+            {
+                if (_disposed)
+                {
+                    return;
+                }
 
-            _isLogging = false;
-            PushMessageToConveyor(new InfoMessage(Resources.LoggingStopped));
+                lock (_syncRoot)
+                {
+                    if (_isLogging)
+                    {
+                        TextMessage message;
+                        while (_messageQueue.TryDequeue(out message))
+                        {
+                            _streamWriter.WriteLine(message.InnerText);
+                        }
+                    }
+                }
+
+                Thread.Sleep(1000);
+            }
         }
     }
 }

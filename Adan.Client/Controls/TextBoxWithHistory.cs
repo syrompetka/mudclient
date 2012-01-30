@@ -86,7 +86,7 @@ namespace Adan.Client.Controls
             }
 
             Conveyor.PushCommand(new TextCommand(command));
-            Text = string.Empty;
+            SelectAll();
         }
 
         private void FindTextInHistoryAndUpdateTextBox(bool lookBackWard)

@@ -14,6 +14,7 @@ namespace Adan.Client
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Data;
@@ -43,6 +44,8 @@ namespace Adan.Client
     using MessageDeserializers;
 
     using Model.ActionDescriptions;
+    using Model.ActionParameters;
+    using Model.Actions;
     using Model.ParameterDescriptions;
 
     using ViewModel;
@@ -81,7 +84,8 @@ namespace Adan.Client
             actionDescriptions.Add(new ConditionalActionDescription(parameterDescriptions, actionDescriptions));
             actionDescriptions.Add(new DisableGroupActionDescription(allGroups, actionDescriptions));
             actionDescriptions.Add(new EnableGroupActionDescription(allGroups, actionDescriptions));
-            actionDescriptions.Add(new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions, allVariables));
+            actionDescriptions.Add(
+                new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions, allVariables));
             actionDescriptions.Add(new StartLogActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
 
@@ -91,6 +95,28 @@ namespace Adan.Client
             parameterDescriptions.Add(new ConstantStringParameterDescription(parameterDescriptions));
 
             var model = new RootModel(_converyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
+
+            model.CustomSerializationTypes.Add(typeof(SendTextAction));
+            model.CustomSerializationTypes.Add(typeof(OutputToMainWindowAction));
+            model.CustomSerializationTypes.Add(typeof(ClearVariableValueAction));
+            model.CustomSerializationTypes.Add(typeof(ConditionalAction));
+            model.CustomSerializationTypes.Add(typeof(DisableGroupAction));
+            model.CustomSerializationTypes.Add(typeof(EnableGroupAction));
+            model.CustomSerializationTypes.Add(typeof(SetVariableValueAction));
+            model.CustomSerializationTypes.Add(typeof(StartLogAction));
+            model.CustomSerializationTypes.Add(typeof(StopLogAction));
+            model.CustomSerializationTypes.Add(typeof(TriggerOrCommandParameter));
+            model.CustomSerializationTypes.Add(typeof(VariableReferenceParameter));
+            model.CustomSerializationTypes.Add(typeof(MathExpressionParameter));
+            model.CustomSerializationTypes.Add(typeof(ConstantStringParameter));
+
+            foreach (var plugin in PluginHost.Instance.Plugins)
+            {
+                foreach (var customType in plugin.CustomSerializationTypes)
+                {
+                    model.CustomSerializationTypes.Add(customType);
+                }
+            }
 
             _converyor.AddCommandSerializer(new TextCommandSerializer(_converyor));
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
@@ -124,16 +150,19 @@ namespace Adan.Client
                 themesMenuItem.Items.Add(menuItem);
             }
 
-            PluginHost.Instance.InitializePlugins(_converyor, model);
+            var initializationDalog = new PluginInitializationStatusDialog
+                                          {
+                                              ViewModel = new InitializationStatusModel()
+                                          };
+            Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_converyor, model, initializationDalog.ViewModel, this))
+                .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
+            initializationDalog.ShowDialog();
 
             foreach (var plugin in PluginHost.Instance.Plugins)
             {
                 if (plugin.HasOptions)
                 {
-                    var menuItem = new MenuItem
-                    {
-                        Header = plugin.OptionsMenuItemText
-                    };
+                    var menuItem = new MenuItem { Header = plugin.OptionsMenuItemText };
 
                     var pluginClosure = plugin;
                     menuItem.Click += (o, e) => pluginClosure.ShowOptionsDialog(this);
@@ -159,7 +188,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _hotkeyCommand.Key = e.Key;
+            _hotkeyCommand.Key = e.Key == Key.System ? e.SystemKey : e.Key;
             _hotkeyCommand.ModifierKeys = Keyboard.Modifiers;
             _hotkeyCommand.Handled = false;
             _converyor.PushCommand(_hotkeyCommand);

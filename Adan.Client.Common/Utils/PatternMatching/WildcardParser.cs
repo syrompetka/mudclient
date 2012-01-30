@@ -14,6 +14,8 @@ namespace Adan.Client.Common.Utils.PatternMatching
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
+    using Model;
+
     /// <summary>
     /// A class to parse wildcards.
     /// </summary>
@@ -23,11 +25,16 @@ namespace Adan.Client.Common.Utils.PatternMatching
         /// Parses the wild card string.
         /// </summary>
         /// <param name="target">The string to parse.</param>
-        /// <returns>A reference to root <see cref="WildcardToken"/>.</returns>
+        /// <param name="rootModel">The root model.</param>
+        /// <returns>
+        /// A reference to root <see cref="WildcardToken"/>.
+        /// </returns>
         [NotNull]
-        public static PatternToken ParseWildcardString([NotNull] string target)
+        public static PatternToken ParseWildcardString([NotNull] string target, [NotNull]RootModel rootModel)
         {
             Assert.ArgumentNotNullOrWhiteSpace(target, "target");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
             int position = 0;
             bool anchored = false;
             PatternToken rootToken = null;
@@ -49,7 +56,7 @@ namespace Adan.Client.Common.Utils.PatternMatching
                         var token = new WildcardToken(target[position + 1] - '0');
                         if (sb.Length != 0)
                         {
-                            var constantToken = new ConstantStringToken(previousToken as WildcardToken, anchored, sb.ToString());
+                            var constantToken = new ConstantStringToken(previousToken, anchored, sb.ToString());
                             sb.Clear();
                             if (previousToken != null)
                             {
@@ -79,6 +86,50 @@ namespace Adan.Client.Common.Utils.PatternMatching
 
                         continue;
                     }
+
+                    if (target[position] == '$')
+                    {
+                        var endPosition = target.IndexOf(' ', position);
+                        string variableName = endPosition >= position
+                                                  ? target.Substring(position + 1, endPosition - position - 1)
+                                                  : target.Substring(position + 1);
+
+                        if (sb.Length != 0)
+                        {
+                            var constantToken = new ConstantStringToken(previousToken, anchored, sb.ToString());
+                            sb.Clear();
+                            if (previousToken != null)
+                            {
+                                previousToken.SetNextToken(constantToken);
+                            }
+
+                            previousToken = constantToken;
+                            if (rootToken == null)
+                            {
+                                rootToken = constantToken;
+                            }
+
+                            anchored = true;
+                        }
+
+                        var token = new VariableReferenceToken(rootModel, previousToken, anchored, variableName);
+                        position += variableName.Length + 1;
+
+                        if (previousToken != null)
+                        {
+                            previousToken.SetNextToken(token);
+                        }
+
+                        previousToken = token;
+                        if (rootToken == null)
+                        {
+                            rootToken = token;
+                        }
+
+                        anchored = true;
+
+                        continue;
+                    }
                 }
 
                 sb.Append(target[position]);
@@ -87,7 +138,7 @@ namespace Adan.Client.Common.Utils.PatternMatching
 
             if (sb.Length != 0)
             {
-                var constantToken = new ConstantStringToken(previousToken as WildcardToken, anchored, sb.ToString());
+                var constantToken = new ConstantStringToken(previousToken, anchored, sb.ToString());
                 sb.Clear();
                 if (previousToken != null)
                 {

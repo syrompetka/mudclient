@@ -106,7 +106,9 @@ namespace Adan.Client.Plugins.StuffDatabase
                         using (var inStream = File.OpenRead(fileName))
                         {
                             lore = (LoreMessage)_serializer.Deserialize(inStream);
-                            lore.Comments = commandText.Remove(0, Resources.LoreCommentCommand.Length + 1);
+                            lore.Comments = commandText.Equals(Resources.LoreCommentCommand, StringComparison.CurrentCultureIgnoreCase)
+                                                ? string.Empty
+                                                : commandText.Remove(0, Resources.LoreCommentCommand.Length + 1);
                         }
                     }
 
@@ -128,7 +130,9 @@ namespace Adan.Client.Plugins.StuffDatabase
                 || commandText.Equals(Resources.LoreCommand, StringComparison.CurrentCultureIgnoreCase))
             {
                 command.Handled = true;
-                var searchQuery = commandText.Remove(0, Resources.LoreCommentCommand.Length + 1).Trim().Replace(" ", "_");
+                var searchQuery = commandText.Equals(Resources.LoreCommand, StringComparison.CurrentCultureIgnoreCase)
+                                      ? string.Empty
+                                      : commandText.Remove(0, Resources.LoreCommand.Length + 1).Trim().Replace(" ", "_").Replace("\"", string.Empty);
                 const int maxDisplayItems = 4;
                 int foundItems = 0;
                 if (Directory.Exists(GetStuffDbFolder()))
@@ -209,7 +213,7 @@ namespace Adan.Client.Plugins.StuffDatabase
                 Directory.CreateDirectory(GetStuffDbFolder());
             }
 
-            var fileName = Path.Combine(GetStuffDbFolder(), loreMessage.ObjectName.Replace(" ", "_"));
+            var fileName = Path.Combine(GetStuffDbFolder(), loreMessage.ObjectName.Replace(" ", "_").Replace("\"", string.Empty));
             bool isUpdated = false;
             if (File.Exists(fileName))
             {
