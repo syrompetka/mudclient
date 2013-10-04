@@ -129,6 +129,7 @@
     <Compile Include="Plugins\ParameterDescription.cs" />
     <Compile Include="Plugins\PluginBase.cs" />
     <Compile Include="Plugins\WidgetDescription.cs" />
+    <Compile Include="ProfileHolder.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
@@ -145,6 +146,7 @@
     <Compile Include="Themes\ThemeManager.cs" />
     <Compile Include="Themes\ThemeDescription.cs" />
     <Compile Include="Utils\BackgroundTextColorToBrushConverter.cs" />
+    <Compile Include="Utils\CommandLineParser.cs" />
     <Compile Include="Utils\DelegateCommand.cs" />
     <Compile Include="Utils\DelegateCommandWithCanExecute.cs" />
     <Compile Include="Utils\EqualityToBooleanConverter.cs" />
@@ -164,6 +166,7 @@
     <Compile Include="Utils\SwitchCaseCollection.cs" />
     <Compile Include="Utils\SwitchConverter.cs" />
     <Compile Include="Utils\SwitchedContent.cs" />
+    <Compile Include="Utils\TextColorParser.cs" />
     <Compile Include="Utils\TextColorToBrushConverter.cs" />
     <Compile Include="Utils\TreeHelper.cs" />
     <Compile Include="Utils\WildcardStringHelper.cs" />

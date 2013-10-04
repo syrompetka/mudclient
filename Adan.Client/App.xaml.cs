@@ -10,7 +10,7 @@
 namespace Adan.Client
 {
     using System.Windows;
-
+    using Adan.Client.Common;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 

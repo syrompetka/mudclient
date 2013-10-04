@@ -64,6 +64,24 @@ namespace Adan.Client.Common.Themes
         }
 
         /// <summary>
+        /// Default text color
+        /// </summary>
+        public SolidColorBrush DefaultTextColor
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Default background color
+        /// </summary>
+        public SolidColorBrush DefaultBackGroundColor
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
         /// Gets the brush by text color.
         /// </summary>
         /// <param name="color">The color.</param>
@@ -71,5 +89,14 @@ namespace Adan.Client.Common.Themes
         /// <returns>A <see cref="Brush"/> instance to use to draw specified text color.</returns>
         [NotNull]
         public abstract SolidColorBrush GetBrushByTextColor(TextColor color, bool isBackground);
+
+        /// <summary>
+        /// Gets the text color by brush.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="isBackground">if set to <c>true</c> [is back ground].</param>
+        /// <returns></returns>
+        [NotNull]
+        public abstract TextColor GetTextColorByBrush(SolidColorBrush color, bool isBackground);
     }
 }

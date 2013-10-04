@@ -11,6 +11,7 @@ namespace Adan.Client.Common.Themes
 {
     using System.Collections.Generic;
     using System.Windows.Media;
+    using System.Linq;
 
     /// <summary>
     /// Represents "normal" theme.
@@ -77,6 +78,17 @@ namespace Adan.Client.Common.Themes
             }
 
             return _textColors[color];
+        }
+
+        /// <summary>
+        /// Gets the text color by brush.
+        /// </summary>
+        /// <param name="color">The color.</param>
+        /// <param name="isBackground">if set to <c>true</c> [is back ground].</param>
+        /// <returns></returns>
+        public override TextColor GetTextColorByBrush(SolidColorBrush color, bool isBackground)
+        {
+            return _textColors.FirstOrDefault(x => x.Value == color).Key;
         }
     }
 }

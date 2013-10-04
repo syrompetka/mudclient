@@ -70,7 +70,12 @@ namespace Adan.Client.Common.Utils
             Assert.ArgumentNotNull(parameter, "parameter");
             Assert.ArgumentNotNull(culture, "culture");
 
-            throw new NotImplementedException();
+            if (targetType != typeof(TextColor))
+            {
+                throw new InvalidOperationException("The target must be a TextColor");
+            }
+
+            return ThemeManager.Instance.ActiveTheme.GetTextColorByBrush((SolidColorBrush)value, false);
         }
     }
 }

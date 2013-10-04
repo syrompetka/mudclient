@@ -12,6 +12,7 @@ namespace Adan.Client.ViewModel
     using System.Collections.Generic;
 
     using Common.Model;
+    using Common.ViewModel;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -33,11 +34,41 @@ namespace Adan.Client.ViewModel
             Assert.ArgumentNotNull(allVariables, "allVariables");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            AllVariables = allVariables;
+            //AllVariables = allVariables;
             RootModel = rootModel;
 
             ConnectionStatus = new ConnectionStatusModel();
-            GroupsModel = new GroupsViewModel(allGroups, rootModel.AllActionDescriptions);
+           // GroupsModel = new GroupsViewModel(allGroups, rootModel.AllActionDescriptions, rootModel);
+            //AllGroups = allGroups;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MainWindowModel"/> class.
+        /// </summary>
+        /// <param name="rootModel">The RootModel.</param>
+        public MainWindowModel([NotNull] RootModel rootModel)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            //AllVariables = allVariables;
+            RootModel = rootModel;
+
+            ConnectionStatus = new ConnectionStatusModel();
+            // GroupsModel = new GroupsViewModel(allGroups, rootModel.AllActionDescriptions, rootModel);
+            //AllGroups = allGroups;
+        }
+
+        /// <summary>
+        /// Gets all groups.
+        /// </summary>
+        public IList<Group> AllGroups
+        {
+            //get;
+            //private set;
+            get
+            {
+                return RootModel.Groups;
+            }
         }
 
         /// <summary>
@@ -46,8 +77,12 @@ namespace Adan.Client.ViewModel
         [NotNull]
         public IEnumerable<Variable> AllVariables
         {
-            get;
-            private set;
+            //get;
+            //private set;
+            get
+            {
+                return RootModel.Variables;
+            }
         }
 
         /// <summary>
@@ -59,7 +94,7 @@ namespace Adan.Client.ViewModel
             get;
             private set;
         }
-        
+
         /// <summary>
         /// Gets the connection status.
         /// </summary>
@@ -76,8 +111,12 @@ namespace Adan.Client.ViewModel
         [NotNull]
         public GroupsViewModel GroupsModel
         {
-            get;
-            private set;
+            get
+            {
+                //return new GroupsViewModel(AllGroups, RootModel.AllActionDescriptions);
+                return new GroupsViewModel(AllGroups, RootModel.AllActionDescriptions);
+            }
+            private set { }
         }
     }
 }

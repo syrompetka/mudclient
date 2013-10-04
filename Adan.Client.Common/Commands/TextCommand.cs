@@ -50,5 +50,14 @@ namespace Adan.Client.Common.Commands
                 return BuiltInCommandTypes.TextCommand;
             }
         }
+
+        /// <summary>
+        /// Is Separated
+        /// </summary>
+        public bool IsSeparated
+        {
+            get;
+            set;
+        }
     }
 }

@@ -11,6 +11,7 @@ namespace Adan.Client
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.ComponentModel;
     using System.IO;
     using System.Linq;
@@ -20,12 +21,10 @@ namespace Adan.Client
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
-
+    using Adan.Client.Common;
     using AvalonDock;
-
     using Commands;
     using CommandSerializers;
-
     using Common.Commands;
     using Common.Conveyor;
     using Common.Messages;
@@ -34,20 +33,16 @@ namespace Adan.Client
     using Common.Plugins;
     using Common.Themes;
     using Common.Utils;
-
     using ConveyorUnits;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Dialogs;
     using MessageDeserializers;
-
+    using Microsoft.Win32;
     using Model.ActionDescriptions;
     using Model.ActionParameters;
     using Model.Actions;
     using Model.ParameterDescriptions;
-
     using ViewModel;
 
     /// <summary>
@@ -84,8 +79,7 @@ namespace Adan.Client
             actionDescriptions.Add(new ConditionalActionDescription(parameterDescriptions, actionDescriptions));
             actionDescriptions.Add(new DisableGroupActionDescription(allGroups, actionDescriptions));
             actionDescriptions.Add(new EnableGroupActionDescription(allGroups, actionDescriptions));
-            actionDescriptions.Add(
-                new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions, allVariables));
+            actionDescriptions.Add(new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions, allVariables));
             actionDescriptions.Add(new StartLogActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
 
@@ -94,43 +88,31 @@ namespace Adan.Client
             parameterDescriptions.Add(new MathExpressionParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new ConstantStringParameterDescription(parameterDescriptions));
 
-            var model = new RootModel(_converyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
-
-            model.CustomSerializationTypes.Add(typeof(SendTextAction));
-            model.CustomSerializationTypes.Add(typeof(OutputToMainWindowAction));
-            model.CustomSerializationTypes.Add(typeof(ClearVariableValueAction));
-            model.CustomSerializationTypes.Add(typeof(ConditionalAction));
-            model.CustomSerializationTypes.Add(typeof(DisableGroupAction));
-            model.CustomSerializationTypes.Add(typeof(EnableGroupAction));
-            model.CustomSerializationTypes.Add(typeof(SetVariableValueAction));
-            model.CustomSerializationTypes.Add(typeof(StartLogAction));
-            model.CustomSerializationTypes.Add(typeof(StopLogAction));
-            model.CustomSerializationTypes.Add(typeof(TriggerOrCommandParameter));
-            model.CustomSerializationTypes.Add(typeof(VariableReferenceParameter));
-            model.CustomSerializationTypes.Add(typeof(MathExpressionParameter));
-            model.CustomSerializationTypes.Add(typeof(ConstantStringParameter));
+            var rootModel = new RootModel(_converyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
 
             foreach (var plugin in PluginHost.Instance.Plugins)
             {
                 foreach (var customType in plugin.CustomSerializationTypes)
                 {
-                    model.CustomSerializationTypes.Add(customType);
+                    rootModel.CustomSerializationTypes.Add(customType);
                 }
             }
+
+            _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor, rootModel));
 
             _converyor.AddCommandSerializer(new TextCommandSerializer(_converyor));
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
             _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
 
-            _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, model));
-            _converyor.AddConveyorUnit(new AliasUnit(_converyor, model));
-            _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor));
+            _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
             _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
-            _converyor.AddConveyorUnit(new TriggerUnit(_converyor, model));
-            _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, model));
-            _converyor.AddConveyorUnit(new HighlightUnit(_converyor, model));
+            _converyor.AddConveyorUnit(new TriggerUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new HighlightUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new LoggingUnit(_converyor));
+            _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
 
             _converyor.MessageReceived += HandleMessageFromServer;
 
@@ -141,20 +123,21 @@ namespace Adan.Client
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
                 var menuItem = new MenuItem
-                                   {
-                                       Header = themeDescription.Name,
-                                       Tag = themeDescription,
-                                       IsChecked = themeDescription == ThemeManager.Instance.ActiveTheme
-                                   };
+                {
+                    Header = themeDescription.Name,
+                    Tag = themeDescription,
+                    IsChecked = themeDescription == ThemeManager.Instance.ActiveTheme
+                };
                 menuItem.Click += HandleThemeChange;
                 themesMenuItem.Items.Add(menuItem);
             }
 
             var initializationDalog = new PluginInitializationStatusDialog
-                                          {
-                                              ViewModel = new InitializationStatusModel()
-                                          };
-            Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_converyor, model, initializationDalog.ViewModel, this))
+            {
+                ViewModel = new InitializationStatusModel()
+            };
+
+            Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_converyor, rootModel, initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
@@ -174,7 +157,10 @@ namespace Adan.Client
             _converyor.AddConveyorUnit(new ProtocolVersionUnit(_converyor, maxProtocolVersion));
 
             _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
-            _model = new MainWindowModel(allGroups, allVariables, model);
+            // _model = new MainWindowModel(allGroups, allVariables, rootModel);
+            //_model = new MainWindowModel(rootModel.Groups, rootModel.Variables, rootModel);
+            _model = new MainWindowModel(rootModel);
+
             DataContext = _model;
 
             dockManager.DeserializationCallback = HandleFindWidget;
@@ -192,6 +178,7 @@ namespace Adan.Client
             _hotkeyCommand.ModifierKeys = Keyboard.Modifiers;
             _hotkeyCommand.Handled = false;
             _converyor.PushCommand(_hotkeyCommand);
+
             if (_hotkeyCommand.Handled)
             {
                 e.Handled = true;
@@ -285,13 +272,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var connectionDialogViewModel = new ConnectionDialogViewModel { HostName = "adan.ru", Port = 4000 };
-            var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
-            var result = dialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                _converyor.PushCommand(new ConnectCommand(connectionDialogViewModel.HostName, connectionDialogViewModel.Port));
-            }
+            _converyor.PushCommand(new ConnectCommand(SettingsHolder.Instance.ConnectHostName, SettingsHolder.Instance.ConnectPort));
         }
 
         private void HandleDisconnect([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -300,6 +281,23 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             _converyor.PushCommand(new DisconnectCommand());
+        }
+
+        private void HandleConnectionPreference([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var connectionDialogViewModel = new ConnectionDialogViewModel { HostName = SettingsHolder.Instance.ConnectHostName, Port = SettingsHolder.Instance.ConnectPort };
+            var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
+
+
+            var result = dialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                SettingsHolder.Instance.ConnectHostName = connectionDialogViewModel.HostName;
+                SettingsHolder.Instance.ConnectPort = connectionDialogViewModel.Port;
+            }
         }
 
         private void HandleExit([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -398,6 +396,7 @@ namespace Adan.Client
                 dockContent.FloatingWindowSizeToContent = widgetDescription.ResizeToContent
                                                               ? SizeToContent.WidthAndHeight
                                                               : SizeToContent.Manual;
+
                 if (!string.IsNullOrEmpty(widgetDescription.Icon))
                 {
                     dockContent.Icon = (ImageSource)FindResource(widgetDescription.Icon);
@@ -430,6 +429,7 @@ namespace Adan.Client
                 RelativeSource = RelativeSource.Self,
                 Converter = new InverseBooleanConverter()
             };
+
             TreeHelper.FindVisualChildren<DocumentPane>(dockManager).First().SetBinding(Pane.ShowHeaderProperty, singleItemBinding);
         }
 
@@ -469,6 +469,49 @@ namespace Adan.Client
 
             layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
             dockManager.SaveLayout(layoutFullPath);
+        }
+
+        private void HandleEditProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var models = new ObservableCollection<ProfileViewModel>();
+
+            foreach (string str in ProfileHolder.Instance.AllProfiles)
+            {
+                models.Add(new ProfileViewModel(str, str == "Default" ? true : false));
+            }
+
+            var profilesViewModel = new ProfilesViewModel(models, ProfileHolder.Instance.Name);
+            var profileDialog = new ProfilesDialog() { DataContext = profilesViewModel, Owner = this };
+
+            var resultDialog = profileDialog.ShowDialog();
+        }
+
+        private void HandleSaveProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            SettingsHolder.Instance.Save();
+        }
+
+        private void HandleImportJmcConfig([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            OpenFileDialog fileDialog = new OpenFileDialog();
+            fileDialog.DefaultExt = ".set";
+            fileDialog.Filter = "Config|*.set|All Files|*.*";
+            fileDialog.Multiselect = false;
+
+            var result = fileDialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                ProfileHolder.Instance.ImportJmcConfig(fileDialog.FileName, _model.RootModel);
+            }
         }
     }
 }

@@ -22,9 +22,15 @@
             <MenuItem Header="File" >
                 <MenuItem Header="Connect" Click="HandleConnect"/>
                 <MenuItem Header="Disconnect" Click="HandleDisconnect" />
-                <MenuItem Header="Connection preferences" />
+                <MenuItem Header="Connection preferences" Click="HandleConnectionPreference" />
                 <Separator />
                 <MenuItem Header="Exit" Click="HandleExit" />
+            </MenuItem>
+            <MenuItem Header="Profile" Name="profileMenuItem">
+                <MenuItem Header="Edit" Click="HandleEditProfile" />
+                <MenuItem Header="Save" Click="HandleSaveProfile" />
+                <Separator />
+                <MenuItem Header="Import JMC config" Click="HandleImportJmcConfig" />
             </MenuItem>
             <MenuItem Header="Options" Name="optionsMenuItem">
                 <MenuItem Header="Groups" Click="HandleEditGroups" />

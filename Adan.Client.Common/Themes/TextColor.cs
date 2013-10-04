@@ -15,6 +15,21 @@ namespace Adan.Client.Common.Themes
     public enum TextColor
     {
         /// <summary>
+        /// Gray color.
+        /// </summary>
+        Grey,
+
+        /// <summary>
+        /// Charcoal color.
+        /// </summary>
+        Charcoal,
+
+        /// <summary>
+        /// Brown color.
+        /// </summary>
+        Brown,
+
+        /// <summary>
         /// White color.
         /// </summary>
         White,
