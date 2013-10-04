@@ -31,8 +31,14 @@ namespace Adan.Client.Common.Model
     {
         private readonly MessageConveyor _conveyor;
         private readonly IDictionary<string, Variable> _variablesDictionary = new Dictionary<string, Variable>();
-        private readonly IList<Variable> _variables;
+        //private readonly IList<Variable> _variables;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
+
+        static RootModel()
+        {
+            CharDelimiter = ';';
+            CharCommands = '#';
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RootModel"/> class.
@@ -51,14 +57,15 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(allParameterDescriptions, "allParameterDescriptions");
 
             _conveyor = conveyor;
-            Groups = groups;
-            _variables = variables;
+            //Groups = groups;
+            //_variables = variables;
             AllActionDescriptions = allActionDescriptions;
             AllParameterDescriptions = allParameterDescriptions;
             GroupStatus = new List<CharacterStatus>(10);
             RoomMonstersStatus = new List<MonsterStatus>(20);
 
-            foreach (var variable in _variables)
+            //foreach (var variable in _variables)
+            foreach (var variable in variables)
             {
                 if (!_variablesDictionary.ContainsKey(variable.Name))
                 {
@@ -67,6 +74,37 @@ namespace Adan.Client.Common.Model
             }
 
             CustomSerializationTypes = new List<Type>();
+        }
+
+        /// <summary>
+        /// Initialize additional parameters
+        /// </summary>
+        /// <param name="allActionDescriptions">All action descriptions.</param>
+        /// <param name="allParameterDescriptions">All parameter descriptions.</param>
+        public void Initialize([NotNull] IList<ActionDescription> allActionDescriptions, [NotNull] IList<ParameterDescription> allParameterDescriptions)
+        {
+            AllActionDescriptions = allActionDescriptions;
+            AllParameterDescriptions = allParameterDescriptions;
+        }
+
+        /// <summary>
+        /// Get char delimiter
+        /// </summary>
+        [NotNull]
+        public static char CharDelimiter
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get char commands
+        /// </summary>
+        [NotNull]
+        public static char CharCommands
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -97,8 +135,12 @@ namespace Adan.Client.Common.Model
         [NotNull]
         public IList<Group> Groups
         {
-            get;
-            private set;
+            //get;
+            //private set;
+            get
+            {
+                return ProfileHolder.Instance.Groups;
+            }
         }
 
         /// <summary>
@@ -168,6 +210,20 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
+        /// Gets variables
+        /// </summary>
+        [NotNull]
+        public IList<Variable> Variables
+        {
+            //get;
+            //private set;
+            get
+            {
+                return ProfileHolder.Instance.Variables;
+            }
+        }
+
+        /// <summary>
         /// Pushes the command to conveyor.
         /// </summary>
         /// <param name="command">The command.</param>
@@ -202,7 +258,7 @@ namespace Adan.Client.Common.Model
             {
                 var variable = new Variable { Name = variableName };
                 _variablesDictionary.Add(variableName, variable);
-                _variables.Add(variable);
+                //_variables.Add(variable);
             }
 
             _variablesDictionary[variableName].Value = value;
@@ -243,7 +299,7 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
             if (_variablesDictionary.ContainsKey(variableName))
             {
-                _variables.Remove(_variablesDictionary[variableName]);
+                //_variables.Remove(_variablesDictionary[variableName]);
                 _variablesDictionary.Remove(variableName);
             }
 
@@ -282,6 +338,35 @@ namespace Adan.Client.Common.Model
             }
 
             RecalculatedEnabledTriggersPriorities();
+        }
+
+        /// <summary>
+        /// Add the group.
+        /// </summary>
+        /// <param name="groupName">Name of the group.</param>
+        public void AddGroup([NotNull]string groupName)
+        {
+            Assert.ArgumentNotNull(groupName, "groupName");
+            var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
+            if (group == null)
+            {
+                Groups.Add(new Group() { Name = groupName, IsEnabled = true, IsBuildIn = false });
+            }
+        }
+
+        /// <summary>
+        /// Delete the group.
+        /// </summary>
+        /// <param name="groupName">Name of the group.</param>
+        public void DeleteGroup([NotNull]string groupName)
+        {
+            Assert.ArgumentNotNull(groupName, "groupName");
+            var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
+            if (group != null && !group.IsBuildIn)
+            {
+                if (!Groups.Remove(group))
+                    PushMessageToConveyor(new ErrorMessage("#Возникла Ошибка при удалении группы"));
+            }
         }
 
         /// <summary>

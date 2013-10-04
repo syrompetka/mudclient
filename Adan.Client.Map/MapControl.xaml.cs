@@ -105,7 +105,10 @@ namespace Adan.Client.Map
         {
             get
             {
-                return (ZoneViewModel)DataContext;
+                if (DataContext is ZoneViewModel)
+                    return (ZoneViewModel)DataContext;
+                else
+                    return null;
             }
 
             set
@@ -137,12 +140,13 @@ namespace Adan.Client.Map
         {
             Assert.ArgumentNotNull(newZone, "newZone");
             var actionToExecute = (Action)(() =>
-                                    {
-                                        ViewModel = newZone;
-                                        NavigateToCurrentRoom(currentRoom);
-                                        ViewModel.CurrentRoom = currentRoom;
-                                        RouteManager.UpdateCurrentRoom(currentRoom, newZone);
-                                    });
+            {
+                ViewModel = newZone;
+                NavigateToCurrentRoom(currentRoom);
+                ViewModel.CurrentRoom = currentRoom;
+                if (RouteManager != null)
+                    RouteManager.UpdateCurrentRoom(currentRoom, newZone);
+            });
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
         }
 
@@ -153,14 +157,15 @@ namespace Adan.Client.Map
         public void UpdateCurrentRoom([CanBeNull] RoomViewModel currentRoom)
         {
             var actionToExecute = (Action)(() =>
-                                  {
-                                      if (ViewModel != null)
-                                      {
-                                          NavigateToCurrentRoom(currentRoom);
-                                          ViewModel.CurrentRoom = currentRoom;
-                                          RouteManager.UpdateCurrentRoom(currentRoom, ViewModel);
-                                      }
-                                  });
+            {
+                if (ViewModel != null)
+                {
+                    NavigateToCurrentRoom(currentRoom);
+                    ViewModel.CurrentRoom = currentRoom;
+                    if (RouteManager != null)
+                        RouteManager.UpdateCurrentRoom(currentRoom, ViewModel);
+                }
+            });
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
         }
 

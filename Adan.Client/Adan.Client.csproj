@@ -102,6 +102,7 @@
     <Compile Include="ConveyorUnits\CommandMultiplierUnit.cs" />
     <Compile Include="ConveyorUnits\CommandRepeaterUnit.cs" />
     <Compile Include="ConveyorUnits\CommandSeparatorUnit.cs" />
+    <Compile Include="ConveyorUnits\CommandsFromUserLineUnits.cs" />
     <Compile Include="ConveyorUnits\ConnectionUnit.cs" />
     <Compile Include="ConveyorUnits\HighlightUnit.cs" />
     <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
@@ -135,6 +136,9 @@
     </Compile>
     <Compile Include="Dialogs\PluginInitializationStatusDialog.xaml.cs">
       <DependentUpon>PluginInitializationStatusDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfilesDialog.xaml.cs">
+      <DependentUpon>ProfilesDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SubstitutionEditDialog.xaml.cs">
       <DependentUpon>SubstitutionEditDialog.xaml</DependentUpon>
@@ -213,6 +217,8 @@
     <Compile Include="ViewModel\HighlightViewModel.cs" />
     <Compile Include="ViewModel\HotkeysViewModel.cs" />
     <Compile Include="ViewModel\HotkeyViewModel.cs" />
+    <Compile Include="ViewModel\ProfilesViewModel.cs" />
+    <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionsViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionViewModel.cs" />
     <Compile Include="ViewModel\MainWindowModel.cs" />
@@ -252,6 +258,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\PluginInitializationStatusDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfilesDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

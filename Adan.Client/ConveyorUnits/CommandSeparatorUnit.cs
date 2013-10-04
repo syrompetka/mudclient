@@ -12,9 +12,10 @@ namespace Adan.Client.ConveyorUnits
     using System.Collections.Generic;
     using System.Linq;
 
-    using Common.Commands;
-    using Common.Conveyor;
-    using Common.ConveyorUnits;
+    using Adan.Client.Common.Commands;
+    using Adan.Client.Common.Conveyor;
+    using Adan.Client.Common.ConveyorUnits;
+    using Adan.Client.Common.Model;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -24,14 +25,20 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CommandSeparatorUnit : ConveyorUnit
     {
+        private RootModel _rootModel;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandSeparatorUnit"/> class.
         /// </summary>
         /// <param name="messageConveyor">The message conveyor.</param>
-        public CommandSeparatorUnit([NotNull] MessageConveyor messageConveyor)
+        /// <param name="rootModel">The Root Model.</param>
+        public CommandSeparatorUnit([NotNull] MessageConveyor messageConveyor, [NotNull] RootModel rootModel)
             : base(messageConveyor)
         {
             Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+
+            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -72,17 +79,41 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            if (!textCommand.CommandText.Contains(";"))
-            {
+            if (textCommand.IsSeparated)
                 return;
-            }
 
-            foreach (var subCommand in textCommand.CommandText.Split(';'))
+            string commandText = textCommand.CommandText;
+
+            int nest = 0;
+            int i = 0;
+            int startIndex = 0;
+            while (i < commandText.Length)
             {
-                PushCommandToConveyor(new TextCommand(subCommand));
+                while (i < commandText.Length && !(commandText[i] == RootModel.CharDelimiter && nest == 0))
+                {
+                    if (commandText[i] == '{')
+                    {
+                        nest++;
+                    }
+                    else if (commandText[i] == '}')
+                    {
+                        nest--;
+                    }
+
+                    i++;
+                }
+
+                if (i < commandText.Length)
+                {
+                    base.PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true });
+                    i++;
+                    startIndex = i;
+                    textCommand.Handled = true;
+                }
             }
 
-            textCommand.Handled = true;
+            if(startIndex != 0)
+                base.PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true });
         }
 
         #endregion

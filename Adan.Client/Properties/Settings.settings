@@ -11,5 +11,8 @@
     <Setting Name="ConnectPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">4000</Value>
     </Setting>
+    <Setting Name="ProfileName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Default</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
