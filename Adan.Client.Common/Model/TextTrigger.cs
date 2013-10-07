@@ -13,6 +13,8 @@ namespace Adan.Client.Common.Model
     using System.Collections.Generic;
     using System.Linq;
     using System.Xml.Serialization;
+    using System.Text;
+    using System.Text.RegularExpressions;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -46,6 +48,17 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
+        /// Get Is Regular Expression
+        /// </summary>
+        [NotNull]
+        [XmlIgnore]
+        public bool IsRegExp
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets or sets the matching pattern.
         /// </summary>
         /// <value>
@@ -66,6 +79,11 @@ namespace Adan.Client.Common.Model
 
                 _matchingPattern = value;
                 _rootPatternToken = null;
+
+                if (_matchingPattern.StartsWith("/") && _matchingPattern.EndsWith("/"))
+                    IsRegExp = true;
+                else
+                    IsRegExp = false;
             }
         }
 
@@ -94,16 +112,34 @@ namespace Adan.Client.Common.Model
                 return;
             }
 
-            ClearMatchingResults();
-            var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-            if (!res.IsSuccess)
+            if (IsRegExp)
             {
-                return;
-            }
+                Regex rExp = new Regex(MatchingPattern.Substring(1, MatchingPattern.Length - 2));
+                Match m = rExp.Match(textMessage.InnerText);
+                if (!m.Success)
+                    return;
 
-            for (int i = 0; i < 10; i++)
+                for(int i = 0; i < 10; i++)
+                {
+                    if (i + 1< m.Groups.Count)
+                        Context.Parameters[i] = m.Groups[i + 1].ToString();
+                    else
+                        Context.Parameters[i] = String.Empty;
+                }
+            }
+            else
             {
-                Context.Parameters[i] = _matchingResults[i];
+                ClearMatchingResults();
+                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+                if (!res.IsSuccess)
+                {
+                    return;
+                }
+
+                for (int i = 0; i < 10; i++)
+                {
+                    Context.Parameters[i] = _matchingResults[i];
+                }
             }
 
             Context.CurrentMessage = message;

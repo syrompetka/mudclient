@@ -21,7 +21,7 @@ namespace Adan.Client.ConveyorUnits
     using CSLib.Net.Diagnostics;
 
     /// <summary>
-    /// A <see cref="ConveyorUnit"/> implementation that splits commands separated by ';'.
+    /// A <see cref="ConveyorUnit"/> implementation that splits commands separated by CharDelimiter.
     /// </summary>
     public class CommandSeparatorUnit : ConveyorUnit
     {
@@ -89,7 +89,7 @@ namespace Adan.Client.ConveyorUnits
             int startIndex = 0;
             while (i < commandText.Length)
             {
-                while (i < commandText.Length && !(commandText[i] == RootModel.CharDelimiter && nest == 0))
+                while (i < commandText.Length && !(commandText[i] == RootModel.CommandDelimiter && nest == 0))
                 {
                     if (commandText[i] == '{')
                     {

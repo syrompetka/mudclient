@@ -70,5 +70,112 @@ namespace Adan.Client.Properties {
                 this["ProfileName"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoReconnect {
+            get {
+                return ((bool)(this["AutoReconnect"]));
+            }
+            set {
+                this["AutoReconnect"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoClearInput {
+            get {
+                return ((bool)(this["AutoClearInput"]));
+            }
+            set {
+                this["AutoClearInput"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2")]
+        public int MinLengthHistory {
+            get {
+                return ((int)(this["MinLengthHistory"]));
+            }
+            set {
+                this["MinLengthHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("20")]
+        public int HistorySize {
+            get {
+                return ((int)(this["HistorySize"]));
+            }
+            set {
+                this["HistorySize"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("#")]
+        public char CommandChar {
+            get {
+                return ((char)(this["CommandChar"]));
+            }
+            set {
+                this["CommandChar"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute(";")]
+        public char CommandDelimiter {
+            get {
+                return ((char)(this["CommandDelimiter"]));
+            }
+            set {
+                this["CommandDelimiter"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1")]
+        public int HistoryCursorPosition {
+            get {
+                return ((int)(this["HistoryCursorPosition"]));
+            }
+            set {
+                this["HistoryCursorPosition"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("500")]
+        public int ScrollBuffer {
+            get {
+                return ((int)(this["ScrollBuffer"]));
+            }
+            set {
+                this["ScrollBuffer"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection CommandsHistory {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["CommandsHistory"]));
+            }
+            set {
+                this["CommandsHistory"] = value;
+            }
+        }
     }
 }

@@ -90,7 +90,7 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
-        /// Postprocesses the result string replacing all %1 and variable refereces.
+        /// Postprocesses the result string replacing all %1.
         /// </summary>
         /// <param name="valueToProcess">The value to process.</param>
         /// <param name="model">The model.</param>
@@ -114,6 +114,19 @@ namespace Adan.Client.Common.Model
                 }
             }
 
+            //return ReplaceVariables(res, model);
+            return res;
+        }
+
+        /// <summary>
+        /// Replace all variables.
+        /// </summary>
+        /// <param name="res">Input string</param>
+        /// <param name="model">The model.</param>
+        /// <returns></returns>
+        [NotNull]
+        protected string ReplaceVariables([NotNull] string res, [NotNull] RootModel model)
+        {
             return VariableSearchRegex.Replace(res, m => model.GetVariableValue(m.Groups[1].Value));
         }
     }

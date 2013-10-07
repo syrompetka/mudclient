@@ -76,6 +76,24 @@ namespace Adan.Client.Common.Conveyor
 
         #endregion
 
+        /// <summary>
+        /// Last connection host
+        /// </summary>
+        public string LastConnectionHost
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Last connection port
+        /// </summary>
+        public int LastConnectPort
+        {
+            get;
+            private set;
+        }
+
         #region Public Methods
 
         /// <summary>
@@ -139,6 +157,9 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNullOrWhiteSpace(host, "host");
 
             _mccpClient.Connect(host, port);
+
+            LastConnectionHost = host;
+            LastConnectPort = port;
         }
 
         /// <summary>

@@ -8,7 +8,5 @@
     <Compile Include="$(SolutionDir)MSBuild\CommonAssemblyInfo.cs" >
       <Link>Properties\CommonAssemblyInfo.cs</Link>
     </Compile>
-  </ItemGroup>
-  <Import Project="$(SolutionDir)MSBuild\CodeAnalysis.targets" />
-  <Import Project="$(SolutionDir)MSBuild\StyleCop.targets" />
+  </ItemGroup>                                               
 </Project>

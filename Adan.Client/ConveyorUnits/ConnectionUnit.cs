@@ -163,6 +163,10 @@ namespace Adan.Client.ConveyorUnits
                 PushMessageToConveyor(new ErrorMessage(networkErrorMessage.SocketException.Message));
                 _connectionStatus.Connected = false;
                 _connectionStatus.ConnectionInProgress = false;
+
+                //Автореконнект
+                if (SettingsHolder.Instance.AutoReconnect)
+                    _messageConveyor.PushCommand(new ConnectCommand(_messageConveyor.LastConnectionHost, _messageConveyor.LastConnectPort));
             }
         }
 

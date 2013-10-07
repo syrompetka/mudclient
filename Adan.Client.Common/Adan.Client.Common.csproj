@@ -116,6 +116,7 @@
     <Compile Include="Model\RootModel.cs" />
     <Compile Include="Model\Substitution.cs" />
     <Compile Include="Model\TextTrigger.cs" />
+    <Compile Include="Model\Ticker.cs" />
     <Compile Include="Model\TriggerBase.cs" />
     <Compile Include="Model\Variable.cs" />
     <Compile Include="Networking\TelnetConstants.cs" />

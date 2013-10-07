@@ -104,12 +104,12 @@ namespace Adan.Client
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
             _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
 
-            _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
-            _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
-            _converyor.AddConveyorUnit(new TriggerUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
+            _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
+            _converyor.AddConveyorUnit(new TriggerUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new HighlightUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new LoggingUnit(_converyor));
             _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
@@ -156,7 +156,6 @@ namespace Adan.Client
             int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);
             _converyor.AddConveyorUnit(new ProtocolVersionUnit(_converyor, maxProtocolVersion));
 
-            _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
             // _model = new MainWindowModel(allGroups, allVariables, rootModel);
             //_model = new MainWindowModel(rootModel.Groups, rootModel.Variables, rootModel);
             _model = new MainWindowModel(rootModel);
@@ -164,6 +163,14 @@ namespace Adan.Client
             DataContext = _model;
 
             dockManager.DeserializationCallback = HandleFindWidget;
+
+            //Заглушка для нераспознанных комманд с CharCommands
+            _converyor.AddConveyorUnit(new CapForLineCommandUnit(_converyor));
+
+            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
+
+            //Проверка коннекта к серверу для команд
+            _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
         }
 
         /// <summary>
@@ -197,7 +204,8 @@ namespace Adan.Client
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Enter && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            //if (e.Key == Key.Enter && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            if (e.Key == Key.Enter && txtCommandInput.IsFocused)
             {
                 txtCommandInput.SendCurrentCommand();
                 e.Handled = true;
@@ -218,6 +226,13 @@ namespace Adan.Client
             if (e.Key == Key.End && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
             {
                 mainOutputWindow.ScrollToEnd();
+                e.Handled = true;
+            }
+
+            //Очищение коммандной строки клавишей escape
+            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            {
+                txtCommandInput.Clear();
                 e.Handled = true;
             }
 
@@ -469,6 +484,8 @@ namespace Adan.Client
 
             layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
             dockManager.SaveLayout(layoutFullPath);
+
+            txtCommandInput.SaveCurrentHistory();
         }
 
         private void HandleEditProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -511,6 +528,50 @@ namespace Adan.Client
             if (result.HasValue && result.Value)
             {
                 ProfileHolder.Instance.ImportJmcConfig(fileDialog.FileName, _model.RootModel);
+            }
+        }
+
+        private void HandleEditOptions([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var model = new OptionsViewModel()
+            {
+                AutoClearInput = SettingsHolder.Instance.AutoClearInput,
+                AutoReconnect = SettingsHolder.Instance.AutoReconnect,
+                CommandChar = SettingsHolder.Instance.CommandChar,
+                CommandDelimiter = SettingsHolder.Instance.CommandDelimiter,
+                StartOfLine = SettingsHolder.Instance.CursorPosition == CursorPositionHistory.StartOfLine,
+                EndOfLine = SettingsHolder.Instance.CursorPosition == CursorPositionHistory.EndOfLine,
+                HistorySize = SettingsHolder.Instance.HistorySize.ToString(),
+                MinLengthHistory = SettingsHolder.Instance.MinLengthHistory.ToString(),
+                ScrollBuffer = SettingsHolder.Instance.ScrollBuffer.ToString(),
+            };
+
+            var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
+            var dialogResult = optionsDialog.ShowDialog();
+
+            if (dialogResult.HasValue && dialogResult.Value)
+            {
+                SettingsHolder.Instance.AutoClearInput = model.AutoClearInput;
+                SettingsHolder.Instance.AutoReconnect = model.AutoReconnect;
+                SettingsHolder.Instance.CommandChar = model.CommandChar;
+                SettingsHolder.Instance.CommandDelimiter = model.CommandDelimiter;
+                if (model.StartOfLine)
+                    SettingsHolder.Instance.CursorPosition = CursorPositionHistory.StartOfLine;
+                else
+                    SettingsHolder.Instance.CursorPosition = CursorPositionHistory.EndOfLine;
+
+                int val;
+                if(int.TryParse(model.HistorySize, out val))
+                    SettingsHolder.Instance.HistorySize = val;
+
+                if (int.TryParse(model.MinLengthHistory, out val))
+                    SettingsHolder.Instance.MinLengthHistory = val;
+
+                if(int.TryParse(model.ScrollBuffer, out val))
+                    SettingsHolder.Instance.ScrollBuffer = val;
             }
         }
     }
