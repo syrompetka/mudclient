@@ -42,13 +42,7 @@ namespace Adan.Client.Controls
         {
             AcceptsReturn = false;
             AcceptsTab = false;
-        }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Initialize()
-        {
             var history = SettingsHolder.Instance.CommandsHistory;
             _queueSize = SettingsHolder.Instance.HistorySize;
 
