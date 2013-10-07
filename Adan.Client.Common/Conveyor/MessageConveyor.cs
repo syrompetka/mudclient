@@ -94,6 +94,18 @@ namespace Adan.Client.Common.Conveyor
             private set;
         }
 
+        //Временная мера до фикса сервера
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<MessageDeserializer> MessageDeserializers
+        {
+            get
+            {
+                return _messageDeserializers;
+            }
+        }
+
         #region Public Methods
 
         /// <summary>

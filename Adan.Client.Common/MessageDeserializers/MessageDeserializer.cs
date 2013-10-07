@@ -22,8 +22,11 @@ namespace Adan.Client.Common.MessageDeserializers
     public abstract class MessageDeserializer
     {
         #region Constants and Fields
-
-        private readonly MessageConveyor _messageConveyor;
+        
+        /// <summary>
+        /// MessageConveyor
+        /// </summary>
+        protected readonly MessageConveyor _messageConveyor;
 
         #endregion
 
