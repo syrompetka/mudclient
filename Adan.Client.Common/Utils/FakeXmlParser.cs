@@ -36,7 +36,11 @@ namespace Adan.Client.Common.Utils
                         nest = false;
                         level++;
                     }
+                    else if (level == 0)
+                        sb.Append(input[i]);
                 }
+                else if (level == 0)
+                    sb.Append(input[i]);
             }
             return sb.ToString();
         }
