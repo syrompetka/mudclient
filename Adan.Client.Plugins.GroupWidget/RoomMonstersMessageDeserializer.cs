@@ -10,6 +10,7 @@
 namespace Adan.Client.Plugins.GroupWidget
 {
     using System;
+    using System.Linq;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
@@ -20,6 +21,7 @@ namespace Adan.Client.Plugins.GroupWidget
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="RoomMonstersMessage"/> messages.
@@ -75,14 +77,19 @@ namespace Adan.Client.Plugins.GroupWidget
                         var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
                         PushMessageToConveyor(message);
                     }
-
                     _builder.Clear();
                 }
             }
             catch (Exception ex)
             {
+                var deseirilizer = _messageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
+                byte[] buf = _encoding.GetBytes(str);
+                deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
+                PushMessageToConveyor(new OutputToMainWindowMessage(str));
                 _builder.Clear();
-                PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                PushMessageToConveyor(new ErrorMessage(ex.Message));
             }
         }
     }

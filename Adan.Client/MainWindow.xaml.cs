@@ -104,15 +104,15 @@ namespace Adan.Client
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
             _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
 
+            _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
+            _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
+            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
             _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
             _converyor.AddConveyorUnit(new TriggerUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new HighlightUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new LoggingUnit(_converyor));
-            _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
 
             _converyor.MessageReceived += HandleMessageFromServer;
 
@@ -164,10 +164,10 @@ namespace Adan.Client
 
             dockManager.DeserializationCallback = HandleFindWidget;
 
+            _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
+
             //Заглушка для нераспознанных комманд с CharCommands
             _converyor.AddConveyorUnit(new CapForLineCommandUnit(_converyor));
-
-            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
 
             //Проверка коннекта к серверу для команд
             _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));

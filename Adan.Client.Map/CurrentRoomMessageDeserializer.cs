@@ -11,13 +11,13 @@ namespace Adan.Client.Map
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
-
+    using Adan.Client.Common.Utils;
     using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -77,19 +77,25 @@ namespace Adan.Client.Map
                 _builder.Append(messageXml);
                 if (isComplete)
                 {
-                    using (var stringReader = new StringReader(_builder.ToString()))
-                    {
-                        var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
-                        _zoneManager.UpdateCurrentRoom(message.RoomId, message.ZoneId);
-                    }
+                        using (var stringReader = new StringReader(_builder.ToString()))
+                        {
+                            var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
+                            _zoneManager.UpdateCurrentRoom(message.RoomId, message.ZoneId);
+                        }
 
                     _builder.Clear();
                 }
             }
             catch (Exception ex)
             {
+                var deseirilizer = _messageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
+                byte[] buf = _encoding.GetBytes(str);
+                deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
+                PushMessageToConveyor(new OutputToMainWindowMessage(str));
                 _builder.Clear();
-                PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                PushMessageToConveyor(new ErrorMessage(ex.Message));
             }
         }
     }

@@ -17,7 +17,7 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class VariableReplaceUnit : ConveyorUnit
     {
-        private Regex VariableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private Regex VariableRegex = new Regex(@"\$([\w\d]+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
         private RootModel _rooteModel;
 
         /// <summary>
@@ -72,7 +72,17 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            textCommand.CommandText = VariableRegex.Replace(textCommand.CommandText, m => _rooteModel.GetVariableValue(m.Groups[1].Value));
+            bool ret;
+
+            do
+            {
+                ret = false;
+                textCommand.CommandText = VariableRegex.Replace(textCommand.CommandText,
+                    m =>
+                    {
+                        ret = true; return _rooteModel.GetVariableValue(m.Groups[1].Value);
+                    });
+            } while (ret);
         }
 
         #endregion
