@@ -19,29 +19,28 @@ namespace Adan.Client.Common.Utils
         /// <returns></returns>
         public static string Parse(string input)
         {
-            bool nest = false;
-            int level = 0;
+            int nest = 0;
             StringBuilder sb = new StringBuilder();
 
             for (int i = 0; i < input.Length; i++)
             {
                 if (input[i] == '<')
                 {
-                    nest = true;
+                    nest++;
                 }
                 else if (input[i] == '>')
                 {
-                    if (nest)
+                    if (nest != 0)
                     {
-                        nest = false;
-                        level++;
+                        nest--;
                     }
-                    else if (level == 0)
+                    else if (nest == 0)
                         sb.Append(input[i]);
                 }
-                else if (level == 0)
+                else
                     sb.Append(input[i]);
             }
+
             return sb.ToString();
         }
     }
