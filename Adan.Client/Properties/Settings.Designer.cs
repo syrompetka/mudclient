@@ -169,6 +169,7 @@ namespace Adan.Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValue(null)]
         public global::System.Collections.Specialized.StringCollection CommandsHistory {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["CommandsHistory"]));
