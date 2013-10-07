@@ -62,7 +62,7 @@ namespace Adan.Client.Common.Utils
         /// A converted value. If the method returns null, the valid null value is used.
         /// </returns>
         /// <exception cref="NotImplementedException"><c>NotImplementedException</c>.</exception>
-        [CanBeNull]
+        [NotNull]
         public object ConvertBack([NotNull] object value, [NotNull] Type targetType, [NotNull] object parameter, [NotNull] CultureInfo culture)
         {
             Assert.ArgumentNotNull(value, "value");

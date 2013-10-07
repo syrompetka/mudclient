@@ -13,13 +13,12 @@ namespace Adan.Client.ConveyorUnits
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-
+    using Adan.Client.Model.Actions;
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -32,7 +31,7 @@ namespace Adan.Client.ConveyorUnits
         private readonly ActionExecutionContext _context = new ActionExecutionContext { CurrentMessage = new OutputToMainWindowMessage(string.Empty) };
 
         // For optimization.
-        private readonly char[] _paramsSeparatorArray = new[] { ' ' };
+        //private readonly char[] _paramsSeparatorArray = new[] { ' ' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
@@ -95,31 +94,52 @@ namespace Adan.Client.ConveyorUnits
                         continue;
                     }
 
-                    var parts = commandText.Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length >= 2)
-                    {
-                        _context.Parameters[0] = string.Join(" ", parts.Skip(1));
-                    }
-                    else
-                    {
-                        _context.Parameters[0] = string.Empty;
-                    }
+                    //Я абсолютно не понимаю в чем смысл закомментированного.
+                    //Возможно в этом есть какой-то сакральный смысл, но мне он не понятен :(
 
-                    for (int i = 1; i < 10; i++)
-                    {
-                        if (i < parts.Length)
-                        {
-                            _context.Parameters[i] = parts[i];
-                        }
-                        else
-                        {
-                            _context.Parameters[i] = string.Empty;
-                        }
-                    }
+                    //var parts = commandText.Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
+                    //if (parts.Length >= 2)
+                    //{
+                    //    _context.Parameters[0] = string.Join(" ", parts.Skip(1));
+                    //}
+                    //else
+                    //{
+                    //    _context.Parameters[0] = string.Empty;
+                    //}
+
+                    //for (int i = 1; i < 10; i++)
+                    //{
+                    //    if (i < parts.Length)
+                    //    {
+                    //        _context.Parameters[i] = parts[i];
+                    //    }
+                    //    else
+                    //    {
+                    //        _context.Parameters[i] = string.Empty;
+                    //    }
+                    //}
+
+#if DEBUG
+                    if(_context.Parameters.Count > 1)
+                        throw new Exception("WTF?! Action context more than 1");
+#endif
+
+                    int ind = commandText.IndexOf(' ');
+                    if (ind != -1)
+                        _context.Parameters[0] = (commandText.Substring(ind));
+                    else
+                        _context.Parameters[0] = String.Empty;
 
                     foreach (var action in alias.Actions)
                     {
-                        action.Execute(_rootModel, _context);
+                        //Проверка старых, неправильно работающих алиасов
+                        var act = action as SendTextAction;
+                        if (act != null)
+                        {
+                            (new SendTextWoParamAction() { CommandText = act.CommandText }).Execute(_rootModel, _context);
+                        }
+                        else
+                            action.Execute(_rootModel, _context);
                     }
 
                     textCommand.Handled = true;

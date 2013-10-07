@@ -10,18 +10,19 @@
 namespace Adan.Client
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Text;
-    using System.Xml;
-    using System.Xml.Serialization;
-    using Adan.Client.Common;
-    using Common.Model;
-    using Common.Themes;
-    using CSLib.Net.Annotations;
-    using Model.ActionParameters;
-    using Model.Actions;
-    using Properties;
+using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.IO;
+using System.Text;
+using System.Xml;
+using System.Xml.Serialization;
+using Adan.Client.Common;
+using Common.Model;
+using Common.Themes;
+using CSLib.Net.Annotations;
+using Model.ActionParameters;
+using Model.Actions;
+using Properties;
 
     /// <summary>
     /// Class how hold settings like colors, windows sizes etc.
@@ -48,9 +49,9 @@ namespace Adan.Client
         {
             _settings = Settings.Default;
             _settings.Reload();
-            MainOutputWindowSecondaryScrollHeight = _settings.MainOutputWindowSecondaryScrollHeight;
-            ConnectHostName = _settings.ConnectHostName;
-            ConnectPort = _settings.ConnectPort;
+
+            RootModel.CommandChar = _settings.CommandChar;
+            RootModel.CommandDelimiter = _settings.CommandDelimiter;
 
             var types = new List<Type>
                             {
@@ -66,7 +67,8 @@ namespace Adan.Client
                                 typeof(TriggerOrCommandParameter),
                                 typeof(VariableReferenceParameter),
                                 typeof(MathExpressionParameter),
-                                typeof(ConstantStringParameter)
+                                typeof(ConstantStringParameter),
+                                typeof(SendTextWoParamAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.Plugins)
@@ -81,7 +83,11 @@ namespace Adan.Client
             //_variablesSerializer = new XmlSerializer(typeof(List<Variable>));
 
             ProfileHolder.Instance.Initialize(types);
-            ProfileHolder.Instance.Name = _settings.ProfileName;
+
+            if (ProfileHolder.Instance.AllProfiles.Contains(_settings.ProfileName))
+                ProfileHolder.Instance.Name = _settings.ProfileName;
+            else if(!ProfileHolder.Instance.AllProfiles.Contains("Default"))
+                ProfileHolder.Instance.Name = "Default";
         }
 
         #endregion
@@ -101,6 +107,50 @@ namespace Adan.Client
         }
 
         /// <summary>
+        /// Command history
+        /// </summary>
+        public StringCollection CommandsHistory
+        {
+            get
+            {
+                if (_settings.CommandsHistory == null)
+                    _settings.CommandsHistory = new StringCollection();
+
+                return _settings.CommandsHistory;
+            }
+        }
+
+        /// <summary>
+        /// Scroll buffer
+        /// </summary>
+        public int ScrollBuffer
+        {
+            get
+            {
+                return _settings.ScrollBuffer;
+            }
+            set
+            {
+                _settings.ScrollBuffer = value;
+            }
+        }
+
+        /// <summary>
+        /// Cursor Position
+        /// </summary>
+        public CursorPositionHistory CursorPosition
+        {
+            get
+            {
+                return (CursorPositionHistory)_settings.HistoryCursorPosition;
+            }
+            set
+            {
+                _settings.HistoryCursorPosition = (int) value;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the height of the main output window secondary scroll.
         /// </summary>
         /// <value>
@@ -108,9 +158,107 @@ namespace Adan.Client
         /// </value>
         public int MainOutputWindowSecondaryScrollHeight
         {
-            get;
-            set;
+            get
+            {
+                return _settings.MainOutputWindowSecondaryScrollHeight;
+            }
+            set
+            {
+                _settings.MainOutputWindowSecondaryScrollHeight = value;
+            }
         }
+
+        /// <summary>
+        /// Gets Char Separator
+        /// </summary>
+        public char CommandChar
+        {
+            get
+            {
+                return _settings.CommandChar;
+            }
+            set
+            {
+                _settings.CommandChar = value;
+                RootModel.CommandChar = value;
+            }
+        }
+
+        /// <summary>
+        /// Get Char delimiter
+        /// </summary>
+        public char CommandDelimiter
+        {
+            get
+            {
+                return _settings.CommandDelimiter;
+            }
+            set
+            {
+                _settings.CommandDelimiter = value;
+                RootModel.CommandDelimiter = value;
+            }
+        }
+
+        /// <summary>
+        /// Get AutoClearInput
+        /// </summary>
+        public bool AutoClearInput
+        {
+            get
+            {
+                return _settings.AutoClearInput;
+            }
+            set
+            {
+                _settings.AutoClearInput = value;
+            }
+        }
+
+        /// <summary>
+        /// Get AutoReconnect
+        /// </summary>
+        public bool AutoReconnect
+        {
+            get
+            {
+                return _settings.AutoReconnect;
+            }
+            set
+            {
+                _settings.AutoReconnect = value;
+            }
+        }
+
+        /// <summary>
+        /// Get MinLengthHistory
+        /// </summary>
+        public int MinLengthHistory
+        {
+            get
+            {
+                return _settings.MinLengthHistory;
+            }
+            set
+            {
+                _settings.MinLengthHistory = value;
+            }
+        }
+
+        /// <summary>
+        /// Get HistorySize
+        /// </summary>
+        public int HistorySize
+        {
+            get
+            {
+                return _settings.HistorySize;
+            }
+            set
+            {
+                _settings.HistorySize = value;
+            }
+        } 
 
         /// <summary>
         /// Gets the groups.
@@ -166,31 +314,6 @@ namespace Adan.Client
             }
         }
 
-        ///// <summary>
-        ///// TODO: Profile Name
-        ///// </summary>
-        ////[NotNull]
-        //public string ProfileName
-        //{
-        //    get
-        //    {
-        //        return _settings.ProfileName;
-        //    }
-        //    //set
-        //    //{
-        //    //    //Save();
-
-        //    //    _settings.ProfileName = value;
-
-        //    //    //ReadVariables();
-        //    //    //ReadGroups();
-
-        //    //    //if (SettingsChanged != null)
-        //    //        //SettingsChanged(this, EventArgs.Empty);
-        //    //}
-        //}
-
-
         /// <summary>
         /// Gets the variables.
         /// </summary>
@@ -215,7 +338,7 @@ namespace Adan.Client
         /// </summary>
         public void Save()
         {
-            _settings.MainOutputWindowSecondaryScrollHeight = MainOutputWindowSecondaryScrollHeight;
+            //_settings.MainOutputWindowSecondaryScrollHeight = MainOutputWindowSecondaryScrollHeight;
             ThemeManager.SaveSettings();
             _settings.ProfileName = ProfileHolder.Instance.Name;
             _settings.Save();

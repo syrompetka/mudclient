@@ -239,6 +239,7 @@ namespace Adan.Client.MessageDeserializers
             var textblock = new TextMessageBlock(_stringBuilder.ToString(), ConvertAnsiColorToTextColor(_currentForeColor, _isBright), ConvertAnsiColorToTextColor(_currentBackColor, _isBright));
             _messageBlocks.Add(textblock);
             _stringBuilder.Clear();
+
         }
 
         private void FlushCurrentLineToConveyor()

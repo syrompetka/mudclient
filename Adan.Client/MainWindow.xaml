@@ -33,6 +33,8 @@
                 <MenuItem Header="Import JMC config" Click="HandleImportJmcConfig" />
             </MenuItem>
             <MenuItem Header="Options" Name="optionsMenuItem">
+                <MenuItem Header="Options" Click="HandleEditOptions"/>
+                <Separator />
                 <MenuItem Header="Groups" Click="HandleEditGroups" />
                 <MenuItem Header="Triggers" Click="HandleEditTriggers" />
                 <MenuItem Header="Aliases" Click="HandleEditAliases" />
@@ -58,7 +60,7 @@
                             <ScrollViewer Grid.Row="0" CanContentScroll="True" Focusable="False" HorizontalScrollBarVisibility="Disabled">
                                 <Controls:MainOutputWindow x:Name="mainOutputWindow" Focusable="False"/>
                             </ScrollViewer>
-                            <Controls:TextBoxWithHistory Grid.Row="1"  x:Name="txtCommandInput" FontSize="16"/>
+                            <Controls:TextBoxWithHistory Grid.Row="1" x:Name="txtCommandInput" FontSize="16"/>
                         </Grid>
                     </AvalonDock:DocumentContent>
                 </AvalonDock:DocumentPane>

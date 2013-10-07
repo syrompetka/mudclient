@@ -85,7 +85,10 @@ namespace Adan.Client.Common
         {
             get
             {
-                return _variables ?? ReadVariables();
+                if(_variables == null)
+                    ReadVariables();
+
+                return _variables ?? new List<Variable>();
             }
         }
 
@@ -106,6 +109,9 @@ namespace Adan.Client.Common
 
                 if(!_firstTime)
                     Save();
+
+                if (!AllProfiles.Contains(value))
+                    CreateNewProfile(value);
 
                 _name = value;
 
@@ -160,11 +166,13 @@ namespace Adan.Client.Common
                 }
 
                 stream = File.Open(Path.Combine(dir, "Settings.xml"), FileMode.Create, FileAccess.Write);
-                using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
                 {
                     stream = null;
                     streamWriter.Formatting = Formatting.Indented;
-                    _groupsSerializer.Serialize(streamWriter, null);
+                    var gr = new List<Group>();
+                    gr.Add(new Group() { Name = "Default", IsEnabled = true, IsBuildIn = true });
+                    _groupsSerializer.Serialize(streamWriter, gr);
                 }
             }
             finally
@@ -183,7 +191,7 @@ namespace Adan.Client.Common
                 }
 
                 stream = File.Open(Path.Combine(dir, "Variables.xml"), FileMode.Create, FileAccess.Write);
-                using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
                 {
                     stream = null;
                     streamWriter.Formatting = Formatting.Indented;
@@ -234,14 +242,21 @@ namespace Adan.Client.Common
             if (!File.Exists(file))
                 return;
 
-            using (var stream = new StreamReader(file, Encoding.Default, false, 1024))
-            {
-                string line;
-                while((line = stream.ReadLine()) != null)
+
+            System.Threading.ThreadPool.QueueUserWorkItem(state =>
                 {
-                    rootModel.PushCommandToConveyor(new TextCommand(line));
-                }
-            }
+                    using (var stream = new StreamReader(file, Encoding.Default, false, 1024))
+                    {
+                        string line;
+                        while ((line = stream.ReadLine()) != null)
+                        {
+                            //XML не читает символ \x0018
+                            //TODO: Need FIX IT
+                            if (!line.Contains("\x001B"))
+                                rootModel.PushCommandToConveyor(new TextCommand(line));
+                        }
+                    }
+                });
         }
 
         [NotNull]
@@ -267,7 +282,7 @@ namespace Adan.Client.Common
                 }
 
                 stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Settings.xml"), FileMode.Create, FileAccess.Write);
-                using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
                 {
                     stream = null;
                     streamWriter.Formatting = Formatting.Indented;
@@ -294,24 +309,35 @@ namespace Adan.Client.Common
 
             using (var stream = File.OpenRead(settingsFileFullPath))
             {
-                _groups = (IList<Group>)_groupsSerializer.Deserialize(stream);
+                try
+                {
+                    _groups = (IList<Group>)_groupsSerializer.Deserialize(stream);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                }
             }
         }
 
-        [NotNull]
-        private IList<Variable> ReadVariables()
+        private void ReadVariables()
         {
             var variablesFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Variables.xml");
             if (!File.Exists(variablesFileFullPath))
             {
                 _variables = new List<Variable>();
-                return _variables;
             }
 
             using (var stream = File.OpenRead(variablesFileFullPath))
             {
-                _variables = (IList<Variable>)_variablesSerializer.Deserialize(stream);
-                return _variables;
+                try
+                {
+                    _variables = (IList<Variable>)_variablesSerializer.Deserialize(stream);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                }
             }
         }
 
@@ -326,9 +352,8 @@ namespace Adan.Client.Common
                 }
 
                 stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Variables.xml"), FileMode.Create, FileAccess.Write);
-                using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
                 {
-                    stream = null;
                     streamWriter.Formatting = Formatting.Indented;
                     _variablesSerializer.Serialize(streamWriter, _variables);
                 }

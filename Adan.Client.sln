@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client", "Adan.Client\Adan.Client.csproj", "{735142A1-9BB3-4708-B25F-0774352386B9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BC1440F5-5743-402C-9C08-4650E122C40F}"
@@ -12,8 +12,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.StuffDatabase", "Adan.Client.Plugins.StuffDatabase\Adan.Client.Plugins.StuffDatabase.csproj", "{E1E4B8FA-4655-4AE3-AC7A-A244BA887C5C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.GroupWidget", "Adan.Client.Plugins.GroupWidget\Adan.Client.Plugins.GroupWidget.csproj", "{95218378-19CB-419E-92F1-0D6E2A2897A6}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Adan.Client.Setup", "Adan.Client.Setup\Adan.Client.Setup.vdproj", "{0C13F056-F3E1-4B85-B072-BD3AD8828293}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Map", "Adan.Client.Map\Adan.Client.Map.csproj", "{BF656B2E-A08B-446C-923A-C3AB523F9387}"
 EndProject
@@ -87,12 +85,6 @@ Global
 		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|x86.ActiveCfg = Release|Any CPU
 		{95218378-19CB-419E-92F1-0D6E2A2897A6}.Release|x86.Build.0 = Release|Any CPU
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Debug|Any CPU.ActiveCfg = Debug
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Debug|Mixed Platforms.ActiveCfg = Debug
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Debug|x86.ActiveCfg = Debug
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|Any CPU.ActiveCfg = Release
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|Mixed Platforms.ActiveCfg = Release
-		{0C13F056-F3E1-4B85-B072-BD3AD8828293}.Release|x86.ActiveCfg = Release
 		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BF656B2E-A08B-446C-923A-C3AB523F9387}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -108,5 +100,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
 	EndGlobalSection
 EndGlobal

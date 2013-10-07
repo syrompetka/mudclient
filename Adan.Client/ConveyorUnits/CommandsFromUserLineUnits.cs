@@ -108,7 +108,7 @@ namespace Adan.Client.ConveyorUnits
 
             string commandText = textCommand.CommandText.Trim();
 
-            if (!commandText.StartsWith(RootModel.CharCommands.ToString()))
+            if (!commandText.StartsWith(RootModel.CommandChar.ToString()))
                 return;
 
             Match match;
@@ -172,6 +172,8 @@ namespace Adan.Client.ConveyorUnits
                 group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
                 group.Triggers.Add(trigger);
 
+                _rootModel.RecalculatedEnabledTriggersPriorities();
+
                 base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен"));
 
                 return;
@@ -214,6 +216,8 @@ namespace Adan.Client.ConveyorUnits
                     }
                 }
 
+                _rootModel.RecalculatedEnabledTriggersPriorities();
+
                 return;
             }
 
@@ -246,7 +250,7 @@ namespace Adan.Client.ConveyorUnits
                     Command = args[0]
                 };
 
-                commandAlias.Actions.Add(new SendTextAction()
+                commandAlias.Actions.Add(new SendTextWoParamAction()
                 {
                     CommandText = args[1]
                 });
@@ -549,7 +553,7 @@ namespace Adan.Client.ConveyorUnits
                     }
                 }
 
-                hot.Actions.Add(new SendTextAction()
+                hot.Actions.Add(new SendTextWoParamAction()
                 {
                     CommandText = args[1]
                 });
@@ -692,7 +696,7 @@ namespace Adan.Client.ConveyorUnits
                     return;
                 }
 
-                base.PushMessageToConveyor(new InfoMessage(match.Groups[1].ToString()));
+                base.PushMessageToConveyor(new InfoMessage(match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty)));
 
                 return;
             }
@@ -704,7 +708,6 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
                     return;
                 }
 
@@ -746,7 +749,6 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            //private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             match = _regexGroup.Match(commandText);
             if (match.Success)
             {

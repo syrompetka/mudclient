@@ -34,7 +34,7 @@ namespace Adan.Client.Common.Commands
         public string CommandText
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -54,6 +54,7 @@ namespace Adan.Client.Common.Commands
         /// <summary>
         /// Is Separated
         /// </summary>
+        [NotNull]
         public bool IsSeparated
         {
             get;

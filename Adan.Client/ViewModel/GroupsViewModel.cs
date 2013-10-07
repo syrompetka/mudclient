@@ -166,7 +166,7 @@ namespace Adan.Client.ViewModel
             var castedGroupName = groupName as string;
             if (!string.IsNullOrEmpty(castedGroupName))
             {
-                var group = new GroupViewModel(Groups, new Group(), _actionDescriptions) { Name = castedGroupName, IsEnabled = true, IsBuildIn = false };
+                var group = new GroupViewModel(Groups, new Group(), _actionDescriptions) { Name = castedGroupName, IsEnabled = true };
                 _allGroups.Add(group.Group);
                 _groups.Add(group);
             }

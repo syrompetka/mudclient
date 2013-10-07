@@ -30,15 +30,9 @@ namespace Adan.Client.Common.Model
     public class RootModel
     {
         private readonly MessageConveyor _conveyor;
-        private readonly IDictionary<string, Variable> _variablesDictionary = new Dictionary<string, Variable>();
+        //private readonly IDictionary<string, Variable> _variablesDictionary = new Dictionary<string, Variable>();
         //private readonly IList<Variable> _variables;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
-
-        static RootModel()
-        {
-            CharDelimiter = ';';
-            CharCommands = '#';
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RootModel"/> class.
@@ -65,13 +59,13 @@ namespace Adan.Client.Common.Model
             RoomMonstersStatus = new List<MonsterStatus>(20);
 
             //foreach (var variable in _variables)
-            foreach (var variable in variables)
-            {
-                if (!_variablesDictionary.ContainsKey(variable.Name))
-                {
-                    _variablesDictionary.Add(variable.Name, variable);
-                }
-            }
+            //foreach (var variable in variables)
+            //{
+            //    //if (!_variablesDictionary.ContainsKey(variable.Name))
+            //    //{
+            //       // _variablesDictionary.Add(variable.Name, variable);
+            //   // }
+            //}
 
             CustomSerializationTypes = new List<Type>();
         }
@@ -91,7 +85,7 @@ namespace Adan.Client.Common.Model
         /// Get char delimiter
         /// </summary>
         [NotNull]
-        public static char CharDelimiter
+        public static char CommandDelimiter
         {
             get;
             set;
@@ -101,7 +95,7 @@ namespace Adan.Client.Common.Model
         /// Get char commands
         /// </summary>
         [NotNull]
-        public static char CharCommands
+        public static char CommandChar
         {
             get;
             set;
@@ -254,14 +248,20 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
             Assert.ArgumentNotNull(value, "value");
-            if (!_variablesDictionary.ContainsKey(variableName))
+
+            var v = Variables.FirstOrDefault(var => var.Name == variableName);
+            //if (!_variablesDictionary.ContainsKey(variableName))
+            if (v != null)
             {
-                var variable = new Variable { Name = variableName };
-                _variablesDictionary.Add(variableName, variable);
+                v.Value = value;
+                //var variable = new Variable { Name = variableName, Value = value };
+                //_variablesDictionary.Add(variableName, variable);
                 //_variables.Add(variable);
             }
+            else
+                Variables.Add(new Variable() { Name = variableName, Value = value });
 
-            _variablesDictionary[variableName].Value = value;
+            //_variablesDictionary[variableName].Value = value;
 
             _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
         }
@@ -277,14 +277,25 @@ namespace Adan.Client.Common.Model
         public string GetVariableValue([NotNull] string variableName)
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
-            if (_variablesDictionary.ContainsKey(variableName))
+
+            //if (_variablesDictionary.ContainsKey(variableName))
+            //{
+            //    return _variablesDictionary[variableName].Value;
+            //}
+
+            var v = Variables.FirstOrDefault(var => var.Name == variableName);
+            if (v != null)
             {
-                return _variablesDictionary[variableName].Value;
+                return v.Value;
             }
 
             if (variableName.Equals("DATE", StringComparison.Ordinal))
             {
                 return DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+            }
+            else if (variableName.Equals("TIME", StringComparison.Ordinal))
+            {
+                return DateTime.Now.ToString("hh-mm-ss", CultureInfo.InvariantCulture);
             }
 
             return string.Empty;
@@ -297,10 +308,16 @@ namespace Adan.Client.Common.Model
         public void ClearVariableValue([NotNull] string variableName)
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
-            if (_variablesDictionary.ContainsKey(variableName))
+            //if (_variablesDictionary.ContainsKey(variableName))
+            //{
+            //    //_variables.Remove(_variablesDictionary[variableName]);
+            //    _variablesDictionary.Remove(variableName);
+            //}
+
+            var v = Variables.FirstOrDefault(var => var.Name == variableName);
+            if (v != null)
             {
-                //_variables.Remove(_variablesDictionary[variableName]);
-                _variablesDictionary.Remove(variableName);
+                Variables.Remove(v);
             }
 
             _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));

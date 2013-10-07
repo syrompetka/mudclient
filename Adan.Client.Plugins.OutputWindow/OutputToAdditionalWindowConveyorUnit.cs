@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Plugins.OutputWindow
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -95,7 +96,7 @@ namespace Adan.Client.Plugins.OutputWindow
                 }
 
                 _window.AddMessage(new OutputToAdditionalWindowMessage(
-                    match.Groups[1].ToString(),
+                    match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty),
                     (TextColor)new TextColorToBrushConverter().ConvertBack(ThemeManager.Instance.ActiveTheme.DefaultTextColor, typeof(TextColor), new object(), CultureInfo.InvariantCulture),
                     (TextColor)new TextColorToBrushConverter().ConvertBack(ThemeManager.Instance.ActiveTheme.DefaultBackGroundColor, typeof(TextColor), new object(), CultureInfo.InvariantCulture)) { SkipTriggers = true });
 
