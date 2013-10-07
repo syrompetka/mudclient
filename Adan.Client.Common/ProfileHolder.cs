@@ -270,7 +270,13 @@ namespace Adan.Client.Common
         {
             string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
             if (!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
+            {
+                try
+                {
+                    Directory.CreateDirectory(dir);
+                }
+                catch (Exception) { }
+            }
             return dir;
         }
 
