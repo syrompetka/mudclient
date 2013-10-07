@@ -268,7 +268,10 @@ namespace Adan.Client.Common
         [NotNull]
         private string GetSettingsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+            string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+            if (!Directory.Exists(dir))
+                Directory.CreateDirectory(dir);
+            return dir;
         }
 
         private void SaveGroups()
@@ -370,11 +373,14 @@ namespace Adan.Client.Common
         private void LoadAllProfiles()
         {
             var root = GetSettingsFolder();
-            foreach (string dir in Directory.GetDirectories(root))
+            if (Directory.Exists(root))
             {
-                if (File.Exists(Path.Combine(dir, "Settings.xml")))
+                foreach (string dir in Directory.GetDirectories(root))
                 {
-                    AllProfiles.Add(new DirectoryInfo(dir).Name);
+                    if (File.Exists(Path.Combine(dir, "Settings.xml")))
+                    {
+                        AllProfiles.Add(new DirectoryInfo(dir).Name);
+                    }
                 }
             }
         }
