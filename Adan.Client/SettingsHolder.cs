@@ -68,7 +68,7 @@ using Properties;
                                 typeof(VariableReferenceParameter),
                                 typeof(MathExpressionParameter),
                                 typeof(ConstantStringParameter),
-                                typeof(SendTextWoParamAction),
+                                typeof(SendTextOneParameterAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.Plugins)

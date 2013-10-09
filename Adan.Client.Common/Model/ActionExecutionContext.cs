@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Common.Model
 {
+    using System;
     using System.Collections.Generic;
 
     using CSLib.Net.Annotations;

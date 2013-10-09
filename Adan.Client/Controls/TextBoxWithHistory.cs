@@ -35,6 +35,9 @@ namespace Adan.Client.Controls
         private bool _selfChanges = false;
         private string oldText = String.Empty;
 
+        private int oldCaretIndex;
+        private int realCaretIndex = -1;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxWithHistory"/> class.
         /// </summary>
@@ -135,6 +138,8 @@ namespace Adan.Client.Controls
                 _currentQueueElementIndex = _enteredCommandsQueue.Count;
             }
 
+            oldText = String.Empty;
+
             Conveyor.PushCommand(new TextCommand(command));
             if (SettingsHolder.Instance.AutoClearInput)
             {
@@ -142,7 +147,10 @@ namespace Adan.Client.Controls
                 Clear();
             }
             else
+            {
                 SelectAll();
+                realCaretIndex = Text.Length;
+            }
         }
 
         private void FindTextInHistoryAndUpdateTextBox(bool lookBackWard)
@@ -188,7 +196,7 @@ namespace Adan.Client.Controls
                 if (_currentQueueElementIndex > 0)
                 {
                     ind = _enteredCommandsQueue.FindLastIndex(_currentQueueElementIndex - 1, _currentQueueElementIndex,
-                        x => x.StartsWith(oldText, true, CultureInfo.InvariantCulture));
+                        x => x.StartsWith(oldText));
                 }
             }
             else
@@ -196,7 +204,7 @@ namespace Adan.Client.Controls
                 if (_currentQueueElementIndex < _enteredCommandsQueue.Count)
                 {
                     ind = _enteredCommandsQueue.FindIndex(_currentQueueElementIndex + 1, _enteredCommandsQueue.Count - (_currentQueueElementIndex + 1),
-                        x => x.StartsWith(oldText, true, CultureInfo.InvariantCulture));
+                        x => x.StartsWith(oldText));
 
                     if (ind == -1)
                     {
@@ -221,7 +229,7 @@ namespace Adan.Client.Controls
         }
 
         /// <summary>
-        /// 
+        /// Override OnTextChanged method
         /// </summary>
         /// <param name="e"></param>
         protected override void OnTextChanged(TextChangedEventArgs e)
@@ -233,6 +241,59 @@ namespace Adan.Client.Controls
             }
             else
                 _selfChanges = false;
+
+            base.OnTextChanged(e);
+        }
+
+        /// <summary>
+        /// Улучшенное поведение каретки.
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnSelectionChanged(System.Windows.RoutedEventArgs e)
+        {
+            if (SelectionLength > 0)
+            {
+                if (oldCaretIndex == CaretIndex)
+                {
+                    realCaretIndex = CaretIndex + SelectionLength;
+                }
+                else
+                {
+                    realCaretIndex = CaretIndex;
+                }
+            }
+            else
+            {
+                if (realCaretIndex != -1)
+                {
+                    int newCaretIndex = -1;
+                    if (oldCaretIndex == CaretIndex)
+                    {
+                        if (realCaretIndex > 0)
+                            newCaretIndex = realCaretIndex - 1;
+                        else
+                            newCaretIndex = realCaretIndex;
+                    }
+                    else if (oldCaretIndex < CaretIndex)
+                    {
+                        if (realCaretIndex < Text.Length)
+                            newCaretIndex = realCaretIndex + 1;
+                        else
+                            newCaretIndex = realCaretIndex;
+                    }
+                    else
+                    {
+                        Conveyor.PushMessage(new ErrorMessage(string.Format("#Ошибка, просьба передать это разработчикам: TextBoxWithHistory: oldCaretIndex = {0}, CaretIndex = {1}", oldCaretIndex, CaretIndex)));
+                    }
+
+                    realCaretIndex = -1;
+                    CaretIndex = newCaretIndex;
+                }
+            }
+
+            oldCaretIndex = CaretIndex;
+
+            base.OnSelectionChanged(e);
         }
     }
 }

@@ -44,6 +44,7 @@
                     <CheckBox IsChecked="{Binding Path=AutoReconnect}" Content="AutoReconnect" Grid.Column="1" HorizontalAlignment="Left" Margin="159,48,0,0" Grid.Row="1" VerticalAlignment="Top"/>
                     <Label Content="Scroll buffer" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1"/>
                     <Controls:NumberTextBox Text="{Binding Path=ScrollBuffer}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="159,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="65" Grid.Row="1"/>
+                    <TextBox HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="120" Grid.Column="1" Margin="10,58,0,0"/>
                 </Grid>
             </TabItem>
         </TabControl>
