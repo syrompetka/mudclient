@@ -94,50 +94,24 @@ namespace Adan.Client.ConveyorUnits
                         continue;
                     }
 
-                    //Я абсолютно не понимаю в чем смысл закомментированного.
-                    //Возможно в этом есть какой-то сакральный смысл, но мне он не понятен :(
-
-                    //var parts = commandText.Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
-                    //if (parts.Length >= 2)
-                    //{
-                    //    _context.Parameters[0] = string.Join(" ", parts.Skip(1));
-                    //}
-                    //else
-                    //{
-                    //    _context.Parameters[0] = string.Empty;
-                    //}
-
-                    //for (int i = 1; i < 10; i++)
-                    //{
-                    //    if (i < parts.Length)
-                    //    {
-                    //        _context.Parameters[i] = parts[i];
-                    //    }
-                    //    else
-                    //    {
-                    //        _context.Parameters[i] = string.Empty;
-                    //    }
-                    //}
-
 #if DEBUG
                     if(_context.Parameters.Count > 1)
                         throw new Exception("WTF?! Action context more than 1");
 #endif
 
                     int ind = commandText.IndexOf(' ');
+
                     if (ind != -1)
-                        _context.Parameters[0] = (commandText.Substring(ind));
+                        _context.Parameters[0] = commandText.Substring(ind + 1);
                     else
                         _context.Parameters[0] = String.Empty;
 
                     foreach (var action in alias.Actions)
                     {
                         //Проверка старых, неправильно работающих алиасов
-                        var act = action as SendTextAction;
-                        if (act != null)
-                        {
-                            (new SendTextWoParamAction() { CommandText = act.CommandText }).Execute(_rootModel, _context);
-                        }
+                        var oldAction = action as SendTextAction;
+                        if(oldAction != null)
+                            (new SendTextOneParameterAction() { CommandText = oldAction.CommandText, Parameters = oldAction.Parameters }).Execute(_rootModel, _context);
                         else
                             action.Execute(_rootModel, _context);
                     }

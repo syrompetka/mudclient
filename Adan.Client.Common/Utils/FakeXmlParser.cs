@@ -37,7 +37,7 @@ namespace Adan.Client.Common.Utils
                     else if (nest == 0)
                         sb.Append(input[i]);
                 }
-                else
+                else if(nest == 0)
                     sb.Append(input[i]);
             }
 

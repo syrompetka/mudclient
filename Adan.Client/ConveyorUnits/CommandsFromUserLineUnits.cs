@@ -250,7 +250,8 @@ namespace Adan.Client.ConveyorUnits
                     Command = args[0]
                 };
 
-                commandAlias.Actions.Add(new SendTextWoParamAction()
+                //commandAlias.Actions.Add(new SendTextWoParamAction()
+                commandAlias.Actions.Add(new SendTextAction()
                 {
                     CommandText = args[1]
                 });
@@ -553,7 +554,8 @@ namespace Adan.Client.ConveyorUnits
                     }
                 }
 
-                hot.Actions.Add(new SendTextWoParamAction()
+                //hot.Actions.Add(new SendTextWoParamAction()
+                hot.Actions.Add(new SendTextAction()
                 {
                     CommandText = args[1]
                 });

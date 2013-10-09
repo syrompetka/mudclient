@@ -80,7 +80,8 @@ namespace Adan.Client.ConveyorUnits
                 textCommand.CommandText = VariableRegex.Replace(textCommand.CommandText,
                     m =>
                     {
-                        ret = true; return _rooteModel.GetVariableValue(m.Groups[1].Value);
+                        ret = true;
+                        return _rooteModel.GetVariableValue(m.Groups[1].Value);
                     });
             } while (ret);
         }

@@ -99,7 +99,7 @@ namespace Adan.Client.Common.Model
         /// A result of post processing.
         /// </returns>
         [NotNull]
-        protected string PostProcessString([NotNull] string valueToProcess, [NotNull] RootModel model, [NotNull] ActionExecutionContext context)
+        protected virtual string PostProcessString([NotNull] string valueToProcess, [NotNull] RootModel model, [NotNull] ActionExecutionContext context)
         {
             Assert.ArgumentNotNull(valueToProcess, "valueToProcess");
             Assert.ArgumentNotNull(model, "model");

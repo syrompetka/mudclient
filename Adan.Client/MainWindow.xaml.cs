@@ -98,15 +98,15 @@ namespace Adan.Client
                 }
             }
 
-            _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor, rootModel));
-
             _converyor.AddCommandSerializer(new TextCommandSerializer(_converyor));
             _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
             _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
 
+            _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor, rootModel));
+
+            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
-            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
             _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
