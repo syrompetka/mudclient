@@ -46,6 +46,17 @@ namespace Adan.Client.Model.Actions
         }
 
         /// <summary>
+        /// Gets or sets Silent mode
+        /// </summary>
+        [NotNull]
+        [XmlAttribute]
+        public bool SilentSet
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Executes this action.
         /// </summary>
         /// <param name="model">The model.</param>
@@ -56,7 +67,7 @@ namespace Adan.Client.Model.Actions
             Assert.ArgumentNotNull(context, "context");
             if (!string.IsNullOrEmpty(VariableName))
             {
-                model.ClearVariableValue(VariableName);
+                model.ClearVariableValue(VariableName, SilentSet);
             }
         }
     }

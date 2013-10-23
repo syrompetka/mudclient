@@ -645,7 +645,7 @@ namespace Adan.Client.ConveyorUnits
                     return;
                 }
 
-                _rootModel.SetVariableValue(args[0], args[1]);
+                _rootModel.SetVariableValue(args[0], args[1], false);
 
                 base.PushMessageToConveyor(new InfoMessage("#Переменная добавлена"));
 
@@ -671,7 +671,7 @@ namespace Adan.Client.ConveyorUnits
                     return;
                 }
 
-                _rootModel.ClearVariableValue(args[0]);
+                _rootModel.ClearVariableValue(args[0], false);
 
                 base.PushMessageToConveyor(new InfoMessage("#Переменная удалена"));
 

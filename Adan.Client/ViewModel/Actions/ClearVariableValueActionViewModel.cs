@@ -72,6 +72,23 @@ namespace Adan.Client.ViewModel.Actions
         }
 
         /// <summary>
+        /// Gets or sets Silent mode
+        /// </summary>
+        public bool SilentSet
+        {
+            get
+            {
+                return _action.SilentSet;
+            }
+            set
+            {
+                _action.SilentSet = value;
+                OnPropertyChanged("SilentSet");
+                OnPropertyChanged("ActionDescription");
+            }
+        }
+
+        /// <summary>
         /// Gets all variables.
         /// </summary>
         [NotNull]
@@ -101,7 +118,12 @@ namespace Adan.Client.ViewModel.Actions
         /// <returns>A deep copy of this instance.</returns>
         public override ActionViewModelBase Clone()
         {
-            return new ClearVariableValueActionViewModel(new ClearVariableValueAction(), AllVariables, ActionDescriptor, AllActionDescriptions) { VariableName = VariableName };
+            return new ClearVariableValueActionViewModel
+                (new ClearVariableValueAction(), AllVariables, ActionDescriptor, AllActionDescriptions)
+                { 
+                    VariableName = VariableName,
+                    SilentSet = SilentSet
+                };
         }
     }
 }

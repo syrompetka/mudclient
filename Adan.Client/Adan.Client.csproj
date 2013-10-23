@@ -120,14 +120,11 @@
     <Compile Include="Dialogs\AliasesEditDialog.xaml.cs">
       <DependentUpon>AliasesEditDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\Fonts\ColorFontChooser.xaml.cs">
-      <DependentUpon>ColorFontChooser.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Dialogs\Fonts\ColorPicker.xaml.cs">
-      <DependentUpon>ColorPicker.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Dialogs\ConnectionDialog.xaml.cs">
       <DependentUpon>ConnectionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Fonts\FontChooser.xaml.cs">
+      <DependentUpon>FontChooser.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GroupsEditDialog.xaml.cs">
       <DependentUpon>GroupsEditDialog.xaml</DependentUpon>
@@ -166,9 +163,10 @@
       <DependentUpon>TriggersEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\TriggerTemplateSelector.cs" />
-    <Compile Include="Fonts\AvailableColor.cs" />
-    <Compile Include="Fonts\FonInfo.cs" />
-    <Compile Include="Fonts\FontColor.cs" />
+    <Compile Include="Controls\Fonts\FontFamilyListItem.cs" />
+    <Compile Include="Controls\Fonts\FontSizeListItem.cs" />
+    <Compile Include="Controls\Fonts\NameDictionaryHelper.cs" />
+    <Compile Include="Controls\Fonts\TypeFaceListItem.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
@@ -211,7 +209,7 @@
     <Compile Include="Model\ParameterDescriptions\TriggerOrCommandParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\VariableReferenceParameterDescription.cs" />
     <Compile Include="PluginHost.cs" />
-    <Compile Include="CursorPositionHistory.cs" />
+    <Compile Include="Controls\CursorPositionHistory.cs" />
     <Compile Include="ViewModel\ActionParameters\ConstantStringParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\ExtensionMethods.cs" />
     <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
@@ -229,9 +227,9 @@
     <Compile Include="ViewModel\Actions\StopLogActionViewModel.cs" />
     <Compile Include="ViewModel\AliasesViewModel.cs" />
     <Compile Include="ViewModel\AliasViewModel.cs" />
-    <Compile Include="ViewModel\ColorPickerViewModel.cs" />
     <Compile Include="ViewModel\ConnectionDialogViewModel.cs" />
     <Compile Include="ViewModel\ConnectionStatusModel.cs" />
+    <Compile Include="ViewModel\FontChooserViewModel.cs" />
     <Compile Include="ViewModel\GroupViewModel.cs" />
     <Compile Include="ViewModel\GroupsViewModel.cs" />
     <Compile Include="ViewModel\HighlightsViewModel.cs" />
@@ -255,15 +253,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\Fonts\ColorFontChooser.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Dialogs\Fonts\ColorPicker.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Dialogs\ConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Fonts\FontChooser.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

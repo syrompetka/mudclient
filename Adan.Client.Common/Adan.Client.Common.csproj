@@ -60,6 +60,7 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>
     </Compile>

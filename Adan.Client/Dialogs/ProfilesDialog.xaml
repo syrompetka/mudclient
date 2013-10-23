@@ -45,6 +45,9 @@
             <Button HorizontalAlignment="Left" Command="{Binding Path=AddProfileCommand}" CommandParameter="{Binding ElementName=txtNewProfileName, Path=Text}" MinWidth="50">Add</Button>
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" Command="{Binding Path=DeleteProfileCommand}" CommandParameter="{Binding ElementName=lstProfiles, Path=SelectedItem}" MinWidth="50">Delete</Button>
         </StackPanel>
-        <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Click="HandleOkClick" Margin="0,0,5,0" HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Content="Ok"/>
+            <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+        </StackPanel>
     </Grid>
 </Window>

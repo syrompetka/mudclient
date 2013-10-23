@@ -32,6 +32,7 @@ namespace Adan.Client.Model.Actions
         {
             VariableName = string.Empty;
             ValueToSet = new TriggerOrCommandParameter();
+            SilentSet = false;
         }
 
         /// <summary>
@@ -43,6 +44,17 @@ namespace Adan.Client.Model.Actions
         [NotNull]
         [XmlAttribute]
         public string VariableName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets Silent mode
+        /// </summary>
+        [NotNull]
+        [XmlAttribute]
+        public bool SilentSet
         {
             get;
             set;
@@ -73,7 +85,7 @@ namespace Adan.Client.Model.Actions
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
 
-            model.SetVariableValue(VariableName, ValueToSet.GetParameterValue(model, context));
+            model.SetVariableValue(VariableName, ValueToSet.GetParameterValue(model, context), SilentSet);
         }
 
         #endregion

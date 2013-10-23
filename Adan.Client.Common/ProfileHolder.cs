@@ -21,6 +21,7 @@ namespace Adan.Client.Common
         private static readonly ProfileHolder _instance = new ProfileHolder();
         private XmlSerializer _groupsSerializer;
         private XmlSerializer _variablesSerializer;
+        private XmlSerializer _commonSerializer;
         private IList<Group> _groups;
         private IList<Variable> _variables;
         private string _name;
@@ -38,6 +39,7 @@ namespace Adan.Client.Common
 
             _groupsSerializer = new XmlSerializer(typeof(List<Group>), types.ToArray());
             _variablesSerializer = new XmlSerializer(typeof(List<Variable>));
+            _commonSerializer = new XmlSerializer(typeof(CommonProfileSettings));
 
             _profiles = new List<string>();
 
@@ -117,6 +119,7 @@ namespace Adan.Client.Common
 
                 ReadVariables();
                 ReadGroups();
+                ReadCommonSettings();
 
                 if(!_firstTime)
                     _firstTime = true;
@@ -124,6 +127,15 @@ namespace Adan.Client.Common
                 //if (SettingsChanged != null)
                 //SettingsChanged(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public CommonProfileSettings CommonSettings
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -148,6 +160,7 @@ namespace Adan.Client.Common
         {
             SaveGroups();
             SaveVariables();
+            SaveCommonSettings();
         }
 
         /// <summary>
@@ -206,6 +219,32 @@ namespace Adan.Client.Common
                 }
             }
 
+            try
+            {
+                if (!Directory.Exists(GetProfileSettingsFolder()))
+                {
+                    Directory.CreateDirectory(GetProfileSettingsFolder());
+                }
+
+                stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Common.xml"), FileMode.Create, FileAccess.Write);
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+                {
+                    streamWriter.Formatting = Formatting.Indented;
+                    var profileSettings = new CommonProfileSettings() 
+                    {
+                        MultiAction = false 
+                    };
+                    _commonSerializer.Serialize(streamWriter, profileSettings);
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
+            }
+
             AllProfiles.Add(name);
         }
 
@@ -215,7 +254,6 @@ namespace Adan.Client.Common
         /// <param name="name">Name profile</param>
         public void DeleteProfile(string name)
         {
-
             var dir = GetProfileSettingsFolder(name);
             if (Directory.Exists(dir))
             {
@@ -241,7 +279,6 @@ namespace Adan.Client.Common
         {
             if (!File.Exists(file))
                 return;
-
 
             System.Threading.ThreadPool.QueueUserWorkItem(state =>
                 {
@@ -296,6 +333,47 @@ namespace Adan.Client.Common
                     stream = null;
                     streamWriter.Formatting = Formatting.Indented;
                     _groupsSerializer.Serialize(streamWriter, _groups);
+                }
+            }
+            finally
+            {
+                if (stream != null)
+                {
+                    stream.Dispose();
+                }
+            }
+        }
+
+        private void ReadCommonSettings()
+        {
+            var commonFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Common.xml");
+            if (!File.Exists(commonFileFullPath))
+            {
+                CommonSettings = new CommonProfileSettings() { MultiAction = false };
+                return;
+            }
+
+            using (var stream = File.OpenRead(commonFileFullPath))
+            {
+                CommonSettings = (CommonProfileSettings) _commonSerializer.Deserialize(stream);
+            }
+        }
+
+        private void SaveCommonSettings()
+        {
+            FileStream stream = null;
+            try
+            {
+                if (!Directory.Exists(GetProfileSettingsFolder()))
+                {
+                    Directory.CreateDirectory(GetProfileSettingsFolder());
+                }
+
+                stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Common.xml"), FileMode.Create, FileAccess.Write);
+                using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+                {
+                    streamWriter.Formatting = Formatting.Indented;
+                    _commonSerializer.Serialize(streamWriter, CommonSettings);
                 }
             }
             finally

@@ -244,7 +244,8 @@ namespace Adan.Client.Common.Model
         /// </summary>
         /// <param name="variableName">Name of the variable.</param>
         /// <param name="value">The value.</param>
-        public void SetVariableValue([NotNull]string variableName, [NotNull] string value)
+        /// <param name="isSilent">IsSilent</param>
+        public void SetVariableValue([NotNull]string variableName, [NotNull] string value, [NotNull] bool isSilent)
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
             Assert.ArgumentNotNull(value, "value");
@@ -263,7 +264,8 @@ namespace Adan.Client.Common.Model
 
             //_variablesDictionary[variableName].Value = value;
 
-            _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
+            if(!isSilent)
+                _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
         }
 
         /// <summary>
@@ -289,13 +291,13 @@ namespace Adan.Client.Common.Model
                 return v.Value;
             }
 
-            if (variableName.Equals("DATE", StringComparison.Ordinal))
+            if (variableName.Equals("DATE", StringComparison.InvariantCultureIgnoreCase))
             {
                 return DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             }
-            else if (variableName.Equals("TIME", StringComparison.Ordinal))
+            else if (variableName.Equals("TIME", StringComparison.InvariantCultureIgnoreCase))
             {
-                return DateTime.Now.ToString("hh-mm-ss", CultureInfo.InvariantCulture);
+                return DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
             }
 
             return string.Empty;
@@ -305,7 +307,8 @@ namespace Adan.Client.Common.Model
         /// Clears the variable value.
         /// </summary>
         /// <param name="variableName">Name of the variable.</param>
-        public void ClearVariableValue([NotNull] string variableName)
+        /// <param name="isSilent">Is Silent</param>
+        public void ClearVariableValue([NotNull] string variableName, bool isSilent)
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
             //if (_variablesDictionary.ContainsKey(variableName))
@@ -320,7 +323,8 @@ namespace Adan.Client.Common.Model
                 Variables.Remove(v);
             }
 
-            _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
+            if(!isSilent)
+                _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
         }
 
         /// <summary>

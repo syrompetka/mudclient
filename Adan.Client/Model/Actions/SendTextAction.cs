@@ -22,7 +22,7 @@ namespace Adan.Client.Model.Actions
     /// Action that sends text to server.
     /// </summary>
     [Serializable]
-    public class SendTextAction : ActionWithOneParameterOrDefault
+    public class SendTextAction : ActionWithParameters
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SendTextAction"/> class.

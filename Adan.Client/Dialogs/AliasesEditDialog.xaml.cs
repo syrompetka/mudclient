@@ -33,6 +33,7 @@ namespace Adan.Client.Dialogs
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+
             var aliasesViewModel = (AliasesViewModel)DataContext;
             if (aliasesViewModel.EditAliasCommand.CanBeExecuted)
             {

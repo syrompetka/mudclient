@@ -133,7 +133,7 @@
     <value>Значение переменной '{0}' очищенно.</value>
   </data>
   <data name="VariableValueSet" xml:space="preserve">
-    <value>Значение переменной '{0}' установлено в  '{1}'.</value>
+    <value>Значение переменной '{0}' установлено в '{1}'.</value>
   </data>
   <data name="Yes" xml:space="preserve">
     <value>Да</value>
