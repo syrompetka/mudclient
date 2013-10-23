@@ -10,19 +10,19 @@
 namespace Adan.Client
 {
     using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Text;
-using System.Xml;
-using System.Xml.Serialization;
-using Adan.Client.Common;
-using Common.Model;
-using Common.Themes;
-using CSLib.Net.Annotations;
-using Model.ActionParameters;
-using Model.Actions;
-using Properties;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.IO;
+    using System.Text;
+    using System.Xml;
+    using System.Xml.Serialization;
+    using Adan.Client.Common;
+    using Common.Model;
+    using Common.Themes;
+    using CSLib.Net.Annotations;
+    using Model.ActionParameters;
+    using Model.Actions;
+    using Properties;
 
     /// <summary>
     /// Class how hold settings like colors, windows sizes etc.

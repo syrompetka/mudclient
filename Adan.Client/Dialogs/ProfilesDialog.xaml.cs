@@ -40,5 +40,13 @@ namespace Adan.Client.Dialogs
 
             this.Close();
         }
+
+        private void HandleOkClick(object sender, RoutedEventArgs e)
+        {
+            if(((ProfilesViewModel)DataContext).SelectedProfile != null)
+                ProfileHolder.Instance.Name = ((ProfilesViewModel)DataContext).SelectedProfile.NameProfile;
+
+            DialogResult = true;
+        }
     }
 }

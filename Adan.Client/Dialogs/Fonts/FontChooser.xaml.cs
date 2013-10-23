@@ -9,32 +9,24 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Adan.Client.Dialogs.Fonts;
-using Adan.Client.Fonts;
 
-namespace Adan.Client.Dialogs
+namespace Adan.Client.Dialogs.Fonts
 {
     /// <summary>
-    /// Логика взаимодействия для OptionsDialog.xaml
+    /// Логика взаимодействия для FontChooser.xaml
     /// </summary>
-    public partial class OptionsDialog : Window
+    public partial class FontChooser : UserControl
     {
         /// <summary>
-        /// Constructor
+        /// 
         /// </summary>
-        public OptionsDialog()
+        public FontChooser()
         {
             InitializeComponent();
         }
 
-        private void HandleOk(object sender, RoutedEventArgs e)
-        {
-            DialogResult = true;
-        }
 
-        private void HandleColorClick(object sender, RoutedEventArgs e)
-        {
-        }
     }
 }

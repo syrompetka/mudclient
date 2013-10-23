@@ -79,6 +79,23 @@ namespace Adan.Client.ViewModel.Actions
         }
 
         /// <summary>
+        /// Gets or sets Silent mode
+        /// </summary>
+        public bool SilentSet
+        {
+            get
+            {
+                return _action.SilentSet;
+            }
+            set
+            {
+                _action.SilentSet = value;
+                OnPropertyChanged("SilentSet");
+                OnPropertyChanged("ActionDescription");
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the value to set parameter descriptor.
         /// </summary>
         /// <value>
@@ -169,7 +186,13 @@ namespace Adan.Client.ViewModel.Actions
         /// <returns>A deep copy of this instance.</returns>
         public override ActionViewModelBase Clone()
         {
-            return new SetVariableValueActionViewModel(new SetVariableValueAction(), AllVariables, ActionDescriptor, ParameterDescriptions, AllActionDescriptions) { VariableName = VariableName, ValueToSet = ValueToSet.Clone() };
+            return new SetVariableValueActionViewModel
+                (new SetVariableValueAction(), AllVariables, ActionDescriptor, ParameterDescriptions, AllActionDescriptions) 
+                { 
+                    VariableName = VariableName, 
+                    SilentSet = SilentSet,
+                    ValueToSet = ValueToSet.Clone()
+                };
         }
 
         private void HandleValueToSetDescriptionChange([NotNull] object sender, [NotNull] PropertyChangedEventArgs e)

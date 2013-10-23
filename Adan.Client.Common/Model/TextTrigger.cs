@@ -149,7 +149,7 @@ namespace Adan.Client.Common.Model
                 action.Execute(rootModel, Context);
             }
 
-            if (StopProcessingTriggersAfterThis)
+            if (ProfileHolder.Instance.CommonSettings.MultiAction || StopProcessingTriggersAfterThis)
             {
                 textMessage.SkipTriggers = true;
             }

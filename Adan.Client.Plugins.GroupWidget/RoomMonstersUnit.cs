@@ -66,7 +66,9 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             get
             {
-                return Enumerable.Repeat(BuiltInCommandTypes.HotkeyCommand, 1);
+                //Временное включение буквы ё
+                //return Enumerable.Repeat(BuiltInCommandTypes.HotkeyCommand, 1);
+                return Enumerable.Empty<int>();
             }
         }
 
