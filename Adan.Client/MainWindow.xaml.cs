@@ -13,6 +13,7 @@ namespace Adan.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -22,6 +23,7 @@ namespace Adan.Client
     using System.Windows.Input;
     using System.Windows.Media;
     using Adan.Client.Common;
+    using Adan.Client.Common.Controls;
     using AvalonDock;
     using Commands;
     using CommandSerializers;
@@ -50,7 +52,7 @@ namespace Adan.Client
     /// </summary>
     public partial class MainWindow
     {
-        private readonly MessageConveyor _converyor;
+        private readonly MessageConveyor _conveyor;
         private readonly MainWindowModel _model;
         private readonly HotkeyCommand _hotkeyCommand = new HotkeyCommand();
         private readonly Queue<Message> _messageQueue = new Queue<Message>();
@@ -62,11 +64,21 @@ namespace Adan.Client
         /// </summary>
         public MainWindow()
         {
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+
             InitializeComponent();
+
+#if DEBUG
+            long initTime = sw.ElapsedMilliseconds;
+            sw.Restart();
+#endif
 
             var mccpClient = new MccpClient();
 
-            _converyor = new MessageConveyor(mccpClient);
+            _conveyor = new MessageConveyor(mccpClient);
             var allVariables = SettingsHolder.Instance.Variables;
             var allGroups = SettingsHolder.Instance.Groups;
 
@@ -88,7 +100,7 @@ namespace Adan.Client
             parameterDescriptions.Add(new MathExpressionParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new ConstantStringParameterDescription(parameterDescriptions));
 
-            var rootModel = new RootModel(_converyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
+            var rootModel = new RootModel(_conveyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
 
             foreach (var plugin in PluginHost.Instance.Plugins)
             {
@@ -98,27 +110,27 @@ namespace Adan.Client
                 }
             }
 
-            _converyor.AddCommandSerializer(new TextCommandSerializer(_converyor));
-            _converyor.AddMessageDeserializer(new TextMessageDeserializer(_converyor));
-            _converyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_converyor));
+            _conveyor.AddCommandSerializer(new TextCommandSerializer(_conveyor));
+            _conveyor.AddMessageDeserializer(new TextMessageDeserializer(_conveyor));
+            _conveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_conveyor));
 
-            _converyor.AddConveyorUnit(new CommandSeparatorUnit(_converyor, rootModel));
+            _conveyor.AddConveyorUnit(new CommandSeparatorUnit(_conveyor, rootModel));
 
-            _converyor.AddConveyorUnit(new VariableReplaceUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new CommandsFromUserLineUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new CommandMultiplierUnit(_converyor));
-            _converyor.AddConveyorUnit(new SubstitutionUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new AliasUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new HotkeyUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new TriggerUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new HighlightUnit(_converyor, rootModel));
-            _converyor.AddConveyorUnit(new LoggingUnit(_converyor));
+            _conveyor.AddConveyorUnit(new VariableReplaceUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new CommandsFromUserLineUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new CommandMultiplierUnit(_conveyor));
+            _conveyor.AddConveyorUnit(new SubstitutionUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new AliasUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new HotkeyUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new TriggerUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new HighlightUnit(_conveyor, rootModel));
+            _conveyor.AddConveyorUnit(new LoggingUnit(_conveyor));
 
-            _converyor.MessageReceived += HandleMessageFromServer;
+            _conveyor.MessageReceived += HandleMessageFromServer;
 
             Loaded += (o, e) => txtCommandInput.Focus();
 
-            txtCommandInput.Conveyor = _converyor;
+            txtCommandInput.Conveyor = _conveyor;
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -137,7 +149,12 @@ namespace Adan.Client
                 ViewModel = new InitializationStatusModel()
             };
 
-            Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_converyor, rootModel, initializationDalog.ViewModel, this))
+#if DEBUG
+            long varInitTime = sw.ElapsedMilliseconds;
+            sw.Restart();
+#endif
+
+            Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_conveyor, rootModel, initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
@@ -154,23 +171,29 @@ namespace Adan.Client
             }
 
             int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);
-            _converyor.AddConveyorUnit(new ProtocolVersionUnit(_converyor, maxProtocolVersion));
+            _conveyor.AddConveyorUnit(new ProtocolVersionUnit(_conveyor, maxProtocolVersion));
 
-            // _model = new MainWindowModel(allGroups, allVariables, rootModel);
-            //_model = new MainWindowModel(rootModel.Groups, rootModel.Variables, rootModel);
             _model = new MainWindowModel(rootModel);
 
             DataContext = _model;
 
             dockManager.DeserializationCallback = HandleFindWidget;
 
-            _converyor.AddConveyorUnit(new CommandRepeaterUnit(_converyor));
+            _conveyor.AddConveyorUnit(new CommandRepeaterUnit(_conveyor));
 
             //Заглушка для нераспознанных комманд с CharCommands
-            _converyor.AddConveyorUnit(new CapForLineCommandUnit(_converyor));
+            _conveyor.AddConveyorUnit(new CapForLineCommandUnit(_conveyor));
 
             //Проверка коннекта к серверу для команд
-            _converyor.AddConveyorUnit(new ConnectionUnit(_converyor));
+            _conveyor.AddConveyorUnit(new ConnectionUnit(_conveyor));
+
+#if DEBUG
+            task.Wait();
+            long pluginInitTime = sw.ElapsedMilliseconds;
+            sw.Stop();
+            _conveyor.PushMessage(new InfoMessage(string.Format("InitTime = {0} ms, varInitTime = {1} ms, pluginInitTime = {2} ms",
+                initTime, varInitTime, pluginInitTime)));
+#endif
         }
 
         /// <summary>
@@ -184,7 +207,7 @@ namespace Adan.Client
             _hotkeyCommand.Key = e.Key == Key.System ? e.SystemKey : e.Key;
             _hotkeyCommand.ModifierKeys = Keyboard.Modifiers;
             _hotkeyCommand.Handled = false;
-            _converyor.PushCommand(_hotkeyCommand);
+            _conveyor.PushCommand(_hotkeyCommand);
 
             if (_hotkeyCommand.Handled)
             {
@@ -250,7 +273,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _converyor.Dispose();
+            _conveyor.Dispose();
             base.OnClosing(e);
         }
 
@@ -287,7 +310,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            _converyor.PushCommand(new ConnectCommand(SettingsHolder.Instance.ConnectHostName, SettingsHolder.Instance.ConnectPort));
+            _conveyor.PushCommand(new ConnectCommand(SettingsHolder.Instance.ConnectHostName, SettingsHolder.Instance.ConnectPort));
         }
 
         private void HandleDisconnect([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -295,7 +318,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            _converyor.PushCommand(new DisconnectCommand());
+            _conveyor.PushCommand(new DisconnectCommand());
         }
 
         private void HandleConnectionPreference([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -428,7 +451,7 @@ namespace Adan.Client
                 dockContent.Show(dockManager);
             }
 
-            var layoutFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings", "Layout.xml");
+            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "Layout.xml");
             if (File.Exists(layoutFullPath))
             {
                 dockManager.RestoreLayout(layoutFullPath);
@@ -460,7 +483,7 @@ namespace Adan.Client
             }
             else
             {
-                dockContent.Show();
+                dockContent.Show(dockManager);
             }
         }
 
@@ -476,7 +499,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
-            var layoutFullPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
             if (!Directory.Exists(layoutFullPath))
             {
                 Directory.CreateDirectory(layoutFullPath);
@@ -547,6 +570,7 @@ namespace Adan.Client
                 HistorySize = SettingsHolder.Instance.HistorySize.ToString(),
                 MinLengthHistory = SettingsHolder.Instance.MinLengthHistory.ToString(),
                 ScrollBuffer = SettingsHolder.Instance.ScrollBuffer.ToString(),
+                SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings
             };
 
             var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
@@ -558,10 +582,16 @@ namespace Adan.Client
                 SettingsHolder.Instance.AutoReconnect = model.AutoReconnect;
                 SettingsHolder.Instance.CommandChar = model.CommandChar;
                 SettingsHolder.Instance.CommandDelimiter = model.CommandDelimiter;
+
                 if (model.StartOfLine)
                     SettingsHolder.Instance.CursorPosition = CursorPositionHistory.StartOfLine;
                 else
                     SettingsHolder.Instance.CursorPosition = CursorPositionHistory.EndOfLine;
+
+                if (model.SettingsFolder)
+                    SettingsHolder.Instance.SettingsFolder = SettingsFolder.DocumentsAndSettings;
+                else
+                    SettingsHolder.Instance.SettingsFolder = SettingsFolder.ProgramFolder;
 
                 int val;
                 if(int.TryParse(model.HistorySize, out val))

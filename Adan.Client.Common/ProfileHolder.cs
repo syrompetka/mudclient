@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
 using Adan.Client.Common.Commands;
+using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
@@ -19,6 +21,7 @@ namespace Adan.Client.Common
     public class ProfileHolder
     {
         private static readonly ProfileHolder _instance = new ProfileHolder();
+
         private XmlSerializer _groupsSerializer;
         private XmlSerializer _variablesSerializer;
         private XmlSerializer _commonSerializer;
@@ -27,21 +30,20 @@ namespace Adan.Client.Common
         private string _name;
         private bool _firstTime = true;
         private IList<string> _profiles;
+        private SettingsFolder _settingsFolder;
         //private static object _lockobject = new object();
 
         /// <summary>
         /// Initialize class
         /// </summary>
         /// <param name="types">Types</param>
-        public void Initialize([NotNull] List<Type> types)
+        public void Initialize([NotNull] IList<Type> types)
         {
             Assert.ArgumentNotNull(types, "types");
 
             _groupsSerializer = new XmlSerializer(typeof(List<Group>), types.ToArray());
             _variablesSerializer = new XmlSerializer(typeof(List<Variable>));
             _commonSerializer = new XmlSerializer(typeof(CommonProfileSettings));
-
-            _profiles = new List<string>();
 
             LoadAllProfiles();
         }
@@ -56,6 +58,53 @@ namespace Adan.Client.Common
             {
                // lock(_lockobject)
                     return _instance;
+            }
+        }
+
+        /// <summary>
+        /// Get Settings Folder
+        /// </summary>
+        public SettingsFolder SettingsFolder
+        {
+            get
+            {
+                return _settingsFolder;
+            }
+            set
+            {
+                _settingsFolder = value;
+
+                if (!_firstTime)
+                {
+                    LoadAllProfiles();
+
+                    if (!AllProfiles.Contains(Name))
+                        AllProfiles.Add(Name);
+                    else if (!AllProfiles.Contains("Default"))
+                        CreateNewProfile("Default");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Get Settings Folder Folder
+        /// </summary>
+        public string Folder
+        {
+            get
+            {
+                string dir = String.Empty;
+                switch (SettingsFolder)
+                {
+                    case SettingsFolder.DocumentsAndSettings:
+                        dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client");
+                        break;
+                    case SettingsFolder.ProgramFolder:
+                        dir = Path.Combine(Environment.CurrentDirectory);
+                        break;
+                }
+
+                return dir;
             }
         }
 
@@ -109,20 +158,22 @@ namespace Adan.Client.Common
                 if (_name == value)
                     return;
 
-                if(!_firstTime)
+                if (!_firstTime)
                     Save();
-
-                if (!AllProfiles.Contains(value))
-                    CreateNewProfile(value);
+                else
+                    _firstTime = false;
 
                 _name = value;
 
-                ReadVariables();
-                ReadGroups();
-                ReadCommonSettings();
+                if (!AllProfiles.Contains(value))
+                    CreateNewProfile(value);
+                else
+                {
+                    ReadVariables();
+                    ReadGroups();
+                    ReadCommonSettings();
+                }
 
-                if(!_firstTime)
-                    _firstTime = true;
 
                 //if (SettingsChanged != null)
                 //SettingsChanged(this, EventArgs.Empty);
@@ -145,6 +196,9 @@ namespace Adan.Client.Common
         {
             get
             {
+                if (_profiles == null)
+                    _profiles = new List<string>();
+
                 return _profiles;
             }
             private set
@@ -280,14 +334,14 @@ namespace Adan.Client.Common
             if (!File.Exists(file))
                 return;
 
-            System.Threading.ThreadPool.QueueUserWorkItem(state =>
+            Task.Factory.StartNew(() =>
                 {
                     using (var stream = new StreamReader(file, Encoding.Default, false, 1024))
                     {
                         string line;
                         while ((line = stream.ReadLine()) != null)
                         {
-                            //XML не читает символ \x0018
+                            //XML не читает символ \x001B
                             //TODO: Need FIX IT
                             if (!line.Contains("\x001B"))
                                 rootModel.PushCommandToConveyor(new TextCommand(line));
@@ -305,7 +359,8 @@ namespace Adan.Client.Common
         [NotNull]
         private string GetSettingsFolder()
         {
-            string dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+            string dir = Path.Combine(Folder, "Settings");
+
             if (!Directory.Exists(dir))
             {
                 try
@@ -456,6 +511,8 @@ namespace Adan.Client.Common
 
         private void LoadAllProfiles()
         {
+            AllProfiles.Clear();
+
             var root = GetSettingsFolder();
             if (Directory.Exists(root))
             {

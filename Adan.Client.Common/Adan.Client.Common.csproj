@@ -76,6 +76,7 @@
     </Compile>
     <Compile Include="Controls\GenericTemplateSelector.cs" />
     <Compile Include="Controls\ScrollableFlowTextControl.cs" />
+    <Compile Include="Controls\SettingsFolder.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />
     <Compile Include="Controls\TextFormatting\MessageTextSource.cs" />

@@ -121,7 +121,7 @@
     <value>Envenom: [{0}]</value>
   </data>
   <data name="AffectMagicArrows" xml:space="preserve">
-    <value>magic arrows: extra datage by {0} magic {1}d{2} [{3}]</value>
+    <value>magic arrows: extra damage by {0} magic {1}d{2} [{3}]</value>
   </data>
   <data name="AffectMagicArrowsAir" xml:space="preserve">
     <value>air</value>

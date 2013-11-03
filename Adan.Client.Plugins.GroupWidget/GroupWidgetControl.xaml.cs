@@ -17,6 +17,7 @@ namespace Adan.Client.Plugins.GroupWidget
     using CSLib.Net.Diagnostics;
 
     using ViewModel;
+    using Adan.Client.Plugins.GroupWidget.Messages;
 
     /// <summary>
     /// Interaction logic for GroupWidgetControl.xaml

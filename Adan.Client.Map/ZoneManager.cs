@@ -20,20 +20,15 @@ namespace Adan.Client.Map
     using System.Windows;
     using System.Xml;
     using System.Xml.Serialization;
-
+    using Adan.Client.Common;
+    using Adan.Client.Common.Messages;
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Dialogs;
-
     using Model;
-
     using Properties;
-
     using ViewModel;
-
     using OperationMode = SharpAESCrypt.OperationMode;
 
     /// <summary>
@@ -112,7 +107,17 @@ namespace Adan.Client.Map
                     var currentRoom = zone.AllRooms.FirstOrDefault(r => r.RoomId == roomId);
                     _mapControl.UpdateCurrentZone(zone, currentRoom);
 
-                    Task.Factory.StartNew(UnloadUnusedZones);
+                    Task.Factory.StartNew(() => 
+                        {
+                            try
+                            {
+                                UnloadUnusedZones();
+                            }
+                            catch (Exception ex)
+                            {
+                                _rootModel.PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                            }
+                        });
                 }
                 else
                 {
@@ -120,7 +125,17 @@ namespace Adan.Client.Map
                     _currentZone = _emptyZone;
                     _mapControl.UpdateCurrentZone(_emptyZone, null);
 
-                    Task.Factory.StartNew(() => FetchZone(zoneId, roomId));
+                    Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            FetchZone(zoneId, roomId);
+                        }
+                        catch (Exception ex)
+                        {
+                            _rootModel.PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                        }
+                    });
                 }
             }
             else
@@ -141,13 +156,13 @@ namespace Adan.Client.Map
         [NotNull]
         private static string GetZonesFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "MapGenerator", "MapResults");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator", "MapResults");
         }
 
         [NotNull]
         private static string GetZoneVisitsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "ZoneVisits");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "ZoneVisits");
         }
 
         private void FetchZone(int zoneId, int roomId)

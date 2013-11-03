@@ -17,6 +17,7 @@ namespace Adan.Client
     using System.Xml;
     using System.Xml.Serialization;
     using Adan.Client.Common;
+    using Adan.Client.Common.Controls;
     using Common.Model;
     using Common.Themes;
     using CSLib.Net.Annotations;
@@ -25,13 +26,14 @@ namespace Adan.Client
     using Properties;
 
     /// <summary>
-    /// Class how hold settings like colors, windows sizes etc.
+    /// Class whos hold settings like colors, windows sizes etc.
     /// </summary>
     public class SettingsHolder
     {
         #region Constants and Fields
 
-        private static readonly SettingsHolder _instance = new SettingsHolder();
+        private static SettingsHolder _instance = new SettingsHolder();
+
         private readonly Settings _settings;
         //private readonly XmlSerializer _groupsSerializer;
         //private readonly XmlSerializer _variablesSerializer;
@@ -82,11 +84,13 @@ namespace Adan.Client
             //_groupsSerializer = new XmlSerializer(typeof(List<Group>), types.ToArray());
             //_variablesSerializer = new XmlSerializer(typeof(List<Variable>));
 
+            ProfileHolder.Instance.SettingsFolder = (SettingsFolder)_settings.Folder;
+
             ProfileHolder.Instance.Initialize(types);
 
             if (ProfileHolder.Instance.AllProfiles.Contains(_settings.ProfileName))
                 ProfileHolder.Instance.Name = _settings.ProfileName;
-            else if(!ProfileHolder.Instance.AllProfiles.Contains("Default"))
+            else if (!ProfileHolder.Instance.AllProfiles.Contains("Default"))
                 ProfileHolder.Instance.Name = "Default";
         }
 
@@ -103,6 +107,34 @@ namespace Adan.Client
             get
             {
                 return _instance;
+            }
+        }
+
+        /// <summary>
+        /// Get SettingsFolder
+        /// </summary>
+        [NotNull]
+        public SettingsFolder SettingsFolder
+        {
+            get
+            {
+                return (SettingsFolder)_settings.Folder;
+            }
+            set
+            {
+                _settings.Folder = (int)value;
+                ProfileHolder.Instance.SettingsFolder = value;
+            }
+        }
+
+        /// <summary>
+        /// Get Settings Folder
+        /// </summary>
+        public string Folder
+        {
+            get
+            {
+                return ProfileHolder.Instance.Folder;
             }
         }
 
@@ -351,11 +383,11 @@ namespace Adan.Client
 
         #region Methods
 
-        [NotNull]
-        private static string GetSettingsFolder()
-        {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
-        }
+        //[NotNull]
+        //private static string GetSettingsFolder()
+        //{
+        //    return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Settings");
+        //}
 
         //private void SaveGroups()
         //{

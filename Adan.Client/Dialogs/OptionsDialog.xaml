@@ -42,14 +42,15 @@
                     <Controls:NumberTextBox Text="{Binding Path=MinLengthHistory}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="159,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81"/>
                     <Controls:NumberTextBox Text="{Binding Path=HistorySize}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Margin="159,28,71,0"/>
                     <CheckBox IsChecked="{Binding Path=AutoClearInput}" Content="Auto clear input" Grid.Column="1" HorizontalAlignment="Left" Margin="10,48,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="98"/>
-                    <CheckBox IsChecked="{Binding Path=AutoReconnect}" Content="AutoReconnect" Grid.Column="1" HorizontalAlignment="Left" Margin="159,48,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="94"/>
+                    <CheckBox IsChecked="{Binding Path=AutoReconnect}" Content="Auto Reconnect" Grid.Column="1" HorizontalAlignment="Left" Margin="159,48,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="94"/>
                     <Label Content="Scroll buffer" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1" Height="13" Width="59"/>
                     <Controls:NumberTextBox Text="{Binding Path=ScrollBuffer}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="159,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" Grid.Row="1"/>
+                    <CheckBox IsChecked="{Binding Path=SettingsFolder}" Content="Save settings to My Documents" HorizontalAlignment="Left" Margin="10,78,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1"/>
                 </Grid>
             </TabItem>
             <TabItem Header="Font">
                 <Grid>
-                    
+
                 </Grid>
             </TabItem>
         </TabControl>

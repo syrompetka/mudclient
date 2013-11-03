@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.ViewModel;
 
@@ -21,6 +22,23 @@ namespace Adan.Client.ViewModel
         private bool _startOfLine;
         private bool _endOfLine;
         private string _scrollBuffer;
+        private bool _settingsFolder;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool SettingsFolder
+        {
+            get
+            {
+                return _settingsFolder;
+            }
+            set
+            {
+                _settingsFolder = value;
+                OnPropertyChanged("SettingsFolder");
+            }
+        }
 
         /// <summary>
         /// Scroll buffer

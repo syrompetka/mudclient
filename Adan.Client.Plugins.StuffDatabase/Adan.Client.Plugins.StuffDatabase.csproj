@@ -55,31 +55,31 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AppliedAffect.cs" />
-    <Compile Include="ArmorStats.cs" />
+    <Compile Include="Model\Affects\AppliedAffect.cs" />
+    <Compile Include="Model\ArmorStats.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="CraftBook.cs" />
-    <Compile Include="Enhance.cs" />
-    <Compile Include="Envenom.cs" />
+    <Compile Include="Model\CraftBook.cs" />
+    <Compile Include="Model\Affects\Enhance.cs" />
+    <Compile Include="Model\Affects\Envenom.cs" />
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="Ingredient.cs" />
-    <Compile Include="LoreMessage.cs" />
-    <Compile Include="LoreMessageDeserializer.cs" />
-    <Compile Include="MagicArrows.cs" />
+    <Compile Include="Model\Ingredient.cs" />
+    <Compile Include="Messages\LoreMessage.cs" />
+    <Compile Include="MessageDeserializers\LoreMessageDeserializer.cs" />
+    <Compile Include="Model\Affects\MagicArrows.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ScrollOrPotionSpell.cs" />
-    <Compile Include="SkillEnhance.cs" />
-    <Compile Include="SkillResist.cs" />
-    <Compile Include="SpellBook.cs" />
+    <Compile Include="Model\ScrollOrPotionSpell.cs" />
+    <Compile Include="Model\Affects\SkillEnhance.cs" />
+    <Compile Include="Model\Affects\SkillResist.cs" />
+    <Compile Include="Model\SpellBook.cs" />
     <Compile Include="StuffDatabasePlugin.cs" />
-    <Compile Include="StuffDatabaseUnit.cs" />
-    <Compile Include="WandOrStaffSpell.cs" />
-    <Compile Include="WeaponStats.cs" />
-    <Compile Include="WearingAffect.cs" />
+    <Compile Include="ConveyorUnits\StuffDatabaseUnit.cs" />
+    <Compile Include="Model\WandOrStaffSpell.cs" />
+    <Compile Include="Model\WeaponStats.cs" />
+    <Compile Include="Model\WearingAffect.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">

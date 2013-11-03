@@ -56,15 +56,15 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
-    <Compile Include="SelectedMonsterParameter.cs" />
-    <Compile Include="SelectedMonsterParameterDescription.cs" />
+    <Compile Include="Model\ActionParameters\SelectedMonsterParameter.cs" />
+    <Compile Include="Model\ParameterDescriptions\SelectedMonsterParameterDescription.cs" />
     <Compile Include="MonstersWidgetPlugin.cs" />
     <Compile Include="MonstersWidgetControl.xaml.cs">
       <DependentUpon>MonstersWidgetControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="RoomMonstersUnit.cs" />
-    <Compile Include="RoomMonstersMessageDeserializer.cs" />
-    <Compile Include="RoomMonstersMessage.cs" />
+    <Compile Include="ConveyorUnits\RoomMonstersUnit.cs" />
+    <Compile Include="MessageDeserializers\RoomMonstersMessageDeserializer.cs" />
+    <Compile Include="Messages\RoomMonstersMessage.cs" />
     <Compile Include="OptionsDialog.xaml.cs">
       <DependentUpon>OptionsDialog.xaml</DependentUpon>
     </Compile>
@@ -78,12 +78,12 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="SelectedGroupMateParameterDescription.cs" />
+    <Compile Include="Model\ParameterDescriptions\SelectedGroupMateParameterDescription.cs" />
     <Compile Include="ViewModel\AffectDescription.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="GroupStatusMessage.cs" />
-    <Compile Include="GroupStatusMessageDeserializer.cs" />
-    <Compile Include="GroupStatusUnit.cs" />
+    <Compile Include="Messages\GroupStatusMessage.cs" />
+    <Compile Include="MessageDeserializers\GroupStatusMessageDeserializer.cs" />
+    <Compile Include="ConveyorUnits\GroupStatusUnit.cs" />
     <Compile Include="GroupWidgetControl.xaml.cs">
       <DependentUpon>GroupWidgetControl.xaml</DependentUpon>
     </Compile>
@@ -97,7 +97,7 @@
     <Compile Include="ViewModel\GroupMateViewModel.cs" />
     <Compile Include="ViewModel\GroupStatusViewModel.cs" />
     <Compile Include="ViewModel\GroupWidgetOptionsViewModel.cs" />
-    <Compile Include="SelectedGroupMateParameter.cs" />
+    <Compile Include="Model\ActionParameters\SelectedGroupMateParameter.cs" />
     <Compile Include="ViewModel\SelectedGroupMateParameterViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +147,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
