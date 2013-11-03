@@ -22,6 +22,8 @@ namespace Adan.Client.Map
     using Common.Plugins;
 
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Map.MessageDeserializers;
+    using Adan.Client.Map.ConveyorUnits;
 
     /// <summary>
     /// A plugin to display zone map.

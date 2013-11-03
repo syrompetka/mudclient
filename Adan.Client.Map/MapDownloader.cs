@@ -12,15 +12,13 @@ namespace Adan.Client.Map
     using System;
     using System.IO;
     using System.Net;
-
+    using Adan.Client.Common;
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Ionic.Zip;
-
     using Properties;
+    using System.Threading;
 
     /// <summary>
     /// Class to download maps from server.
@@ -37,29 +35,33 @@ namespace Adan.Client.Map
 
             try
             {
-                var request = (HttpWebRequest)WebRequest.Create(Settings.Default.MapsUrl);
-                request.IfModifiedSince = Settings.Default.LastMapsUpdateDate;
                 initializationStatusModel.PluginInitializationStatus = "Checking for map updates";
+
+                var request = (HttpWebRequest)WebRequest.Create(Settings.Default.MapsUrl);
+
+                //Обновляет, только если файл существует.
+                if (File.Exists(Path.Combine(GetMapsFolder(), "Maps.zip")))
+                    request.IfModifiedSince = Settings.Default.LastMapsUpdateDate;
+
                 CreateDirectories();
+
                 using (var response = GetHttpResponse(request))
                 {
                     if (response.StatusCode == HttpStatusCode.NotModified)
-                    {
-                        initializationStatusModel.PluginInitializationStatus = string.Empty;
                         return;
-                    }
 
                     initializationStatusModel.PluginInitializationStatus = "Downloading maps";
-                    Settings.Default.LastMapsUpdateDate = response.LastModified;
+                    
                     using (var responceStream = response.GetResponseStream())
-                    using (var stream = File.Open(Path.Combine(GetMapsFolder(), "Maps.zip"), FileMode.Create, FileAccess.Write))
                     {
                         if (responceStream == null)
-                        {
                             return;
-                        }
 
-                        responceStream.CopyTo(stream);
+                        using (var stream = File.Open(Path.Combine(GetMapsFolder(), "Maps.zip"), FileMode.Create, FileAccess.Write))
+                        {
+                            responceStream.CopyTo(stream);
+                            Settings.Default.LastMapsUpdateDate = response.LastModified;
+                        }
                     }
 
                     initializationStatusModel.PluginInitializationStatus = "Unpacking maps";
@@ -68,12 +70,10 @@ namespace Adan.Client.Map
                         foreach (var zipEntry in zip.Entries)
                         {
                             if (zipEntry.IsDirectory)
-                            {
                                 continue;
-                            }
 
                             var fileName = Path.GetFileName(zipEntry.FileName) ?? string.Empty;
-                            initializationStatusModel.PluginInitializationStatus = fileName;
+                            initializationStatusModel.PluginInitializationStatus = string.Format("Unpacking maps: {0}", fileName);
                             zipEntry.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
                             zipEntry.Extract(GetMapsFolder());
                         }
@@ -92,19 +92,19 @@ namespace Adan.Client.Map
         [NotNull]
         private static string GetMapsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps");
         }
 
         [NotNull]
         private static string GetZonesFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "MapGenerator", "MapResults");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator", "MapResults");
         }
 
         [NotNull]
         private static string GetZoneVisitsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "ZoneVisits");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "ZoneVisits");
         }
 
         private static void CreateDirectories()
@@ -114,9 +114,9 @@ namespace Adan.Client.Map
                 Directory.CreateDirectory(GetMapsFolder());
             }
 
-            if (!Directory.Exists(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "MapGenerator")))
+            if (!Directory.Exists(Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator")))
             {
-                Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps", "MapGenerator"));
+                Directory.CreateDirectory(Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator"));
             }
 
             if (!Directory.Exists(GetZonesFolder()))

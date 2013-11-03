@@ -15,6 +15,7 @@ namespace Adan.Client.Plugins.OutputWindow
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Plugins.OutputWindow.Messages;
 
     /// <summary>
     /// Interaction logic for AdditionalOutputWindow.xaml

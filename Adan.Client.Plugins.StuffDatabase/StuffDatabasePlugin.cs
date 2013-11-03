@@ -22,6 +22,8 @@ namespace Adan.Client.Plugins.StuffDatabase
     using Common.Plugins;
 
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Plugins.StuffDatabase.MessageDeserializers;
+    using Adan.Client.Plugins.StuffDatabase.ConveyorUnits;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to save stuff stats.

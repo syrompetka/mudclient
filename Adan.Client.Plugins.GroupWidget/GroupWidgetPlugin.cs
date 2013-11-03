@@ -26,6 +26,10 @@ namespace Adan.Client.Plugins.GroupWidget
     using Properties;
 
     using ViewModel;
+    using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
+    using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
+    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
+    using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display group widget.

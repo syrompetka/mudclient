@@ -21,6 +21,9 @@ namespace Adan.Client.Plugins.OutputWindow
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits;
+    using Adan.Client.Plugins.OutputWindow.Model.Actions;
+    using Adan.Client.Plugins.OutputWindow.Model;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.

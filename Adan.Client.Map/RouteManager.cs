@@ -18,16 +18,14 @@ namespace Adan.Client.Map
     using System.Windows;
     using System.Xml;
     using System.Xml.Serialization;
-
+    using Adan.Client.Common;
     using Common.Commands;
     using Common.Dialogs;
     using Common.Messages;
     using Common.Model;
     using Common.Themes;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Dialogs;
     using Model;
     using Properties;
@@ -611,7 +609,7 @@ namespace Adan.Client.Map
         [NotNull]
         private static string GetMapsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Maps");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Maps");
         }
 
         [NotNull]

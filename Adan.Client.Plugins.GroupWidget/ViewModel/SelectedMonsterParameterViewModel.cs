@@ -17,6 +17,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
 
     /// <summary>
     /// A view model for <see cref="SelectedGroupMateParameter"/>.

@@ -81,8 +81,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="CurrentRoomMessage.cs" />
-    <Compile Include="CurrentRoomMessageDeserializer.cs" />
+    <Compile Include="Messages\CurrentRoomMessage.cs" />
+    <Compile Include="MessageDeserializers\CurrentRoomMessageDeserializer.cs" />
     <Compile Include="Dialogs\RouteDeleteDialog.xaml.cs">
       <DependentUpon>RouteDeleteDialog.xaml</DependentUpon>
     </Compile>
@@ -136,7 +136,7 @@
     </Compile>
     <Compile Include="RouteManager.cs" />
     <Compile Include="RoutePathElement.cs" />
-    <Compile Include="RouteUnit.cs" />
+    <Compile Include="ConveyorUnits\RouteUnit.cs" />
     <Compile Include="ViewModel\RoomExitViewModel.cs" />
     <Compile Include="ViewModel\RoomViewModel.cs" />
     <Compile Include="ViewModel\ZoneViewModel.cs" />
@@ -203,6 +203,7 @@
     <Content Include="DefaultMaps\20.xml" />
     <Content Include="DefaultMaps\30.xml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

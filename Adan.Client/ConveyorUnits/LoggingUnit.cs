@@ -18,16 +18,13 @@ namespace Adan.Client.ConveyorUnits
     using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
-
+    using Adan.Client.Common;
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Messages;
-
     using Properties;
 
     /// <summary>
@@ -160,7 +157,7 @@ namespace Adan.Client.ConveyorUnits
         [NotNull]
         private static string GetLogsFolder()
         {
-            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client", "Logs");
+            return Path.Combine(ProfileHolder.Instance.Folder, "Logs");
         }
 
         private void StartLogging([NotNull] string logName)

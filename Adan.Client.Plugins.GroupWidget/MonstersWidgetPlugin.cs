@@ -26,6 +26,10 @@ namespace Adan.Client.Plugins.GroupWidget
     using Properties;
 
     using ViewModel;
+    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
+    using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
+    using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
+    using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display monsters widget.

@@ -169,13 +169,24 @@ namespace Adan.Client.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValue(null)]
         public global::System.Collections.Specialized.StringCollection CommandsHistory {
             get {
                 return ((global::System.Collections.Specialized.StringCollection)(this["CommandsHistory"]));
             }
             set {
                 this["CommandsHistory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int Folder {
+            get {
+                return ((int)(this["Folder"]));
+            }
+            set {
+                this["Folder"] = value;
             }
         }
     }
