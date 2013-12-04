@@ -35,10 +35,6 @@ namespace Adan.Client
         private static SettingsHolder _instance = new SettingsHolder();
 
         private readonly Settings _settings;
-        //private readonly XmlSerializer _groupsSerializer;
-        //private readonly XmlSerializer _variablesSerializer;
-        //private IList<Group> _groups;
-        //private IList<Variable> _variables;
 
         #endregion
 
