@@ -34,16 +34,6 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(RoomMonstersMessage));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RoomMonstersMessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public RoomMonstersMessageDeserializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
-
-        /// <summary>
         /// Gets the type of deserialized message.
         /// </summary>
         /// <value>
@@ -83,7 +73,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
             }
             catch (Exception ex)
             {
-                var deseirilizer = _messageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
                 string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
                 byte[] buf = _encoding.GetBytes(str);
                 deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
@@ -92,6 +82,15 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                 //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
                 PushMessageToConveyor(new ErrorMessage(ex.Message));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new RoomMonstersMessageDeserializer();
         }
     }
 }

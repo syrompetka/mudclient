@@ -21,6 +21,7 @@ namespace Adan.Client.Common.Model
     using Messages;
 
     using Utils.PatternMatching;
+    using Adan.Client.Common.Settings;
 
     /// <summary>
     /// Trigger that handles text messages from server.
@@ -149,7 +150,7 @@ namespace Adan.Client.Common.Model
                 action.Execute(rootModel, Context);
             }
 
-            if (ProfileHolder.Instance.CommonSettings.MultiAction || StopProcessingTriggersAfterThis)
+            if (StopProcessingTriggersAfterThis)
             {
                 textMessage.SkipTriggers = true;
             }

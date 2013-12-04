@@ -25,20 +25,12 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class TriggerUnit : ConveyorUnit
     {
-        private readonly RootModel _rootModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="TriggerUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The RootModel.</param>
-        public TriggerUnit([NotNull] MessageConveyor messageConveyor, [NotNull] RootModel rootModel)
-            : base(messageConveyor)
+        public TriggerUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -66,20 +58,21 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
-            foreach (var trigger in _rootModel.EnabledTriggersOrderedByPriority)
+            foreach (var trigger in rootModel.EnabledTriggersOrderedByPriority)
             {
                 if (message.SkipTriggers)
                 {
                     break;
                 }
 
-                trigger.HandleMessage(message, _rootModel);
+                trigger.HandleMessage(message, rootModel);
             }
         }
 

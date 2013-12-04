@@ -9,16 +9,17 @@
 
 namespace Adan.Client.Map.ViewModel
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-
+    using System.Threading.Tasks;
+    using System.Windows.Threading;
+    using Adan.Client.Map.Messages;
     using Common.Model;
     using Common.ViewModel;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Model;
 
     /// <summary>
@@ -26,29 +27,27 @@ namespace Adan.Client.Map.ViewModel
     /// </summary>
     public class ZoneViewModel : ViewModelBase
     {
-        private readonly Zone _zone;
+        private Zone _zone;
         private readonly IEnumerable<AdditionalRoomParameters> _additionalRoomParameters;
-        private readonly RootModel _rootModel;
+        //private readonly ZoneManager _zoneManager;
+        //private RootModel _rootModel;
         private double _zoomLevel;
         private int _currentLevel;
         private RoomViewModel _currentRoom;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ZoneViewModel"/> class.
+        /// 
         /// </summary>
-        /// <param name="zone">The zone to display.</param>
-        /// <param name="additionalRoomParameters">The additional room parameterses.</param>
-        /// <param name="rootModel">The root model.</param>
-        public ZoneViewModel([NotNull] Zone zone, [NotNull] IEnumerable<AdditionalRoomParameters> additionalRoomParameters, [NotNull] RootModel rootModel)
+        /// <param name="zone"></param>
+        /// <param name="additionalRoomParameters"></param>
+        public ZoneViewModel([NotNull] Zone zone, [NotNull] IEnumerable<AdditionalRoomParameters> additionalRoomParameters)
         {
             Assert.ArgumentNotNull(zone, "zone");
             Assert.ArgumentNotNull(additionalRoomParameters, "additionalRoomParameters");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             AllRooms = new List<RoomViewModel>();
             _zone = zone;
             _additionalRoomParameters = additionalRoomParameters;
-            _rootModel = rootModel;
             _zoomLevel = 1;
             CurrentLevelRooms = new ObservableCollection<RoomViewModel>();
             BuildRoomsViewModel();
@@ -184,6 +183,7 @@ namespace Adan.Client.Map.ViewModel
                     return;
                 }
 
+                //TODO: Почему здесь Single вместо First/FirstOrDefault?
                 CurrentRoom = AllRooms.Single(r => r.RoomId == value.Value);
             }
         }
@@ -208,7 +208,10 @@ namespace Adan.Client.Map.ViewModel
             private set;
         }
 
-        private void BuildCurrentLevelRooms()
+        /// <summary>
+        /// 
+        /// </summary>
+        public void BuildCurrentLevelRooms()
         {
             CurrentLevelRooms.Clear();
 
@@ -223,6 +226,9 @@ namespace Adan.Client.Map.ViewModel
             var roomExitByIdLookup = new Dictionary<int, IList<RoomExitViewModel>>();
             var roomByIdLookup = new Dictionary<int, RoomViewModel>();
             var additionalRoomParametersLookup = _additionalRoomParameters.ToDictionary(r => r.RoomId);
+
+            AllRooms.Clear();
+
             foreach (var room in _zone.Rooms)
             {
                 var exists = new List<RoomExitViewModel>();
@@ -236,7 +242,7 @@ namespace Adan.Client.Map.ViewModel
                     additionalRoomParameters = new AdditionalRoomParameters { RoomId = room.Id };
                 }
 
-                var roomViewModel = new RoomViewModel(room, additionalRoomParameters, exists, this, _rootModel.AllActionDescriptions);
+                var roomViewModel = new RoomViewModel(room, additionalRoomParameters, exists, this, RootModel.AllActionDescriptions);
                 roomByIdLookup.Add(room.Id, roomViewModel);
                 roomExitByIdLookup.Add(room.Id, exists);
                 AllRooms.Add(roomViewModel);

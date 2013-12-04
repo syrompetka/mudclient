@@ -23,24 +23,20 @@ namespace Adan.Client.Common.CommandSerializers
     {
         #region Constants and Fields
 
-        private readonly MessageConveyor _messageConveyor;
-
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandSerializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        protected CommandSerializer([NotNull] MessageConveyor messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-
-            _messageConveyor = messageConveyor;
-        }
-
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MessageConveyor Conveyor
+        {
+            get;
+            set;
+        }
 
         #region Public Methods
 
@@ -49,6 +45,12 @@ namespace Adan.Client.Common.CommandSerializers
         /// </summary>
         /// <param name="command">The command.</param>
         public abstract void SerializeAndSendCommand([NotNull] Command command);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract CommandSerializer Clone();
 
         #endregion
 
@@ -64,7 +66,7 @@ namespace Adan.Client.Common.CommandSerializers
         {
             Assert.ArgumentNotNull(data, "data");
 
-            _messageConveyor.SendRawDataToServer(offset, bytesToSend, data);
+            Conveyor.SendRawDataToServer(offset, bytesToSend, data);
         }
 
         #endregion

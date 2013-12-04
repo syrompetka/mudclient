@@ -10,11 +10,9 @@
 namespace Adan.Client.Model.Actions
 {
     using System;
-
     using ActionParameters;
-
-    using Common.Model;
-
+    using Adan.Client.Messages;
+    using Adan.Client.Common.Model;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -30,6 +28,17 @@ namespace Adan.Client.Model.Actions
         public StartLogAction()
         {
             LogNameParameter = new TriggerOrCommandParameter();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
         }
 
         /// <summary>
@@ -57,7 +66,7 @@ namespace Adan.Client.Model.Actions
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
 
-            model.PushMessageToConveyor(new Messages.StartLoggingMessage(LogNameParameter.GetParameterValue(model, context)));
+            model.PushMessageToConveyor(new StartLoggingMessage(LogNameParameter.GetParameterValue(model, context)));
         }
 
         #endregion

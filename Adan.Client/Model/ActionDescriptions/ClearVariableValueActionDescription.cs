@@ -27,19 +27,14 @@ namespace Adan.Client.Model.ActionDescriptions
     /// </summary>
     public class ClearVariableValueActionDescription : ActionDescription
     {
-        private readonly IEnumerable<Variable> _allVariables;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ClearVariableValueActionDescription"/> class.
         /// </summary>
         /// <param name="allDescriptions">All descriptions.</param>
-        /// <param name="allVariables">All variables.</param>
-        public ClearVariableValueActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions, [NotNull] IEnumerable<Variable> allVariables)
+        public ClearVariableValueActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base("Clear variable value", allDescriptions)
         {
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
-            _allVariables = allVariables;
         }
 
         /// <summary>
@@ -65,7 +60,7 @@ namespace Adan.Client.Model.ActionDescriptions
             var clearVariableAction = action as ClearVariableValueAction;
             if (clearVariableAction != null)
             {
-                return new ClearVariableValueActionViewModel(clearVariableAction, _allVariables, this, AllDescriptions);
+                return new ClearVariableValueActionViewModel(clearVariableAction, this, AllDescriptions);
             }
 
             return null;

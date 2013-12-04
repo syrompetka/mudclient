@@ -18,7 +18,7 @@ namespace Adan.Client.Map.Dialogs
     /// <summary>
     /// Interaction logic for RoadMapDialog.xaml
     /// </summary>
-    public partial class RoadMapDialog
+    public partial class RoadMapDialog : Window
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RoadMapDialog"/> class.

@@ -56,8 +56,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="GroupManager.cs" />
     <Compile Include="Model\ActionParameters\SelectedMonsterParameter.cs" />
+    <Compile Include="Model\GroupHolder.cs" />
+    <Compile Include="Model\MonsterHolder.cs" />
     <Compile Include="Model\ParameterDescriptions\SelectedMonsterParameterDescription.cs" />
+    <Compile Include="MonstersManager.cs" />
     <Compile Include="MonstersWidgetPlugin.cs" />
     <Compile Include="MonstersWidgetControl.xaml.cs">
       <DependentUpon>MonstersWidgetControl.xaml</DependentUpon>

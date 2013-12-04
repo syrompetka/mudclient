@@ -11,19 +11,16 @@ namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Globalization;
-
+    using Adan.Client.Common.Model;
+    using Adan.Client.Common.Settings;
     using Commands;
-
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Properties;
-
     using ViewModel;
 
     /// <summary>
@@ -31,21 +28,6 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class ConnectionUnit : ConveyorUnit
     {
-        private readonly MessageConveyor _messageConveyor;
-        private readonly ConnectionStatusModel _connectionStatus;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ConnectionUnit"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public ConnectionUnit([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            _messageConveyor = messageConveyor;
-            _connectionStatus = new ConnectionStatusModel();
-        }
-
         #region Overrides of ConveyorUnit
 
         /// <summary>
@@ -71,10 +53,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -82,15 +66,15 @@ namespace Adan.Client.ConveyorUnits
             if (connectCommand != null)
             {
                 connectCommand.Handled = true;
-                if (_connectionStatus.Connected || _connectionStatus.ConnectionInProgress)
+                if (rootModel.Connected || rootModel.ConnectionInProgress)
                 {
-                    PushMessageToConveyor(new ErrorMessage(Resources.AlreadyConnected));
+                    PushMessageToConveyor(new ErrorMessage(Resources.AlreadyConnected), rootModel);
                 }
                 else
                 {
-                    PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.TryingToConnect, connectCommand.Host, connectCommand.Port)));
-                    _connectionStatus.ConnectionInProgress = true;
-                    _messageConveyor.Connect(connectCommand.Host, connectCommand.Port);
+                    PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.TryingToConnect, connectCommand.Host, connectCommand.Port)), rootModel);
+                    rootModel.ConnectionInProgress = true;
+                    rootModel.MessageConveyor.Connect(connectCommand.Host, connectCommand.Port);
                 }
 
                 return;
@@ -100,50 +84,51 @@ namespace Adan.Client.ConveyorUnits
             if (disconnectCommand != null)
             {
                 disconnectCommand.Handled = true;
-                if (!(_connectionStatus.Connected || _connectionStatus.ConnectionInProgress))
+                if (!(rootModel.Connected || rootModel.ConnectionInProgress))
                 {
-                    PushMessageToConveyor(new ErrorMessage(Resources.NotConnected));
+                    PushMessageToConveyor(new ErrorMessage(Resources.NotConnected), rootModel);
                 }
                 else
                 {
-                    _messageConveyor.Disconnect();
+                    rootModel.MessageConveyor.Disconnect();
                 }
 
                 return;
             }
 
-            if (!_connectionStatus.Connected)
+            if (!rootModel.Connected)
             {
                 command.Handled = true;
-                PushMessageToConveyor(new ErrorMessage(Resources.NotConnectedPleaseConnectFirst));
+                PushMessageToConveyor(new ErrorMessage(Resources.NotConnectedPleaseConnectFirst), rootModel);
             }
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
 
             var connectedMessage = message as ConnectedMessage;
             if (connectedMessage != null)
             {
-                PushMessageToConveyor(new InfoMessage(Resources.ConnectionEstablished));
-                _connectionStatus.Connected = true;
-                _connectionStatus.ConnectionInProgress = false;
+                PushMessageToConveyor(new InfoMessage(Resources.ConnectionEstablished), rootModel);
+                rootModel.Connected = true;
+                rootModel.ConnectionInProgress = false;
                 return;
             }
 
             var disconnectedMessage = message as DisconnectedMessage;
             if (disconnectedMessage != null)
             {
-                if (_connectionStatus.Connected)
+                if (rootModel.Connected)
                 {
-                    _connectionStatus.Connected = false;
-                    _connectionStatus.ConnectionInProgress = false;
-                    PushMessageToConveyor(new InfoMessage(Resources.ConnectionLost));
+                    rootModel.Connected = false;
+                    rootModel.ConnectionInProgress = false;
+                    PushMessageToConveyor(new InfoMessage(Resources.ConnectionLost), rootModel);
                     PushMessageToConveyor(
                         new InfoMessage(
                             string.Format(
@@ -151,7 +136,7 @@ namespace Adan.Client.ConveyorUnits
                                 Resources.ConnectionStatistic,
                                 disconnectedMessage.TotalBytesReceived,
                                 disconnectedMessage.BytesDecompressed,
-                                100.0f * (disconnectedMessage.TotalBytesReceived / (float)disconnectedMessage.BytesDecompressed))));
+                                100.0f * (disconnectedMessage.TotalBytesReceived / (float)disconnectedMessage.BytesDecompressed))), rootModel);
                 }
 
                 return;
@@ -160,13 +145,13 @@ namespace Adan.Client.ConveyorUnits
             var networkErrorMessage = message as NetworkErrorMessage;
             if (networkErrorMessage != null)
             {
-                PushMessageToConveyor(new ErrorMessage(networkErrorMessage.SocketException.Message));
-                _connectionStatus.Connected = false;
-                _connectionStatus.ConnectionInProgress = false;
+                PushMessageToConveyor(new ErrorMessage(networkErrorMessage.SocketException.Message), rootModel);
+                rootModel.Connected = false;
+                rootModel.ConnectionInProgress = false;
 
                 //Автореконнект
-                if (SettingsHolder.Instance.AutoReconnect)
-                    _messageConveyor.PushCommand(new ConnectCommand(_messageConveyor.LastConnectionHost, _messageConveyor.LastConnectPort));
+                if (SettingsHolder.Instance.Settings.AutoReconnect)
+                    rootModel.PushCommandToConveyor(new ConnectCommand(rootModel.MessageConveyor.LastConnectHost, rootModel.MessageConveyor.LastConnectPort));
             }
         }
 

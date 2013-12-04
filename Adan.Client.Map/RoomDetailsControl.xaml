@@ -1,6 +1,8 @@
 ﻿<UserControl x:Class="Adan.Client.Map.RoomDetailsControl"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:Properties="clr-namespace:Adan.Client.Map.Properties" MaxWidth="450">
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:Properties="clr-namespace:Adan.Client.Map.Properties"
+             MaxWidth="450">
     <UserControl.Resources>
         <ResourceDictionary Source="Resources.xaml"
                             x:Key="MapResources" />
@@ -49,7 +51,5 @@
                    TextWrapping="Wrap"
                    Text="{Binding Path=Comments}">
         </TextBlock>
-
-
     </StackPanel>
 </UserControl>

@@ -1,7 +1,8 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
-                    xmlns:Model="clr-namespace:Adan.Client.Map.Model" xmlns:Map="clr-namespace:Adan.Client.Map">
+                    xmlns:Model="clr-namespace:Adan.Client.Map.Model"
+                    xmlns:Map="clr-namespace:Adan.Client.Map">
     <VisualBrush x:Key="Brush_MapIcon_None"
                  Stretch="Uniform"
                  RenderOptions.CachingHint="Cache">

@@ -17,14 +17,11 @@ namespace Adan.Client.ConveyorUnits
     public class CapForLineCommandUnit : ConveyorUnit
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CapForLineCommandUnit"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public CapForLineCommandUnit([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
+        public CapForLineCommandUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-
         }
 
         /// <summary>
@@ -50,10 +47,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 

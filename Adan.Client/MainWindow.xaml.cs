@@ -46,18 +46,25 @@ namespace Adan.Client
     using Model.Actions;
     using Model.ParameterDescriptions;
     using ViewModel;
+    using Adan.Client.Common.ViewModel;
+    using Adan.Client.Controls;
+    using System.Xml;
+    using Adan.Client.Model;
+    using Adan.Client.Common.Settings;
+    using Adan.Client.Properties;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow
     {
-        private readonly MessageConveyor _conveyor;
-        private readonly MainWindowModel _model;
-        private readonly HotkeyCommand _hotkeyCommand = new HotkeyCommand();
-        private readonly Queue<Message> _messageQueue = new Queue<Message>();
-        private readonly object _messageQueueLockObject = new object();
-        private readonly IList<DockableContent> _allWidgets = new List<DockableContent>();
+        private IList<DockableContent> _allWidgets = new List<DockableContent>();
+        private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
+        private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
+
+#if DEBUG
+        Stopwatch sw = new Stopwatch();
+#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -65,7 +72,6 @@ namespace Adan.Client
         public MainWindow()
         {
 #if DEBUG
-            Stopwatch sw = new Stopwatch();
             sw.Start();
 #endif
 
@@ -76,61 +82,80 @@ namespace Adan.Client
             sw.Restart();
 #endif
 
-            var mccpClient = new MccpClient();
+            var types = new List<Type>
+                            {
+                                typeof(SendTextAction),
+                                typeof(OutputToMainWindowAction),
+                                typeof(ClearVariableValueAction),
+                                typeof(ConditionalAction),
+                                typeof(DisableGroupAction),
+                                typeof(EnableGroupAction),
+                                typeof(SetVariableValueAction),
+                                typeof(StartLogAction),
+                                typeof(StopLogAction),
+                                typeof(TriggerOrCommandParameter),
+                                typeof(VariableReferenceParameter),
+                                typeof(MathExpressionParameter),
+                                typeof(ConstantStringParameter),
+                                typeof(SendTextOneParameterAction),
+                            };
 
-            _conveyor = new MessageConveyor(mccpClient);
-            var allVariables = SettingsHolder.Instance.Variables;
-            var allGroups = SettingsHolder.Instance.Groups;
+            foreach (var plugin in PluginHost.Instance.Plugins)
+            {
+                foreach (var customType in plugin.CustomSerializationTypes)
+                {
+                    types.Add(customType);
+                    RootModel.CustomSerializationTypes.Add(customType);
+                }
+            }
+
+            Settings settings = Settings.Default;
+            settings.Reload();
+
+            SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
+
+            _globalHotkeys = SettingsHolder.Instance.Settings.GlobalHotkeys;
 
             var actionDescriptions = new List<ActionDescription>();
             var parameterDescriptions = new List<ParameterDescription>();
 
             actionDescriptions.Add(new SendTextActionDescription(parameterDescriptions, actionDescriptions));
             actionDescriptions.Add(new OutputToMainWindowActionDescription(parameterDescriptions, actionDescriptions));
-            actionDescriptions.Add(new ClearVariableValueActionDescription(actionDescriptions, allVariables));
+            actionDescriptions.Add(new ClearVariableValueActionDescription(actionDescriptions));
             actionDescriptions.Add(new ConditionalActionDescription(parameterDescriptions, actionDescriptions));
-            actionDescriptions.Add(new DisableGroupActionDescription(allGroups, actionDescriptions));
-            actionDescriptions.Add(new EnableGroupActionDescription(allGroups, actionDescriptions));
-            actionDescriptions.Add(new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions, allVariables));
+            actionDescriptions.Add(new DisableGroupActionDescription(actionDescriptions));
+            actionDescriptions.Add(new EnableGroupActionDescription(actionDescriptions));
+            actionDescriptions.Add(new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StartLogActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
+            //TODO: Заставить работать
+            //TODO: Добавить template
+            //actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
-            parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions, allVariables));
+            parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new MathExpressionParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new ConstantStringParameterDescription(parameterDescriptions));
 
-            var rootModel = new RootModel(_conveyor, allGroups, allVariables, actionDescriptions, parameterDescriptions);
+            RootModel.AllActionDescriptions = actionDescriptions;
+            RootModel.AllParameterDescriptions = parameterDescriptions;
 
-            foreach (var plugin in PluginHost.Instance.Plugins)
-            {
-                foreach (var customType in plugin.CustomSerializationTypes)
-                {
-                    rootModel.CustomSerializationTypes.Add(customType);
-                }
-            }
+            MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
-            _conveyor.AddCommandSerializer(new TextCommandSerializer(_conveyor));
-            _conveyor.AddMessageDeserializer(new TextMessageDeserializer(_conveyor));
-            _conveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer(_conveyor));
+            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
+            MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
-            _conveyor.AddConveyorUnit(new CommandSeparatorUnit(_conveyor, rootModel));
-
-            _conveyor.AddConveyorUnit(new VariableReplaceUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new CommandsFromUserLineUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new CommandMultiplierUnit(_conveyor));
-            _conveyor.AddConveyorUnit(new SubstitutionUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new AliasUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new HotkeyUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new TriggerUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new HighlightUnit(_conveyor, rootModel));
-            _conveyor.AddConveyorUnit(new LoggingUnit(_conveyor));
-
-            _conveyor.MessageReceived += HandleMessageFromServer;
-
-            Loaded += (o, e) => txtCommandInput.Focus();
-
-            txtCommandInput.Conveyor = _conveyor;
+            MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
+            MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
+            MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
+            MessageConveyor.AddConveyorUnit(new CommandMultiplierUnit());
+            MessageConveyor.AddConveyorUnit(new SubstitutionUnit());
+            MessageConveyor.AddConveyorUnit(new AliasUnit());
+            MessageConveyor.AddConveyorUnit(new HotkeyUnit());
+            MessageConveyor.AddConveyorUnit(new TriggerUnit());
+            MessageConveyor.AddConveyorUnit(new HighlightUnit());
+            MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
+            MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -154,7 +179,7 @@ namespace Adan.Client
             sw.Restart();
 #endif
 
-            Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(_conveyor, rootModel, initializationDalog.ViewModel, this))
+            Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
@@ -166,34 +191,121 @@ namespace Adan.Client
 
                     var pluginClosure = plugin;
                     menuItem.Click += (o, e) => pluginClosure.ShowOptionsDialog(this);
-                    optionsMenuItem.Items.Add(menuItem);
+                    optionsMenuItem.Items.Insert(0, menuItem);
+
+                    if(optionsSeparator.Visibility != Visibility.Visible)
+                        optionsSeparator.Visibility = Visibility.Visible;
                 }
             }
 
-            int maxProtocolVersion = PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion);
-            _conveyor.AddConveyorUnit(new ProtocolVersionUnit(_conveyor, maxProtocolVersion));
+            int maxProtocolVersion = PluginHost.Instance.Plugins.Count > 0 ? PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion) : 1;
+            MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit(maxProtocolVersion));
 
-            _model = new MainWindowModel(rootModel);
+            MessageConveyor.AddConveyorUnit(new CommandRepeaterUnit());
 
-            DataContext = _model;
-
-            dockManager.DeserializationCallback = HandleFindWidget;
-
-            _conveyor.AddConveyorUnit(new CommandRepeaterUnit(_conveyor));
-
-            //Заглушка для нераспознанных комманд с CharCommands
-            _conveyor.AddConveyorUnit(new CapForLineCommandUnit(_conveyor));
+            //Заглушка для нераспознанных комманд
+            MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
 
             //Проверка коннекта к серверу для команд
-            _conveyor.AddConveyorUnit(new ConnectionUnit(_conveyor));
+            MessageConveyor.AddConveyorUnit(new ConnectionUnit());
+
+            foreach (var uid in SettingsHolder.Instance.Settings.MainOutputs)
+            {
+                var name = uid.Substring(0, uid.Length - 32);
+
+                OutputWindow outputWindow = new OutputWindow(this, name);
+                _outputWindows.Add(outputWindow);
+                outputWindow.Uid = uid;
+
+                DockableContent dockable = new DockableContent()
+                {
+                    Name = uid,
+                    Title = name,
+                    Content = outputWindow.VisibleControl,
+                    HideOnClose = false,
+                };
+
+                outputWindow.DockContent = dockable;
+                dockable.Closed += OnOutputWindowClosed;
+
+                var menuItem = new MenuItem()
+                {
+                    Header = outputWindow.Name,
+                    Name = outputWindow.Uid,
+                };
+
+                windowMenuItem.Items.Insert(0, menuItem);
+
+                if (windowSeparator.Visibility != Visibility.Visible)
+                    windowSeparator.Visibility = Visibility.Visible;
+
+                PluginHost.Instance.OutputWindowCreated(outputWindow);
+
+                dockable.Show(dockManager);
+            }
 
 #if DEBUG
-            task.Wait();
             long pluginInitTime = sw.ElapsedMilliseconds;
-            sw.Stop();
-            _conveyor.PushMessage(new InfoMessage(string.Format("InitTime = {0} ms, varInitTime = {1} ms, pluginInitTime = {2} ms",
-                initTime, varInitTime, pluginInitTime)));
+            sw.Reset();
+
+            {
+                var outputWindow = _outputWindows.FirstOrDefault();
+                if (outputWindow != null)
+                {
+                    outputWindow.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("InitTime = {0} ms, varInitTime = {1} ms, pluginInitTime = {2} ms",
+                    initTime, varInitTime, pluginInitTime)));
+                }
+            }
 #endif
+        }
+
+        private void OnOutputWindowClosed(object sender, EventArgs e)
+        {
+            var dockable = (DockableContent)sender;
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.Uid == dockable.Name);
+            if (outputWindow != null)
+            {
+                outputWindow.Save();
+                PluginHost.Instance.OutputWindowClose(outputWindow);
+                outputWindow.Dispose();
+                _outputWindows.Remove(outputWindow);
+
+                foreach (var floatingWindow in dockManager.FloatingWindows)
+                {
+                    if (!floatingWindow.HostedPane.HasItems)
+                    {
+                        floatingWindow.Close();
+                    }
+                }
+
+                foreach (var item in windowMenuItem.Items)
+                {
+                    var menuItem = item as MenuItem;
+                    if (menuItem != null && menuItem.Name == outputWindow.Uid)
+                    {
+                        windowMenuItem.Items.Remove(menuItem);
+                        break;
+                    }
+                }
+
+                if (windowMenuItem.Items.Count <= 2)
+                    windowSeparator.Visibility = Visibility.Collapsed;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        public void ShowOutputWindow(string name)
+        {
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.Name == name);
+
+            if (outputWindow != null)
+            {
+                dockManager.ActiveContent = outputWindow.DockContent;
+                outputWindow.Focus();
+            }
         }
 
         /// <summary>
@@ -204,64 +316,42 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _hotkeyCommand.Key = e.Key == Key.System ? e.SystemKey : e.Key;
-            _hotkeyCommand.ModifierKeys = Keyboard.Modifiers;
-            _hotkeyCommand.Handled = false;
-            _conveyor.PushCommand(_hotkeyCommand);
-
-            if (_hotkeyCommand.Handled)
-            {
-                e.Handled = true;
-                return;
-            }
-
-            if (e.Key == Key.Up && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
-            {
-                txtCommandInput.ShowPreviousCommand();
-                e.Handled = true;
-            }
-
-            if (e.Key == Key.Down && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
-            {
-                txtCommandInput.ShowNextCommand();
-                e.Handled = true;
-            }
-
-            //if (e.Key == Key.Enter && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
-            if (e.Key == Key.Enter && txtCommandInput.IsFocused)
-            {
-                txtCommandInput.SendCurrentCommand();
-                e.Handled = true;
-            }
-
-            if (e.Key == Key.PageUp && Keyboard.Modifiers == 0)
-            {
-                mainOutputWindow.PageUp();
-                e.Handled = true;
-            }
-
-            if (e.Key == Key.PageDown && Keyboard.Modifiers == 0)
-            {
-                mainOutputWindow.PageDown();
-                e.Handled = true;
-            }
-
-            if (e.Key == Key.End && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
-            {
-                mainOutputWindow.ScrollToEnd();
-                e.Handled = true;
-            }
-
-            //Очищение коммандной строки клавишей escape
-            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
-            {
-                txtCommandInput.Clear();
-                e.Handled = true;
-            }
+            CheckGlobalHotkeys(e);
 
             if (!e.Handled)
-            {
                 base.OnPreviewKeyDown(e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        public void CheckGlobalHotkeys(KeyEventArgs e)
+        {
+            var hotkeyCommand = new HotkeyCommand()
+            {
+                Key = e.Key == Key.System ? e.SystemKey : e.Key,
+                ModifierKeys = Keyboard.Modifiers,
+                Handled = false,
+            };
+
+            var hotkey = _globalHotkeys.FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
+            if (hotkey != null)
+            {
+                var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
+
+                if (outputWindow != null)
+                {
+                    foreach (var action in hotkey.Actions)
+                    {
+                        if (action.IsGlobal)
+                            action.Execute(null, null);
+                        else if (outputWindow.RootModel != null)
+                            action.Execute(outputWindow.RootModel, ActionExecutionContext.Empty);
+                    }
+                }
+
+                e.Handled = true;
             }
         }
 
@@ -273,35 +363,66 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _conveyor.Dispose();
+#if DEBUG
+            sw.Start();
+#endif
+            
+            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
+            if (!Directory.Exists(layoutFullPath))
+            {
+                Directory.CreateDirectory(layoutFullPath);
+            }
+
+            layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
+            dockManager.SaveLayout(layoutFullPath);
+
+            SettingsHolder.Instance.Settings.MainOutputs.Clear();
+
+            foreach (var outputWindow in _outputWindows)
+            {
+                SettingsHolder.Instance.Settings.MainOutputs.Add(outputWindow.Uid);
+                outputWindow.Save();
+                outputWindow.Dispose();
+            }
+
+            SettingsHolder.Instance.Save();
+
+            PluginHost.Instance.Dispose();
+
+#if DEBUG
+            sw.Stop();
+            //MessageBox.Show(string.Format("OnClosingTime: {0} ms", sw.ElapsedMilliseconds));
+#endif
+
             base.OnClosing(e);
         }
 
-        private void HandleMessageFromServer([NotNull] object sender, [NotNull] MessageReceivedEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logName"></param>
+        /// <param name="rootModel"></param>
+        public void StartLogging(string logName, RootModel rootModel)
         {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
+            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
 
-            lock (_messageQueueLockObject)
+            if (outputWindow != null)
             {
-                _messageQueue.Enqueue(e.Message);
+                outputWindow.StartLogging(logName);
             }
-
-            Dispatcher.BeginInvoke((Action)ProcessMessageQueue);
         }
 
-        private void ProcessMessageQueue()
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        public void StopLogging(RootModel rootModel)
         {
-            IList<Message> messages;
-            lock (_messageQueueLockObject)
-            {
-                messages = _messageQueue.ToList();
-                _messageQueue.Clear();
-            }
+            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
 
-            if (messages.Count > 0)
+            if (outputWindow != null)
             {
-                mainOutputWindow.AddMessages(messages.OfType<OutputToMainWindowMessage>());
+                outputWindow.StopLogging();
             }
         }
 
@@ -310,7 +431,18 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            _conveyor.PushCommand(new ConnectCommand(SettingsHolder.Instance.ConnectHostName, SettingsHolder.Instance.ConnectPort));
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
+            if(outputWindow != null)
+                outputWindow.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+        }
+
+        private void HandleConnectAll([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            foreach(OutputWindow window in _outputWindows)
+                window.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
         }
 
         private void HandleDisconnect([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -318,7 +450,18 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            _conveyor.PushCommand(new DisconnectCommand());
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
+            if (outputWindow != null)
+                outputWindow.RootModel.PushCommandToConveyor(new DisconnectCommand());
+        }
+
+        private void HandleDisconnectAll([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            foreach (OutputWindow window in _outputWindows)
+                window.RootModel.PushCommandToConveyor(new DisconnectCommand());
         }
 
         private void HandleConnectionPreference([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -326,15 +469,19 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var connectionDialogViewModel = new ConnectionDialogViewModel { HostName = SettingsHolder.Instance.ConnectHostName, Port = SettingsHolder.Instance.ConnectPort };
-            var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
+            var connectionDialogViewModel = new ConnectionDialogViewModel 
+            { 
+                HostName = SettingsHolder.Instance.Settings.ConnectHostName, 
+                Port = SettingsHolder.Instance.Settings.ConnectPort 
+            };
 
+            var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
 
             var result = dialog.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                SettingsHolder.Instance.ConnectHostName = connectionDialogViewModel.HostName;
-                SettingsHolder.Instance.ConnectPort = connectionDialogViewModel.Port;
+                SettingsHolder.Instance.Settings.ConnectHostName = connectionDialogViewModel.HostName;
+                SettingsHolder.Instance.Settings.ConnectPort = connectionDialogViewModel.Port;
             }
         }
 
@@ -344,62 +491,6 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             Close();
-        }
-
-        private void HandleEditGroups([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var groupEditDialog = new GroupsEditDialog { DataContext = _model.GroupsModel, Owner = this };
-            groupEditDialog.ShowDialog();
-            _model.RootModel.RecalculatedEnabledTriggersPriorities();
-        }
-
-        private void HandleEditTriggers([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var triggerEditDialog = new TriggersEditDialog { DataContext = new TriggersViewModel(_model.GroupsModel.Groups, _model.RootModel.AllActionDescriptions), Owner = this };
-            triggerEditDialog.ShowDialog();
-            _model.RootModel.RecalculatedEnabledTriggersPriorities();
-        }
-
-        private void HandleEditAliases([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var aliasesEditDialog = new AliasesEditDialog { DataContext = new AliasesViewModel(_model.GroupsModel.Groups, _model.RootModel.AllActionDescriptions), Owner = this };
-            aliasesEditDialog.ShowDialog();
-        }
-
-        private void HandleEditHotKeys([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var hotKeysEditDialog = new HotkeysEditDialog { DataContext = new HotkeysViewModel(_model.GroupsModel.Groups, _model.RootModel.AllActionDescriptions), Owner = this };
-            hotKeysEditDialog.ShowDialog();
-        }
-
-        private void HandleEditSubstitutions([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var substitutionsEditDialog = new SubstitutionsEditDialog { DataContext = new SubstitutionsViewModel(_model.GroupsModel.Groups), Owner = this };
-            substitutionsEditDialog.ShowDialog();
-        }
-
-        private void HandleEditHighlights([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var highlightsEditDialog = new HighlightsEditDialog { DataContext = new HighlightsViewModel(_model.GroupsModel.Groups), Owner = this };
-            highlightsEditDialog.ShowDialog();
         }
 
         private void HandleThemeChange([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -428,7 +519,8 @@ namespace Adan.Client
                 {
                     Title = widgetDescription.Description,
                     Name = widgetDescription.Name,
-                    Content = widgetDescription.Control
+                    Content = widgetDescription.Control,
+                    HideOnClose = true,
                 };
 
                 dockContent.FloatingWindowSizeToContent = widgetDescription.ResizeToContent
@@ -442,33 +534,39 @@ namespace Adan.Client
 
                 _allWidgets.Add(dockContent);
 
-                var menuItem = new MenuItem { Header = widgetDescription.Description, Tag = dockContent };
+                var menuItem = new MenuItem()
+                {
+                    Header = widgetDescription.Description, 
+                    Tag = dockContent 
+                };
 
-                var visibleBinding = new Binding("IsVisible") { Source = dockContent, Mode = BindingMode.OneWay };
+                var visibleBinding = new Binding("IsVisible")
+                { 
+                    Source = dockContent, 
+                    Mode = BindingMode.OneWay 
+                };
+
                 menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
                 menuItem.Click += HandleHideShowWidget;
                 viewMenuItem.Items.Add(menuItem);
+
                 dockContent.Show(dockManager);
             }
 
+            LoadLayout();
+        }
+
+        private void LoadLayout()
+        {
             var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "Layout.xml");
             if (File.Exists(layoutFullPath))
             {
-                dockManager.RestoreLayout(layoutFullPath);
+                try
+                {
+                    dockManager.RestoreLayout(layoutFullPath);
+                }
+                catch (Exception) { }
             }
-
-            Dispatcher.BeginInvoke((Action)BindDockumentPane);
-        }
-
-        private void BindDockumentPane()
-        {
-            var singleItemBinding = new Binding("HasSingleItem")
-            {
-                RelativeSource = RelativeSource.Self,
-                Converter = new InverseBooleanConverter()
-            };
-
-            TreeHelper.FindVisualChildren<DocumentPane>(dockManager).First().SetBinding(Pane.ShowHeaderProperty, singleItemBinding);
         }
 
         private void HandleHideShowWidget([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -487,71 +585,22 @@ namespace Adan.Client
             }
         }
 
-        private void HandleFindWidget([NotNull] object sender, [NotNull] DeserializationCallbackEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            e.Content = _allWidgets.FirstOrDefault(w => w.Name == e.Name);
-        }
-
-        private void HandleWindowClosing([NotNull] object sender, [NotNull] CancelEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
-            if (!Directory.Exists(layoutFullPath))
-            {
-                Directory.CreateDirectory(layoutFullPath);
-            }
-
-            layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
-            dockManager.SaveLayout(layoutFullPath);
-
-            txtCommandInput.SaveCurrentHistory();
-        }
-
-        private void HandleEditProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void HandleEditProfiles([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
             var models = new ObservableCollection<ProfileViewModel>();
 
-            foreach (string str in ProfileHolder.Instance.AllProfiles)
+            foreach (string str in SettingsHolder.Instance.AllProfiles)
             {
                 models.Add(new ProfileViewModel(str, str == "Default" ? true : false));
             }
 
-            var profilesViewModel = new ProfilesViewModel(models, ProfileHolder.Instance.Name);
-            var profileDialog = new ProfilesDialog() { DataContext = profilesViewModel, Owner = this };
+            var profilesViewModel = new ProfilesEditViewModel(models, models[0].NameProfile);
+            var profileDialog = new ProfilesEditDialog() { DataContext = profilesViewModel, Owner = this };
 
             var resultDialog = profileDialog.ShowDialog();
-        }
-
-        private void HandleSaveProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            SettingsHolder.Instance.Save();
-        }
-
-        private void HandleImportJmcConfig([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            OpenFileDialog fileDialog = new OpenFileDialog();
-            fileDialog.DefaultExt = ".set";
-            fileDialog.Filter = "Config|*.set|All Files|*.*";
-            fileDialog.Multiselect = false;
-
-            var result = fileDialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                ProfileHolder.Instance.ImportJmcConfig(fileDialog.FileName, _model.RootModel);
-            }
         }
 
         private void HandleEditOptions([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -561,15 +610,15 @@ namespace Adan.Client
 
             var model = new OptionsViewModel()
             {
-                AutoClearInput = SettingsHolder.Instance.AutoClearInput,
-                AutoReconnect = SettingsHolder.Instance.AutoReconnect,
-                CommandChar = SettingsHolder.Instance.CommandChar,
-                CommandDelimiter = SettingsHolder.Instance.CommandDelimiter,
-                StartOfLine = SettingsHolder.Instance.CursorPosition == CursorPositionHistory.StartOfLine,
-                EndOfLine = SettingsHolder.Instance.CursorPosition == CursorPositionHistory.EndOfLine,
-                HistorySize = SettingsHolder.Instance.HistorySize.ToString(),
-                MinLengthHistory = SettingsHolder.Instance.MinLengthHistory.ToString(),
-                ScrollBuffer = SettingsHolder.Instance.ScrollBuffer.ToString(),
+                AutoClearInput = SettingsHolder.Instance.Settings.AutoClearInput,
+                AutoReconnect = SettingsHolder.Instance.Settings.AutoReconnect,
+                CommandChar = SettingsHolder.Instance.Settings.CommandChar,
+                CommandDelimiter = SettingsHolder.Instance.Settings.CommandDelimiter,
+                StartOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.StartOfLine,
+                EndOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.EndOfLine,
+                HistorySize = SettingsHolder.Instance.Settings.CommandsHistorySize.ToString(),
+                MinLengthHistory = SettingsHolder.Instance.Settings.MinLengthHistory.ToString(),
+                ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
                 SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings
             };
 
@@ -578,15 +627,15 @@ namespace Adan.Client
 
             if (dialogResult.HasValue && dialogResult.Value)
             {
-                SettingsHolder.Instance.AutoClearInput = model.AutoClearInput;
-                SettingsHolder.Instance.AutoReconnect = model.AutoReconnect;
-                SettingsHolder.Instance.CommandChar = model.CommandChar;
-                SettingsHolder.Instance.CommandDelimiter = model.CommandDelimiter;
+                SettingsHolder.Instance.Settings.AutoClearInput = model.AutoClearInput;
+                SettingsHolder.Instance.Settings.AutoReconnect = model.AutoReconnect;
+                SettingsHolder.Instance.Settings.CommandChar = model.CommandChar;
+                SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
 
                 if (model.StartOfLine)
-                    SettingsHolder.Instance.CursorPosition = CursorPositionHistory.StartOfLine;
+                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
                 else
-                    SettingsHolder.Instance.CursorPosition = CursorPositionHistory.EndOfLine;
+                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.EndOfLine;
 
                 if (model.SettingsFolder)
                     SettingsHolder.Instance.SettingsFolder = SettingsFolder.DocumentsAndSettings;
@@ -595,13 +644,84 @@ namespace Adan.Client
 
                 int val;
                 if(int.TryParse(model.HistorySize, out val))
-                    SettingsHolder.Instance.HistorySize = val;
+                    SettingsHolder.Instance.Settings.CommandsHistorySize = val;
 
                 if (int.TryParse(model.MinLengthHistory, out val))
-                    SettingsHolder.Instance.MinLengthHistory = val;
+                    SettingsHolder.Instance.Settings.MinLengthHistory = val;
 
                 if(int.TryParse(model.ScrollBuffer, out val))
-                    SettingsHolder.Instance.ScrollBuffer = val;
+                    SettingsHolder.Instance.Settings.ScrollBuffer = val;
+            }
+        }
+
+        private void HandleGlobalHotkeys([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var globalHotkeysDialog = new GlobalHotkeysEditDialog()
+            {
+                DataContext = new GlobalHotkeysViewModel(_globalHotkeys, RootModel.AllActionDescriptions),
+                Owner = this,
+            };
+
+            globalHotkeysDialog.ShowDialog();
+        }
+
+        private void HandleAddNewWindow([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            var profiles = new ObservableCollection<ProfileViewModel>();
+
+            foreach (string str in SettingsHolder.Instance.AllProfiles)
+            {
+                profiles.Add(new ProfileViewModel(str, str == "Default" ? true : false));
+            }
+
+            var chooseViewModel = new ProfileChooseViewModel(profiles, profiles[0].NameProfile);
+
+            var chooseDialog = new ProfilesChooseDialog()
+            {
+                DataContext = chooseViewModel,
+                Owner = this,
+            };
+
+            var result = chooseDialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                var name = chooseViewModel.SelectedProfile.NameProfile;
+
+                OutputWindow outputWindow = new OutputWindow(this, name);
+                outputWindow.Uid = outputWindow.Name + Guid.NewGuid().ToString("N");
+                _outputWindows.Add(outputWindow);
+
+                DockableContent d = new DockableContent()
+                {
+                    Name = outputWindow.Uid,
+                    Title = outputWindow.Name,
+                    Content = outputWindow.VisibleControl,
+                    HideOnClose = false,
+                };
+
+                outputWindow.DockContent = d;
+                d.Closed += OnOutputWindowClosed;
+
+                var menuItem = new MenuItem()
+                {
+                    Header = outputWindow.Name,
+                    Name = outputWindow.Uid,
+                };
+
+                windowMenuItem.Items.Insert(0, menuItem);
+
+                PluginHost.Instance.OutputWindowCreated(outputWindow);
+
+                if (windowSeparator.Visibility != Visibility.Visible)
+                    windowSeparator.Visibility = Visibility.Visible;
+
+                if (dockManager.MainDocumentPane != null)
+                    dockManager.MainDocumentPane.Items.Add(d);
+                else
+                    d.Show(dockManager);
             }
         }
     }

@@ -23,6 +23,7 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
 
     using ViewModel;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using Adan.Client.Common.Model;
 
     /// <summary>
     /// <see cref="ConveyorUnit"/> implementation to handle <see cref="RoomMonstersMessage"/> messages.
@@ -30,23 +31,17 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
     public class RoomMonstersUnit : ConveyorUnit
     {
         private readonly MonstersWidgetControl _monstersWidgetControl;
-        private readonly RoomMonstersViewModel _roomMonstersViewModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomMonstersUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
         /// <param name="monstersWidgetControl">The monsters widget control.</param>
-        /// <param name="roomMonstersViewModel">The room monsters view model.</param>
-        public RoomMonstersUnit([NotNull] MessageConveyor messageConveyor, [NotNull] MonstersWidgetControl monstersWidgetControl, [NotNull] RoomMonstersViewModel roomMonstersViewModel)
-            : base(messageConveyor)
+        public RoomMonstersUnit([NotNull] MonstersWidgetControl monstersWidgetControl)
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
             Assert.ArgumentNotNull(monstersWidgetControl, "monstersWidgetControl");
-            Assert.ArgumentNotNull(roomMonstersViewModel, "roomMonstersViewModel");
 
             _monstersWidgetControl = monstersWidgetControl;
-            _roomMonstersViewModel = roomMonstersViewModel;
         }
 
         /// <summary>
@@ -74,61 +69,49 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand([NotNull]Command command, [NotNull]RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            var hotKeyCommand = command as HotkeyCommand;
-            if (hotKeyCommand == null)
-            {
-                return;
-            }
+            //var hotKeyCommand = command as HotkeyCommand;
+            //if (hotKeyCommand == null)
+            //{
+            //    return;
+            //}
 
-            if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.None)
-            {
-                hotKeyCommand.Handled = true;
-                if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == _roomMonstersViewModel.Monsters.Count - 1)
-                {
-                    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.FirstOrDefault();
-                    return;
-                }
+            //if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.None)
+            //{
+            //    hotKeyCommand.Handled = true;
+            //    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == _roomMonstersViewModel.Monsters.Count - 1)
+            //    {
+            //        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.FirstOrDefault();
+            //        return;
+            //    }
 
-                var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
-                _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index + 1];
-                return;
-            }
+            //    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
+            //    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index + 1];
+            //    return;
+            //}
 
-            if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
-            {
-                hotKeyCommand.Handled = true;
-                if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == 0)
-                {
-                    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.LastOrDefault();
-                    return;
-                }
+            //if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
+            //{
+            //    hotKeyCommand.Handled = true;
+            //    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == 0)
+            //    {
+            //        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.LastOrDefault();
+            //        return;
+            //    }
 
-                var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
-                _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index - 1];
-                return;
-            }
-        }
-
-        /// <summary>
-        /// Handles the message.
-        /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
-        {
-            Assert.ArgumentNotNull(message, "message");
-
-            var roomMonstersMessage = message as RoomMonstersMessage;
-            if (roomMonstersMessage != null)
-            {
-                _monstersWidgetControl.UpdateModel(roomMonstersMessage);
-            }
+            //    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
+            //    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index - 1];
+            //    return;
+            //}
         }
     }
 }

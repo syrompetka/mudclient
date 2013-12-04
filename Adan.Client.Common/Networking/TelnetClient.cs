@@ -105,7 +105,7 @@ namespace Adan.Client.Common.Networking
         {
             Validate.ArgumentNotNull(host, "host");
 
-            _theSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true, Blocking = false };
+            _theSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             _theSocket.BeginConnect(host, port, _connectedCallback, null);
         }
 

@@ -14,7 +14,7 @@ namespace Adan.Client.ViewModel
     /// <summary>
     /// Model for connection status.
     /// </summary>
-    public class ConnectionStatusModel : ViewModelBase
+    public class ConnectionStatusViewModel : ViewModelBase
     {
         private bool _connected;
         private bool _connectionInProgress;

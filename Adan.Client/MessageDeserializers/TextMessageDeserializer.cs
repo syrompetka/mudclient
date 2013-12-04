@@ -60,20 +60,6 @@ namespace Adan.Client.MessageDeserializers
 
         #endregion
 
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextMessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public TextMessageDeserializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
-
-        #endregion
-
         #region Properties
 
         /// <summary>
@@ -180,66 +166,24 @@ namespace Adan.Client.MessageDeserializers
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new TextMessageDeserializer();
+        }
+
         #endregion
 
         #region Methods
-
-        private static TextColor ConvertAnsiColorToTextColor(AnsiColor ansiColor, bool isBright)
-        {
-            if (isBright)
-            {
-                switch (ansiColor)
-                {
-                    case AnsiColor.Black:
-                        return TextColor.BrightBlack;
-                    case AnsiColor.Blue:
-                        return TextColor.BrightBlue;
-                    case AnsiColor.Cyan:
-                        return TextColor.BrightCyan;
-                    case AnsiColor.Green:
-                        return TextColor.BrightGreen;
-                    case AnsiColor.Magenta:
-                        return TextColor.BrightMagenta;
-                    case AnsiColor.Red:
-                        return TextColor.BrightRed;
-                    case AnsiColor.White:
-                        return TextColor.BrightWhite;
-                    case AnsiColor.Yellow:
-                        return TextColor.BrightYellow;
-                }
-            }
-            else
-            {
-                switch (ansiColor)
-                {
-                    case AnsiColor.Black:
-                        return TextColor.Black;
-                    case AnsiColor.Blue:
-                        return TextColor.Blue;
-                    case AnsiColor.Cyan:
-                        return TextColor.Cyan;
-                    case AnsiColor.Green:
-                        return TextColor.Green;
-                    case AnsiColor.Magenta:
-                        return TextColor.Magenta;
-                    case AnsiColor.Red:
-                        return TextColor.Red;
-                    case AnsiColor.White:
-                        return TextColor.White;
-                    case AnsiColor.Yellow:
-                        return TextColor.Yellow;
-                }
-            }
-
-            return TextColor.None;
-        }
 
         private void FlushCurrentBlockToBlocksList()
         {
             var textblock = new TextMessageBlock(_stringBuilder.ToString(), ConvertAnsiColorToTextColor(_currentForeColor, _isBright), ConvertAnsiColorToTextColor(_currentBackColor, _isBright));
             _messageBlocks.Add(textblock);
             _stringBuilder.Clear();
-
         }
 
         private void FlushCurrentLineToConveyor()
@@ -296,6 +240,56 @@ namespace Adan.Client.MessageDeserializers
                         "ASCI escape sequence has invalid parameter - '{0}'",
                         sequenceValue));
             }
+        }
+
+        private static TextColor ConvertAnsiColorToTextColor(AnsiColor ansiColor, bool isBright)
+        {
+            if (isBright)
+            {
+                switch (ansiColor)
+                {
+                    case AnsiColor.Black:
+                        return TextColor.BrightBlack;
+                    case AnsiColor.Blue:
+                        return TextColor.BrightBlue;
+                    case AnsiColor.Cyan:
+                        return TextColor.BrightCyan;
+                    case AnsiColor.Green:
+                        return TextColor.BrightGreen;
+                    case AnsiColor.Magenta:
+                        return TextColor.BrightMagenta;
+                    case AnsiColor.Red:
+                        return TextColor.BrightRed;
+                    case AnsiColor.White:
+                        return TextColor.BrightWhite;
+                    case AnsiColor.Yellow:
+                        return TextColor.BrightYellow;
+                }
+            }
+            else
+            {
+                switch (ansiColor)
+                {
+                    case AnsiColor.Black:
+                        return TextColor.Black;
+                    case AnsiColor.Blue:
+                        return TextColor.Blue;
+                    case AnsiColor.Cyan:
+                        return TextColor.Cyan;
+                    case AnsiColor.Green:
+                        return TextColor.Green;
+                    case AnsiColor.Magenta:
+                        return TextColor.Magenta;
+                    case AnsiColor.Red:
+                        return TextColor.Red;
+                    case AnsiColor.White:
+                        return TextColor.White;
+                    case AnsiColor.Yellow:
+                        return TextColor.Yellow;
+                }
+            }
+
+            return TextColor.None;
         }
 
         #endregion

@@ -36,6 +36,17 @@ namespace Adan.Client.Model.Actions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the name of the variable.
         /// </summary>
         /// <value>

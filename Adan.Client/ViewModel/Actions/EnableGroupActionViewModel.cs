@@ -31,20 +31,18 @@ namespace Adan.Client.ViewModel.Actions
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableGroupActionViewModel"/> class.
         /// </summary>
-        /// <param name="availableGroups">The available groups.</param>
         /// <param name="action">The action.</param>
         /// <param name="actionDescriptor">The action descriptor.</param>
         /// <param name="allDescriptions">All descriptions.</param>
-        public EnableGroupActionViewModel([NotNull] IEnumerable<Group> availableGroups, [NotNull] EnableGroupAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
+        public EnableGroupActionViewModel([NotNull] EnableGroupAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base(action, actionDescriptor, allDescriptions)
         {
-            Assert.ArgumentNotNull(availableGroups, "availableGroups");
             Assert.ArgumentNotNull(action, "action");
             Assert.ArgumentNotNull(actionDescriptor, "actionDescriptor");
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
 
             _action = action;
-            AllGroups = availableGroups.Where(g => !g.IsBuildIn);
+            //AllGroups = availableGroups.Where(g => !g.IsBuildIn);
         }
 
         /// <summary>
@@ -98,7 +96,7 @@ namespace Adan.Client.ViewModel.Actions
         /// <returns>A deep copy of this instance.</returns>
         public override ActionViewModelBase Clone()
         {
-            return new EnableGroupActionViewModel(AllGroups, new EnableGroupAction(), ActionDescriptor, AllActionDescriptions) { GroupNameToEnable = GroupNameToEnable };
+            return new EnableGroupActionViewModel(new EnableGroupAction(), ActionDescriptor, AllActionDescriptions) { GroupNameToEnable = GroupNameToEnable };
         }
     }
 }

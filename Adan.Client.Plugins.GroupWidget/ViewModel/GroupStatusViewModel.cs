@@ -29,9 +29,9 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     public class GroupStatusViewModel : ViewModelBase
     {
         private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
-        private RootModel _rootModel;
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
         private GroupMateViewModel _selectedGroupMate;
+        //private RootModel _rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStatusViewModel"/> class.
@@ -43,6 +43,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Uid
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -71,7 +80,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedGroupMate = value;
-                _rootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
+                //_rootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
                 OnPropertyChanged("SelectedGroupMate");
             }
         }
@@ -104,7 +113,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    _rootModel.GroupStatus.Insert(position, characterStatus);
+                    //_rootModel.GroupStatus.Insert(position, characterStatus);
                     GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList));
                 }
 
@@ -113,22 +122,23 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
 
             for (int i = position; i < GroupMates.Count; i++)
             {
-                if (!GroupMates[i].IsDeleting)
-                {
-                    var groupMateToRemove = GroupMates[i];
-                    groupMateToRemove.IsDeleting = true;
+                GroupMates.RemoveAt(position);
+                //if (!GroupMates[i].IsDeleting)
+                //{
+                //    var groupMateToRemove = GroupMates[i];
+                //    groupMateToRemove.IsDeleting = true;
 
-                    var timer = new DispatcherTimer(DispatcherPriority.SystemIdle);
+                //    var timer = new DispatcherTimer(DispatcherPriority.SystemIdle);
 
-                    timer.Tick += (o, e) =>
-                                  {
-                                      timer.Stop();
-                                      _rootModel.GroupStatus.Remove(groupMateToRemove.GroupMate);
-                                      GroupMates.Remove(groupMateToRemove);
-                                  };
-                    timer.Interval = TimeSpan.FromSeconds(1);
-                    timer.Start();
-                }
+                //    timer.Tick += (o, e) =>
+                //                  {
+                //                      timer.Stop();
+                //                      //_rootModel.GroupStatus.Remove(groupMateToRemove.GroupMate);
+                //                      GroupMates.Remove(groupMateToRemove);
+                //                  };
+                //    timer.Interval = TimeSpan.FromSeconds(1);
+                //    timer.Start();
+                //}
             }
         }
 
@@ -151,7 +161,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            _rootModel = rootModel;
+            //_rootModel = rootModel;
         }
 
         private void UpdateTimings()

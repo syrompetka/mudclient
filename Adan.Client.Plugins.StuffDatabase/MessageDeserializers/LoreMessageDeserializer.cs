@@ -13,6 +13,7 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
+    using System.Diagnostics;
 
     using Common.Conveyor;
     using Common.MessageDeserializers;
@@ -28,18 +29,6 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
     public class LoreMessageDeserializer : MessageDeserializer
     {
         private readonly StringBuilder _builder = new StringBuilder();
-        private readonly Encoding _encoding = Encoding.GetEncoding(1251);
-        private readonly XmlSerializer _serializer = new XmlSerializer(typeof(LoreMessage));
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoreMessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public LoreMessageDeserializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -67,13 +56,14 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
             Assert.ArgumentNotNull(data, "data");
             try
             {
-                var messageXml = _encoding.GetString(data, offset, bytesReceived);
+                var messageXml = Encoding.GetEncoding(1251).GetString(data, offset, bytesReceived);
                 _builder.Append(messageXml);
                 if (isComplete)
                 {
                     using (var stringReader = new StringReader(_builder.ToString()))
                     {
-                        var message = (LoreMessage)_serializer.Deserialize(stringReader);
+                        var serializer = new XmlSerializer(typeof(LoreMessage));
+                        var message = (LoreMessage)serializer.Deserialize(stringReader);
                         PushMessageToConveyor(message);
                     }
 
@@ -85,6 +75,15 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
                 _builder.Clear();
                 PushMessageToConveyor(new ErrorMessage(ex.ToString()));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new LoreMessageDeserializer();
         }
     }
 }

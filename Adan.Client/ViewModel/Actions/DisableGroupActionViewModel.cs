@@ -31,31 +31,29 @@ namespace Adan.Client.ViewModel.Actions
         /// <summary>
         /// Initializes a new instance of the <see cref="DisableGroupActionViewModel"/> class.
         /// </summary>
-        /// <param name="availableGroups">The available groups.</param>
         /// <param name="action">The action.</param>
         /// <param name="actionDescriptor">The action descriptor.</param>
         /// <param name="allDescriptions">All descriptions.</param>
-        public DisableGroupActionViewModel([NotNull] IEnumerable<Group> availableGroups, [NotNull] DisableGroupAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
+        public DisableGroupActionViewModel( [NotNull] DisableGroupAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base(action, actionDescriptor, allDescriptions)
         {
-            Assert.ArgumentNotNull(availableGroups, "availableGroups");
             Assert.ArgumentNotNull(action, "action");
             Assert.ArgumentNotNull(actionDescriptor, "actionDescriptor");
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
 
             _action = action;
-            AllGroups = availableGroups.Where(g => !g.IsBuildIn);
+           // AllGroups = availableGroups.Where(g => !g.IsBuildIn);
         }
 
-        /// <summary>
-        /// Gets all groups.
-        /// </summary>
-        [NotNull]
-        public IEnumerable<Group> AllGroups
-        {
-            get;
-            private set;
-        }
+        ///// <summary>
+        ///// Gets all groups.
+        ///// </summary>
+        //[NotNull]
+        //public IEnumerable<Group> AllGroups
+        //{
+        //    get;
+        //    private set;
+        //}
 
         /// <summary>
         /// Gets or sets the group name to disable.
@@ -98,7 +96,7 @@ namespace Adan.Client.ViewModel.Actions
         /// <returns>A deep copy of this instance.</returns>
         public override ActionViewModelBase Clone()
         {
-            return new DisableGroupActionViewModel(AllGroups, new DisableGroupAction(), ActionDescriptor, AllActionDescriptions) { GroupNameToDisable = GroupNameToDisable };
+            return new DisableGroupActionViewModel(new DisableGroupAction(), ActionDescriptor, AllActionDescriptions) { GroupNameToDisable = GroupNameToDisable };
         }
     }
 }

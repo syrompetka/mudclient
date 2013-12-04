@@ -24,6 +24,7 @@ namespace Adan.Client.Plugins.StuffDatabase
     using CSLib.Net.Diagnostics;
     using Adan.Client.Plugins.StuffDatabase.MessageDeserializers;
     using Adan.Client.Plugins.StuffDatabase.ConveyorUnits;
+    using Adan.Client.Common.ViewModel;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to save stuff stats.
@@ -70,31 +71,17 @@ namespace Adan.Client.Plugins.StuffDatabase
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
+        public override void Initialize(InitializationStatusModel initializationStatusModel, Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 
             initializationStatusModel.CurrentPluginName = "Stuff database";
-            _deserializer = new LoreMessageDeserializer(conveyor);
-            _conveyorUnit = new StuffDatabaseUnit(conveyor);
-        }
+            initializationStatusModel.PluginInitializationStatus = "Initializing";
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
-        {
-            if (_conveyorUnit != null)
-            {
-                _conveyorUnit.Dispose();
-            }
+            _deserializer = new LoreMessageDeserializer();
+            _conveyorUnit = new StuffDatabaseUnit();
         }
     }
 }

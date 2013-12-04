@@ -26,11 +26,12 @@ namespace Adan.Client.Common.Plugins
     using MessageDeserializers;
 
     using Model;
+    using Adan.Client.Common.ViewModel;
 
     /// <summary>
     /// Base class for all plugins.
     /// </summary>
-    public abstract class PluginBase
+    public abstract class PluginBase : IDisposable
     {
         /// <summary>
         /// Gets the conveyor units that this plugin exposes.
@@ -166,13 +167,43 @@ namespace Adan.Client.Common.Plugins
         }
 
         /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public virtual void Dispose()
+        {
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public virtual void OnCreatedOutputWindow(RootModel rootModel, string uid)
+        {
+
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public virtual void OnChangedOutputWindow(RootModel rootModel, string uid) { }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public virtual void OnClosedOutputWindow(RootModel rootModel, string uid) { }
+
+        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public abstract void Initialize([NotNull] MessageConveyor conveyor, [NotNull] RootModel model, [NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow);
+        public abstract void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow);
 
         /// <summary>
         /// Shows the options dialog.

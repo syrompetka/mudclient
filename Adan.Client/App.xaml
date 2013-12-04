@@ -2,8 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
              xmlns:Client="clr-namespace:Adan.Client" 
-             StartupUri="MainWindow.xaml"
-             Exit="HandleApplicationExit">
+             StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,7 +12,6 @@
                 <ResourceDictionary Source="Resources/ExpressionDark.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-            <Client:SettingsHolder x:Key="SettingsHolder" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

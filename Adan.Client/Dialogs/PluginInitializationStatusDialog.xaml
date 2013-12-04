@@ -6,7 +6,7 @@
         WindowStyle="None"
         Width="405"
         Height="76"
-        Title="Initializin plugins..."
+        Title="Initializing..."
         Style="{StaticResource DefaultWindowStyle}"
         ResizeMode="NoResize">
     <Grid>
@@ -31,18 +31,19 @@
                    Foreground="{DynamicResource TextBrush}"
                    FontSize="14"
                    Margin="5" />
-
         <TextBlock Name="txtPluginName"
                    Grid.Row="0"
                    Grid.Column="1"
                    Foreground="{DynamicResource TextBrush}"
                    FontSize="14"
-                   Margin="5" />
+                   Margin="5"
+                   Text="{Binding Path=CurrentPluginName, Mode=TwoWay}"/>
         <TextBlock Name="txtStatus"
                    Grid.Row="1"
                    Grid.Column="1"
                    Foreground="{DynamicResource TextBrush}"
                    FontSize="14"
-                   Margin="5" />
+                   Margin="5"
+                   Text="{Binding Path=PluginInitializationStatus, Mode=TwoWay}"/>
     </Grid>
 </Window>

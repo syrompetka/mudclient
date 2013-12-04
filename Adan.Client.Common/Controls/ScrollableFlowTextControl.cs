@@ -637,7 +637,9 @@ namespace Adan.Client.Common.Controls
         #region Rendering
 
         /// <summary>
-        /// When overridden in a derived class, participates in rendering operations that are directed by the layout system. The rendering instructions for this element are not used directly when this method is invoked, and are instead preserved for later asynchronous use by layout and drawing.
+        /// When overridden in a derived class, participates in rendering operations that are directed by the layout system.
+        /// The rendering instructions for this element are not used directly when this method is invoked,
+        /// and are instead preserved for later asynchronous use by layout and drawing.
         /// </summary>
         /// <param name="drawingContext">The drawing instructions for a specific element. This context is provided to the layout system.</param>
         protected override void OnRender([NotNull] DrawingContext drawingContext)

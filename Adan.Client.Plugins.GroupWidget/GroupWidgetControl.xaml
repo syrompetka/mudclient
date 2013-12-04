@@ -129,7 +129,7 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <DataTemplate.Triggers>
+                    <!--<DataTemplate.Triggers>
                         <EventTrigger RoutedEvent="FrameworkElement.Loaded"
                                       SourceName="ItemStack">
                             <BeginStoryboard>
@@ -153,7 +153,7 @@
                                 </BeginStoryboard>
                             </DataTrigger.EnterActions>
                         </DataTrigger>
-                    </DataTemplate.Triggers>
+                    </DataTemplate.Triggers>-->
                     <DockPanel Height="26"
                                Name="ItemStack"
                                HorizontalAlignment="Stretch"

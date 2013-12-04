@@ -64,10 +64,10 @@ namespace Adan.Client.Model.ActionDescriptions
         {
             Assert.ArgumentNotNull(action, "action");
 
-            var startLocaAction = action as StartLogAction;
-            if (startLocaAction != null)
+            var startLogAction = action as StartLogAction;
+            if (startLogAction != null)
             {
-                return new StartLogActionViewModel(startLocaAction, this, _parameterDescriptions, AllDescriptions);
+                return new StartLogActionViewModel(startLogAction, this, _parameterDescriptions, AllDescriptions);
             }
 
             return null;

@@ -25,20 +25,12 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class HighlightUnit : ConveyorUnit
     {
-        private readonly RootModel _rootModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HighlightUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The root model.</param>
-        public HighlightUnit([NotNull] MessageConveyor messageConveyor, [NotNull]RootModel rootModel)
-            : base(messageConveyor)
+        public HighlightUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -66,23 +58,25 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
+
             var textMessage = message as TextMessage;
             if (textMessage == null)
             {
                 return;
             }
 
-            foreach (var group in _rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var highlight in group.Highlights)
                 {
-                    highlight.ProcessMessage(textMessage, _rootModel);
+                    highlight.ProcessMessage(textMessage, rootModel);
                 }
             }
         }

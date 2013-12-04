@@ -77,7 +77,9 @@
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -111,6 +113,7 @@
     <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
     <Compile Include="ConveyorUnits\LoggingUnit.cs" />
     <Compile Include="ConveyorUnits\ProtocolVersionUnit.cs" />
+    <Compile Include="ConveyorUnits\ShowMainOutputUnit.cs" />
     <Compile Include="ConveyorUnits\SubstitutionUnit.cs" />
     <Compile Include="ConveyorUnits\TriggerUnit.cs" />
     <Compile Include="ConveyorUnits\VariableReplaceUnit.cs" />
@@ -125,6 +128,12 @@
     </Compile>
     <Compile Include="Dialogs\Fonts\FontChooser.xaml.cs">
       <DependentUpon>FontChooser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GlobalHotkeyEditDialog.xaml.cs">
+      <DependentUpon>GlobalHotkeyEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GlobalHotkeysEditDialog.xaml.cs">
+      <DependentUpon>GlobalHotkeysEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\GroupsEditDialog.xaml.cs">
       <DependentUpon>GroupsEditDialog.xaml</DependentUpon>
@@ -147,8 +156,14 @@
     <Compile Include="Dialogs\PluginInitializationStatusDialog.xaml.cs">
       <DependentUpon>PluginInitializationStatusDialog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\ProfilesDialog.xaml.cs">
-      <DependentUpon>ProfilesDialog.xaml</DependentUpon>
+    <Compile Include="Dialogs\ProfilesChooseDialog.xaml.cs">
+      <DependentUpon>ProfilesChooseDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfilesEditDialog.xaml.cs">
+      <DependentUpon>ProfilesEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfileOptionsEditDialog.xaml.cs">
+      <DependentUpon>ProfileOptionsEditDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="Dialogs\SubstitutionEditDialog.xaml.cs">
       <DependentUpon>SubstitutionEditDialog.xaml</DependentUpon>
@@ -170,7 +185,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
-    <Compile Include="Messages\Enums.cs" />
+    <Compile Include="Messages\AnsiColor.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
@@ -186,10 +201,11 @@
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
     <Compile Include="Model\ActionDescriptions\SetVariableValueActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\ShowOutputWindowActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StartLogActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StopLogActionDescription.cs" />
     <Compile Include="Model\ActionParameters\ConstantStringParameter.cs" />
-    <Compile Include="Model\ActionParameters\Enums.cs" />
+    <Compile Include="Model\ActionParameters\MathOperation.cs" />
     <Compile Include="Model\ActionParameters\MathExpressionParameter.cs" />
     <Compile Include="Model\ActionParameters\TriggerOrCommandParameter.cs" />
     <Compile Include="Model\ActionParameters\VariableReferenceParameter.cs" />
@@ -197,19 +213,20 @@
     <Compile Include="Model\Actions\ConditionalAction.cs" />
     <Compile Include="Model\Actions\DisableGroupAction.cs" />
     <Compile Include="Model\Actions\EnableGroupAction.cs" />
-    <Compile Include="Model\Actions\Enums.cs" />
+    <Compile Include="Model\Actions\ActionCondition.cs" />
     <Compile Include="Model\Actions\OutputToMainWindowAction.cs" />
     <Compile Include="Model\Actions\SendTextAction.cs" />
     <Compile Include="Model\Actions\SendTextOneParameterAction.cs" />
     <Compile Include="Model\Actions\SetVariableValueAction.cs" />
+    <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />
     <Compile Include="Model\Actions\StartLogAction.cs" />
     <Compile Include="Model\Actions\StopLogAction.cs" />
     <Compile Include="Model\ParameterDescriptions\ConstantStringParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\MathExpressionParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\TriggerOrCommandParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\VariableReferenceParameterDescription.cs" />
+    <Compile Include="OutputWindow.cs" />
     <Compile Include="PluginHost.cs" />
-    <Compile Include="Controls\CursorPositionHistory.cs" />
     <Compile Include="ViewModel\ActionParameters\ConstantStringParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\ExtensionMethods.cs" />
     <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
@@ -222,6 +239,7 @@
     <Compile Include="ViewModel\Actions\OutputToMainWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\SendTextActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\SetVariableValueActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\ShowOutputWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\StartLogActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\ClearVariableValueActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\StopLogActionViewModel.cs" />
@@ -230,6 +248,8 @@
     <Compile Include="ViewModel\ConnectionDialogViewModel.cs" />
     <Compile Include="ViewModel\ConnectionStatusModel.cs" />
     <Compile Include="ViewModel\FontChooserViewModel.cs" />
+    <Compile Include="ViewModel\GlobalHotkeysViewModel.cs" />
+    <Compile Include="ViewModel\GlobalHotkeyViewModel.cs" />
     <Compile Include="ViewModel\GroupViewModel.cs" />
     <Compile Include="ViewModel\GroupsViewModel.cs" />
     <Compile Include="ViewModel\HighlightsViewModel.cs" />
@@ -237,14 +257,14 @@
     <Compile Include="ViewModel\HotkeysViewModel.cs" />
     <Compile Include="ViewModel\HotkeyViewModel.cs" />
     <Compile Include="ViewModel\OptionsViewModel.cs" />
-    <Compile Include="ViewModel\ProfilesViewModel.cs" />
+    <Compile Include="ViewModel\ProfileChooseViewModel.cs" />
+    <Compile Include="ViewModel\ProfileOptionsViewModel.cs" />
+    <Compile Include="ViewModel\ProfilesEditViewModel.cs" />
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionsViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionViewModel.cs" />
-    <Compile Include="ViewModel\MainWindowModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
-    <Compile Include="SettingsHolder.cs" />
     <Page Include="Dialogs\AliasEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -258,6 +278,14 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Dialogs\Fonts\FontChooser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GlobalHotkeyEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GlobalHotkeysEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -289,7 +317,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Dialogs\ProfilesDialog.xaml">
+    <Page Include="Dialogs\ProfilesChooseDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfilesEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfileOptionsEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -397,13 +433,11 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
-    <Content Include="Layout.xml" />
     <Resource Include="Resources\Images\DockBottom.png" />
     <Resource Include="Resources\Images\DockLeft.png" />
     <Resource Include="Resources\Images\DockPane.png" />
     <Resource Include="Resources\Images\DockRight.png" />
     <Resource Include="Resources\Images\DockTop.png" />
-    <Content Include="Settings.xml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">

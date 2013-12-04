@@ -15,6 +15,8 @@ namespace Adan.Client.Dialogs
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Common.ViewModel;
+    using System.Threading;
 
     /// <summary>
     /// Interaction logic for PluginInitializationStatusDialog.xaml
@@ -58,6 +60,7 @@ namespace Adan.Client.Dialogs
         {
             txtPluginName.Text = _viewModel.CurrentPluginName;
             txtStatus.Text = _viewModel.PluginInitializationStatus;
+            //Thread.Sleep(1000);
         }
     }
 }

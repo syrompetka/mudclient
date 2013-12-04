@@ -370,6 +370,18 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2D64D29C45688CCC1A33D9D9D016740A"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_6BF44583BC668DD682C4E689506CC0F4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_EE804499F55F4918AC6BAA5B4917A5EA"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -442,12 +454,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2D64D29C45688CCC1A33D9D9D016740A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9C72676FAAB165675EF2710DF3CE008D"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -455,12 +461,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9DEE49C9BB42EF3422273592FFCDF14C"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_6BF44583BC668DD682C4E689506CC0F4"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -592,9 +592,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.7.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.17.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_2D64D29C45688CCC1A33D9D9D016740A"
+                    {
+                    "Name" = "8:Adan.Client.Common.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Adan.Client.Common.dll"
             "TargetName" = "8:"
@@ -621,6 +626,11 @@
             "AssemblyAsmDisplayName" = "8:AvalonDock.Themes, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_42C6AE9A833F459304692FED523CFC11"
+                    {
+                    "Name" = "8:AvalonDock.Themes.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:AvalonDock.Themes.dll"
             "TargetName" = "8:"
@@ -647,6 +657,11 @@
             "AssemblyAsmDisplayName" = "8:CSLib.Net.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_65BC9A39BEF41A8AE606F288A4921C8F"
+                    {
+                    "Name" = "8:CSLib.Net.Extensions.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CSLib.Net.Extensions.dll"
             "TargetName" = "8:"
@@ -673,6 +688,11 @@
             "AssemblyAsmDisplayName" = "8:Ionic.Zlib, Version=1.9.5.2, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_6BF44583BC668DD682C4E689506CC0F4"
+                    {
+                    "Name" = "8:Ionic.Zlib.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Ionic.Zlib.dll"
             "TargetName" = "8:"
@@ -699,6 +719,11 @@
             "AssemblyAsmDisplayName" = "8:SharpAESCrypt, Version=1.0.0.0, Culture=neutral, PublicKeyToken=da45da0a7b8da0d2, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_8747660F4D17AA64EB36C5852A4F3F42"
+                    {
+                    "Name" = "8:SharpAESCrypt.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:SharpAESCrypt.dll"
             "TargetName" = "8:"
@@ -725,6 +750,11 @@
             "AssemblyAsmDisplayName" = "8:CSLib.Net.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9C72676FAAB165675EF2710DF3CE008D"
+                    {
+                    "Name" = "8:CSLib.Net.Diagnostics.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CSLib.Net.Diagnostics.dll"
             "TargetName" = "8:"
@@ -751,6 +781,11 @@
             "AssemblyAsmDisplayName" = "8:CSLib.Net.Annotations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9DEE49C9BB42EF3422273592FFCDF14C"
+                    {
+                    "Name" = "8:CSLib.Net.Annotations.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CSLib.Net.Annotations.dll"
             "TargetName" = "8:"
@@ -777,6 +812,11 @@
             "AssemblyAsmDisplayName" = "8:AvalonDock, Version=1.3.3592.0, Culture=neutral, PublicKeyToken=85a1e0ada7ec13e4, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_9E0A15092B9B8429F78921985D9E7A24"
+                    {
+                    "Name" = "8:AvalonDock.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:AvalonDock.dll"
             "TargetName" = "8:"
@@ -803,6 +843,11 @@
             "AssemblyAsmDisplayName" = "8:Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_D3EA25723B62B11E9386D083AC424435"
+                    {
+                    "Name" = "8:Ionic.Zip.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:Ionic.Zip.dll"
             "TargetName" = "8:"
@@ -999,15 +1044,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Adamant mud client"
-        "ProductCode" = "8:{3C603D50-EDC5-4663-A0FD-3059DBD635F6}"
-        "PackageCode" = "8:{BE3967ED-D51A-46CC-9C74-273028F334A9}"
+        "ProductCode" = "8:{2376AC35-4A55-43DA-BB72-2865F93BC36A}"
+        "PackageCode" = "8:{86538EC4-3FE5-49C0-B607-8D60FC720EDB}"
         "UpgradeCode" = "8:{57566A6A-532F-4B87-AC64-05A74AA4919D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.10"
+        "ProductVersion" = "8:1.1.18"
         "Manufacturer" = "8:Adan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

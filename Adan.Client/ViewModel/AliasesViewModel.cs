@@ -140,7 +140,6 @@ namespace Adan.Client.ViewModel
 
             var commandAlias = new CommandAlias();
             commandAlias.Actions.Add(new SendTextAction());
-           // commandAlias.Actions.Add(new SendTextWoParamAction());
             var aliasToAdd = new AliasViewModel(Groups, Groups.First(g => g.IsBuildIn), commandAlias, _actionDescriptions);
             var aliasEditDialog = new AliasEditDialog { DataContext = aliasToAdd, Owner = (Window)obj };
             var dialogResult = aliasEditDialog.ShowDialog();

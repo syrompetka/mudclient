@@ -23,6 +23,7 @@ namespace Adan.Client.ConveyorUnits
     using CSLib.Net.Diagnostics;
     using Adan.Client.Commands;
     using Adan.Client.Model.Actions;
+    using Adan.Client.Messages;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementation that use commands string from line
@@ -55,19 +56,14 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexStatus = new Regex(@"#stat?u?s?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private RootModel _rootModel;
+        //private RootModel rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandsFromUserLineUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The root model.</param>
-        public CommandsFromUserLineUnit([NotNull] MessageConveyor messageConveyor, [NotNull]RootModel rootModel)
-            : base(messageConveyor)
+        public CommandsFromUserLineUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            _rootModel = rootModel;
         }
 
         /// <summary>
@@ -93,10 +89,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand([NotNull] Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand([NotNull] Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -120,7 +118,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Triggers List"));
+                    if(!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Triggers List"), rootModel);
                     return;
                 }
 
@@ -128,7 +127,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -140,7 +140,8 @@ namespace Adan.Client.ConveyorUnits
                     groupName = args[3];
                     if (!int.TryParse(args[2], out priority))
                     {
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                        if (!isImport) 
+                            base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                         return;
                     }
                 }
@@ -162,19 +163,20 @@ namespace Adan.Client.ConveyorUnits
                     CommandText = args[1]
                 });
 
-                var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
                 {
-                    _rootModel.AddGroup(groupName);
-                    group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
                 group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
                 group.Triggers.Add(trigger);
 
-                _rootModel.RecalculatedEnabledTriggersPriorities();
+                rootModel.RecalculatedEnabledTriggersPriorities();
 
-                base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен"));
+                if (!isImport) 
+                    base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен"), rootModel);
 
                 return;
             }
@@ -193,30 +195,33 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 if (args.Length == 2)
                 {
-                    var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
                         group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
 
-                        base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."), rootModel);
                     }
                 }
                 else
                 {
-                    foreach (var group in _rootModel.Groups)
+                    foreach (var group in rootModel.Groups)
                     {
                         group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
-                        base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."), rootModel);
                     }
                 }
 
-                _rootModel.RecalculatedEnabledTriggersPriorities();
+                rootModel.RecalculatedEnabledTriggersPriorities();
 
                 return;
             }
@@ -228,7 +233,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Alias List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Alias List"), rootModel);
                     return;
                 }
 
@@ -236,7 +242,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -250,23 +257,23 @@ namespace Adan.Client.ConveyorUnits
                     Command = args[0]
                 };
 
-                //commandAlias.Actions.Add(new SendTextWoParamAction()
                 commandAlias.Actions.Add(new SendTextAction()
                 {
                     CommandText = args[1]
                 });
 
-                var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
                 {
-                    _rootModel.AddGroup(groupName);
-                    group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
                 group.Aliases.RemoveAll(all => all.Command == args[0]);
                 group.Aliases.Add(commandAlias);
 
-                base.PushMessageToConveyor(new InfoMessage("#Алиас добавлен"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Алиас добавлен"), rootModel);
 
                 return;
             }
@@ -285,27 +292,30 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 if (args.Length == 2)
                 {
-                    var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
                         group.Aliases.RemoveAll(all => ((CommandAlias)all).Command == args[0]);
-                        base.PushMessageToConveyor(new InfoMessage("#Алиас удален"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Алиас удален"), rootModel);
                     }
                 }
                 else
                 {
-                    foreach (var group in _rootModel.Groups)
+                    foreach (var group in rootModel.Groups)
                     {
                         group.Aliases.RemoveAll(all => all.Command == args[0]);
                     }
 
-                    base.PushMessageToConveyor(new InfoMessage("#Алиас удален"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Алиас удален"), rootModel);
                 }
 
                 return;
@@ -318,7 +328,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Highlight List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Highlight List"), rootModel);
                     return;
                 }
 
@@ -326,7 +337,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -335,11 +347,11 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length == 3)
                     groupName = args[2];
 
-                var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
                 {
-                    _rootModel.AddGroup(groupName);
-                    group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
                 Highlight highlight = new Highlight()
@@ -361,7 +373,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (foregroundColor == TextColor.None || backgroundColor == TextColor.None)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Ошибка цвета"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Ошибка цвета"), rootModel);
                     return;
                 }
 
@@ -371,7 +384,8 @@ namespace Adan.Client.ConveyorUnits
                 group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[2]);
                 group.Highlights.Add(highlight);
 
-                base.PushMessageToConveyor(new InfoMessage("#Подсветка добавлена"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Подсветка добавлена"), rootModel);
 
                 return;
             }
@@ -390,27 +404,30 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 if (args.Length == 2)
                 {
-                    var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
                         group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[0]);
-                        base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"), rootModel);
                     }
                 }
                 else
                 {
-                    foreach (var group in _rootModel.Groups)
+                    foreach (var group in rootModel.Groups)
                     {
                         group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[0]);
                     }
 
-                    base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"), rootModel);
                 }
 
                 return;
@@ -423,7 +440,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Substitute List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Substitute List"), rootModel);
                     return;
                 }
 
@@ -431,7 +449,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -440,11 +459,11 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length == 3)
                     groupName = args[2];
 
-                var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
                 {
-                    _rootModel.AddGroup(groupName);
-                    group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
                 Substitution subtitution = new Substitution() { Pattern = args[0], SubstituteWith = args[1] };
@@ -452,7 +471,8 @@ namespace Adan.Client.ConveyorUnits
                 group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
                 group.Substitutions.Add(subtitution);
 
-                base.PushMessageToConveyor(new InfoMessage("#Замена добавлена"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Замена добавлена"), rootModel);
 
                 return;
             }
@@ -464,7 +484,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
                     return;
                 }
 
@@ -472,27 +493,30 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 if (args.Length == 2)
                 {
-                    var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
                         group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
-                        base.PushMessageToConveyor(new InfoMessage("#Замена удалена"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Замена удалена"), rootModel);
                     }
                 }
                 else
                 {
-                    foreach (var group in _rootModel.Groups)
+                    foreach (var group in rootModel.Groups)
                     {
                         group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
                     }
 
-                    base.PushMessageToConveyor(new InfoMessage("#Замена удалена"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Замена удалена"), rootModel);
                 }
 
                 return;
@@ -505,7 +529,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
                     return;
                 }
 
@@ -513,7 +538,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -522,11 +548,11 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length == 3)
                     groupName = args[2];
 
-                var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
                 {
-                    _rootModel.AddGroup(groupName);
-                    group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
                 args[0] = args[0].Replace("INS", "Insert").Replace("NUMDEL", "Decimal");
@@ -549,12 +575,13 @@ namespace Adan.Client.ConveyorUnits
                         hot.Key |= (Key)keyConverter.ConvertFrom(hotkey);
                     else
                     {
-                        base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"), rootModel);
+
                         return;
                     }
                 }
 
-                //hot.Actions.Add(new SendTextWoParamAction()
                 hot.Actions.Add(new SendTextAction()
                 {
                     CommandText = args[1]
@@ -563,7 +590,8 @@ namespace Adan.Client.ConveyorUnits
                 group.Hotkeys.RemoveAll(h => h.Key == hot.Key && h.ModifierKeys == hot.ModifierKeys);
                 group.Hotkeys.Add(hot);
 
-                base.PushMessageToConveyor(new InfoMessage("#Хоткей добавлен"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Хоткей добавлен"), rootModel);
 
                 return;
             }
@@ -575,7 +603,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
                     return;
                 }
 
@@ -583,7 +612,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -601,26 +631,29 @@ namespace Adan.Client.ConveyorUnits
                     else if (keyConverter.IsValid(hotkey))
                         key |= (Key)keyConverter.ConvertFrom(hotkey);
                     else
-                        base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"), rootModel);
                 }
 
                 if (args.Length == 2)
                 {
-                    var group = _rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
                         group.Hotkeys.RemoveAll(hot => hot.Key == key && hot.ModifierKeys == modifierKeys);
-                        base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"));
+                        if (!isImport)
+                            base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"), rootModel);
                     }
                 }
                 else
                 {
-                    foreach (var group in _rootModel.Groups)
+                    foreach (var group in rootModel.Groups)
                     {
                         group.Hotkeys.RemoveAll(hot => hot.Key == key && hot.ModifierKeys == modifierKeys);
                     }
 
-                    base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"), rootModel);
                 }
 
                 return;
@@ -633,7 +666,9 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
+
                     return;
                 }
 
@@ -641,13 +676,16 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
-                _rootModel.SetVariableValue(args[0], args[1], false);
+                rootModel.SetVariableValue(args[0], args[1], false);
 
-                base.PushMessageToConveyor(new InfoMessage("#Переменная добавлена"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Переменная добавлена"), rootModel);
 
                 return;
             }
@@ -659,7 +697,9 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
+
                     return;
                 }
 
@@ -667,22 +707,37 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
-                _rootModel.ClearVariableValue(args[0], false);
+                rootModel.ClearVariableValue(args[0], false);
 
-                base.PushMessageToConveyor(new InfoMessage("#Переменная удалена"));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage("#Переменная удалена"), rootModel);
 
                 return;
             }
 
-            //TODO
             match = _regexLog.Match(commandText);
             if (match.Success)
             {
                 command.Handled = true;
+
+                if(!match.Groups[1].Success)
+                {                   
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
+                    return;
+                }
+
+                if (rootModel.IsLogging)
+                    rootModel.PushMessageToConveyor(new StopLoggingMessage());
+                else
+                    rootModel.PushMessageToConveyor(new StartLoggingMessage(CommandLineParser.GetArgs(match.Groups[1].ToString())[0]));
 
                 return;
             }
@@ -694,11 +749,13 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[1].Success)
                 {
-                    base.PushMessageToConveyor(new InfoMessage("#Action List"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
                     return;
                 }
 
-                base.PushMessageToConveyor(new InfoMessage(match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty)));
+                if (!isImport)
+                    base.PushMessageToConveyor(new InfoMessage(match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty)), rootModel);
 
                 return;
             }
@@ -717,18 +774,21 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 2)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 int port;
                 if (!int.TryParse(args[1], out port))
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
-                base.PushCommandToConveyor(new ConnectCommand(args[0], port));
+                if (!isImport)
+                    base.PushCommandToConveyor(new ConnectCommand(args[0], port), rootModel);
                 return;
             }
 
@@ -737,7 +797,8 @@ namespace Adan.Client.ConveyorUnits
             {
                 command.Handled = true;
 
-                base.PushCommandToConveyor(new DisconnectCommand());
+                if (!isImport)
+                    base.PushCommandToConveyor(new DisconnectCommand(), rootModel);
 
                 return;
             }
@@ -758,7 +819,8 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!match.Groups[2].Success)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
@@ -766,20 +828,22 @@ namespace Adan.Client.ConveyorUnits
 
                 if (args.Length < 1)
                 {
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                     return;
                 }
 
                 if (match.Groups[1].ToString() == "enable")
                 {
-                    _rootModel.EnableGroup(args[0]);
+                    rootModel.EnableGroup(args[0]);
                 }
                 else if(match.Groups[1].ToString() == "disable")
                 {
-                    _rootModel.DisableGroup(args[0]);
+                    rootModel.DisableGroup(args[0]);
                 }
                 else
-                    base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"));
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
             }
         }
     }

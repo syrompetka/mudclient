@@ -11,18 +11,14 @@ namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using Adan.Client.Common.Model;
     using Commands;
-
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Messages;
-
     using Properties;
 
     /// <summary>
@@ -35,13 +31,11 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtocolVersionUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
         /// <param name="clientProtocolVersion">The client protocol version.</param>
-        public ProtocolVersionUnit([NotNull] MessageConveyor messageConveyor, int clientProtocolVersion)
-            : base(messageConveyor)
+        public ProtocolVersionUnit(int clientProtocolVersion)
+            : base()
         {
             _clientProtocolVersion = clientProtocolVersion;
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
         }
 
         /// <summary>
@@ -67,10 +61,11 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
             var protocolVersionMessage = message as ProtocolVersionMessage;
@@ -80,8 +75,8 @@ namespace Adan.Client.ConveyorUnits
             }
 
             message.Handled = true;
-            PushMessageToConveyor(new ErrorMessage(Resources.ProtocolVersionMismatch));
-            PushCommandToConveyor(new DisconnectCommand());
+            PushMessageToConveyor(new ErrorMessage(Resources.ProtocolVersionMismatch), rootModel);
+            PushCommandToConveyor(new DisconnectCommand(), rootModel);
         }
     }
 }

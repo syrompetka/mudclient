@@ -36,16 +36,6 @@ namespace Adan.Client.CommandSerializers
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextCommandSerializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public TextCommandSerializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
-
         #endregion
 
         #region Public Methods
@@ -68,6 +58,15 @@ namespace Adan.Client.CommandSerializers
             var bytesToSend = _encoding.GetBytes(textCommand.CommandText, 0, textCommand.CommandText.Length, _buffer, 0);
             _buffer[bytesToSend] = 0x0A;
             SendRawDataToServer(0, bytesToSend + 1, _buffer);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override CommandSerializer Clone()
+        {
+            return new TextCommandSerializer();
         }
 
         #endregion

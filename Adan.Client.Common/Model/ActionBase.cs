@@ -22,6 +22,14 @@ namespace Adan.Client.Common.Model
     public abstract class ActionBase
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public abstract bool IsGlobal
+        {
+            get;
+        }
+
+        /// <summary>
         /// Executes this action.
         /// </summary>
         /// <param name="model">The model.</param>

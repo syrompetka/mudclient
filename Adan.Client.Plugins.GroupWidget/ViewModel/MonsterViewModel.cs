@@ -31,6 +31,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             Assert.ArgumentNotNull(monsterStatus, "monsterStatus");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
+
             MonsterStatus = monsterStatus;
         }
 

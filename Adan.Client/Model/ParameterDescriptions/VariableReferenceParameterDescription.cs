@@ -27,19 +27,16 @@ namespace Adan.Client.Model.ParameterDescriptions
     /// </summary>
     public class VariableReferenceParameterDescription : ParameterDescription
     {
-        private readonly IEnumerable<Variable> _allVariables;
+        //private readonly IEnumerable<Variable> _allVariables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableReferenceParameterDescription"/> class.
         /// </summary>
         /// <param name="parameterDescriptions">The parameter descriptions.</param>
-        /// <param name="allVariables">All variables.</param>
-        public VariableReferenceParameterDescription([NotNull] IEnumerable<ParameterDescription> parameterDescriptions, [NotNull] IEnumerable<Variable> allVariables)
+        public VariableReferenceParameterDescription([NotNull] IEnumerable<ParameterDescription> parameterDescriptions)
             : base("Variable reference", parameterDescriptions)
         {
-            _allVariables = allVariables;
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
         }
 
         /// <summary>
@@ -65,7 +62,7 @@ namespace Adan.Client.Model.ParameterDescriptions
             var variableReferenceParameter = parameter as VariableReferenceParameter;
             if (variableReferenceParameter != null)
             {
-                return new VariableReferenceParameterViewModel(variableReferenceParameter, _allVariables, this, ParameterDescriptions);
+                return new VariableReferenceParameterViewModel(variableReferenceParameter, this, ParameterDescriptions);
             }
 
             return null;

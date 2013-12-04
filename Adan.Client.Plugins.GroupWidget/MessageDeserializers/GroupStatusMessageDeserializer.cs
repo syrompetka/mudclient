@@ -32,16 +32,6 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(GroupStatusMessage));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupStatusMessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public GroupStatusMessageDeserializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
-
-        /// <summary>
         /// Gets the type of deserialized message.
         /// </summary>
         /// <value>
@@ -86,6 +76,15 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                 //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
                 PushMessageToConveyor(new ErrorMessage(ex.Message));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new GroupStatusMessageDeserializer();
         }
     }
 }

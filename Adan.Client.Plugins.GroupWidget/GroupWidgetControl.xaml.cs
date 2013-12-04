@@ -10,6 +10,7 @@
 namespace Adan.Client.Plugins.GroupWidget
 {
     using System;
+    using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Input;
 
@@ -18,11 +19,14 @@ namespace Adan.Client.Plugins.GroupWidget
 
     using ViewModel;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using Adan.Client.Common.Model;
+    using System.Collections.Generic;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Interaction logic for GroupWidgetControl.xaml
     /// </summary>
-    public partial class GroupWidgetControl
+    public partial class GroupWidgetControl : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupWidgetControl"/> class.
@@ -33,19 +37,85 @@ namespace Adan.Client.Plugins.GroupWidget
         }
 
         /// <summary>
-        /// Updates the model.
+        /// 
         /// </summary>
-        /// <param name="groupStatusMessage">The group status message.</param>
-        public void UpdateModel([NotNull]GroupStatusMessage groupStatusMessage)
+        public string ViewModelUid
         {
-            Assert.ArgumentNotNull(groupStatusMessage, "groupStatusMessage");
-            Dispatcher.BeginInvoke((Action)(() => ((GroupStatusViewModel)DataContext).UpdateModel(groupStatusMessage.GroupMates)));
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void NextGroupMate()
+        {
+            var executeToAct = (Action) (() =>
+            {
+                var groupWidgetControl = (GroupStatusViewModel)DataContext;
+
+                if (groupWidgetControl.SelectedGroupMate == null
+                    || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == groupWidgetControl.GroupMates.Count - 1)
+                {
+                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.FirstOrDefault();
+                    return;
+                }
+
+                var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
+                groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index + 1];
+            });
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, executeToAct);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void PreviousGroupMate()
+        {
+            var executeToAct = (Action)(() =>
+            {
+                var groupWidgetControl = (GroupStatusViewModel)DataContext;
+
+                if (groupWidgetControl.SelectedGroupMate == null
+                    || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == 0)
+                {
+                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.LastOrDefault();
+                    return;
+                }
+
+                var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
+                groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index - 1];
+            });
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, executeToAct);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="characters"></param>
+        public void UpdateModel([NotNull] RootModel rootModel, [NotNull] List<CharacterStatus> characters)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+            Assert.ArgumentNotNull(characters, "characters");
+
+            Action actToExecute = () => 
+                {
+                    GroupStatusViewModel viewModel = DataContext as GroupStatusViewModel;
+                    viewModel.UpdateRootModel(rootModel);
+                    viewModel.UpdateModel(characters);
+                };
+
+            Dispatcher.BeginInvoke(actToExecute);
         }
 
         private void CancelFocusingListBoxItem([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+
             ((ListBoxItem)sender).IsSelected = true;
             e.Handled = true;
         }

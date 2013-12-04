@@ -19,6 +19,8 @@ namespace Adan.Client.Map
     using Ionic.Zip;
     using Properties;
     using System.Threading;
+    using Adan.Client.Common.ViewModel;
+    using Adan.Client.Common.Settings;
 
     /// <summary>
     /// Class to download maps from server.
@@ -92,19 +94,19 @@ namespace Adan.Client.Map
         [NotNull]
         private static string GetMapsFolder()
         {
-            return Path.Combine(ProfileHolder.Instance.Folder, "Maps");
+            return Path.Combine(SettingsHolder.Instance.Folder, "Maps");
         }
 
         [NotNull]
         private static string GetZonesFolder()
         {
-            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator", "MapResults");
+            return Path.Combine(SettingsHolder.Instance.Folder, "Maps", "MapGenerator", "MapResults");
         }
 
         [NotNull]
         private static string GetZoneVisitsFolder()
         {
-            return Path.Combine(ProfileHolder.Instance.Folder, "Maps", "ZoneVisits");
+            return Path.Combine(SettingsHolder.Instance.Folder, "Maps", "ZoneVisits");
         }
 
         private static void CreateDirectories()
@@ -114,9 +116,9 @@ namespace Adan.Client.Map
                 Directory.CreateDirectory(GetMapsFolder());
             }
 
-            if (!Directory.Exists(Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator")))
+            if (!Directory.Exists(Path.Combine(SettingsHolder.Instance.Folder, "Maps", "MapGenerator")))
             {
-                Directory.CreateDirectory(Path.Combine(ProfileHolder.Instance.Folder, "Maps", "MapGenerator"));
+                Directory.CreateDirectory(Path.Combine(SettingsHolder.Instance.Folder, "Maps", "MapGenerator"));
             }
 
             if (!Directory.Exists(GetZonesFolder()))

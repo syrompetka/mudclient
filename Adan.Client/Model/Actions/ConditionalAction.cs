@@ -39,6 +39,17 @@ namespace Adan.Client.Model.Actions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the left condition parameter.
         /// </summary>
         /// <value>
