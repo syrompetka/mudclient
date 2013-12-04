@@ -24,6 +24,17 @@ namespace Adan.Client.Model.Actions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the command text.
         /// </summary>
         /// <value>
@@ -36,6 +47,7 @@ namespace Adan.Client.Model.Actions
             get;
             set;
         }
+
         /// <summary>
         /// Executes this action.
         /// </summary>

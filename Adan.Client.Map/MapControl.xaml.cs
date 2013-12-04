@@ -16,10 +16,8 @@ namespace Adan.Client.Map
     using System.Windows.Controls.Primitives;
     using System.Windows.Input;
     using System.Windows.Threading;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using ViewModel;
 
     /// <summary>
@@ -31,6 +29,7 @@ namespace Adan.Client.Map
         private readonly ToolTip _toolTip = new ToolTip();
         private readonly RoomDetailsControl _roomDetailsControl = new RoomDetailsControl();
 
+        private ZoneViewModel _zoneViewModel;
         private bool _dragging;
         private Point _draggingStartPosition;
         private double _draggingStartY;
@@ -95,6 +94,11 @@ namespace Adan.Client.Map
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public string ViewModelUid { get; set; }
+
+        /// <summary>
         /// Gets or sets the view model.
         /// </summary>
         /// <value>
@@ -105,14 +109,12 @@ namespace Adan.Client.Map
         {
             get
             {
-                if (DataContext is ZoneViewModel)
-                    return (ZoneViewModel)DataContext;
-                else
-                    return null;
+                return _zoneViewModel;
             }
 
             set
             {
+                _zoneViewModel = value;
                 DataContext = value;
                 zoneVisual.ViewModel = value;
             }
@@ -139,14 +141,40 @@ namespace Adan.Client.Map
         public void UpdateCurrentZone([NotNull] ZoneViewModel newZone, [CanBeNull]RoomViewModel currentRoom)
         {
             Assert.ArgumentNotNull(newZone, "newZone");
+
             var actionToExecute = (Action)(() =>
             {
                 ViewModel = newZone;
                 NavigateToCurrentRoom(currentRoom);
                 ViewModel.CurrentRoom = currentRoom;
-                if (RouteManager != null)
-                    RouteManager.UpdateCurrentRoom(currentRoom, newZone);
+
+                //if (RouteManager != null)
+                    //RouteManager.UpdateCurrentRoom(currentRoom, newZone);
             });
+
+            Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="newZone"></param>
+        /// <param name="currentRoom"></param>
+        public void UpdateCurrentZone([NotNull] ZoneViewModel newZone, int currentRoom)
+        {
+            Assert.ArgumentNotNull(newZone, "newZone");
+
+            var actionToExecute = (Action)(() =>
+            {
+                ViewModel = newZone;
+                var room = ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom);
+                NavigateToCurrentRoom(room);
+                ViewModel.CurrentRoom = room;
+
+                if (RouteManager != null)
+                    RouteManager.UpdateCurrentRoom(room, newZone);
+            });
+
             Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
         }
 
@@ -166,7 +194,29 @@ namespace Adan.Client.Map
                         RouteManager.UpdateCurrentRoom(currentRoom, ViewModel);
                 }
             });
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="currentRoom"></param>
+        public void UpdateCurrentRoom(int currentRoom)
+        {
+            var actionToExecute = (Action)(() =>
+            {
+                if (ViewModel != null)
+                {
+                    var room = ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom);
+                    NavigateToCurrentRoom(room);
+                    ViewModel.CurrentRoom = room;
+                    if (RouteManager != null)
+                        RouteManager.UpdateCurrentRoom(room, ViewModel);
+                }
+            });
+
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
         }
 
         /// <summary>
@@ -362,13 +412,10 @@ namespace Adan.Client.Map
 
             if (currentRoom != null)
             {
-                if (ViewModel.CurrentRoom == null || currentRoom.RoomId != ViewModel.CurrentRoom.RoomId)
-                {
-                    translateTransform.X = (ActualWidth / 2) - (currentRoom.XLocation * 30) - 15;
-                    translateTransform.Y = (ActualHeight / 2) - (currentRoom.YLocation * 30) - 15;
-                    scaleTransform.CenterX = ActualWidth / 2;
-                    scaleTransform.CenterY = ActualHeight / 2;
-                }
+                translateTransform.X = (ActualWidth / 2) - (currentRoom.XLocation * 30) - 15;
+                translateTransform.Y = (ActualHeight / 2) - (currentRoom.YLocation * 30) - 15;
+                scaleTransform.CenterX = ActualWidth / 2;
+                scaleTransform.CenterY = ActualHeight / 2;
             }
         }
 

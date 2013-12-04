@@ -13,15 +13,15 @@ namespace Adan.Client.Common.Model
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Adan.Client.Common.Settings;
     using Commands;
     using Conveyor;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
-
     using Plugins;
-
     using Properties;
 
     /// <summary>
@@ -29,56 +29,67 @@ namespace Adan.Client.Common.Model
     /// </summary>
     public class RootModel
     {
-        private readonly MessageConveyor _conveyor;
-        //private readonly IDictionary<string, Variable> _variablesDictionary = new Dictionary<string, Variable>();
-        //private readonly IList<Variable> _variables;
+        #region #Constants and Fields
+
+        private static IList<Type> _customSerializationTypes;
+
+        private MessageConveyor _conveyor;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
+        private ProfileHolder _profile;
+        private object _profileLockObject = new object();
+
+        #endregion
+
+        #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RootModel"/> class.
+        /// 
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="groups">The groups.</param>
-        /// <param name="variables">The variables.</param>
-        /// <param name="allActionDescriptions">All action descriptions.</param>
-        /// <param name="allParameterDescriptions">All parameter descriptions.</param>
-        public RootModel([NotNull] MessageConveyor conveyor, [NotNull] IList<Group> groups, [NotNull] IList<Variable> variables, [NotNull] IList<ActionDescription> allActionDescriptions, [NotNull] IList<ParameterDescription> allParameterDescriptions)
+        /// <param name="conveyor"></param>
+        /// <param name="profile"></param>
+        public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile) : this(profile)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(groups, "groups");
-            Assert.ArgumentNotNull(variables, "variables");
-            Assert.ArgumentNotNull(allActionDescriptions, "allActionDescriptions");
-            Assert.ArgumentNotNull(allParameterDescriptions, "allParameterDescriptions");
 
-            _conveyor = conveyor;
-            //Groups = groups;
-            //_variables = variables;
-            AllActionDescriptions = allActionDescriptions;
-            AllParameterDescriptions = allParameterDescriptions;
-            GroupStatus = new List<CharacterStatus>(10);
-            RoomMonstersStatus = new List<MonsterStatus>(20);
+            _profile = profile;
+            MessageConveyor = conveyor;
 
-            //foreach (var variable in _variables)
-            //foreach (var variable in variables)
-            //{
-            //    //if (!_variablesDictionary.ContainsKey(variable.Name))
-            //    //{
-            //       // _variablesDictionary.Add(variable.Name, variable);
-            //   // }
-            //}
-
-            CustomSerializationTypes = new List<Type>();
+            SettingsHolder.Instance.ProfilesChanged += OnProfileChanged;
         }
 
         /// <summary>
-        /// Initialize additional parameters
+        /// 
         /// </summary>
-        /// <param name="allActionDescriptions">All action descriptions.</param>
-        /// <param name="allParameterDescriptions">All parameter descriptions.</param>
-        public void Initialize([NotNull] IList<ActionDescription> allActionDescriptions, [NotNull] IList<ParameterDescription> allParameterDescriptions)
+        /// <param name="profile"></param>
+        public RootModel(ProfileHolder profile)
         {
-            AllActionDescriptions = allActionDescriptions;
-            AllParameterDescriptions = allParameterDescriptions;
+            _profile = profile;
+
+            //TODO: Разобраться с кол-вом монстров, персонажей в группе
+            GroupStatus = new List<CharacterStatus>(10);
+            RoomMonstersStatus = new List<MonsterStatus>(20);
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IList<ParameterDescription> AllParameterDescriptions
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IList<ActionDescription> AllActionDescriptions
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -102,25 +113,94 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
-        /// Gets the enabled triggers ordered by priority.
+        /// Gets the custom serialization types.
         /// </summary>
         [NotNull]
-        public IEnumerable<TriggerBase> EnabledTriggersOrderedByPriority
+        public static IList<Type> CustomSerializationTypes
         {
             get
             {
-                return _enabledTriggersOrderedByPriority ?? RecalculatedEnabledTriggersPriorities();
+                if (_customSerializationTypes == null)
+                    _customSerializationTypes = new List<Type>();
+
+                return _customSerializationTypes;
+            }
+            private set
+            {
+                _customSerializationTypes = value;
             }
         }
 
         /// <summary>
-        /// Gets the custom serialization types.
+        /// 
         /// </summary>
-        [NotNull]
-        public IList<Type> CustomSerializationTypes
+        public string Uid
         {
             get;
-            private set;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLogging
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MessageConveyor MessageConveyor
+        {
+            get
+            {
+                return _conveyor;
+            }
+            private set
+            {
+                _conveyor = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Connected
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ConnectionInProgress
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ProfileHolder Profile
+        {
+            get
+            {
+                lock (_profileLockObject)
+                {
+                    return _profile;
+                }
+            }
+            set
+            {
+                lock (_profileLockObject)
+                {
+                    _profile = value;
+                }
+            }
         }
 
         /// <summary>
@@ -129,32 +209,28 @@ namespace Adan.Client.Common.Model
         [NotNull]
         public IList<Group> Groups
         {
-            //get;
-            //private set;
             get
             {
-                return ProfileHolder.Instance.Groups;
+                lock (_profileLockObject)
+                {
+                    return Profile.Groups;
+                }
             }
         }
 
         /// <summary>
-        /// Gets all action descriptions.
+        /// Gets variables
         /// </summary>
         [NotNull]
-        public IList<ActionDescription> AllActionDescriptions
+        public IList<Variable> Variables
         {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets all parameter descriptions.
-        /// </summary>
-        [NotNull]
-        public IList<ParameterDescription> AllParameterDescriptions
-        {
-            get;
-            private set;
+            get
+            {
+                lock (_profileLockObject)
+                {
+                    return Profile.Variables;
+                }
+            }
         }
 
         /// <summary>
@@ -204,18 +280,20 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
-        /// Gets variables
+        /// Gets the enabled triggers ordered by priority.
         /// </summary>
         [NotNull]
-        public IList<Variable> Variables
+        public IEnumerable<TriggerBase> EnabledTriggersOrderedByPriority
         {
-            //get;
-            //private set;
             get
             {
-                return ProfileHolder.Instance.Variables;
+                return _enabledTriggersOrderedByPriority ?? RecalculatedEnabledTriggersPriorities();
             }
         }
+
+        #endregion
+
+        #region Public Methods
 
         /// <summary>
         /// Pushes the command to conveyor.
@@ -225,7 +303,8 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNull(command, "command");
 
-            _conveyor.PushCommand(command);
+            if(_conveyor != null)
+                _conveyor.PushCommand(command);
         }
 
         /// <summary>
@@ -236,7 +315,8 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNull(message, "message");
 
-            _conveyor.PushMessage(message);
+            if(_conveyor != null)
+                _conveyor.PushMessage(message);
         }
 
         /// <summary>
@@ -251,18 +331,11 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(value, "value");
 
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
-            //if (!_variablesDictionary.ContainsKey(variableName))
+
             if (v != null)
-            {
                 v.Value = value;
-                //var variable = new Variable { Name = variableName, Value = value };
-                //_variablesDictionary.Add(variableName, variable);
-                //_variables.Add(variable);
-            }
             else
                 Variables.Add(new Variable() { Name = variableName, Value = value });
-
-            //_variablesDictionary[variableName].Value = value;
 
             if(!isSilent)
                 _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
@@ -280,16 +353,9 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
 
-            //if (_variablesDictionary.ContainsKey(variableName))
-            //{
-            //    return _variablesDictionary[variableName].Value;
-            //}
-
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
             if (v != null)
-            {
                 return v.Value;
-            }
 
             if (variableName.Equals("DATE", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -311,17 +377,10 @@ namespace Adan.Client.Common.Model
         public void ClearVariableValue([NotNull] string variableName, bool isSilent)
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
-            //if (_variablesDictionary.ContainsKey(variableName))
-            //{
-            //    //_variables.Remove(_variablesDictionary[variableName]);
-            //    _variablesDictionary.Remove(variableName);
-            //}
 
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
             if (v != null)
-            {
                 Variables.Remove(v);
-            }
 
             if(!isSilent)
                 _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
@@ -386,7 +445,7 @@ namespace Adan.Client.Common.Model
             if (group != null && !group.IsBuildIn)
             {
                 if (!Groups.Remove(group))
-                    PushMessageToConveyor(new ErrorMessage("#Возникла Ошибка при удалении группы"));
+                    PushMessageToConveyor(new ErrorMessage("#Ошибка удаления группы"));
             }
         }
 
@@ -398,6 +457,17 @@ namespace Adan.Client.Common.Model
         public IEnumerable<TriggerBase> RecalculatedEnabledTriggersPriorities()
         {
             return _enabledTriggersOrderedByPriority = Groups.Where(g => g.IsEnabled).SelectMany(g => g.Triggers).OrderBy(trg => trg.Priority).ToList();
+        }
+
+
+        #endregion
+
+        private void OnProfileChanged(object sender, SettingsChangedEventArgs e)
+        {
+            if (e.Name == Profile.Name)
+            {
+                Profile = SettingsHolder.Instance.GetProfile(e.Name);
+            }
         }
     }
 }

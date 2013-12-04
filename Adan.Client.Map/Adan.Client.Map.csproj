@@ -109,6 +109,7 @@
     <Compile Include="Model\RoomIcon.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\Zone.cs" />
+    <Compile Include="Model\ZoneHolder.cs" />
     <Compile Include="Render\RenderConstants.cs" />
     <Compile Include="Render\RoomVisual.cs" />
     <Compile Include="Render\ZoneVisual.cs" />

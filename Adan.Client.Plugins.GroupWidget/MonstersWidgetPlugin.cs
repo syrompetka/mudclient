@@ -30,6 +30,8 @@ namespace Adan.Client.Plugins.GroupWidget
     using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
     using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
     using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
+    using Adan.Client.Common.ViewModel;
+    using CSLib.Net.Annotations;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display monsters widget.
@@ -37,19 +39,20 @@ namespace Adan.Client.Plugins.GroupWidget
     [Export(typeof(PluginBase))]
     public sealed class MonstersWidgetPlugin : PluginBase, IDisposable
     {
-        private readonly MonstersWidgetControl _monstersWidgetControl;
-        private readonly RoomMonstersViewModel _viewModel;
+        private MonstersWidgetControl _monstersWidgetControl;
+        private RoomMonstersViewModel _viewModel;
+
+        private MonstersManager _monstersManager;
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
-        private RootModel _rootModel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MonstersWidgetPlugin"/> class.
+        /// 
         /// </summary>
         public MonstersWidgetPlugin()
         {
             _viewModel = new RoomMonstersViewModel();
-            _monstersWidgetControl = new MonstersWidgetControl { DataContext = _viewModel };
+            _monstersWidgetControl = new MonstersWidgetControl() { DataContext = _viewModel };
         }
 
         /// <summary>
@@ -117,7 +120,7 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             get
             {
-                return Enumerable.Repeat(new SelectedMonsterParameterDescription(_rootModel.AllParameterDescriptions), 1);
+                return Enumerable.Repeat(new SelectedMonsterParameterDescription(RootModel.AllParameterDescriptions), 1);
             }
         }
 
@@ -135,41 +138,56 @@ namespace Adan.Client.Plugins.GroupWidget
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
+        public override void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
             Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
             initializationStatusModel.CurrentPluginName = Resources.Monsters;
-            _rootModel = model;
-            _deserializer = new RoomMonstersMessageDeserializer(conveyor);
-            _viewModel.UpdateRootModel(model);
-            _conveyorUnit = new RoomMonstersUnit(conveyor, _monstersWidgetControl, _viewModel);
+            initializationStatusModel.PluginInitializationStatus = "Initializing";
+
+            _deserializer = new RoomMonstersMessageDeserializer();
+            _monstersManager = new MonstersManager(_monstersWidgetControl);
+            _conveyorUnit = new RoomMonstersUnit(_monstersWidgetControl);
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// 
         /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnCreatedOutputWindow(RootModel rootModel, string uid)
         {
-            if (_conveyorUnit != null)
-            {
-                _conveyorUnit.Dispose();
-            }
+            _monstersManager.OutputWindowCreated(rootModel, uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnChangedOutputWindow(RootModel rootModel, string uid)
+        {
+            _monstersManager.OutputWindowChanged(uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnClosedOutputWindow(RootModel rootModel, string uid)
+        {
+            _monstersManager.OutputWindowClosed(uid);
         }
 
         /// <summary>
         /// Shows the options dialog.
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
-        public override void ShowOptionsDialog(Window parentWindow)
+        public override void ShowOptionsDialog([NotNull] Window parentWindow)
         {
             Assert.ArgumentNotNull(parentWindow, "parentWindow");
 

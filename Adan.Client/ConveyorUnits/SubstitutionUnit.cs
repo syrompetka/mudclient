@@ -25,19 +25,12 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class SubstitutionUnit : ConveyorUnit
     {
-        private readonly RootModel _rootModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstitutionUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The root model.</param>
-        public SubstitutionUnit([NotNull] MessageConveyor messageConveyor, [NotNull] RootModel rootModel)
-            : base(messageConveyor)
+        public SubstitutionUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -65,10 +58,11 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
             var textMessage = message as TextMessage;
@@ -77,11 +71,11 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            foreach (var group in _rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var substitution in group.Substitutions)
                 {
-                    substitution.HandleMessage(textMessage, _rootModel);
+                    substitution.HandleMessage(textMessage, rootModel);
                 }
             }
         }

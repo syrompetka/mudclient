@@ -23,6 +23,7 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Plugins.OutputWindow.Messages;
+    using Adan.Client.Common.Model;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementaion to handle <see cref="OutputToAdditionalWindowMessage"/>.
@@ -36,12 +37,10 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputToAdditionalWindowConveyorUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
         /// <param name="window">The window.</param>
-        public OutputToAdditionalWindowConveyorUnit([NotNull] MessageConveyor messageConveyor, [NotNull] AdditionalOutputWindow window)
-            : base(messageConveyor)
+        public OutputToAdditionalWindowConveyorUnit([NotNull] AdditionalOutputWindow window)
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
             Assert.ArgumentNotNull(window, "window");
 
             _window = window;
@@ -70,10 +69,12 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Common.Commands.Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -106,10 +107,11 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
 

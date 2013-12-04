@@ -28,7 +28,7 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
-        /// Get Name
+        /// 
         /// </summary>
         [XmlAttribute]
         public string NameProfile

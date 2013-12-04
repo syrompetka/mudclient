@@ -33,16 +33,6 @@ namespace Adan.Client.MessageDeserializers
         private readonly Encoding _encoding = Encoding.GetEncoding(1251);
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProtocolVersionMessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public ProtocolVersionMessageDeserializer([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-        }
-
-        /// <summary>
         /// Gets the type of deserialized message.
         /// </summary>
         /// <value>
@@ -79,6 +69,15 @@ namespace Adan.Client.MessageDeserializers
 
                 _builder.Clear();
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new ProtocolVersionMessageDeserializer();
         }
     }
 }

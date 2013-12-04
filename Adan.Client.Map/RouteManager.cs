@@ -19,6 +19,7 @@ namespace Adan.Client.Map
     using System.Xml;
     using System.Xml.Serialization;
     using Adan.Client.Common;
+    using Adan.Client.Common.Settings;
     using Common.Commands;
     using Common.Dialogs;
     using Common.Messages;
@@ -54,15 +55,12 @@ namespace Adan.Client.Map
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteManager"/> class.
         /// </summary>
-        /// <param name="rootModel">The root model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public RouteManager([NotNull] RootModel rootModel, [NotNull] Window mainWindow)
+        public RouteManager(Window mainWindow)
         {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
-
-            _rootModel = rootModel;
+            _rootModel = null;
             _mainWindow = mainWindow;
+
             SelectedRouteDestination = string.Empty;
         }
 
@@ -609,7 +607,7 @@ namespace Adan.Client.Map
         [NotNull]
         private static string GetMapsFolder()
         {
-            return Path.Combine(ProfileHolder.Instance.Folder, "Maps");
+            return Path.Combine(SettingsHolder.Instance.Folder, "Maps");
         }
 
         [NotNull]

@@ -34,20 +34,18 @@ namespace Adan.Client.ViewModel.Actions
         /// Initializes a new instance of the <see cref="SetVariableValueActionViewModel"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        /// <param name="allVariables">All variables.</param>
         /// <param name="actionDescriptor">The action descriptor.</param>
         /// <param name="parameterDescriptions">The parameter descriptions.</param>
         /// <param name="allDescriptions">All descriptions.</param>
-        public SetVariableValueActionViewModel([NotNull]SetVariableValueAction action, [NotNull] IEnumerable<Variable> allVariables, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ParameterDescription> parameterDescriptions, [NotNull] IEnumerable<ActionDescription> allDescriptions)
+        public SetVariableValueActionViewModel([NotNull]SetVariableValueAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ParameterDescription> parameterDescriptions, [NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base(action, actionDescriptor, allDescriptions)
         {
             Assert.ArgumentNotNull(action, "action");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
             Assert.ArgumentNotNull(actionDescriptor, "actionDescriptor");
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
 
-            AllVariables = allVariables;
+           // AllVariables = allVariables;
             _action = action;
             ParameterDescriptions = parameterDescriptions;
             _valueToSet = ActionParametersViewModel.CreateParameterViewModel(action.ValueToSet, parameterDescriptions);
@@ -187,7 +185,7 @@ namespace Adan.Client.ViewModel.Actions
         public override ActionViewModelBase Clone()
         {
             return new SetVariableValueActionViewModel
-                (new SetVariableValueAction(), AllVariables, ActionDescriptor, ParameterDescriptions, AllActionDescriptions) 
+                (new SetVariableValueAction(), ActionDescriptor, ParameterDescriptions, AllActionDescriptions) 
                 { 
                     VariableName = VariableName, 
                     SilentSet = SilentSet,

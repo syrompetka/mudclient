@@ -18,11 +18,13 @@ namespace Adan.Client.Plugins.GroupWidget
 
     using ViewModel;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using Adan.Client.Common.Model;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Interaction logic for GroupWidgetControl.xaml
     /// </summary>
-    public partial class MonstersWidgetControl
+    public partial class MonstersWidgetControl : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MonstersWidgetControl"/> class.
@@ -33,19 +35,39 @@ namespace Adan.Client.Plugins.GroupWidget
         }
 
         /// <summary>
-        /// Updates the model.
+        /// 
         /// </summary>
-        /// <param name="roomMonstersMessage">The room monsters message.</param>
-        public void UpdateModel([NotNull]RoomMonstersMessage roomMonstersMessage)
+        public string ViewModelUid
         {
-            Assert.ArgumentNotNull(roomMonstersMessage, "roomMonstersMessage");
-            Dispatcher.BeginInvoke((Action)(() => ((RoomMonstersViewModel)DataContext).UpdateModel(roomMonstersMessage.Monsters)));
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="characters"></param>
+        public void UpdateModel([NotNull] RootModel rootModel, [NotNull] List<MonsterStatus> characters)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+            Assert.ArgumentNotNull(characters, "roomMonstersMessage");
+
+            Action actToExecute = () =>
+            {
+                RoomMonstersViewModel viewModel = DataContext as RoomMonstersViewModel;
+                //viewModel.UpdateRootModel(rootModel);
+                viewModel.UpdateModel(characters);
+            };
+
+            Dispatcher.BeginInvoke(actToExecute);
         }
 
         private void CancelFocusingListBoxItem([NotNull] object sender, [NotNull] MouseButtonEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+
             ((ListBoxItem)sender).IsSelected = true;
             e.Handled = true;
         }

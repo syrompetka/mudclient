@@ -27,23 +27,15 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class AliasUnit : ConveyorUnit
     {
-        private readonly RootModel _rootModel;
-        private readonly ActionExecutionContext _context = new ActionExecutionContext { CurrentMessage = new OutputToMainWindowMessage(string.Empty) };
+        private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
 
-        // For optimization.
-        //private readonly char[] _paramsSeparatorArray = new[] { ' ' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The root model.</param>
-        public AliasUnit([NotNull] MessageConveyor messageConveyor, [NotNull]RootModel rootModel)
-            : base(messageConveyor)
+        public AliasUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -71,10 +63,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -85,7 +79,7 @@ namespace Adan.Client.ConveyorUnits
             }
 
             var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
-            foreach (var group in _rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var alias in group.Aliases)
                 {
@@ -111,9 +105,9 @@ namespace Adan.Client.ConveyorUnits
                         //Проверка старых, неправильно работающих алиасов
                         var oldAction = action as SendTextAction;
                         if(oldAction != null)
-                            (new SendTextOneParameterAction() { CommandText = oldAction.CommandText, Parameters = oldAction.Parameters }).Execute(_rootModel, _context);
+                            (new SendTextOneParameterAction() { CommandText = oldAction.CommandText, Parameters = oldAction.Parameters }).Execute(rootModel, _context);
                         else
-                            action.Execute(_rootModel, _context);
+                            action.Execute(rootModel, _context);
                     }
 
                     textCommand.Handled = true;

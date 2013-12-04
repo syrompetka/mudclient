@@ -23,30 +23,25 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
 
     using ViewModel;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using Adan.Client.Common.Model;
 
     /// <summary>
     /// <see cref="ConveyorUnit"/> implementation to handle <see cref="GroupStatusMessage"/> messages.
     /// </summary>
     public class GroupStatusUnit : ConveyorUnit
     {
-        private readonly GroupWidgetControl _groupWidgetControl;
-        private readonly GroupStatusViewModel _groupStatusViewModel;
+        private readonly GroupWidgetControl _groupWidget;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupStatusUnit"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="groupWidgetControl">The group widget control.</param>
-        /// <param name="groupStatusViewModel">The group status view model.</param>
-        public GroupStatusUnit([NotNull] MessageConveyor messageConveyor, [NotNull] GroupWidgetControl groupWidgetControl, [NotNull] GroupStatusViewModel groupStatusViewModel)
-            : base(messageConveyor)
+        /// <param name="groupWidget"></param>
+        public GroupStatusUnit([NotNull] GroupWidgetControl groupWidget)
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(groupWidgetControl, "groupWidgetControl");
-            Assert.ArgumentNotNull(groupStatusViewModel, "groupStatusViewModel");
+            Assert.ArgumentNotNull(groupWidget, "groupWidget");
 
-            _groupWidgetControl = groupWidgetControl;
-            _groupStatusViewModel = groupStatusViewModel;
+            _groupWidget = groupWidget;
         }
 
         /// <summary>
@@ -56,7 +51,7 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         {
             get
             {
-                return Enumerable.Repeat(Constants.GroupStatusMessageType, 1);
+                return Enumerable.Empty<int>();
             }
         }
 
@@ -72,12 +67,15 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
+            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var hotKeyCommand = command as HotkeyCommand;
             if (hotKeyCommand == null)
@@ -88,44 +86,15 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
             if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.None)
             {
                 hotKeyCommand.Handled = true;
-                if (_groupStatusViewModel.SelectedGroupMate == null || _groupStatusViewModel.GroupMates.IndexOf(_groupStatusViewModel.SelectedGroupMate) == _groupStatusViewModel.GroupMates.Count - 1)
-                {
-                    _groupStatusViewModel.SelectedGroupMate = _groupStatusViewModel.GroupMates.FirstOrDefault();
-                    return;
-                }
-
-                var index = _groupStatusViewModel.GroupMates.IndexOf(_groupStatusViewModel.SelectedGroupMate);
-                _groupStatusViewModel.SelectedGroupMate = _groupStatusViewModel.GroupMates[index + 1];
+                _groupWidget.NextGroupMate();
                 return;
             }
 
             if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
             {
                 hotKeyCommand.Handled = true;
-                if (_groupStatusViewModel.SelectedGroupMate == null || _groupStatusViewModel.GroupMates.IndexOf(_groupStatusViewModel.SelectedGroupMate) == 0)
-                {
-                    _groupStatusViewModel.SelectedGroupMate = _groupStatusViewModel.GroupMates.LastOrDefault();
-                    return;
-                }
-
-                var index = _groupStatusViewModel.GroupMates.IndexOf(_groupStatusViewModel.SelectedGroupMate);
-                _groupStatusViewModel.SelectedGroupMate = _groupStatusViewModel.GroupMates[index - 1];
+                _groupWidget.PreviousGroupMate();
                 return;
-            }
-        }
-
-        /// <summary>
-        /// Handles the message.
-        /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
-        {
-            Assert.ArgumentNotNull(message, "message");
-
-            var groupStatusMessage = message as GroupStatusMessage;
-            if (groupStatusMessage != null)
-            {
-                _groupWidgetControl.UpdateModel(groupStatusMessage);
             }
         }
     }

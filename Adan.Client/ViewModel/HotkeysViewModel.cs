@@ -52,6 +52,7 @@ namespace Adan.Client.ViewModel
 
             _allGroups = allGroups;
             _actionDescriptions = actionDescriptions;
+
             AddHotkeyCommand = new DelegateCommand(AddHotkeyCommandExecute, true);
             EditHotkeyCommand = new DelegateCommand(EditHotkeyCommandExecute, false);
             DeleteHotkeyCommand = new DelegateCommand(DeleteHotkeyCommandExecute, false);

@@ -37,9 +37,10 @@ namespace Adan.Client.Model.ActionDescriptions
         public OutputToMainWindowActionDescription([NotNull] IEnumerable<ParameterDescription> parameterDescriptions, [NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base("Output to main window", allDescriptions)
         {
-            _parameterDescriptions = parameterDescriptions;
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
+
+            _parameterDescriptions = parameterDescriptions;
         }
 
         /// <summary>

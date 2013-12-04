@@ -7,6 +7,11 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Windows;
+using System.Windows.Controls;
+using CSLib.Net.Annotations;
+using CSLib.Net.Diagnostics;
+
 namespace Adan.Client.Dialogs
 {
     /// <summary>
@@ -20,6 +25,19 @@ namespace Adan.Client.Dialogs
         public GroupsEditDialog()
         {
             InitializeComponent();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        public void HandleItemDoubleClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            ((ListBoxItem)lstGroups.SelectedItem).Content.ToString();
         }
     }
 }

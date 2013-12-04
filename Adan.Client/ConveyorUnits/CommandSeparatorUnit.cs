@@ -25,20 +25,12 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CommandSeparatorUnit : ConveyorUnit
     {
-        private RootModel _rootModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandSeparatorUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The Root Model.</param>
-        public CommandSeparatorUnit([NotNull] MessageConveyor messageConveyor, [NotNull] RootModel rootModel)
-            : base(messageConveyor)
+        public CommandSeparatorUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rootModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -66,10 +58,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -105,7 +99,7 @@ namespace Adan.Client.ConveyorUnits
 
                 if (i < commandText.Length)
                 {
-                    base.PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true });
+                    PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true }, rootModel);
                     i++;
                     startIndex = i;
                     textCommand.Handled = true;
@@ -113,7 +107,7 @@ namespace Adan.Client.ConveyorUnits
             }
 
             if(startIndex != 0)
-                base.PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true });
+                PushCommandToConveyor(new TextCommand(commandText.Substring(startIndex, i - startIndex)) { IsSeparated = true }, rootModel);
         }
 
         #endregion

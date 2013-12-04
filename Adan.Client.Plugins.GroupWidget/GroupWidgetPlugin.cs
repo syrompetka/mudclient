@@ -15,21 +15,22 @@ namespace Adan.Client.Plugins.GroupWidget
     using System.Linq;
     using System.Windows;
 
-    using Common.Conveyor;
-    using Common.ConveyorUnits;
-    using Common.MessageDeserializers;
-    using Common.Model;
-    using Common.Plugins;
+    using Adan.Client.Common.Conveyor;
+    using Adan.Client.Common.ConveyorUnits;
+    using Adan.Client.Common.MessageDeserializers;
+    using Adan.Client.Common.Model;
+    using Adan.Client.Common.Plugins;
+    using Adan.Client.Common.ViewModel;
 
     using CSLib.Net.Diagnostics;
 
-    using Properties;
-
-    using ViewModel;
+    using Adan.Client.Plugins.GroupWidget.Properties;
+    using Adan.Client.Plugins.GroupWidget.ViewModel;
     using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
     using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
     using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
     using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
+    using CSLib.Net.Annotations;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display group widget.
@@ -37,11 +38,12 @@ namespace Adan.Client.Plugins.GroupWidget
     [Export(typeof(PluginBase))]
     public sealed class GroupWidgetPlugin : PluginBase, IDisposable
     {
-        private readonly GroupWidgetControl _groupWidgetControl = new GroupWidgetControl();
-        private readonly GroupStatusViewModel _viewModel;
+        private GroupStatusViewModel _viewModel;
+        private GroupWidgetControl _groupWidgetControl;
+
+        private GroupManager _groupManager;
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
-        private RootModel _rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupWidgetPlugin"/> class.
@@ -49,7 +51,7 @@ namespace Adan.Client.Plugins.GroupWidget
         public GroupWidgetPlugin()
         {
             _viewModel = new GroupStatusViewModel();
-            _groupWidgetControl = new GroupWidgetControl { DataContext = _viewModel };
+            _groupWidgetControl = new GroupWidgetControl() { DataContext = _viewModel };
         }
 
         /// <summary>
@@ -128,7 +130,7 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             get
             {
-                return Enumerable.Repeat(new SelectedGroupMateParameterDescription(_rootModel.AllParameterDescriptions), 1);
+                return Enumerable.Repeat(new SelectedGroupMateParameterDescription(RootModel.AllParameterDescriptions), 1);
             }
         }
 
@@ -146,41 +148,65 @@ namespace Adan.Client.Plugins.GroupWidget
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
+        public override void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
             Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
             initializationStatusModel.CurrentPluginName = Resources.Group;
-            _rootModel = model;
-            _deserializer = new GroupStatusMessageDeserializer(conveyor);
-            _viewModel.UpdateRootModel(model);
-            _conveyorUnit = new GroupStatusUnit(conveyor, _groupWidgetControl, _viewModel);
+            initializationStatusModel.PluginInitializationStatus = "Initializing";
+
+            _deserializer = new GroupStatusMessageDeserializer();
+            _groupManager = new GroupManager(_groupWidgetControl);
+            _conveyorUnit = new GroupStatusUnit(_groupWidgetControl);
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// 
         /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnChangedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
         {
-            if (_conveyorUnit != null)
-            {
-                _conveyorUnit.Dispose();
-            }
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+            Assert.ArgumentNotNullOrWhiteSpace(uid, "UID");
+
+            _groupManager.OutputWindowChanged(uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnCreatedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+            Assert.ArgumentNotNullOrWhiteSpace(uid, "uid");
+
+            _groupManager.OutputWindowCreated(rootModel, uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="uid"></param>
+        public override void OnClosedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
+        {
+            Assert.ArgumentNotNull(rootModel, "rootModel");
+            Assert.ArgumentNotNullOrWhiteSpace(uid, "uid");
+
+            _groupManager.OutputWindowClosed(uid);
         }
 
         /// <summary>
         /// Shows the options dialog.
         /// </summary>
         /// <param name="parentWindow">The parent window.</param>
-        public override void ShowOptionsDialog(Window parentWindow)
+        public override void ShowOptionsDialog([NotNull] Window parentWindow)
         {
             Assert.ArgumentNotNull(parentWindow, "parentWindow");
 

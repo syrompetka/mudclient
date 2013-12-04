@@ -7,12 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.Windows.Controls;
+
 namespace Adan.Client.Map
 {
     /// <summary>
     /// Interaction logic for RoomDetailsControl.xaml
     /// </summary>
-    public partial class RoomDetailsControl
+    public partial class RoomDetailsControl : UserControl
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomDetailsControl"/> class.

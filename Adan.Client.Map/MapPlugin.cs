@@ -24,17 +24,26 @@ namespace Adan.Client.Map
     using CSLib.Net.Diagnostics;
     using Adan.Client.Map.MessageDeserializers;
     using Adan.Client.Map.ConveyorUnits;
+    using Adan.Client.Common.ViewModel;
 
     /// <summary>
     /// A plugin to display zone map.
     /// </summary>
     [Export(typeof(PluginBase))]
-    public sealed class MapPlugin : PluginBase, IDisposable
+    public sealed class MapPlugin : PluginBase
     {
-        private readonly MapControl _mapControl = new MapControl();
+        private readonly MapControl _mapControl;
         private ZoneManager _zoneManager;
         private CurrentRoomMessageDeserializer _messageDeserializer;
         private RouteUnit _routeUnit;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public MapPlugin()
+        {
+            _mapControl = new MapControl();
+        }
 
         /// <summary>
         /// Gets the widgets of this plugin.
@@ -70,40 +79,76 @@ namespace Adan.Client.Map
         }
 
         /// <summary>
+        /// Gets the required protocol version.
+        /// </summary>
+        public override int RequiredProtocolVersion
+        {
+            get
+            {
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Dispose()
+        {
+            base.Dispose();
+
+            _zoneManager.Dispose();
+        }
+
+        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, Window mainWindow)
+        public override void Initialize(InitializationStatusModel initializationStatusModel, Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
             Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
             initializationStatusModel.CurrentPluginName = "Map";
+            initializationStatusModel.PluginInitializationStatus = "Initializing";
             MapDownloader.DownloadMaps(initializationStatusModel);
 
-            var routeManger = new RouteManager(model, mainWindow);
+            var routeManger = new RouteManager(mainWindow);
             routeManger.LoadRoutes();
             _mapControl.RouteManager = routeManger;
-            _routeUnit = new RouteUnit(conveyor, routeManger);
-            _zoneManager = new ZoneManager(_mapControl, mainWindow, model, routeManger);
-            _messageDeserializer = new CurrentRoomMessageDeserializer(conveyor, _zoneManager);
+            _routeUnit = new RouteUnit(routeManger);
+            _zoneManager = new ZoneManager(_mapControl, mainWindow, routeManger);
+            _messageDeserializer = new CurrentRoomMessageDeserializer(_zoneManager);
         }
 
         /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// 
         /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
+        /// <param name="rootModel"></param>
+        /// <param name="UID"></param>
+        public override void OnChangedOutputWindow(RootModel rootModel, string UID)
         {
-            if (_routeUnit != null)
-            {
-                _routeUnit.Dispose();
-            }
+            _zoneManager.OutputWindowChanged(rootModel, UID);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="UID"></param>
+        public override void OnCreatedOutputWindow(RootModel rootModel, string UID)
+        {
+            _zoneManager.OutputWindowCreated(rootModel, UID);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        /// <param name="UID"></param>
+        public override void OnClosedOutputWindow(RootModel rootModel, string UID)
+        {
+            _zoneManager.OutputWindowClosed(UID);
         }
     }
 }

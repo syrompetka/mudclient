@@ -26,7 +26,10 @@
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Expander Header="{Binding Path=Name}" HorizontalAlignment="Stretch" IsExpanded="True">
-                        <ListBox ItemsSource="{Binding Aliases}" BorderBrush="Transparent" Padding="10,0,0,0" HorizontalAlignment="Stretch" SelectedValue="{Binding Path=DataContext.SelectedAlias, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+                        <ListBox ItemsSource="{Binding Aliases}" BorderBrush="Transparent" Padding="10,0,0,0" HorizontalAlignment="Stretch"
+                                 SelectedValue="{Binding Path=DataContext.SelectedAlias,
+                                 RelativeSource={RelativeSource FindAncestor, AncestorType=Window},
+                                 Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
                             <ListBox.Resources>
                                 <Style TargetType="ListBoxItem" BasedOn="{StaticResource {x:Type ListBoxItem}}">
                                     <EventSetter Event="MouseDoubleClick" Handler="HandleItemDoubleClick"/>

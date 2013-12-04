@@ -24,6 +24,17 @@ namespace Adan.Client.Model.Actions
         #region Overrides of ActionBase
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Executes this action.
         /// </summary>
         /// <param name="model">The model.</param>

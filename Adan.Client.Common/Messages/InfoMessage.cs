@@ -27,7 +27,7 @@ namespace Adan.Client.Common.Messages
         public InfoMessage([NotNull] string text)
             : base(text, TextColor.BrightWhite)
         {
-            Assert.ArgumentNotNullOrWhiteSpace(text, "text");
+            Assert.ArgumentNotNull(text, "text");
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Adan.Client.Common.Messages
         public InfoMessage([NotNull] string text, TextColor textColor)
             : base(text, textColor)
         {
-            Assert.ArgumentNotNullOrWhiteSpace(text, "text");
+            Assert.ArgumentNotNull(text, "text");
         }
 
         /// <summary>

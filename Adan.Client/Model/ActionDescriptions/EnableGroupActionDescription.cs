@@ -27,18 +27,13 @@ namespace Adan.Client.Model.ActionDescriptions
     /// </summary>
     public class EnableGroupActionDescription : ActionDescription
     {
-        private readonly IEnumerable<Group> _allGroups;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="EnableGroupActionDescription"/> class.
         /// </summary>
-        /// <param name="allGroups">All groups.</param>
         /// <param name="allDescriptions">All descriptions.</param>
-        public EnableGroupActionDescription([NotNull] IEnumerable<Group> allGroups, [NotNull] IEnumerable<ActionDescription> allDescriptions)
+        public EnableGroupActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base("Enable group", allDescriptions)
         {
-            _allGroups = allGroups;
-            Assert.ArgumentNotNull(allGroups, "allGroups");
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
         }
 
@@ -67,7 +62,7 @@ namespace Adan.Client.Model.ActionDescriptions
             var enableGroupAction = action as EnableGroupAction;
             if (enableGroupAction != null)
             {
-                return new EnableGroupActionViewModel(_allGroups, enableGroupAction, this, AllDescriptions);
+                return new EnableGroupActionViewModel(enableGroupAction, this, AllDescriptions);
             }
 
             return null;

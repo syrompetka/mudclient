@@ -37,6 +37,17 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override bool IsGlobal
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the text to ouput.
         /// </summary>
         /// <value>

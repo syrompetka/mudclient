@@ -44,6 +44,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _hitsColor = GetColor(groupMate.HitsPercent);
             _movesColor = GetColor(groupMate.MovesPercent);
             Affects = new ObservableCollection<AffectViewModel>();
+
             foreach (var affectDescription in affectsToDisplay)
             {
                 Affects.Add(new AffectViewModel(affectDescription));
@@ -261,6 +262,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         public virtual void UpdateFromModel([NotNull] CharacterStatus characterStatus)
         {
             Assert.ArgumentNotNull(characterStatus, "characterStatus");
+
             if (characterStatus.Name != Name)
             {
                 return;

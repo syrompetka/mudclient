@@ -508,15 +508,12 @@
                                               KeyboardNavigation.DirectionalNavigation="Contained"
                                               KeyboardNavigation.TabIndex="1" />
                         </Border>
-
                     </Border>
                     <ControlTemplate.Triggers>
-
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
-
     </Style>
 
     <!--DocumentTabItemStyle-->

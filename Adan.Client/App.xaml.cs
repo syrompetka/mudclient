@@ -11,6 +11,7 @@ namespace Adan.Client
 {
     using System.Windows;
     using Adan.Client.Common;
+    using Adan.Client.Common.Settings;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -19,13 +20,5 @@ namespace Adan.Client
     /// </summary>
     public partial class App
     {
-        private void HandleApplicationExit([NotNull] object sender, [NotNull] ExitEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            PluginHost.Instance.Dispose();
-            SettingsHolder.Instance.Save();
-        }
     }
 }

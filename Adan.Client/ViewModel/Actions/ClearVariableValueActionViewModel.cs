@@ -32,18 +32,15 @@ namespace Adan.Client.ViewModel.Actions
         /// Initializes a new instance of the <see cref="ClearVariableValueActionViewModel"/> class.
         /// </summary>
         /// <param name="action">The action.</param>
-        /// <param name="allVariables">All variables.</param>
         /// <param name="actionDescriptor">The action descriptor.</param>
         /// <param name="allDescriptions">All descriptions.</param>
-        public ClearVariableValueActionViewModel([NotNull] ClearVariableValueAction action, [NotNull] IEnumerable<Variable> allVariables, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
+        public ClearVariableValueActionViewModel([NotNull] ClearVariableValueAction action, [NotNull] ActionDescription actionDescriptor, [NotNull] IEnumerable<ActionDescription> allDescriptions)
             : base(action, actionDescriptor, allDescriptions)
         {
             Assert.ArgumentNotNull(action, "action");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
             Assert.ArgumentNotNull(actionDescriptor, "actionDescriptor");
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
 
-            AllVariables = allVariables;
             _action = action;
         }
 
@@ -89,16 +86,6 @@ namespace Adan.Client.ViewModel.Actions
         }
 
         /// <summary>
-        /// Gets all variables.
-        /// </summary>
-        [NotNull]
-        public IEnumerable<Variable> AllVariables
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Gets the action description.
         /// </summary>
         public override string ActionDescription
@@ -119,7 +106,7 @@ namespace Adan.Client.ViewModel.Actions
         public override ActionViewModelBase Clone()
         {
             return new ClearVariableValueActionViewModel
-                (new ClearVariableValueAction(), AllVariables, ActionDescriptor, AllActionDescriptions)
+                (new ClearVariableValueAction(), ActionDescriptor, AllActionDescriptions)
                 { 
                     VariableName = VariableName,
                     SilentSet = SilentSet

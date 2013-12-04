@@ -18,20 +18,13 @@ namespace Adan.Client.ConveyorUnits
     public class VariableReplaceUnit : ConveyorUnit
     {
         private Regex VariableRegex = new Regex(@"\$([\w\d]+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-        private RootModel _rooteModel;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandSeparatorUnit"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">Root Model</param>
-        public VariableReplaceUnit([NotNull] MessageConveyor messageConveyor, [NotNull] RootModel rootModel)
-            : base(messageConveyor)
+        public VariableReplaceUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rooteModel = rootModel;
         }
 
         #region Overrides of ConveyorUnit
@@ -59,10 +52,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -81,7 +76,7 @@ namespace Adan.Client.ConveyorUnits
                     m =>
                     {
                         ret = true;
-                        return _rooteModel.GetVariableValue(m.Groups[1].Value);
+                        return rootModel.GetVariableValue(m.Groups[1].Value);
                     });
             } while (ret);
         }

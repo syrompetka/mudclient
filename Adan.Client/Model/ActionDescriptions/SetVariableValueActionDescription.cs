@@ -28,23 +28,19 @@ namespace Adan.Client.Model.ActionDescriptions
     public class SetVariableValueActionDescription : ActionDescription
     {
         private readonly IEnumerable<ParameterDescription> _parameterDescriptions;
-        private readonly IEnumerable<Variable> _allVariables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SetVariableValueActionDescription"/> class.
         /// </summary>
         /// <param name="allDescriptions">All descriptions.</param>
         /// <param name="parameterDescriptions">The parameter descriptions.</param>
-        /// <param name="allVariables">All variables.</param>
-        public SetVariableValueActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions, [NotNull] IEnumerable<ParameterDescription> parameterDescriptions, [NotNull] IEnumerable<Variable> allVariables)
+        public SetVariableValueActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions, [NotNull] IEnumerable<ParameterDescription> parameterDescriptions)
             : base("Set variable value", allDescriptions)
         {
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
 
             _parameterDescriptions = parameterDescriptions;
-            _allVariables = allVariables;
         }
 
         /// <summary>
@@ -72,7 +68,7 @@ namespace Adan.Client.Model.ActionDescriptions
             var setVariableValueAction = action as SetVariableValueAction;
             if (setVariableValueAction != null)
             {
-                return new SetVariableValueActionViewModel(setVariableValueAction, _allVariables, this, _parameterDescriptions, AllDescriptions);
+                return new SetVariableValueActionViewModel(setVariableValueAction, this, _parameterDescriptions, AllDescriptions);
             }
 
             return null;

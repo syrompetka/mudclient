@@ -31,18 +31,14 @@ namespace Adan.Client.ViewModel.ActionParameters
         /// Initializes a new instance of the <see cref="VariableReferenceParameterViewModel"/> class.
         /// </summary>
         /// <param name="parameter">The parameter.</param>
-        /// <param name="allVariables">All variables.</param>
         /// <param name="parameterDescriptor">The parameter descriptor.</param>
         /// <param name="allParameterDescriptions">All parameter descriptions.</param>
-        public VariableReferenceParameterViewModel([NotNull] VariableReferenceParameter parameter, [NotNull] IEnumerable<Variable> allVariables, [NotNull] ParameterDescription parameterDescriptor, [NotNull] IEnumerable<ParameterDescription> allParameterDescriptions)
+        public VariableReferenceParameterViewModel([NotNull] VariableReferenceParameter parameter, [NotNull] ParameterDescription parameterDescriptor, [NotNull] IEnumerable<ParameterDescription> allParameterDescriptions)
             : base(parameter, parameterDescriptor, allParameterDescriptions)
         {
             Assert.ArgumentNotNull(parameter, "parameter");
-            Assert.ArgumentNotNull(allVariables, "allVariables");
             Assert.ArgumentNotNull(parameterDescriptor, "parameterDescriptor");
             Assert.ArgumentNotNull(allParameterDescriptions, "allParameterDescriptions");
-
-            AllVariables = allVariables;
 
             _parameter = parameter;
         }
@@ -98,7 +94,7 @@ namespace Adan.Client.ViewModel.ActionParameters
         /// <returns>A deep copy of this instance.</returns>
         public override ActionParameterViewModelBase Clone()
         {
-            return new VariableReferenceParameterViewModel(new VariableReferenceParameter(), AllVariables, ParameterDescriptor, AllParameterDescriptions) { VariableName = VariableName };
+            return new VariableReferenceParameterViewModel(new VariableReferenceParameter(), ParameterDescriptor, AllParameterDescriptions) { VariableName = VariableName };
         }
     }
 }

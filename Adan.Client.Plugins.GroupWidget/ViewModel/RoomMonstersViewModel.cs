@@ -29,7 +29,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     public class RoomMonstersViewModel : ViewModelBase
     {
         private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
-        private RootModel _rootModel;
 
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
         private MonsterViewModel _selectedMonster;
@@ -72,7 +71,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedMonster = value;
-                _rootModel.SelectedRoomMonster = value != null ? value.MonsterStatus : null;
+                //_rootModel.SelectedRoomMonster = value != null ? value.MonsterStatus : null;
                 OnPropertyChanged("SelectedMonster");
             }
         }
@@ -105,7 +104,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    _rootModel.RoomMonstersStatus.Insert(position, monster);
+                    //_rootModel.RoomMonstersStatus.Insert(position, monster);
                     Monsters.Insert(position, new MonsterViewModel(monster, affectsList));
                 }
 
@@ -116,7 +115,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             for (int i = position; i < count; i++)
             {
                 Monsters.RemoveAt(position);
-                _rootModel.RoomMonstersStatus.RemoveAt(position);
+               // _rootModel.RoomMonstersStatus.RemoveAt(position);
             }
         }
 
@@ -129,17 +128,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 155;
             OnPropertyChanged("MinimumWidth");
-        }
-
-        /// <summary>
-        /// Updates the root model.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        public void UpdateRootModel([NotNull] RootModel rootModel)
-        {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            _rootModel = rootModel;
         }
         
         private void UpdateTimings()

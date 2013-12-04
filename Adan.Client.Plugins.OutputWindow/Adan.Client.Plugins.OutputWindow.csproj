@@ -81,7 +81,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Model\ParameterDescriptions\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>

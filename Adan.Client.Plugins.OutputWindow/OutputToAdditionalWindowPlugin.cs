@@ -24,6 +24,7 @@ namespace Adan.Client.Plugins.OutputWindow
     using Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits;
     using Adan.Client.Plugins.OutputWindow.Model.Actions;
     using Adan.Client.Plugins.OutputWindow.Model;
+    using Adan.Client.Common.ViewModel;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.
@@ -35,7 +36,6 @@ namespace Adan.Client.Plugins.OutputWindow
         private WidgetDescription _widget;
 
         private OutputToAdditionalWindowConveyorUnit _conveyorUnit;
-        private RootModel _rootModel;
 
         /// <summary>
         /// Gets the conveyor units that this plugin exposes.
@@ -66,7 +66,7 @@ namespace Adan.Client.Plugins.OutputWindow
         {
             get
             {
-                return Enumerable.Repeat(new OutputToAdditionalWindowActionDescription(_rootModel.AllParameterDescriptions, _rootModel.AllActionDescriptions), 1);
+                return Enumerable.Repeat(new OutputToAdditionalWindowActionDescription(RootModel.AllParameterDescriptions, RootModel.AllActionDescriptions), 1);
             }
         }
 
@@ -95,32 +95,17 @@ namespace Adan.Client.Plugins.OutputWindow
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(MessageConveyor conveyor, RootModel model, InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
+        public override void Initialize(InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 
             initializationStatusModel.CurrentPluginName = "Additional window";
-            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl, false);
-            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(conveyor, _additionalOutputWindowControl);
-            _rootModel = model;
-        }
+            initializationStatusModel.PluginInitializationStatus = "Initializing";
 
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
-        {
-            if (_conveyorUnit != null)
-            {
-                _conveyorUnit.Dispose();
-            }
+            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl, false);
+            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(_additionalOutputWindowControl);
         }
     }
 }

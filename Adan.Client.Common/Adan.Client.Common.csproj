@@ -59,8 +59,9 @@
     <Compile Include="Commands\BuiltinCommandTypes.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
+    <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
-    <Compile Include="CommonProfileSettings.cs" />
+    <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>
     </Compile>
@@ -74,9 +75,11 @@
     <Compile Include="Controls\BackgroundColorSelector.xaml.cs">
       <DependentUpon>BackgroundColorSelector.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\CursorPositionHistory.cs" />
     <Compile Include="Controls\GenericTemplateSelector.cs" />
     <Compile Include="Controls\ScrollableFlowTextControl.cs" />
-    <Compile Include="Controls\SettingsFolder.cs" />
+    <Compile Include="Settings\SettingsChangedEventArgs.cs" />
+    <Compile Include="Settings\SettingsFolder.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />
     <Compile Include="Controls\TextFormatting\MessageTextSource.cs" />
@@ -112,7 +115,9 @@
     <Compile Include="Model\Group.cs" />
     <Compile Include="Model\Highlight.cs" />
     <Compile Include="Model\Hotkey.cs" />
-    <Compile Include="Model\InitializationStatusModel.cs" />
+    <Compile Include="Settings\SettingsHolder.cs" />
+    <Compile Include="Settings\SettingsSerializer.cs" />
+    <Compile Include="ViewModel\InitializationStatusModel.cs" />
     <Compile Include="Model\MonsterStatus.cs" />
     <Compile Include="Model\PetStatus.cs" />
     <Compile Include="Model\Position.cs" />
@@ -133,7 +138,7 @@
     <Compile Include="Plugins\ParameterDescription.cs" />
     <Compile Include="Plugins\PluginBase.cs" />
     <Compile Include="Plugins\WidgetDescription.cs" />
-    <Compile Include="ProfileHolder.cs" />
+    <Compile Include="Settings\ProfileHolder.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>

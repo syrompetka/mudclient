@@ -33,16 +33,18 @@ namespace Adan.Client.ViewModel
         private string _newGroupName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupsViewModel"/> class.
+        /// 
         /// </summary>
-        /// <param name="allGroups">All groups.</param>
-        /// <param name="actionDescriptions">The action descriptions.</param>
-        public GroupsViewModel([NotNull] IList<Group> allGroups, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
+        /// <param name="allGroups"></param>
+        /// <param name="name"></param>
+        /// <param name="actionDescriptions"></param>
+        public GroupsViewModel([NotNull] IList<Group> allGroups, string name, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
         {
             Assert.ArgumentNotNull(allGroups, "allGroups");
             Assert.ArgumentNotNull(actionDescriptions, "actionDescriptions");
 
             _allGroups = allGroups;
+            Name = name;
             _actionDescriptions = actionDescriptions;
             DeleteGroupCommand = new DelegateCommand(DeleteGroup, false);
             AddGroupCommand = new DelegateCommand(AddGroup, false);
@@ -52,13 +54,33 @@ namespace Adan.Client.ViewModel
                 _groups.Add(new GroupViewModel(_groups, group, _actionDescriptions));
             }
 
-            Groups = new ReadOnlyObservableCollection<GroupViewModel>(_groups);
+            Groups = new ObservableCollection<GroupViewModel>(_groups);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Name
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public IList<Group> AllGroup
+        {
+            get
+            {
+                return _allGroups;
+            }
         }
 
         /// <summary>
         /// Gets the groups.
         /// </summary>
-        public ReadOnlyObservableCollection<GroupViewModel> Groups
+        public ObservableCollection<GroupViewModel> Groups
         {
             get;
             private set;

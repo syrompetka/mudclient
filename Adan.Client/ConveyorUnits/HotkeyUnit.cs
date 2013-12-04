@@ -28,21 +28,9 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class HotkeyUnit : ConveyorUnit
     {
-        private readonly RootModel _rootModel;
-        private readonly ActionExecutionContext _context = new ActionExecutionContext { CurrentMessage = new OutputToMainWindowMessage(string.Empty) };
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HotkeyUnit"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="rootModel">The root model.</param>
-        public HotkeyUnit([NotNull] MessageConveyor messageConveyor, [NotNull]RootModel rootModel)
-            : base(messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-            _rootModel = rootModel;
-        }
+        //private readonly RootModel _rootModel;
+        //private readonly ActionExecutionContext _context = new ActionExecutionContext { CurrentMessage = new OutputToMainWindowMessage(string.Empty) };
+        private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
 
         #region Overrides of ConveyorUnit
 
@@ -69,19 +57,23 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
+
             var hotKeyCommand = command as HotkeyCommand;
+
             if (hotKeyCommand == null)
             {
                 return;
             }
 
-            foreach (var group in _rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var hotkey in group.Hotkeys)
                 {
@@ -92,7 +84,7 @@ namespace Adan.Client.ConveyorUnits
 
                     foreach (var action in hotkey.Actions)
                     {
-                        action.Execute(_rootModel, _context);
+                        action.Execute(rootModel, _context);
                     }
 
                     hotKeyCommand.Handled = true;

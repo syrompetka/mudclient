@@ -22,6 +22,7 @@ namespace Adan.Client
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using Adan.Client.Common.ViewModel;
 
     /// <summary>
     /// Class to host plugins.
@@ -46,9 +47,7 @@ namespace Adan.Client
                 _container = new CompositionContainer(_catalog);
                 _container.ComposeParts(this);
             }
-            catch
-            {
-            }
+            catch { }
         }
 
         /// <summary>
@@ -87,6 +86,36 @@ namespace Adan.Client
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputWindow"></param>
+        public void OutputWindowCreated(OutputWindow outputWindow)
+        {
+            foreach (var plugin in Plugins)
+                plugin.OnCreatedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputWindow"></param>
+        public void OutputWindowChanged(OutputWindow outputWindow)
+        {
+            foreach (var plugin in Plugins)
+                plugin.OnChangedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="outputWindow"></param>
+        public void OutputWindowClose(OutputWindow outputWindow)
+        {
+            foreach (var plugin in Plugins)
+                plugin.OnClosedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+        }
+
+        /// <summary>
         /// Loads all avalable plugins.
         /// </summary>
         public void LoadPlugins()
@@ -119,44 +148,40 @@ namespace Adan.Client
         /// <summary>
         /// Initializes the plugins.
         /// </summary>
-        /// <param name="conveyor">The conveyor.</param>
-        /// <param name="model">The model.</param>
         /// <param name="initializationStatusModel">The initialization status model.</param>
         /// <param name="mainWindow">The main window.</param>
-        public void InitializePlugins([NotNull] MessageConveyor conveyor, [NotNull] RootModel model, [NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
+        public void InitializePlugins([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
-            Assert.ArgumentNotNull(conveyor, "conveyor");
-            Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
             Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
             foreach (var plugin in Plugins)
             {
-                plugin.Initialize(conveyor, model, initializationStatusModel, mainWindow);
+                plugin.Initialize(initializationStatusModel, mainWindow);
 
                 foreach (var actionDescription in plugin.CustomActions)
                 {
-                    model.AllActionDescriptions.Add(actionDescription);
+                    RootModel.AllActionDescriptions.Add(actionDescription);
                 }
 
                 foreach (var actionParameter in plugin.CustomActionParameters)
                 {
-                    model.AllParameterDescriptions.Add(actionParameter);
+                    RootModel.AllParameterDescriptions.Add(actionParameter);
                 }
 
                 foreach (var conveyorUnit in plugin.ConveyorUnits)
                 {
-                    conveyor.AddConveyorUnit(conveyorUnit);
+                    MessageConveyor.AddConveyorUnit(conveyorUnit);
                 }
 
                 foreach (var commandSerializer in plugin.CommandSerializers)
                 {
-                    conveyor.AddCommandSerializer(commandSerializer);
+                    MessageConveyor.AddCommandSerializer(commandSerializer);
                 }
 
                 foreach (var messageDeserializer in plugin.MessageDeserializers)
                 {
-                    conveyor.AddMessageDeserializer(messageDeserializer);
+                    MessageConveyor.AddMessageDeserializer(messageDeserializer);
                 }
             }
 
@@ -166,9 +191,11 @@ namespace Adan.Client
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
+            foreach (var plugin in Plugins)
+                plugin.Dispose();
+
             if (_container != null)
             {
                 _container.Dispose();

@@ -34,14 +34,11 @@ namespace Adan.Client.Map.MessageDeserializers
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(CurrentRoomMessage));
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CurrentRoomMessageDeserializer"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        /// <param name="zoneManager">The zone manager.</param>
-        public CurrentRoomMessageDeserializer([NotNull] MessageConveyor messageConveyor, [NotNull] ZoneManager zoneManager)
-            : base(messageConveyor)
+        /// <param name="zoneManager"></param>
+        public CurrentRoomMessageDeserializer([NotNull] ZoneManager zoneManager)
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
             Assert.ArgumentNotNull(zoneManager, "zoneManager");
             _zoneManager = zoneManager;
         }
@@ -81,7 +78,7 @@ namespace Adan.Client.Map.MessageDeserializers
                         using (var stringReader = new StringReader(_builder.ToString()))
                         {
                             var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
-                            _zoneManager.UpdateCurrentRoom(message.RoomId, message.ZoneId);
+                            PushMessageToConveyor(message);                            
                         }
 
                     _builder.Clear();
@@ -89,7 +86,7 @@ namespace Adan.Client.Map.MessageDeserializers
             }
             catch (Exception ex)
             {
-                var deseirilizer = _messageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
                 string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
                 byte[] buf = _encoding.GetBytes(str);
                 deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
@@ -98,6 +95,15 @@ namespace Adan.Client.Map.MessageDeserializers
                 //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
                 PushMessageToConveyor(new ErrorMessage(ex.Message));
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override MessageDeserializer NewInstance()
+        {
+            return new CurrentRoomMessageDeserializer(_zoneManager);
         }
     }
 }

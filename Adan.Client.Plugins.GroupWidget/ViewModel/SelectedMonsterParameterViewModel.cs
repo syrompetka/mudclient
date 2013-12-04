@@ -53,6 +53,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// Clones this instance.
         /// </summary>
         /// <returns>A deep copy of this instance.</returns>
+        [NotNull]
         public override ActionParameterViewModelBase Clone()
         {
             return new SelectedMonsterParameterViewModel(new SelectedMonsterParameter(), ParameterDescriptor, AllParameterDescriptions);

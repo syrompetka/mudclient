@@ -28,5 +28,10 @@ namespace Adan.Client.Common.Commands
         /// Type of command to connect/disconnect.
         /// </summary>
         public const int ConnectionCommands = 3;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int ShowMainOutputCommand = 4;
     }
 }

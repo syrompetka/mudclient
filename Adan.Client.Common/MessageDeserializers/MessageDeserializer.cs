@@ -22,26 +22,6 @@ namespace Adan.Client.Common.MessageDeserializers
     public abstract class MessageDeserializer
     {
         #region Constants and Fields
-        
-        /// <summary>
-        /// MessageConveyor
-        /// </summary>
-        protected readonly MessageConveyor _messageConveyor;
-
-        #endregion
-
-        #region Constructors and Destructors
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageDeserializer"/> class.
-        /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        protected MessageDeserializer([NotNull] MessageConveyor messageConveyor)
-        {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
-
-            _messageConveyor = messageConveyor;
-        }
 
         #endregion
 
@@ -58,6 +38,15 @@ namespace Adan.Client.Common.MessageDeserializers
             get;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public MessageConveyor Conveyor
+        {
+            get;
+            set;
+        }
+
         #endregion
 
         #region Public Methods
@@ -71,6 +60,12 @@ namespace Adan.Client.Common.MessageDeserializers
         /// <param name="isComplete">Indicates whether message should be completed or wait for next data.</param>
         public abstract void DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data, bool isComplete);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract MessageDeserializer NewInstance();
+
         #endregion
 
         #region Methods
@@ -83,7 +78,7 @@ namespace Adan.Client.Common.MessageDeserializers
         {
             Assert.ArgumentNotNull(message, "message");
 
-            _messageConveyor.PushMessage(message);
+            Conveyor.PushMessage(message);
         }
 
         #endregion

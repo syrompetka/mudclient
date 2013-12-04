@@ -14,18 +14,14 @@ namespace Adan.Client.Common.Conveyor
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Adan.Client.Common.Model;
     using Commands;
     using CommandSerializers;
-
     using ConveyorUnits;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using MessageDeserializers;
     using Messages;
-
     using Networking;
 
     #endregion
@@ -35,14 +31,27 @@ namespace Adan.Client.Common.Conveyor
     /// </summary>
     public sealed class MessageConveyor : IDisposable
     {
+        #region Events
+
+        /// <summary>
+        /// Occurs when message if revieved from server.
+        /// </summary>
+        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+
+        #endregion
+
         #region Constants and Fields
 
-        private readonly IList<CommandSerializer> _commandSerializers = new List<CommandSerializer>();
+        private static IList<CommandSerializer> _commandSerializers;
+        private static IList<MessageDeserializer> _messageDeserializers;
+        private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType;
+        private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType;
+
+        private IList<CommandSerializer> _currentCommandSerializers;
+        private IList<MessageDeserializer> _currentMessageDeserializers;
         private readonly MccpClient _mccpClient;
-        private readonly IList<MessageDeserializer> _messageDeserializers = new List<MessageDeserializer>();
-        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType = new Dictionary<int, IList<ConveyorUnit>>();
-        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
         private readonly byte[] _buffer = new byte[32767];
+        private RootModel _rootModel;
 
         private int _currentMessageType = BuiltInMessageTypes.TextMessage;
 
@@ -51,12 +60,28 @@ namespace Adan.Client.Common.Conveyor
         #region Constructors and Destructors
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageConveyor"/> class.
+        /// 
         /// </summary>
-        /// <param name="mccpClient">The MCCP client.</param>
+        /// <param name="mccpClient"></param>
         public MessageConveyor([NotNull] MccpClient mccpClient)
         {
             Assert.ArgumentNotNull(mccpClient, "mccpClient");
+
+            _currentCommandSerializers = new List<CommandSerializer>(CommandSerializers.Count);
+            foreach (CommandSerializer commandSerializer in CommandSerializers)
+            {
+                var newCommandSerializer = commandSerializer.Clone();
+                newCommandSerializer.Conveyor = this;
+                _currentCommandSerializers.Add(newCommandSerializer);
+            }
+
+            _currentMessageDeserializers = new List<MessageDeserializer>(MessageDeserializers.Count);
+            foreach (MessageDeserializer messageDeserializer in MessageDeserializers)
+            {
+                var newMessageDeserializer = messageDeserializer.NewInstance();
+                newMessageDeserializer.Conveyor = this;
+                _currentMessageDeserializers.Add(newMessageDeserializer);
+            }
 
             _mccpClient = mccpClient;
             _mccpClient.DataReceived += HandleDataReceived;
@@ -67,19 +92,99 @@ namespace Adan.Client.Common.Conveyor
 
         #endregion
 
-        #region Events
+        #region Properties
 
         /// <summary>
-        /// Occurs when message if revieved from server.
+        /// 
         /// </summary>
-        public event EventHandler<MessageReceivedEventArgs> MessageReceived;
+        public static IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByCommandType
+        {
+            get
+            {
+                if (_conveyorUnitsByCommandType == null)
+                    _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
 
-        #endregion
+                return _conveyorUnitsByCommandType;
+            }
+            set
+            {
+                _conveyorUnitsByCommandType = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByMessageType
+        {
+            get
+            {
+                if (_conveyorUnitsByMessageType == null)
+                    _conveyorUnitsByMessageType = new Dictionary<int, IList<ConveyorUnit>>();
+
+                return _conveyorUnitsByMessageType;
+            }
+            set
+            {
+                _conveyorUnitsByMessageType = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IList<CommandSerializer> CommandSerializers
+        {
+            get
+            {
+                if (_commandSerializers == null)
+                    _commandSerializers = new List<CommandSerializer>();
+
+                return _commandSerializers;
+            }
+            set
+            {
+                _commandSerializers = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static IList<MessageDeserializer> MessageDeserializers
+        {
+            get
+            {
+                if (_messageDeserializers == null)
+                    _messageDeserializers = new List<MessageDeserializer>();
+
+                return _messageDeserializers;
+            }
+            set
+            {
+                _messageDeserializers = value;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public RootModel RootModel
+        {
+            get
+            {
+                return _rootModel;
+            }
+            set
+            {
+                _rootModel = value;
+            }
+        }
 
         /// <summary>
         /// Last connection host
         /// </summary>
-        public string LastConnectionHost
+        public string LastConnectHost
         {
             get;
             private set;
@@ -94,17 +199,7 @@ namespace Adan.Client.Common.Conveyor
             private set;
         }
 
-        //Временная мера до фикса сервера
-        /// <summary>
-        /// 
-        /// </summary>
-        public IList<MessageDeserializer> MessageDeserializers
-        {
-            get
-            {
-                return _messageDeserializers;
-            }
-        }
+        #endregion
 
         #region Public Methods
 
@@ -112,51 +207,77 @@ namespace Adan.Client.Common.Conveyor
         /// Adds the command serializer.
         /// </summary>
         /// <param name="commandSerializer">The command serializer to add.</param>
-        public void AddCommandSerializer([NotNull] CommandSerializer commandSerializer)
+        public static void AddCommandSerializer([NotNull] CommandSerializer commandSerializer)
         {
             Assert.ArgumentNotNull(commandSerializer, "commandSerializer");
 
-            _commandSerializers.Add(commandSerializer);
-        }
-
-        /// <summary>
-        /// Adds the conveyor unit.
-        /// </summary>
-        /// <param name="conveyorUnit">The conveyor unit.</param>
-        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit)
-        {
-            Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
-
-            foreach (var handledMessageType in conveyorUnit.HandledMessageTypes)
-            {
-                if (!_conveyorUnitsByMessageType.ContainsKey(handledMessageType))
-                {
-                    _conveyorUnitsByMessageType[handledMessageType] = new List<ConveyorUnit>();
-                }
-
-                _conveyorUnitsByMessageType[handledMessageType].Add(conveyorUnit);
-            }
-
-            foreach (var handledCommandType in conveyorUnit.HandledCommandTypes)
-            {
-                if (!_conveyorUnitsByCommandType.ContainsKey(handledCommandType))
-                {
-                    _conveyorUnitsByCommandType[handledCommandType] = new List<ConveyorUnit>();
-                }
-
-                _conveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
-            }
+            CommandSerializers.Add(commandSerializer);
         }
 
         /// <summary>
         /// Adds the message deserializer.
         /// </summary>
         /// <param name="messageDeserializer">The message deserializer to add.</param>
-        public void AddMessageDeserializer([NotNull] MessageDeserializer messageDeserializer)
+        public static void AddMessageDeserializer([NotNull] MessageDeserializer messageDeserializer)
         {
             Assert.ArgumentNotNull(messageDeserializer, "messageDeserializer");
 
-            _messageDeserializers.Add(messageDeserializer);
+            MessageDeserializers.Add(messageDeserializer);
+        }
+
+        /// <summary>
+        /// Adds the conveyor unit.
+        /// </summary>
+        /// <param name="conveyorUnit">The conveyor unit.</param>
+        public static void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit)
+        {
+            Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
+
+            foreach (var handledMessageType in conveyorUnit.HandledMessageTypes)
+            {
+                if (!ConveyorUnitsByMessageType.ContainsKey(handledMessageType))
+                {
+                    ConveyorUnitsByMessageType[handledMessageType] = new List<ConveyorUnit>();
+                }
+
+                ConveyorUnitsByMessageType[handledMessageType].Add(conveyorUnit);
+            }
+
+            foreach (var handledCommandType in conveyorUnit.HandledCommandTypes)
+            {
+                if (!ConveyorUnitsByCommandType.ContainsKey(handledCommandType))
+                {
+                    ConveyorUnitsByCommandType[handledCommandType] = new List<ConveyorUnit>();
+                }
+
+                ConveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="line"></param>
+        /// <param name="rootModel"></param>
+        public static void ImportJMC(string line, RootModel rootModel)
+        {
+            var command = new TextCommand(line);
+            if (ConveyorUnitsByCommandType.ContainsKey(command.CommandType))
+            {
+                foreach (var conveyorUnit in ConveyorUnitsByCommandType[command.CommandType])
+                {
+                    try
+                    {
+                        conveyorUnit.HandleCommand(command, rootModel, true);
+                    }
+                    catch { }
+
+                    if (command.Handled)
+                    {
+                        break;
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -170,7 +291,7 @@ namespace Adan.Client.Common.Conveyor
 
             _mccpClient.Connect(host, port);
 
-            LastConnectionHost = host;
+            LastConnectHost = host;
             LastConnectPort = port;
         }
 
@@ -190,11 +311,11 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(command, "command");
 
-            if (_conveyorUnitsByCommandType.ContainsKey(command.CommandType))
+            if (ConveyorUnitsByCommandType.ContainsKey(command.CommandType))
             {
-                foreach (var conveyorUnit in _conveyorUnitsByCommandType[command.CommandType])
+                foreach (var conveyorUnit in ConveyorUnitsByCommandType[command.CommandType])
                 {
-                    conveyorUnit.HandleCommand(command);
+                    conveyorUnit.HandleCommand(command, _rootModel);
                     if (command.Handled)
                     {
                         break;
@@ -204,7 +325,7 @@ namespace Adan.Client.Common.Conveyor
 
             if (!command.Handled)
             {
-                foreach (var commandSerializer in _commandSerializers)
+                foreach (var commandSerializer in _currentCommandSerializers)
                 {
                     commandSerializer.SerializeAndSendCommand(command);
                     if (command.Handled)
@@ -223,11 +344,11 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(message, "message");
 
-            if (_conveyorUnitsByMessageType.ContainsKey(message.MessageType))
+            if (ConveyorUnitsByMessageType.ContainsKey(message.MessageType))
             {
-                foreach (var conveyorUnit in _conveyorUnitsByMessageType[message.MessageType])
+                foreach (var conveyorUnit in ConveyorUnitsByMessageType[message.MessageType])
                 {
-                    conveyorUnit.HandleMessage(message);
+                    conveyorUnit.HandleMessage(message, _rootModel);
                     if (message.Handled)
                     {
                         break;
@@ -265,22 +386,10 @@ namespace Adan.Client.Common.Conveyor
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
-            var allUnits = new List<ConveyorUnit>();
-            foreach (var unitList in _conveyorUnitsByMessageType.Values)
-            {
-                allUnits.AddRange(unitList);
-            }
-
-            foreach (var unitList in _conveyorUnitsByCommandType.Values)
-            {
-                allUnits.AddRange(unitList);
-            }
-
-            foreach (var conveyorUnit in allUnits.Distinct())
-            {
-                conveyorUnit.Dispose();
-            }
+            if(_mccpClient != null)
+                _mccpClient.Dispose();
         }
+
         #endregion
 
         #region Methods
@@ -373,11 +482,12 @@ namespace Adan.Client.Common.Conveyor
                 return;
             }
 
-            var deserializer = _messageDeserializers.FirstOrDefault(d => d.DeserializedMessageType == _currentMessageType);
+            var deserializer = _currentMessageDeserializers.FirstOrDefault(d => d.DeserializedMessageType == _currentMessageType);
             if (deserializer == null)
             {
                 // falling back to text if there is no
-                deserializer = _messageDeserializers.First(d => d.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                //deserializer = _currentMessageDeserializers.First(d => d.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                return;
             }
 
             deserializer.DeserializeDataFromServer(0, actualBytesReceived, _buffer, isComplete);

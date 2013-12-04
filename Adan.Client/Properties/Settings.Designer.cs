@@ -189,5 +189,28 @@ namespace Adan.Client.Properties {
                 this["Folder"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        public global::System.Collections.Specialized.StringCollection MainOutputs {
+            get {
+                return ((global::System.Collections.Specialized.StringCollection)(this["MainOutputs"]));
+            }
+            set {
+                this["MainOutputs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int SettingsFolder {
+            get {
+                return ((int)(this["SettingsFolder"]));
+            }
+            set {
+                this["SettingsFolder"] = value;
+            }
+        }
     }
 }

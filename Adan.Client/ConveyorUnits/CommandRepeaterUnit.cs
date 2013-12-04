@@ -11,15 +11,13 @@ namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
-
+    using Adan.Client.Common.Model;
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Messages;
 
     /// <summary>
@@ -27,16 +25,14 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CommandRepeaterUnit : ConveyorUnit
     {
-        private bool _displayInput = true;
+       // private bool _displayInput = true;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRepeaterUnit"/> class.
         /// </summary>
-        /// <param name="messageConveyor">The message conveyor.</param>
-        public CommandRepeaterUnit([NotNull] MessageConveyor messageConveyor)
-            : base(messageConveyor)
+        public CommandRepeaterUnit()
+            : base()
         {
-            Assert.ArgumentNotNull(messageConveyor, "messageConveyor");
         }
 
         /// <summary>
@@ -62,10 +58,12 @@ namespace Adan.Client.ConveyorUnits
         }
 
         /// <summary>
-        /// Handles the command.
+        /// 
         /// </summary>
-        /// <param name="command">The command to handle.</param>
-        public override void HandleCommand(Command command)
+        /// <param name="command"></param>
+        /// <param name="rootModel"></param>
+        /// <param name="isImport"></param>
+        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -75,28 +73,32 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            if (_displayInput)
-            {
-                PushMessageToConveyor(new CommandRepeatMessage(textCommand.CommandText));
-            }
-            else
-            {
-                PushMessageToConveyor(new CommandRepeatMessage(Regex.Replace(textCommand.CommandText, ".", "*")));
-            }
+            PushMessageToConveyor(new CommandRepeatMessage(textCommand.CommandText), rootModel);
+
+            //if (_displayInput)
+            //{
+            //    PushMessageToConveyor(new CommandRepeatMessage(textCommand.CommandText), rootModel);
+            //}
+            //else
+            //{
+            //    PushMessageToConveyor(new CommandRepeatMessage(Regex.Replace(textCommand.CommandText, ".", "*")), rootModel);
+            //}
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        public override void HandleMessage(Message message)
+        /// <param name="message"></param>
+        /// <param name="rootModel"></param>
+        public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
 
             var echoMessage = message as ChangeEchoModeMessage;
             if (echoMessage != null)
             {
-                _displayInput = echoMessage.DisplayTypedCharacters;
+                message.Handled = true;
+                //_displayInput = echoMessage.DisplayTypedCharacters;
             }
         }
     }
