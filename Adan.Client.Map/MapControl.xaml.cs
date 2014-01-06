@@ -152,7 +152,7 @@ namespace Adan.Client.Map
                     //RouteManager.UpdateCurrentRoom(currentRoom, newZone);
             });
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
         }
 
         /// <summary>
@@ -175,7 +175,7 @@ namespace Adan.Client.Map
                     RouteManager.UpdateCurrentRoom(room, newZone);
             });
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Adan.Client.Map
                 }
             });
 
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
         }
 
         /// <summary>
@@ -216,7 +216,7 @@ namespace Adan.Client.Map
                 }
             });
 
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, actionToExecute);
+            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
         }
 
         /// <summary>

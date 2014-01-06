@@ -2,7 +2,8 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:AvalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:Controls="clr-namespace:Adan.Client.Controls"
              xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
              mc:Ignorable="d"
@@ -25,7 +26,7 @@
             </Grid>
         <GridSplitter Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
                 <Grid Grid.Row="2" Background="Black">
-                    <Controls1:ScrollableFlowTextControl x:Name="mainScrollOutput"  MaximumLinesToStore="5000"
+                <Controls1:ScrollableFlowTextControl x:Name="mainScrollOutput"  MaximumLinesToStore="5000"
                                                          LinesOverflowPercentBeforeCleanup="30" AutoScroll="True"
                                                          Grid.Row="2"  Focusable="False" HorizontalAlignment="Stretch"
                                                          VerticalAlignment="Stretch"/>

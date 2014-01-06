@@ -80,8 +80,10 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
             if (commandText.StartsWith(Resources.LoreHelpCommand + " ", StringComparison.CurrentCultureIgnoreCase)
                 || commandText.Equals(Resources.LoreHelpCommand, StringComparison.CurrentCultureIgnoreCase))
             {
-                PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreHelp, TextColor.BrightYellow) }), rootModel);
-                PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreCommentsHelp, TextColor.BrightYellow) }), rootModel);
+                PushMessageToConveyor(new InfoMessage(Resources.LoreHelp, TextColor.BrightYellow), rootModel);
+                PushMessageToConveyor(new InfoMessage(Resources.LoreCommentsHelp, TextColor.BrightYellow), rootModel);
+                //PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreHelp, TextColor.BrightYellow) }), rootModel);
+                //PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreCommentsHelp, TextColor.BrightYellow) }), rootModel);
                 command.Handled = true;
                 return;
             }
@@ -143,7 +145,7 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
                         foundItems++;
                         if (foundItems > maxDisplayItems)
                         {
-                            PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreTooMuchFound, TextColor.BrightYellow) }), rootModel);
+                            PushMessageToConveyor(new InfoMessage(Resources.LoreTooMuchFound, TextColor.BrightYellow), rootModel);
                             break;
                         }
 
@@ -151,7 +153,7 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
                         {
                             var serializer = new XmlSerializer(typeof(LoreMessage));
                             var message = (LoreMessage)serializer.Deserialize(stream);
-                            PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(string.Format(CultureInfo.CurrentCulture, Resources.LoreFoundObject, message.ObjectName), TextColor.BrightYellow) }), rootModel);
+                            PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.CurrentCulture, Resources.LoreFoundObject, message.ObjectName), TextColor.BrightYellow), rootModel);
                             foreach (var displayMessage in message.ConvertToMessages())
                             {
                                 PushMessageToConveyor(displayMessage, rootModel);
@@ -163,12 +165,12 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
 
                     if (foundItems == 0)
                     {
-                        PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreNothingFound, TextColor.BrightYellow) }), rootModel);
+                        PushMessageToConveyor(new InfoMessage(Resources.LoreNothingFound, TextColor.BrightYellow), rootModel);
                     }
                 }
                 else
                 {
-                    PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreNothingFound, TextColor.BrightYellow) }), rootModel);
+                    PushMessageToConveyor(new InfoMessage(Resources.LoreNothingFound, TextColor.BrightYellow), rootModel);
                 }
 
                 return;
@@ -256,14 +258,14 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
             _lastShownObjectName = loreMessage.ObjectName;
             if (isUpdated)
             {
-                PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(string.Format(CultureInfo.CurrentCulture, Resources.LoreUpdated, loreMessage.ObjectName), TextColor.BrightYellow) }), rootModel);
+                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.CurrentCulture, Resources.LoreUpdated, loreMessage.ObjectName), TextColor.BrightYellow), rootModel);
             }
             else
             {
-                PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(string.Format(CultureInfo.CurrentCulture, Resources.LoreCreated, loreMessage.ObjectName), TextColor.BrightYellow) }), rootModel);
+                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.CurrentCulture, Resources.LoreCreated, loreMessage.ObjectName), TextColor.BrightYellow), rootModel);
             }
 
-            PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreGetHelp, TextColor.BrightYellow) }), rootModel);
+            PushMessageToConveyor(new InfoMessage(Resources.LoreGetHelp, TextColor.BrightYellow), rootModel);
         }
     }
 }

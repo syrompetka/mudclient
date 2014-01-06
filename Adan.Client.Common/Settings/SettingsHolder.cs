@@ -39,6 +39,7 @@ namespace Adan.Client.Common.Settings
         private SettingsFolder _settingsFolder;
         private IList<ProfileHolder> _profiles;
         private IList<string> _allProfiles;
+        private string _folder;
 
         /// <summary>
         /// 
@@ -67,6 +68,7 @@ namespace Adan.Client.Common.Settings
             AllSerializationTypes = types;
 
             ReloadSettings();
+            LoadAllProfiles();
         }
 
         #endregion
@@ -130,6 +132,16 @@ namespace Adan.Client.Common.Settings
             {
                 _settingsFolder = value;
 
+                switch (SettingsFolder)
+                {
+                    case SettingsFolder.DocumentsAndSettings:
+                        _folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client");
+                        break;
+                    case SettingsFolder.ProgramFolder:
+                        _folder = Path.Combine(Environment.CurrentDirectory);
+                        break;
+                }
+
                 LoadAllProfiles();
             }
         }
@@ -141,18 +153,7 @@ namespace Adan.Client.Common.Settings
         {
             get
             {
-                string dir = String.Empty;
-                switch (SettingsFolder)
-                {
-                    case SettingsFolder.DocumentsAndSettings:
-                        dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "Adan client");
-                        break;
-                    case SettingsFolder.ProgramFolder:
-                        dir = Path.Combine(Environment.CurrentDirectory);
-                        break;
-                }
-
-                return dir;
+                return _folder;
             }
         }
 
@@ -193,8 +194,8 @@ namespace Adan.Client.Common.Settings
             {
                 AutoClearInput = false,
                 AutoReconnect = false,
-                CommandChar = "#"[0],
-                CommandDelimiter = ";"[0],
+                CommandChar = '#',
+                CommandDelimiter = ';',
                 ConnectHostName = "adan.ru",
                 ConnectPort = 4000,
                 CursorPosition = CursorPositionHistory.EndOfLine,
@@ -203,6 +204,7 @@ namespace Adan.Client.Common.Settings
                 MinLengthHistory = 2,
                 ScrollBuffer = 5000,
                 IsLogCommands = false,
+                AutoConnect = true,
             };
         }
 
@@ -240,6 +242,7 @@ namespace Adan.Client.Common.Settings
             {
                 _profiles.Add(new ProfileHolder(name));
             }
+
             _allProfiles.Add(name);
         }
 
@@ -340,7 +343,7 @@ namespace Adan.Client.Common.Settings
                 {
                     Directory.CreateDirectory(dir);
                 }
-                catch (Exception) { }
+                catch { }
             }
 
             return dir;
@@ -353,15 +356,27 @@ namespace Adan.Client.Common.Settings
                 _profiles.Clear();
             }
 
+            _allProfiles.Clear();
+
             var root = GetSettingsFolder();
             if (Directory.Exists(root))
             {
-                foreach (string dir in Directory.GetDirectories(root))
+                try
                 {
-                    if (File.Exists(Path.Combine(dir, "Settings.xml")))
+
+                    foreach (string dir in Directory.GetDirectories(root))
                     {
-                        _allProfiles.Add(new DirectoryInfo(dir).Name);
+                        if (File.Exists(Path.Combine(dir, "Settings.xml")))
+                        {
+                            _allProfiles.Add(new DirectoryInfo(dir).Name);
+                        }
                     }
+                }
+                catch { }
+
+                if (_allProfiles.Count == 0)
+                {
+                    CreateNewProfile("Default");
                 }
             }
         }

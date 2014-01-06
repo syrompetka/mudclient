@@ -76,7 +76,7 @@ namespace Adan.Client
 #endif
 
             InitializeComponent();
-
+            
 #if DEBUG
             long initTime = sw.ElapsedMilliseconds;
             sw.Restart();
@@ -98,6 +98,8 @@ namespace Adan.Client
                                 typeof(MathExpressionParameter),
                                 typeof(ConstantStringParameter),
                                 typeof(SendTextOneParameterAction),
+                                typeof(ShowOutputWindowAction),
+                                typeof(SendToWindowAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.Plugins)
@@ -142,7 +144,8 @@ namespace Adan.Client
 
             MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
-            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
+           // MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
+            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializerEx());
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
             MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
@@ -150,12 +153,13 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
             MessageConveyor.AddConveyorUnit(new CommandMultiplierUnit());
             MessageConveyor.AddConveyorUnit(new SubstitutionUnit());
+            MessageConveyor.AddConveyorUnit(new TriggerUnit());
             MessageConveyor.AddConveyorUnit(new AliasUnit());
             MessageConveyor.AddConveyorUnit(new HotkeyUnit());
-            MessageConveyor.AddConveyorUnit(new TriggerUnit());
             MessageConveyor.AddConveyorUnit(new HighlightUnit());
             MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
             MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
+            MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -211,37 +215,7 @@ namespace Adan.Client
 
             foreach (var uid in SettingsHolder.Instance.Settings.MainOutputs)
             {
-                var name = uid.Substring(0, uid.Length - 32);
-
-                OutputWindow outputWindow = new OutputWindow(this, name);
-                _outputWindows.Add(outputWindow);
-                outputWindow.Uid = uid;
-
-                DockableContent dockable = new DockableContent()
-                {
-                    Name = uid,
-                    Title = name,
-                    Content = outputWindow.VisibleControl,
-                    HideOnClose = false,
-                };
-
-                outputWindow.DockContent = dockable;
-                dockable.Closed += OnOutputWindowClosed;
-
-                var menuItem = new MenuItem()
-                {
-                    Header = outputWindow.Name,
-                    Name = outputWindow.Uid,
-                };
-
-                windowMenuItem.Items.Insert(0, menuItem);
-
-                if (windowSeparator.Visibility != Visibility.Visible)
-                    windowSeparator.Visibility = Visibility.Visible;
-
-                PluginHost.Instance.OutputWindowCreated(outputWindow);
-
-                dockable.Show(dockManager);
+                CreateNewOutputWindow(uid.Substring(0, uid.Length - 32), uid);
             }
 
 #if DEBUG
@@ -253,16 +227,62 @@ namespace Adan.Client
                 if (outputWindow != null)
                 {
                     outputWindow.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("InitTime = {0} ms, varInitTime = {1} ms, pluginInitTime = {2} ms",
-                    initTime, varInitTime, pluginInitTime)));
+                        initTime, varInitTime, pluginInitTime)));
                 }
             }
 #endif
+        }
+
+        private void CreateNewOutputWindow(string name, string uid)
+        {
+            OutputWindow outputWindow = new OutputWindow(this, name);
+            _outputWindows.Add(outputWindow);
+            outputWindow.Uid = uid;
+
+            DockableContent dockable = new DockableContent()
+            {
+                Name = uid,
+                Title = name,
+                Content = outputWindow.VisibleControl,
+                HideOnClose = false,
+            };
+
+            outputWindow.DockContent = dockable;
+            dockable.Closed += OnOutputWindowClosed;
+
+            var menuItem = new MenuItem()
+            {
+                Header = outputWindow.Name,
+                Name = outputWindow.Uid,
+            };
+
+            if (windowMenuItem.Items.Count > 0)
+                windowMenuItem.Items.Insert(0, menuItem);
+            else
+                windowMenuItem.Items.Add(menuItem);
+
+            if (windowSeparator.Visibility != Visibility.Visible)
+                windowSeparator.Visibility = Visibility.Visible;
+
+            PluginHost.Instance.OutputWindowCreated(outputWindow);
+
+            if (dockManager.MainDocumentPane != null)
+                dockManager.MainDocumentPane.Items.Add(dockable);
+            else
+                dockable.Show(dockManager);
+
+            if (SettingsHolder.Instance.Settings.AutoConnect)
+            {
+                outputWindow.RootModel.PushCommandToConveyor(
+                    new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+            }
         }
 
         private void OnOutputWindowClosed(object sender, EventArgs e)
         {
             var dockable = (DockableContent)sender;
             var outputWindow = _outputWindows.FirstOrDefault(output => output.Uid == dockable.Name);
+
             if (outputWindow != null)
             {
                 outputWindow.Save();
@@ -274,7 +294,12 @@ namespace Adan.Client
                 {
                     if (!floatingWindow.HostedPane.HasItems)
                     {
-                        floatingWindow.Close();
+                        try
+                        {
+
+                            floatingWindow.Close();
+                        }
+                        catch { }
                     }
                 }
 
@@ -305,6 +330,34 @@ namespace Adan.Client
             {
                 dockManager.ActiveContent = outputWindow.DockContent;
                 outputWindow.Focus();
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="command"></param>
+        public void SendToWindow(string name, Command command)
+        {
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.Name == name);
+
+            if (outputWindow != null)
+            {
+                outputWindow.RootModel.PushCommandToConveyor(command);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="command"></param>
+        public void SendToAllWindows(Command command)
+        {
+            foreach (var outputWindow in _outputWindows)
+            {
+                outputWindow.RootModel.PushCommandToConveyor(command);
+                command.Handled = false;
             }
         }
 
@@ -432,14 +485,22 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
-            if(outputWindow != null)
-                outputWindow.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+            if (outputWindow == null)
+            {
+                CreateNewOutputWindow("Default", Guid.NewGuid().ToString("N"));
+            }
+
+            outputWindow.RootModel.PushCommandToConveyor(
+                    new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
         }
 
         private void HandleConnectAll([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+
+            if(_outputWindows.Count == 0)
+                CreateNewOutputWindow("Default", Guid.NewGuid().ToString("N"));
 
             foreach(OutputWindow window in _outputWindows)
                 window.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
@@ -451,6 +512,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
+
             if (outputWindow != null)
                 outputWindow.RootModel.PushCommandToConveyor(new DisconnectCommand());
         }
@@ -554,6 +616,11 @@ namespace Adan.Client
             }
 
             LoadLayout();
+
+            if (SettingsHolder.Instance.Settings.MainOutputs.Count == 0)
+            {
+                CreateNewOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
+            }
         }
 
         private void LoadLayout()
@@ -619,7 +686,8 @@ namespace Adan.Client
                 HistorySize = SettingsHolder.Instance.Settings.CommandsHistorySize.ToString(),
                 MinLengthHistory = SettingsHolder.Instance.Settings.MinLengthHistory.ToString(),
                 ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
-                SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings
+                SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings,
+                AutoConnect = SettingsHolder.Instance.Settings.AutoConnect,
             };
 
             var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
@@ -631,6 +699,7 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.AutoReconnect = model.AutoReconnect;
                 SettingsHolder.Instance.Settings.CommandChar = model.CommandChar;
                 SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
+                SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
 
                 if (model.StartOfLine)
                     SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
@@ -650,7 +719,7 @@ namespace Adan.Client
                     SettingsHolder.Instance.Settings.MinLengthHistory = val;
 
                 if(int.TryParse(model.ScrollBuffer, out val))
-                    SettingsHolder.Instance.Settings.ScrollBuffer = val;
+                    SettingsHolder.Instance.Settings.ScrollBuffer = val < 100000 ? val : 100000;
             }
         }
 
@@ -677,6 +746,12 @@ namespace Adan.Client
                 profiles.Add(new ProfileViewModel(str, str == "Default" ? true : false));
             }
 
+            if (profiles.Count == 0)
+            {
+                MessageBox.Show(this, "Create profile please", "Error");
+                return;
+            }
+
             var chooseViewModel = new ProfileChooseViewModel(profiles, profiles[0].NameProfile);
 
             var chooseDialog = new ProfilesChooseDialog()
@@ -690,38 +765,7 @@ namespace Adan.Client
             {
                 var name = chooseViewModel.SelectedProfile.NameProfile;
 
-                OutputWindow outputWindow = new OutputWindow(this, name);
-                outputWindow.Uid = outputWindow.Name + Guid.NewGuid().ToString("N");
-                _outputWindows.Add(outputWindow);
-
-                DockableContent d = new DockableContent()
-                {
-                    Name = outputWindow.Uid,
-                    Title = outputWindow.Name,
-                    Content = outputWindow.VisibleControl,
-                    HideOnClose = false,
-                };
-
-                outputWindow.DockContent = d;
-                d.Closed += OnOutputWindowClosed;
-
-                var menuItem = new MenuItem()
-                {
-                    Header = outputWindow.Name,
-                    Name = outputWindow.Uid,
-                };
-
-                windowMenuItem.Items.Insert(0, menuItem);
-
-                PluginHost.Instance.OutputWindowCreated(outputWindow);
-
-                if (windowSeparator.Visibility != Visibility.Visible)
-                    windowSeparator.Visibility = Visibility.Visible;
-
-                if (dockManager.MainDocumentPane != null)
-                    dockManager.MainDocumentPane.Items.Add(d);
-                else
-                    d.Show(dockManager);
+                CreateNewOutputWindow(name, name+ Guid.NewGuid().ToString("N"));
             }
         }
     }

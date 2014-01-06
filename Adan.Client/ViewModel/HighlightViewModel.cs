@@ -123,12 +123,12 @@ namespace Adan.Client.ViewModel
         {
             get
             {
-                return Highlight.TextColor;
+                return Highlight.ForegroundColor;
             }
 
             set
             {
-                Highlight.TextColor = value;
+                Highlight.ForegroundColor = value;
                 OnPropertyChanged("TextColor");
             }
         }

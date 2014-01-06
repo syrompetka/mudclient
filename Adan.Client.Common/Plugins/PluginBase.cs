@@ -178,8 +178,7 @@ namespace Adan.Client.Common.Plugins
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public virtual void OnCreatedOutputWindow(RootModel rootModel, string uid)
+        public virtual void OnCreatedOutputWindow(RootModel rootModel)
         {
 
         }
@@ -188,15 +187,13 @@ namespace Adan.Client.Common.Plugins
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public virtual void OnChangedOutputWindow(RootModel rootModel, string uid) { }
+        public virtual void OnChangedOutputWindow(RootModel rootModel) { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public virtual void OnClosedOutputWindow(RootModel rootModel, string uid) { }
+        public virtual void OnClosedOutputWindow(RootModel rootModel) { }
 
         /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.

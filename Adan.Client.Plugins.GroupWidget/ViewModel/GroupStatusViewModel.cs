@@ -28,10 +28,9 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class GroupStatusViewModel : ViewModelBase
     {
-        private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _tickingTimer;
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
         private GroupMateViewModel _selectedGroupMate;
-        //private RootModel _rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStatusViewModel"/> class.
@@ -40,6 +39,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             GroupMates = new ObservableCollection<GroupMateViewModel>();
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
+
+            _tickingTimer =  new DispatcherTimer(DispatcherPriority.Background);
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
@@ -80,7 +81,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedGroupMate = value;
-                //_rootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
                 OnPropertyChanged("SelectedGroupMate");
             }
         }
@@ -113,7 +113,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    //_rootModel.GroupStatus.Insert(position, characterStatus);
                     GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList));
                 }
 
@@ -151,17 +150,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
             OnPropertyChanged("MinimumWidth");
-        }
-
-        /// <summary>
-        /// Updates the root model.
-        /// </summary>
-        /// <param name="rootModel">The root model.</param>
-        public void UpdateRootModel([NotNull] RootModel rootModel)
-        {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            //_rootModel = rootModel;
         }
 
         private void UpdateTimings()

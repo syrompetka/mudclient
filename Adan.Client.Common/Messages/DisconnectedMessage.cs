@@ -19,7 +19,7 @@ namespace Adan.Client.Common.Messages
         /// </summary>
         /// <param name="totalBytesReceived">The total bytes received.</param>
         /// <param name="bytesDecompressed">The bytes decompressed.</param>
-        public DisconnectedMessage(int totalBytesReceived, int bytesDecompressed)
+        public DisconnectedMessage(uint totalBytesReceived, uint bytesDecompressed)
         {
             TotalBytesReceived = totalBytesReceived;
             BytesDecompressed = bytesDecompressed;
@@ -28,7 +28,7 @@ namespace Adan.Client.Common.Messages
         /// <summary>
         /// Gets the total bytes received.
         /// </summary>
-        public int TotalBytesReceived
+        public uint TotalBytesReceived
         {
             get;
             private set;
@@ -37,7 +37,7 @@ namespace Adan.Client.Common.Messages
         /// <summary>
         /// Gets the bytes decompressed.
         /// </summary>
-        public int BytesDecompressed
+        public uint BytesDecompressed
         {
             get;
             private set;

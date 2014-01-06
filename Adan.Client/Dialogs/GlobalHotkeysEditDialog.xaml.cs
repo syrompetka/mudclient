@@ -39,7 +39,12 @@ namespace Adan.Client.Dialogs
             hotKeysModel.EditHotkeyCommand.Execute(this);
         }
 
-        private void HandleOkClick(object sender, RoutedEventArgs e)
+        private void HandleAddClick(object sender, RoutedEventArgs e)
+        {
+            ((GlobalHotkeysViewModel)DataContext).AddHotkeyCommand.Execute(this);
+        }
+
+        private void HandleEditClick(object sender, RoutedEventArgs e)
         {
             ((GlobalHotkeysViewModel)DataContext).EditHotkeyCommand.Execute(this);
         }

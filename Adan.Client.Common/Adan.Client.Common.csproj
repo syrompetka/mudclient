@@ -39,6 +39,9 @@
     <Reference Include="CSLib.Net.Diagnostics">
       <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zlib">
       <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zlib.dll</HintPath>
     </Reference>
@@ -59,8 +62,17 @@
     <Compile Include="Commands\BuiltinCommandTypes.cs" />
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
-    <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\AdanElementGenerator.cs" />
+    <Compile Include="Controls\AvalonEdit\AdanLineTransformer.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanResetVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStartHighlightVisualElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStopHighlightVisualElement.cs" />
+    <Compile Include="Controls\AvalonEdit\DocumentColorizer.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\IAdanVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\SelectionColorizer.cs" />
+    <Compile Include="Controls\AvalonEdit\TextColorHolder.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>
@@ -117,6 +129,8 @@
     <Compile Include="Model\Hotkey.cs" />
     <Compile Include="Settings\SettingsHolder.cs" />
     <Compile Include="Settings\SettingsSerializer.cs" />
+    <Compile Include="Utils\AnsiColor.cs" />
+    <Compile Include="Utils\ColorsQueue.cs" />
     <Compile Include="ViewModel\InitializationStatusModel.cs" />
     <Compile Include="Model\MonsterStatus.cs" />
     <Compile Include="Model\PetStatus.cs" />

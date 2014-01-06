@@ -65,19 +65,22 @@ namespace Adan.Client.ConveyorUnits
         public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
-            var textMessage = message as TextMessage;
-            if (textMessage == null)
-            {
-                return;
-            }
 
-            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+            var textMessage = message as TextMessage;
+            if (textMessage != null)
             {
-                foreach (var substitution in group.Substitutions)
+                if (!textMessage.SkipSubstitution)
                 {
-                    substitution.HandleMessage(textMessage, rootModel);
+                    foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+                    {
+                        foreach (var substitution in group.Substitutions)
+                        {
+                            substitution.HandleMessage(textMessage, rootModel);
+                        }
+                    }
                 }
             }
+
         }
 
         #endregion

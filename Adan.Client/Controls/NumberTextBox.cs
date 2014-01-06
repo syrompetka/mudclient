@@ -12,9 +12,9 @@ namespace Adan.Client.Controls
     public class NumberTextBox : TextBox
     {
         /// <summary>
-        /// Checking for only number
+        /// Checking for only number in textbox
         /// </summary>
-        /// <param name="e">???</param>
+        /// <param name="e"></param>
         protected override void OnPreviewTextInput(System.Windows.Input.TextCompositionEventArgs e)
         {
             e.Handled = !AreAllValidNumericChars(e.Text);
@@ -24,20 +24,6 @@ namespace Adan.Client.Controls
         private bool AreAllValidNumericChars(string str)
         {
             bool ret = true;
-            //if (str == System.Globalization.NumberFormatInfo.CurrentInfo.CurrencyDecimalSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.CurrencyGroupSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.CurrencySymbol |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.NegativeSign |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.NegativeInfinitySymbol |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.NumberDecimalSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.NumberGroupSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PercentDecimalSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PercentGroupSeparator |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PercentSymbol |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PerMilleSymbol |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PositiveInfinitySymbol |
-            //    str == System.Globalization.NumberFormatInfo.CurrentInfo.PositiveSign)
-            //    return ret;
 
             int l = str.Length;
             for (int i = 0; i < l; i++)

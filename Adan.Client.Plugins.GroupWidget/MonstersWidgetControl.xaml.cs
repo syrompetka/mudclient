@@ -20,6 +20,8 @@ namespace Adan.Client.Plugins.GroupWidget
     using Adan.Client.Plugins.GroupWidget.Messages;
     using Adan.Client.Common.Model;
     using System.Collections.Generic;
+    using System.Windows;
+    using System.Windows.Threading;
 
     /// <summary>
     /// Interaction logic for GroupWidgetControl.xaml
@@ -56,11 +58,10 @@ namespace Adan.Client.Plugins.GroupWidget
             Action actToExecute = () =>
             {
                 RoomMonstersViewModel viewModel = DataContext as RoomMonstersViewModel;
-                //viewModel.UpdateRootModel(rootModel);
                 viewModel.UpdateModel(characters);
             };
 
-            Dispatcher.BeginInvoke(actToExecute);
+            Application.Current.Dispatcher.BeginInvoke(actToExecute, DispatcherPriority.Background);
         }
 
         private void CancelFocusingListBoxItem([NotNull] object sender, [NotNull] MouseButtonEventArgs e)

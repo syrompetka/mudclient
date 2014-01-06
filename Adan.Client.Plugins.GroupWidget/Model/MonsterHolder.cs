@@ -23,15 +23,14 @@ namespace Adan.Client.Plugins.GroupWidget.Model
         /// </summary>
         /// <param name="monsterManager"></param>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public MonsterHolder([NotNull] MonstersManager monsterManager, [NotNull] RootModel rootModel, string uid)
+        public MonsterHolder([NotNull] MonstersManager monsterManager, [NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(monsterManager, "monsterManager");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
             _monsterManager = monsterManager;
             _rootModel = rootModel;
-            Uid = uid;
+            Uid = _rootModel.Uid;
             Characters = new List<MonsterStatus>();
 
             rootModel.MessageConveyor.MessageReceived += MessageConveyor_MessageReceived;

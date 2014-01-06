@@ -28,6 +28,8 @@ namespace Adan.Client.Common.Messages
             : base(text, TextColor.BrightWhite)
         {
             Assert.ArgumentNotNull(text, "text");
+
+            base.AddText("\x1B[0m");
         }
 
         /// <summary>
@@ -42,14 +44,24 @@ namespace Adan.Client.Common.Messages
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="InfoMessage"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageBlocks">The message blocks.</param>
-        public InfoMessage([NotNull]IEnumerable<TextMessageBlock> messageBlocks)
-            : base(messageBlocks)
+        /// <param name="originalMessage"></param>
+        public InfoMessage(InfoMessage originalMessage)
+            : base(originalMessage)
         {
-            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
+
         }
+
+        ///// <summary>
+        ///// Initializes a new instance of the <see cref="InfoMessage"/> class.
+        ///// </summary>
+        ///// <param name="messageBlocks">The message blocks.</param>
+        //public InfoMessage([NotNull]IEnumerable<TextMessageBlock> messageBlocks)
+        //    : base(messageBlocks)
+        //{
+        //    Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
+        //}
 
         /// <summary>
         /// Gets the type of this message.

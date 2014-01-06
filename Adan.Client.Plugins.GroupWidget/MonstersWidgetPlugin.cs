@@ -157,30 +157,27 @@ namespace Adan.Client.Plugins.GroupWidget
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnCreatedOutputWindow(RootModel rootModel, string uid)
+        public override void OnCreatedOutputWindow(RootModel rootModel)
         {
-            _monstersManager.OutputWindowCreated(rootModel, uid);
+            _monstersManager.OutputWindowCreated(rootModel);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnChangedOutputWindow(RootModel rootModel, string uid)
+        public override void OnChangedOutputWindow(RootModel rootModel)
         {
-            _monstersManager.OutputWindowChanged(uid);
+            _monstersManager.OutputWindowChanged(rootModel.Uid);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnClosedOutputWindow(RootModel rootModel, string uid)
+        public override void OnClosedOutputWindow(RootModel rootModel)
         {
-            _monstersManager.OutputWindowClosed(uid);
+            _monstersManager.OutputWindowClosed(rootModel.Uid);
         }
 
         /// <summary>

@@ -51,7 +51,8 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         {
             get
             {
-                return Enumerable.Repeat(Constants.RoomMonstersMessage, 1);
+                //return Enumerable.Repeat(Constants.RoomMonstersMessage, 1);
+                return Enumerable.Empty<int>();
             }
         }
 

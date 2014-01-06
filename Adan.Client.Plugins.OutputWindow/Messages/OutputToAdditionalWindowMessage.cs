@@ -28,6 +28,20 @@ namespace Adan.Client.Plugins.OutputWindow.Messages
             : base(originalMessage)
         {
             Assert.ArgumentNotNull(originalMessage, "originalMessage");
+
+            this.SkipSubstitution = true;
+            this.SkipTriggers = true;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        public OutputToAdditionalWindowMessage(string text)
+            : base(text, true)
+        {
+            this.SkipSubstitution = true;
+            this.SkipTriggers = true;
         }
 
         /// <summary>
@@ -40,6 +54,9 @@ namespace Adan.Client.Plugins.OutputWindow.Messages
             : base(text, foregroundColor, backgroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
+
+            this.SkipSubstitution = true;
+            this.SkipTriggers = true;
         }
 
         /// <summary>
@@ -54,6 +71,15 @@ namespace Adan.Client.Plugins.OutputWindow.Messages
             {
                 return BuiltInMessageTypes.TextMessage;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override TextMessage NewInstance()
+        {
+            return new OutputToAdditionalWindowMessage(this);
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Adan.Client.Common.Controls
     using System.Windows.Media;
     using System.Windows.Media.TextFormatting;
     using System.Windows.Threading;
+    using System.Diagnostics;
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -28,6 +29,7 @@ namespace Adan.Client.Common.Controls
 
     using TextFormatting;
     using Themes;
+    using System.ComponentModel;
 
     #endregion
 
@@ -53,6 +55,14 @@ namespace Adan.Client.Common.Controls
         private int _currentNumberOfLinesInView;
         private double _lineHeight;
 
+#if DEBUG
+        private TimeSpan _renderTime;
+        /// <summary>
+        /// 
+        /// </summary>
+        public event PropertyChangedEventHandler PropertyChanged;
+#endif
+
         #endregion
 
         #region Constructors and Destructors
@@ -72,6 +82,28 @@ namespace Adan.Client.Common.Controls
         #endregion
 
         #region Properties
+
+#if DEBUG
+        /// <summary>
+        /// 
+        /// </summary>
+        public TimeSpan RenderTime
+        {
+            get
+            {
+                return _renderTime;
+            }
+            set
+            {
+                _renderTime = value;
+                if (PropertyChanged != null)
+                {
+                    var e = new PropertyChangedEventArgs("RenderTime");
+                    PropertyChanged(this, e);
+                }
+            }
+        }
+#endif
 
         /// <summary>
         /// Gets or sets the lines overflow percent before cleanup.
@@ -508,7 +540,7 @@ namespace Adan.Client.Common.Controls
 
         #endregion
 
-        #region TextSelecing
+        #region TextSelecting
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Controls.Control.MouseDoubleClick"/> routed event.
@@ -646,6 +678,11 @@ namespace Adan.Client.Common.Controls
         {
             Assert.ArgumentNotNull(drawingContext, "drawingContext");
 
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+
             base.OnRender(drawingContext);
             drawingContext.DrawRectangle(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), new Pen(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
             var renderedLines = 0;
@@ -705,6 +742,11 @@ namespace Adan.Client.Common.Controls
                 _selectionSettings.NeedUpdate = false;
                 InvalidateVisual();
             }
+
+#if DEBUG
+            sw.Stop();
+            RenderTime = sw.Elapsed;
+#endif
         }
 
         /// <summary>

@@ -41,13 +41,12 @@
             </ListBox.ItemTemplate>
         </ListBox>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Row="1">
-            <Button HorizontalAlignment="Left" MinWidth="50" Command="{Binding Path=AddHotkeyCommand}" CommandParameter="{Binding ElementName=HotkeysEditorWindow, Path=.}">Add</Button>
-            <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=EditHotkeyCommand}"  CommandParameter="{Binding ElementName=HotkeysEditorWindow, Path=.}">Edit</Button>
+            <Button HorizontalAlignment="Left" MinWidth="50" Click="HandleAddClick" >Add</Button>
+            <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"   Click="HandleEditClick">Edit</Button>
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=DeleteHotkeyCommand}">Delete</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Click="HandleOkClick" Margin="0,0,5,0" HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Content="Ok"/>
-            <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+            <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" MinWidth="50">Close</Button>
         </StackPanel>
     </Grid>
 </Window>

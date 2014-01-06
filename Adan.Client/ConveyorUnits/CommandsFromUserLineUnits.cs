@@ -56,8 +56,6 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexStatus = new Regex(@"#stat?u?s?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        //private RootModel rootModel;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandsFromUserLineUnit"/> class.
         /// </summary>
@@ -378,7 +376,7 @@ namespace Adan.Client.ConveyorUnits
                     return;
                 }
 
-                highlight.TextColor = foregroundColor;
+                highlight.ForegroundColor = foregroundColor;
                 highlight.BackgroundColor = backgroundColor;
 
                 group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[2]);
@@ -631,8 +629,10 @@ namespace Adan.Client.ConveyorUnits
                     else if (keyConverter.IsValid(hotkey))
                         key |= (Key)keyConverter.ConvertFrom(hotkey);
                     else
+                    {
                         if (!isImport)
                             base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"), rootModel);
+                    }
                 }
 
                 if (args.Length == 2)
@@ -674,7 +674,7 @@ namespace Adan.Client.ConveyorUnits
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
 
-                if (args.Length < 2)
+                if (args.Length < 2 || (args.Length > 0 && String.IsNullOrEmpty(args[0])))
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
@@ -682,7 +682,10 @@ namespace Adan.Client.ConveyorUnits
                     return;
                 }
 
-                rootModel.SetVariableValue(args[0], args[1], false);
+                if(!isImport)
+                    rootModel.SetVariableValue(args[0], args[1], false);
+                else
+                    rootModel.SetVariableValue(args[0], args[1], true);
 
                 if (!isImport)
                     base.PushMessageToConveyor(new InfoMessage("#Переменная добавлена"), rootModel);
@@ -751,6 +754,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
+
                     return;
                 }
 
@@ -776,6 +780,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
@@ -784,11 +789,13 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
                 if (!isImport)
                     base.PushCommandToConveyor(new ConnectCommand(args[0], port), rootModel);
+
                 return;
             }
 
@@ -821,6 +828,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
@@ -830,6 +838,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
                     return;
                 }
 
@@ -837,13 +846,17 @@ namespace Adan.Client.ConveyorUnits
                 {
                     rootModel.EnableGroup(args[0]);
                 }
-                else if(match.Groups[1].ToString() == "disable")
+                else if (match.Groups[1].ToString() == "disable")
                 {
                     rootModel.DisableGroup(args[0]);
                 }
                 else
+                {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+                }
+
+                return;
             }
         }
     }

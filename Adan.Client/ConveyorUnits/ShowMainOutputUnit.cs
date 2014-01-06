@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
+using Adan.Client.Commands;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.ConveyorUnits;
 using Adan.Client.Common.Model;
+using Adan.Client.Common.Utils;
 
 namespace Adan.Client.ConveyorUnits
 {
@@ -15,9 +17,9 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class ShowMainOutputUnit : ConveyorUnit
     {
-        private static MainWindow _mainWindow;
+        private MainWindow _mainWindow;
 
-        private Regex _regexShowOutputWindow = new Regex(@"^\#window\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private Regex _regexShowOutputWindow = new Regex(@"^\#wind?o?w?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// 
@@ -61,7 +63,7 @@ namespace Adan.Client.ConveyorUnits
             var showOutputCommand = command as ShowMainOutputCommand;
             if (showOutputCommand != null)
             {
-                Application.Current.Dispatcher.BeginInvoke((Action<string>)_mainWindow.ShowOutputWindow, ((ShowMainOutputCommand)command).OutputWindowName);
+                _mainWindow.ShowOutputWindow(showOutputCommand.OutputWindowName);
                 command.Handled = true;
                 return;
             }
@@ -72,7 +74,7 @@ namespace Adan.Client.ConveyorUnits
                 Match m = _regexShowOutputWindow.Match(textCommand.CommandText);
                 if (m.Success)
                 {
-                    Application.Current.Dispatcher.BeginInvoke((Action<string>)_mainWindow.ShowOutputWindow, m.Groups[1].ToString());
+                    _mainWindow.ShowOutputWindow(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]);
                     command.Handled = true;
                 }
 

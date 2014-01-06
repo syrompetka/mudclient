@@ -77,25 +77,25 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
             Assert.ArgumentNotNull(command, "command");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            var hotKeyCommand = command as HotkeyCommand;
-            if (hotKeyCommand == null)
-            {
-                return;
-            }
+            //var hotKeyCommand = command as HotkeyCommand;
+            //if (hotKeyCommand == null)
+            //{
+            //    return;
+            //}
 
-            if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.None)
-            {
-                hotKeyCommand.Handled = true;
-                _groupWidget.NextGroupMate();
-                return;
-            }
+            //if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.None)
+            //{
+            //    hotKeyCommand.Handled = true;
+            //    _groupWidget.NextGroupMate();
+            //    return;
+            //}
 
-            if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
-            {
-                hotKeyCommand.Handled = true;
-                _groupWidget.PreviousGroupMate();
-                return;
-            }
+            //if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
+            //{
+            //    hotKeyCommand.Handled = true;
+            //    _groupWidget.PreviousGroupMate();
+            //    return;
+            //}
         }
     }
 }

@@ -30,20 +30,17 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
     /// </summary>
     public class OutputToAdditionalWindowConveyorUnit : ConveyorUnit
     {
-        private readonly Regex _regexOutput = new Regex(@"#outp?u?t?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _regexOutput = new Regex(@"#outp?u?t?\s+\{?(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private readonly AdditionalOutputWindow _window;
+        private AdditionalOutputWindowManager _manager;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputToAdditionalWindowConveyorUnit"/> class.
         /// </summary>
-        /// <param name="window">The window.</param>
-        public OutputToAdditionalWindowConveyorUnit([NotNull] AdditionalOutputWindow window)
+        public OutputToAdditionalWindowConveyorUnit(AdditionalOutputWindowManager manager)
             : base()
         {
-            Assert.ArgumentNotNull(window, "window");
-
-            _window = window;
+            _manager = manager;
         }
 
         /// <summary>
@@ -97,10 +94,9 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
                     return;
                 }
 
-                _window.AddMessage(new OutputToAdditionalWindowMessage(
-                    match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty),
-                    (TextColor)new TextColorToBrushConverter().ConvertBack(ThemeManager.Instance.ActiveTheme.DefaultTextColor, typeof(TextColor), new object(), CultureInfo.InvariantCulture),
-                    (TextColor)new TextColorToBrushConverter().ConvertBack(ThemeManager.Instance.ActiveTheme.DefaultBackGroundColor, typeof(TextColor), new object(), CultureInfo.InvariantCulture)) { SkipTriggers = true });
+                string str = match.Groups[1].Value;
+
+                rootModel.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str[str.Length - 1] == '}' ? str.Substring(0, str.Length - 1) : str));
 
                 return;
             }
@@ -113,13 +109,12 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
         /// <param name="rootModel"></param>
         public override void HandleMessage(Message message, RootModel rootModel)
         {
-            Assert.ArgumentNotNull(message, "message");
-
-            var outputToAdditionalWindowMessage = message as OutputToAdditionalWindowMessage;
-            if (outputToAdditionalWindowMessage != null)
+            var outputMessage = message as OutputToAdditionalWindowMessage;
+            if (outputMessage != null)
             {
-                _window.AddMessage(outputToAdditionalWindowMessage);
-                outputToAdditionalWindowMessage.Handled = true;
+                outputMessage.Handled = true;
+
+                _manager.AddText(rootModel, outputMessage);
             }
         }
     }

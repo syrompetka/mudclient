@@ -36,7 +36,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <param name="windowTitle">The window title.</param>
         /// <param name="availableAffects">The avalable affects.</param>
         /// <param name="displayedAffects">The displayed affects.</param>
-        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects, [NotNull] IEnumerable<AffectDescription> displayedAffects)
+        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects,
+            [NotNull] IEnumerable<AffectDescription> displayedAffects)
         {
             Assert.ArgumentNotNullOrWhiteSpace(windowTitle, "windowTitle");
             Assert.ArgumentNotNull(availableAffects, "availableAffects");

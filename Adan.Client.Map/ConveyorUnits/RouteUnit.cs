@@ -35,6 +35,7 @@ namespace Adan.Client.Map.ConveyorUnits
             : base()
         {
             Assert.ArgumentNotNull(routeManager, "routeManager");
+
             _routeManager = routeManager;
         }
 

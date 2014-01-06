@@ -28,7 +28,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class RoomMonstersViewModel : ViewModelBase
     {
-        private readonly DispatcherTimer _tickingTimer = new DispatcherTimer();
+        private readonly DispatcherTimer _tickingTimer;
 
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
         private MonsterViewModel _selectedMonster;
@@ -39,6 +39,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         public RoomMonstersViewModel()
         {
             Monsters = new ObservableCollection<MonsterViewModel>();
+
+            _tickingTimer = new DispatcherTimer(DispatcherPriority.Background);
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
@@ -71,7 +73,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedMonster = value;
-                //_rootModel.SelectedRoomMonster = value != null ? value.MonsterStatus : null;
                 OnPropertyChanged("SelectedMonster");
             }
         }
@@ -104,7 +105,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    //_rootModel.RoomMonstersStatus.Insert(position, monster);
                     Monsters.Insert(position, new MonsterViewModel(monster, affectsList));
                 }
 
@@ -115,7 +115,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             for (int i = position; i < count; i++)
             {
                 Monsters.RemoveAt(position);
-               // _rootModel.RoomMonstersStatus.RemoveAt(position);
             }
         }
 

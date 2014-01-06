@@ -11,6 +11,7 @@ namespace Adan.Client.Common.Messages
 {
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using ICSharpCode.AvalonEdit.Rendering;
     using Themes;
 
     /// <summary>

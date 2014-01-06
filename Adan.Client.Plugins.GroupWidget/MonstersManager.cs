@@ -33,13 +33,11 @@ namespace Adan.Client.Plugins.GroupWidget
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public void OutputWindowCreated([NotNull] RootModel rootModel, [NotNull] string uid)
+        public void OutputWindowCreated([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNullOrWhiteSpace(uid, "uid");
 
-            _monsterHolders.Add(uid, new MonsterHolder(this, rootModel, uid));
+            _monsterHolders.Add(rootModel.Uid, new MonsterHolder(this, rootModel));
         }
 
         /// <summary>

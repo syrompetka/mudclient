@@ -33,5 +33,11 @@ namespace Adan.Client.Dialogs
         {
             ((ProfileOptionsViewModel)this.DataContext).EditOptionsCommand.Execute(this);
         }
+
+        private void HandleCloseClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            DialogResult = true;
+            this.Close();
+        }
     }
 }

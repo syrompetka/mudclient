@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Common.Themes
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows.Media;
     using System.Linq;
@@ -89,6 +90,16 @@ namespace Adan.Client.Common.Themes
         public override TextColor GetTextColorByBrush(SolidColorBrush color, bool isBackground)
         {
             return _textColors.FirstOrDefault(x => x.Value == color).Key;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBackGround"></param>
+        /// <returns></returns>
+        public override SolidColorBrush GetSelectionBrushByTextColor(bool isBackGround)
+        {
+            throw new NotImplementedException();
         }
     }
 }

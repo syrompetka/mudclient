@@ -100,7 +100,7 @@ namespace Adan.Client.ViewModel
                     aliasesEditDialog.ShowDialog();
                     break;
                 case "Groups":
-                    var groupEditDialog = new GroupsEditDialog { DataContext = _groupsViewModel.Groups };
+                    var groupEditDialog = new GroupsEditDialog { DataContext = new GroupsViewModel(_groupsViewModel.AllGroup, "Default", RootModel.AllActionDescriptions), Owner = owner };
                     groupEditDialog.ShowDialog();
                     break;
                 case "Highlights":
@@ -120,8 +120,6 @@ namespace Adan.Client.ViewModel
                     triggerEditDialog.ShowDialog();
                     break;
             }
-
-            //SettingsHolder.Instance.SetProfile(allGroups);
         }
 
         private void ImportProfile(object obj)
@@ -135,11 +133,7 @@ namespace Adan.Client.ViewModel
             if (result.HasValue && result.Value)
             {
                 ProfileHolder.ImportJmcConfig(fileDialog.FileName, Profile);
-                _groupsViewModel.Groups.Clear();
-                foreach (var group in Profile.Groups)
-                {
-                    _groupsViewModel.Groups.Add(new GroupViewModel(_groupsViewModel.Groups, group, RootModel.AllActionDescriptions));
-                }
+                _groupsViewModel = new GroupsViewModel(Profile.Groups, Profile.Name, RootModel.AllActionDescriptions);
             }
         }
     }

@@ -74,6 +74,9 @@
     <Reference Include="CSLib.Net.Extensions">
       <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Extensions.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -87,6 +90,7 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="UIAutomationProvider" />
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -99,8 +103,16 @@
     <Compile Include="CommandSerializers\TextCommandSerializer.cs" />
     <Compile Include="Commands\ConnectCommand.cs" />
     <Compile Include="Commands\DisconnectCommand.cs" />
+    <Compile Include="Commands\SendToWindowCommand.cs" />
+    <Compile Include="Commands\ShowMainOutputCommand.cs" />
+    <Compile Include="Controls\MainOutputWindowEx.xaml.cs">
+      <DependentUpon>MainOutputWindowEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainOutputWindowExx.xaml.cs">
+      <DependentUpon>MainOutputWindowExx.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NumberTextBox.cs" />
-    <Compile Include="Controls\OneCharTextButton.cs" />
+    <Compile Include="Controls\OneCharTextBox.cs" />
     <Compile Include="Controls\TextBoxWithHistory.cs" />
     <Compile Include="ConveyorUnits\AliasUnit.cs" />
     <Compile Include="ConveyorUnits\CapForLineCommandUnit.cs" />
@@ -113,6 +125,7 @@
     <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
     <Compile Include="ConveyorUnits\LoggingUnit.cs" />
     <Compile Include="ConveyorUnits\ProtocolVersionUnit.cs" />
+    <Compile Include="ConveyorUnits\SendToWindowUnit.cs" />
     <Compile Include="ConveyorUnits\ShowMainOutputUnit.cs" />
     <Compile Include="ConveyorUnits\SubstitutionUnit.cs" />
     <Compile Include="ConveyorUnits\TriggerUnit.cs" />
@@ -184,8 +197,8 @@
     <Compile Include="Controls\Fonts\TypeFaceListItem.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
+    <Compile Include="MessageDeserializers\TextMessageDeserializerEx.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
-    <Compile Include="Messages\AnsiColor.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
@@ -217,6 +230,7 @@
     <Compile Include="Model\Actions\OutputToMainWindowAction.cs" />
     <Compile Include="Model\Actions\SendTextAction.cs" />
     <Compile Include="Model\Actions\SendTextOneParameterAction.cs" />
+    <Compile Include="Model\Actions\SendToWindowAction.cs" />
     <Compile Include="Model\Actions\SetVariableValueAction.cs" />
     <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />
     <Compile Include="Model\Actions\StartLogAction.cs" />
@@ -265,6 +279,14 @@
     <Compile Include="ViewModel\SubstitutionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
+    <Page Include="Controls\MainOutputWindowEx.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainOutputWindowExx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Dialogs\AliasEditDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

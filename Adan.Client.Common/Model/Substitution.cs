@@ -11,13 +11,13 @@ namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Xml.Serialization;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
-
     using Utils.PatternMatching;
 
     /// <summary>
@@ -95,35 +95,118 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
-        /// Handles the message.
+        /// 
         /// </summary>
-        /// <param name="message">The message.</param>
-        /// <param name="rootModel">The root model.</param>
-        public void HandleMessage([NotNull] TextMessage message, [NotNull]RootModel rootModel)
+        /// <param name="textMessage"></param>
+        /// <param name="rootModel"></param>
+        public void HandleMessage([NotNull] TextMessage textMessage, [NotNull]RootModel rootModel)
         {
-            Assert.ArgumentNotNull(message, "message");
+            Assert.ArgumentNotNull(textMessage, "message");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            foreach (var block in message.MessageBlocks)
+            ClearMatchingResults();
+            string text = textMessage.InnerText;
+            var res = GetRootPatternToken(rootModel).Match(text, 0, _matchingResults);
+            if (res.IsSuccess)
             {
-                ClearMatchingResults();
                 int position = 0;
-                var res = GetRootPatternToken(rootModel).Match(block.Text, position, _matchingResults);
-                while (res.IsSuccess)
+                int coloredPosition = 0;
+                int coloredStartPosition = 0;
+                int lastPosition = res.StartPosition - position;
+                string coloredText = textMessage.ColoredText;
+                StringBuilder sb = new StringBuilder(coloredText.Length);
+                do
                 {
-                    var replaceResult = block.Text.Substring(0, res.StartPosition)
-                                 + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults)
-                                 + block.Text.Substring(res.EndPosition);
-                    if (replaceResult != block.Text)
+                    int count = 0;
+                    if (lastPosition == 0)
                     {
-                        block.ChangeInnerText(replaceResult);
-                        message.UpdateInnerText();
+                        while (coloredText[coloredStartPosition] == '\x1B')
+                        {
+                            coloredStartPosition += 2;
+                            var tt = coloredText[coloredStartPosition];
+
+                            while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
+                                coloredStartPosition++;
+
+                            if (coloredStartPosition == coloredText.Length)
+                            {
+                                coloredStartPosition = 0;
+                            }
+                            else
+                            {
+                                coloredStartPosition++;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        while (count < lastPosition)
+                        {
+                            if (coloredText[coloredStartPosition] == '\x1B')
+                            {
+                                coloredStartPosition += 2;
+                                var tt = coloredText[coloredStartPosition];
+
+                                while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
+                                    coloredStartPosition++;
+
+                                if (coloredStartPosition == coloredText.Length)
+                                    break;
+
+                                coloredStartPosition++;
+                            }
+                            else
+                            {
+                                count++;
+                                coloredStartPosition++;
+                            }
+                        }
+                    }
+
+                    sb.Append(coloredText, coloredPosition, coloredStartPosition - coloredPosition);
+                    sb.Append(GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults));
+
+                    lastPosition = res.EndPosition - position;
+                    count = 0;
+                    while (count < lastPosition)
+                    {
+                        if (coloredText[coloredPosition] == '\x1B')
+                        {
+                            coloredPosition += 2;
+                            var tt = coloredText[coloredPosition];
+
+                            while (coloredPosition < coloredText.Length && coloredText[coloredPosition] != 'm')
+                                coloredPosition++;
+
+                            if (coloredPosition == coloredText.Length)
+                                break;
+
+                            coloredPosition++;
+                        }
+                        else
+                        {
+                            count++;
+                            coloredPosition++;
+                        }
                     }
 
                     position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
                     ClearMatchingResults();
-                    res = GetRootPatternToken(rootModel).Match(block.Text, position, _matchingResults);
-                }
+                    if (position >= text.Length)
+                    {
+                        break;
+                    }
+
+                    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+                } while (res.IsSuccess);
+
+                if (coloredPosition < coloredText.Length)
+                    sb.Append(coloredText, coloredPosition, coloredText.Length - coloredPosition);
+
+                textMessage.Clear();
+                textMessage.AddText(sb.ToString());
+                //rootModel.PushMessageToConveyor(textMessage.NewInstance());
+                //textMessage.Handled = true;
             }
         }
 
@@ -145,7 +228,7 @@ namespace Adan.Client.Common.Model
                 _rootSubstituteWithPatternToken = WildcardParser.ParseWildcardString(SubstituteWith, rootModel);
             }
 
-            return _rootSubstituteWithPatternToken;            
+            return _rootSubstituteWithPatternToken;
         }
 
         [NotNull]

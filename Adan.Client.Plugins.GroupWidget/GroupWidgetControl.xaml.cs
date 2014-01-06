@@ -22,6 +22,7 @@ namespace Adan.Client.Plugins.GroupWidget
     using Adan.Client.Common.Model;
     using System.Collections.Generic;
     using System.Windows.Threading;
+    using System.Windows;
 
     /// <summary>
     /// Interaction logic for GroupWidgetControl.xaml
@@ -50,7 +51,7 @@ namespace Adan.Client.Plugins.GroupWidget
         /// </summary>
         public void NextGroupMate()
         {
-            var executeToAct = (Action) (() =>
+            Action executeToAct = () =>
             {
                 var groupWidgetControl = (GroupStatusViewModel)DataContext;
 
@@ -63,9 +64,9 @@ namespace Adan.Client.Plugins.GroupWidget
 
                 var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
                 groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index + 1];
-            });
+            };
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, executeToAct);
+            Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
         }
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Adan.Client.Plugins.GroupWidget
         /// </summary>
         public void PreviousGroupMate()
         {
-            var executeToAct = (Action)(() =>
+            Action executeToAct = () =>
             {
                 var groupWidgetControl = (GroupStatusViewModel)DataContext;
 
@@ -86,9 +87,9 @@ namespace Adan.Client.Plugins.GroupWidget
 
                 var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
                 groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index - 1];
-            });
+            };
 
-            Dispatcher.BeginInvoke(DispatcherPriority.Normal, executeToAct);
+            Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
         }
 
         /// <summary>
@@ -104,11 +105,10 @@ namespace Adan.Client.Plugins.GroupWidget
             Action actToExecute = () => 
                 {
                     GroupStatusViewModel viewModel = DataContext as GroupStatusViewModel;
-                    viewModel.UpdateRootModel(rootModel);
                     viewModel.UpdateModel(characters);
                 };
 
-            Dispatcher.BeginInvoke(actToExecute);
+            Application.Current.Dispatcher.BeginInvoke(actToExecute, DispatcherPriority.Background);
         }
 
         private void CancelFocusingListBoxItem([NotNull] object sender, [NotNull] MouseButtonEventArgs e)

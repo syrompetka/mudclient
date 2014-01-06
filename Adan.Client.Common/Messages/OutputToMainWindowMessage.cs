@@ -21,13 +21,12 @@ namespace Adan.Client.Common.Messages
     public class OutputToMainWindowMessage : TextMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputToMainWindowMessage"/> class.
+        /// 
         /// </summary>
-        /// <param name="messageBlocks">The message blocks.</param>
-        public OutputToMainWindowMessage([NotNull] IEnumerable<TextMessageBlock> messageBlocks)
-            : base(messageBlocks)
+        /// <param name="originalMessage"></param>
+        public OutputToMainWindowMessage(OutputToMainWindowMessage originalMessage)
+            : base(originalMessage)
         {
-            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
         }
 
         /// <summary>
@@ -42,11 +41,12 @@ namespace Adan.Client.Common.Messages
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="OutputToMainWindowMessage"/> class.
+        /// 
         /// </summary>
-        /// <param name="text">The text to display.</param>
-        public OutputToMainWindowMessage([NotNull] string text)
-            : base(text)
+        /// <param name="text"></param>
+        /// <param name="isColored"></param>
+        public OutputToMainWindowMessage([NotNull] string text, bool isColored)
+            : base(text, isColored)
         {
             Assert.ArgumentNotNull(text, "text");
         }
@@ -75,6 +75,15 @@ namespace Adan.Client.Common.Messages
             {
                 return BuiltInMessageTypes.TextMessage;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override TextMessage NewInstance()
+        {
+            return new OutputToMainWindowMessage(this);
         }
     }
 }

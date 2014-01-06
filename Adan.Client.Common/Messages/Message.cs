@@ -53,5 +53,15 @@ namespace Adan.Client.Common.Messages
             get;
             set;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public bool SkipSubstitution
+        {
+            get;
+            set;
+        }
     }
 }

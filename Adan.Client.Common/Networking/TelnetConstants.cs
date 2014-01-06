@@ -40,6 +40,11 @@ namespace Adan.Client.Common.Networking
         public const byte DoCode = 0xFD;
 
         /// <summary>
+        /// Telnet "DONOT" code
+        /// </summary>
+        public const byte DoNotCode = 0xFE;
+
+        /// <summary>
         /// Telnet "COMPRESS" code.
         /// </summary>
         public const byte CompressCode = 0x55;

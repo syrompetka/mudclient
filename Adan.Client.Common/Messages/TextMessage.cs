@@ -24,6 +24,7 @@ namespace Adan.Client.Common.Messages
     {
         private bool _isInnerTextComputed;
         private string _innerText;
+        private string _coloredText;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
@@ -33,23 +34,16 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNull(originalMessage, "originalMessage");
 
-            // need to deep copy original message to prevent double substitution for example.
-            var blocks = originalMessage.MessageBlocks.Select(textMessageBlock => new TextMessageBlock(textMessageBlock.Text, textMessageBlock.Foreground, textMessageBlock.Background)).ToList();
+            this.SkipSubstitution = originalMessage.SkipSubstitution;
+            this.SkipTriggers = originalMessage.SkipTriggers;
 
-            MessageBlocks = blocks;
-            _isInnerTextComputed = false;
-        }
+            if (originalMessage._isInnerTextComputed)
+            {
+                _isInnerTextComputed = true;
+                _innerText = originalMessage.InnerText;
+            }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextMessage"/> class.
-        /// </summary>
-        /// <param name="messageBlocks">The message blocks.</param>
-        protected TextMessage([NotNull] IEnumerable<TextMessageBlock> messageBlocks)
-        {
-            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
-
-            MessageBlocks = messageBlocks;
-            _isInnerTextComputed = false;
+            _coloredText = originalMessage.ColoredText;
         }
 
         /// <summary>
@@ -60,21 +54,28 @@ namespace Adan.Client.Common.Messages
         protected TextMessage([NotNull] string text, TextColor foregroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
-            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text, foregroundColor) };
-            _isInnerTextComputed = true;
-            _innerText = text;
+
+            this.AddText(text, foregroundColor);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextMessage"/> class.
+        /// 
         /// </summary>
-        /// <param name="text">The text to display.</param>
-        protected TextMessage([NotNull] string text)
+        /// <param name="text"></param>
+        /// <param name="isColored"></param>
+        protected TextMessage([NotNull] string text, bool isColored)
         {
             Assert.ArgumentNotNull(text, "text");
-            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text) };
-            _isInnerTextComputed = true;
-            _innerText = text;
+
+            if (isColored)
+                _coloredText = text;
+            else
+            {
+                _innerText = text;
+                _coloredText = text;
+            }
+
+            _isInnerTextComputed = !isColored;
         }
 
         /// <summary>
@@ -86,19 +87,197 @@ namespace Adan.Client.Common.Messages
         protected TextMessage([NotNull] string text, TextColor foregroundColor, TextColor backgroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
-            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text, foregroundColor, backgroundColor) };
-            _isInnerTextComputed = true;
-            _innerText = text;
+
+            AddText(text, foregroundColor, backgroundColor);
         }
 
         /// <summary>
-        /// Gets the message blocks.
+        /// 
         /// </summary>
-        [NotNull]
-        public IEnumerable<TextMessageBlock> MessageBlocks
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        public void Highlight(TextColor foreground, TextColor background, int offset, int length)
         {
-            get;
-            private set;
+            StringBuilder sb = new StringBuilder(_coloredText.Length + 20);
+            int coloredPosition = 0;
+
+            if (offset > 0)
+            {
+                int count = 0;
+                while (count < offset)
+                {
+                    if (_coloredText[coloredPosition] == '\x1B')
+                    {
+                        coloredPosition += 2;
+                        var tt = _coloredText[coloredPosition];
+
+                        while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                            coloredPosition++;
+
+                        if (coloredPosition == _coloredText.Length)
+                            break;
+
+                        coloredPosition++;
+                    }
+                    else
+                    {
+                        count++;
+                        coloredPosition++;
+                    }
+                }
+            }
+
+            while (_coloredText[coloredPosition] == '\x1B')
+            {
+                coloredPosition += 2;
+                var tt = _coloredText[coloredPosition];
+
+                while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                    coloredPosition++;
+
+                coloredPosition++;
+            }
+
+            if (coloredPosition > 0)
+                sb.Append(_coloredText, 0, coloredPosition);
+
+            sb.Append("\x1B[2;");
+
+            if (foreground == TextColor.None && background == TextColor.None)
+            {
+                sb.Append("0");
+            }
+            else
+            {
+                if (foreground != TextColor.None)
+                {
+                    sb.Append(ConvertTextColorToAnsi(foreground, false));
+                    sb.Append(';');
+                }
+                if (background != TextColor.None)
+                    sb.Append(ConvertTextColorToAnsi(background, true));
+            }
+
+            sb.Append('m');
+
+            int startPosition = coloredPosition;
+
+            {
+                int count = 0;
+                while (count < length)                    
+                {
+                    if (_coloredText[coloredPosition] == '\x1B')
+                    {
+                        coloredPosition += 2;
+                        var tt = _coloredText[coloredPosition];
+
+                        while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                            coloredPosition++;
+
+                        if (coloredPosition == _coloredText.Length)
+                            break;
+
+                        coloredPosition++;
+                    }
+                    else
+                    {
+                        count++;
+                        coloredPosition++;
+                    }
+                }
+            }
+
+            sb.Append(_coloredText, startPosition, coloredPosition - startPosition);
+            sb.Append("\x1B[3m");
+
+            if (coloredPosition < _coloredText.Length)
+                sb.Append(_coloredText, coloredPosition, _coloredText.Length - coloredPosition);
+
+            _coloredText = sb.ToString();
+        }
+
+        private string ConvertTextColorToAnsi(TextColor color, bool isBackground)
+        {
+            StringBuilder sb = new StringBuilder(4);
+
+            switch(color)
+            {
+                case TextColor.White:
+                    sb.Append("0;");
+                    sb.Append((7 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightWhite:
+                    sb.Append("1;");
+                    sb.Append((7 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Black:
+                    sb.Append("0;");
+                    sb.Append(isBackground ? "40" : "30");
+                    break;
+                case TextColor.BrightBlack:                    
+                    sb.Append("1;");
+                    sb.Append(isBackground ? "40" : "30");
+                    break;
+                case TextColor.Red:
+                    sb.Append("0;");
+                    sb.Append((1 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightRed:
+                    sb.Append("1;");
+                    sb.Append((1 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Green:
+                    sb.Append("0;");
+                    sb.Append((2 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightGreen:
+                    sb.Append("1;");
+                    sb.Append((2 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Yellow:
+                    sb.Append("0;");
+                    sb.Append((3 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightYellow:
+                    sb.Append("1;");
+                    sb.Append((3 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Blue:
+                    sb.Append("0;");
+                    sb.Append((4 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightBlue:
+                    sb.Append("0;");
+                    sb.Append((4 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Magenta:
+                    sb.Append("0;");
+                    sb.Append((5 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightMagenta:
+                    sb.Append("1;");
+                    sb.Append((5 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.Cyan:
+                    sb.Append("0;");
+                    sb.Append((6 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.BrightCyan:
+                    sb.Append("1;");
+                    sb.Append((6 + (isBackground ? 40 : 30)).ToString());
+                    break;
+                case TextColor.RepeatCommandTextColor:
+                    sb.Append("4");
+                    break;
+                case TextColor.None:
+                default:
+                    sb.Append("0");
+                    break;
+            }
+
+            return sb.ToString();
         }
 
         /// <summary>
@@ -111,38 +290,136 @@ namespace Adan.Client.Common.Messages
             {
                 if (!_isInnerTextComputed)
                 {
-                    var builder = new StringBuilder();
-                    foreach (var messageBlock in MessageBlocks)
+                    int offset = 0;
+                    int startIndex = 0;
+                    StringBuilder sb = new StringBuilder();
+
+                    while (offset < _coloredText.Length)
                     {
-                        builder.Append(messageBlock.Text);
+                        if (_coloredText[offset] == '\x1B')
+                        {
+                            if (offset > 0)
+                                sb.Append(_coloredText.Substring(startIndex, offset - startIndex));
+
+                            offset += 2;
+
+                            while (offset < _coloredText.Length && _coloredText[offset] != 'm')
+                                ++offset;
+
+                            if (offset == _coloredText.Length)
+                                break;
+
+                            startIndex = offset + 1;
+                        }
+
+                        ++offset;
                     }
 
-                    _innerText = builder.ToString();
+                    if (startIndex != _coloredText.Length)
+                        sb.Append(_coloredText.Substring(startIndex, offset - startIndex));
+
+                    _innerText = sb.ToString();
+
                     _isInnerTextComputed = true;
                 }
-
+                
                 return _innerText;
             }
         }
 
         /// <summary>
-        /// Updates the inner text.
+        /// 
         /// </summary>
-        public void UpdateInnerText()
+        [NotNull]
+        public string ColoredText
         {
-            _isInnerTextComputed = false;
-            _innerText = string.Empty;
+            get
+            {
+                return _coloredText;
+            }
         }
 
         /// <summary>
-        /// Updates the message blocks.
+        /// 
         /// </summary>
-        /// <param name="messageBlocks">The message blocks.</param>
-        public void UpdateMessageBlocks([NotNull] IEnumerable<TextMessageBlock> messageBlocks)
+        /// <param name="text"></param>
+        public void AddText(string text)
         {
-            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
-
-            MessageBlocks = messageBlocks;
+            StringBuilder sb = new StringBuilder(_coloredText);
+            sb.Append(text);
+            _coloredText = sb.ToString();
+            _isInnerTextComputed = false;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="foreground"></param>
+        public void AddText(string text, TextColor foreground)
+        {
+            StringBuilder sb = new StringBuilder(_coloredText);
+            sb.Append('\x1B');
+            sb.Append('[');
+
+            if (foreground == TextColor.None)
+            {
+                sb.Append("0");
+            }
+            else
+            {
+                sb.Append(ConvertTextColorToAnsi(foreground, false));
+            }
+
+            sb.Append('m');
+            sb.Append(text);
+            _coloredText = sb.ToString();
+            _isInnerTextComputed = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        public void AddText(string text, TextColor foreground, TextColor background)
+        {
+            StringBuilder sb = new StringBuilder(_coloredText);
+            sb.Append('\x1B');
+            sb.Append('[');
+
+            if (foreground == TextColor.None && background == TextColor.None)
+            {
+                sb.Append("0");
+            }
+            else
+            {
+                if (foreground != TextColor.None)
+                    sb.Append(ConvertTextColorToAnsi(foreground, false));
+                if (background != TextColor.None)
+                    sb.Append(ConvertTextColorToAnsi(background, true));
+            }
+
+            sb.Append('m');
+            sb.Append(text);
+            _coloredText = sb.ToString();
+            _isInnerTextComputed = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Clear()
+        {
+            _coloredText = string.Empty;
+            _isInnerTextComputed = false;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract TextMessage NewInstance();
     }
 }

@@ -178,10 +178,7 @@ namespace Adan.Client.ViewModel
             };
 
             var result = profileOptionDialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                SettingsHolder.Instance.SetProfile(profile);
-            }
+            SettingsHolder.Instance.SetProfile(profile);
         }
 
         private void UpdateAddProfileCommandCanExecute()

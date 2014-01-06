@@ -40,7 +40,11 @@ namespace Adan.Client.Common.Networking
         /// Gets the bytes received.
         /// </summary>
         /// <value>The bytes received.</value>
-        public int BytesReceived { get; private set; }
+        public int BytesReceived 
+        { 
+            get;
+            private set; 
+        }
 
         /// <summary>
         /// Gets the offset in buffer.
