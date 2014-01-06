@@ -23,6 +23,7 @@ namespace Adan.Client.ViewModel
         private bool _endOfLine;
         private string _scrollBuffer;
         private bool _settingsFolder;
+        private bool _autoConnect;
 
         /// <summary>
         /// 
@@ -85,6 +86,22 @@ namespace Adan.Client.ViewModel
             {
                 _endOfLine = value;
                 OnPropertyChanged("EndOfLine");
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool AutoConnect
+        {
+            get
+            {
+                return _autoConnect;
+            }
+            set
+            {
+                _autoConnect = value;
+                OnPropertyChanged("AutoConnect");
             }
         }
 

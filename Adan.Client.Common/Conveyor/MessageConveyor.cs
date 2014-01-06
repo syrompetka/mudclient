@@ -14,6 +14,7 @@ namespace Adan.Client.Common.Conveyor
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Adan.Client.Common.Model;
     using Commands;
     using CommandSerializers;
@@ -388,6 +389,8 @@ namespace Adan.Client.Common.Conveyor
         {
             if(_mccpClient != null)
                 _mccpClient.Dispose();
+
+            GC.SuppressFinalize(this);
         }
 
         #endregion
@@ -401,6 +404,7 @@ namespace Adan.Client.Common.Conveyor
 
             try
             {
+                
                 int offset = e.Offset;
                 int bytesRecieved = e.BytesReceived;
                 byte[] data = e.GetData();
@@ -409,7 +413,9 @@ namespace Adan.Client.Common.Conveyor
                 for (int i = 0; i < bytesRecieved; i++)
                 {
                     // removing double IAC and processing IAC GA
-                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
+                    if (i < bytesRecieved - 1 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                        && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
                     {
                         _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
                         i++;
@@ -417,7 +423,9 @@ namespace Adan.Client.Common.Conveyor
                         continue;
                     }
 
-                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.GoAheadCode)
+                    if (i < bytesRecieved - 1 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                        && data[offset + i + 1] == TelnetConstants.GoAheadCode)
                     {
                         // new line
                         _buffer[actualBytesReceived] = 0xA;
@@ -426,15 +434,22 @@ namespace Adan.Client.Common.Conveyor
                         continue;
                     }
 
-                    // handling echo mode on/off
-                    if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    // handling echo mode on
+                    if (i < bytesRecieved - 2 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                        && data[offset + i + 1] == TelnetConstants.WillCode 
+                        && data[offset + i + 2] == TelnetConstants.EchoCode)
                     {
                         PushMessage(new ChangeEchoModeMessage(false));
                         i += 2;
                         continue;
                     }
 
-                    if (i < bytesRecieved - 2 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.WillNotCode && data[offset + i + 2] == TelnetConstants.EchoCode)
+                    // handling echo mode off
+                    if (i < bytesRecieved - 2 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                        && data[offset + i + 1] == TelnetConstants.WillNotCode
+                        && data[offset + i + 2] == TelnetConstants.EchoCode)
                     {
                         PushMessage(new ChangeEchoModeMessage(true));
                         i += 2;
@@ -442,7 +457,10 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling custom message header
-                    if (i < bytesRecieved - 3 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
+                    if (i < bytesRecieved - 3 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                        && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode 
+                        && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
                     {
                         var messageType = data[offset + i + 3];
                         FlushBufferToSerializer(actualBytesReceived, true);
@@ -453,7 +471,9 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling custom message footer
-                    if (i < bytesRecieved - 1 && data[offset + i] == TelnetConstants.InterpretAsCommandCode && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
+                    if (i < bytesRecieved - 1 
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
+                        && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
                     {
                         FlushBufferToSerializer(actualBytesReceived, true);
 
@@ -490,7 +510,9 @@ namespace Adan.Client.Common.Conveyor
                 return;
             }
 
-            deserializer.DeserializeDataFromServer(0, actualBytesReceived, _buffer, isComplete);
+            byte[] buffer = new byte[actualBytesReceived];
+            Array.Copy(_buffer, buffer, actualBytesReceived);
+            deserializer.DeserializeDataFromServer(0, actualBytesReceived, buffer, isComplete);
         }
 
         private void HandleConnected([NotNull] object sender, [NotNull] EventArgs e)

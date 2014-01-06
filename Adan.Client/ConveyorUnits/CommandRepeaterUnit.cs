@@ -25,8 +25,6 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CommandRepeaterUnit : ConveyorUnit
     {
-       // private bool _displayInput = true;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRepeaterUnit"/> class.
         /// </summary>

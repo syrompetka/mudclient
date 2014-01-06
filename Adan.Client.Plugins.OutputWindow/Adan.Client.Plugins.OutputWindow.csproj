@@ -40,6 +40,9 @@
     <Reference Include="CSLib.Net.Diagnostics">
       <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -57,6 +60,7 @@
     <Compile Include="AdditionalOutputWindow.xaml.cs">
       <DependentUpon>AdditionalOutputWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="AdditionalOutputWindowManager.cs" />
     <Compile Include="Model\Actions\OutputToAdditionalWindowAction.cs" />
     <Compile Include="ViewModel\OutputToAdditionalWindowActionViewModel.cs" />
     <Compile Include="ConveyorUnits\OutputToAdditionalWindowConveyorUnit.cs" />

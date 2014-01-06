@@ -179,7 +179,7 @@ namespace Adan.Client.Common.Settings
                             string line;
                             while ((line = stream.ReadLine()) != null)
                             {
-                                //XML не читает символ \x001B
+                                //XML не читает символ \x01B
                                 //TODO: Need FIX IT
                                 if (!line.Contains("\x001B"))
                                 {
@@ -189,7 +189,10 @@ namespace Adan.Client.Common.Settings
                             }
                         }
                     }
-                    catch { }
+                    catch 
+                    {
+                        return;
+                    }
 
                     //SettingsHolder.Instance.SetProfile(rootModel.Profile);
                 //});

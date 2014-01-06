@@ -23,6 +23,8 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using CSLib.Net.Diagnostics;
     using Adan.Client.Common.Utils;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="RoomMonstersMessage"/> messages.
@@ -57,30 +59,35 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
         public override void DeserializeDataFromServer(int offset, int bytesReceived, byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
-            try
+
+            var messageXml = _encoding.GetString(data, offset, bytesReceived);
+            _builder.Append(messageXml);
+            if (isComplete)
             {
-                var messageXml = _encoding.GetString(data, offset, bytesReceived);
-                _builder.Append(messageXml);
-                if (isComplete)
-                {
-                    using (var stringReader = new StringReader(_builder.ToString()))
-                    {
-                        var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
-                        PushMessageToConveyor(message);
-                    }
-                    _builder.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
-                string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
-                byte[] buf = _encoding.GetBytes(str);
-                deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
-                PushMessageToConveyor(new OutputToMainWindowMessage(str));
+                string str = _builder.ToString();
                 _builder.Clear();
-                //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
-                PushMessageToConveyor(new ErrorMessage(ex.Message));
+                Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            using (var stringReader = new StringReader(str.ToString()))
+                            {
+                                var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
+                                PushMessageToConveyor(message);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            //var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                            //string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
+                            //byte[] buf = _encoding.GetBytes(str);
+                            //deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
+                            //PushMessageToConveyor(new OutputToMainWindowMessage(str));
+                            _builder.Clear();
+                            //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                            PushMessageToConveyor(new ErrorMessage(ex.Message));
+                        }
+                    });
             }
         }
 

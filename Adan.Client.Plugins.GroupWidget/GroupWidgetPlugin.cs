@@ -167,39 +167,33 @@ namespace Adan.Client.Plugins.GroupWidget
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnChangedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
+        public override void OnChangedOutputWindow([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNullOrWhiteSpace(uid, "UID");
 
-            _groupManager.OutputWindowChanged(uid);
+            _groupManager.OutputWindowChanged(rootModel.Uid);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnCreatedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
+        public override void OnCreatedOutputWindow([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNullOrWhiteSpace(uid, "uid");
 
-            _groupManager.OutputWindowCreated(rootModel, uid);
+            _groupManager.OutputWindowCreated(rootModel, rootModel.Uid);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public override void OnClosedOutputWindow([NotNull] RootModel rootModel, [NotNull] string uid)
+        public override void OnClosedOutputWindow([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
-            Assert.ArgumentNotNullOrWhiteSpace(uid, "uid");
 
-            _groupManager.OutputWindowClosed(uid);
+            _groupManager.OutputWindowClosed(rootModel.Uid);
         }
 
         /// <summary>

@@ -65,94 +65,94 @@ namespace Adan.Client.Common.Controls.TextFormatting
         /// <param name="textSourceCharacterIndex">Specifies the character index position in the <see cref="T:System.Windows.Media.TextFormatting.TextSource"/> where the <see cref="T:System.Windows.Media.TextFormatting.TextRun"/> is retrieved.</param>
         public override TextRun GetTextRun(int textSourceCharacterIndex)
         {
-            if (Message == null || textSourceCharacterIndex >= Message.InnerText.Length)
-            {
-                return new TextEndOfLine(1);
-            }
+            //if (Message == null || textSourceCharacterIndex >= Message.InnerText.Length)
+            //{
+            //    return new TextEndOfLine(1);
+            //}
 
-            var currentIdx = 0;
-            bool isSelecting = false;
-            int selectionStartIndex = 0;
-            int selectionEndIndex = Message.InnerText.Length;
+            //var currentIdx = 0;
+            //bool isSelecting = false;
+            //int selectionStartIndex = 0;
+            //int selectionEndIndex = Message.InnerText.Length;
 
-            if (_selectionSettings.SelectedMessages.Contains(Message))
-            {
-                isSelecting = true;
-                if (Message == _selectionSettings.SelectedMessages.Last())
-                {
-                    selectionStartIndex = _selectionSettings.SelectionStartCharacterNumber;
-                }
+            //if (_selectionSettings.SelectedMessages.Contains(Message))
+            //{
+            //    isSelecting = true;
+            //    if (Message == _selectionSettings.SelectedMessages.Last())
+            //    {
+            //        selectionStartIndex = _selectionSettings.SelectionStartCharacterNumber;
+            //    }
 
-                if (Message == _selectionSettings.SelectedMessages.First())
-                {
-                    selectionEndIndex = _selectionSettings.SelectionEndCharacterNumber;
-                }
-            }
+            //    if (Message == _selectionSettings.SelectedMessages.First())
+            //    {
+            //        selectionEndIndex = _selectionSettings.SelectionEndCharacterNumber;
+            //    }
+            //}
 
-            foreach (var messageBlock in Message.MessageBlocks)
-            {
-                if (messageBlock.Text.Length + currentIdx > textSourceCharacterIndex)
-                {
-                    if (isSelecting)
-                    {
-                        if (selectionStartIndex >= currentIdx && selectionStartIndex < messageBlock.Text.Length + currentIdx)
-                        {
-                            if (textSourceCharacterIndex < selectionStartIndex)
-                            {
-                                return new TextCharacters(
-                                    messageBlock.Text,
-                                    textSourceCharacterIndex - currentIdx,
-                                    selectionStartIndex - textSourceCharacterIndex,
-                                    GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
-                            }
+            ////foreach (var messageBlock in Message.MessageBlocks)
+            ////{
+            ////    if (messageBlock.Text.Length + currentIdx > textSourceCharacterIndex)
+            ////    {
+            ////        if (isSelecting)
+            ////        {
+            ////            if (selectionStartIndex >= currentIdx && selectionStartIndex < messageBlock.Text.Length + currentIdx)
+            ////            {
+            ////                if (textSourceCharacterIndex < selectionStartIndex)
+            ////                {
+            ////                    return new TextCharacters(
+            ////                        messageBlock.Text,
+            ////                        textSourceCharacterIndex - currentIdx,
+            ////                        selectionStartIndex - textSourceCharacterIndex,
+            ////                        GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
+            ////                }
 
-                            if (textSourceCharacterIndex >= selectionEndIndex)
-                            {
-                                return new TextCharacters(
-                                    messageBlock.Text,
-                                    textSourceCharacterIndex - currentIdx,
-                                    messageBlock.Text.Length - selectionEndIndex + currentIdx,
-                                    GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
-                            }
+            ////                if (textSourceCharacterIndex >= selectionEndIndex)
+            ////                {
+            ////                    return new TextCharacters(
+            ////                        messageBlock.Text,
+            ////                        textSourceCharacterIndex - currentIdx,
+            ////                        messageBlock.Text.Length - selectionEndIndex + currentIdx,
+            ////                        GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
+            ////                }
 
-                            return new TextCharacters(
-                                messageBlock.Text,
-                                textSourceCharacterIndex - currentIdx,
-                                Math.Min(selectionEndIndex - selectionStartIndex, messageBlock.Text.Length - textSourceCharacterIndex + currentIdx),
-                                GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
-                        }
+            ////                return new TextCharacters(
+            ////                    messageBlock.Text,
+            ////                    textSourceCharacterIndex - currentIdx,
+            ////                    Math.Min(selectionEndIndex - selectionStartIndex, messageBlock.Text.Length - textSourceCharacterIndex + currentIdx),
+            ////                    GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
+            ////            }
 
-                        if (selectionStartIndex < currentIdx && selectionEndIndex > messageBlock.Text.Length + currentIdx)
-                        {
-                            return new TextCharacters(
-                                messageBlock.Text,
-                                textSourceCharacterIndex - currentIdx,
-                                messageBlock.Text.Length - textSourceCharacterIndex + currentIdx,
-                                GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
-                        }
+            ////            if (selectionStartIndex < currentIdx && selectionEndIndex > messageBlock.Text.Length + currentIdx)
+            ////            {
+            ////                return new TextCharacters(
+            ////                    messageBlock.Text,
+            ////                    textSourceCharacterIndex - currentIdx,
+            ////                    messageBlock.Text.Length - textSourceCharacterIndex + currentIdx,
+            ////                    GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
+            ////            }
 
-                        if (selectionStartIndex < selectionEndIndex && selectionEndIndex > currentIdx && selectionEndIndex <= messageBlock.Text.Length + currentIdx)
-                        {
-                            if (selectionEndIndex > textSourceCharacterIndex)
-                            {
-                                return new TextCharacters(
-                                    messageBlock.Text,
-                                    textSourceCharacterIndex - currentIdx,
-                                    selectionEndIndex - textSourceCharacterIndex,
-                                    GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
-                            }
-                        }
-                    }
+            ////            if (selectionStartIndex < selectionEndIndex && selectionEndIndex > currentIdx && selectionEndIndex <= messageBlock.Text.Length + currentIdx)
+            ////            {
+            ////                if (selectionEndIndex > textSourceCharacterIndex)
+            ////                {
+            ////                    return new TextCharacters(
+            ////                        messageBlock.Text,
+            ////                        textSourceCharacterIndex - currentIdx,
+            ////                        selectionEndIndex - textSourceCharacterIndex,
+            ////                        GetTextRunPropertiesByBrushes(InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false)), InvertBrush(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true))));
+            ////                }
+            ////            }
+            ////        }
 
-                    return new TextCharacters(
-                        messageBlock.Text,
-                        textSourceCharacterIndex - currentIdx,
-                        messageBlock.Text.Length - textSourceCharacterIndex + currentIdx,
-                        GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
-                }
+            ////        return new TextCharacters(
+            ////            messageBlock.Text,
+            ////            textSourceCharacterIndex - currentIdx,
+            ////            messageBlock.Text.Length - textSourceCharacterIndex + currentIdx,
+            ////            GetTextRunPropertiesByBrushes(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Foreground, false), ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(messageBlock.Background, true)));
+            ////    }
 
-                currentIdx += messageBlock.Text.Length;
-            }
+            //    //currentIdx += messageBlock.Text.Length;
+            //}
 
             return new TextEndOfLine(1);
         }

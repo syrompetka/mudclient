@@ -11,11 +11,10 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
 {
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Text;
     using System.Xml.Serialization;
-
     using Common.Messages;
     using Common.Themes;
-
     using CSLib.Net.Annotations;
 
     /// <summary>
@@ -92,22 +91,36 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         public override InfoMessage ConvertToInfoMessage()
         {
-            var blocks = new List<TextMessageBlock>
-                             {
-                                 new TextMessageBlock(" " + ModifiedParameter + ": "),
-                                 new TextMessageBlock(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed)
-                             };
+            var infoMessage = new InfoMessage(" " + ModifiedParameter + ": ");
+            infoMessage.AddText(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed);
             if (!string.IsNullOrEmpty(SourceSkill))
             {
-                blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White));
+                infoMessage.AddText(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White);
             }
 
             if (Duration > 0)
             {
-                blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White));
+                infoMessage.AddText(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White);
             }
 
-            return new InfoMessage(blocks);
+            return infoMessage;
+
+            //var blocks = new List<TextMessageBlock>
+            //                 {
+            //                     new TextMessageBlock(" " + ModifiedParameter + ": "),
+            //                     new TextMessageBlock(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed)
+            //                 };
+            //if (!string.IsNullOrEmpty(SourceSkill))
+            //{
+            //    blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White));
+            //}
+
+            //if (Duration > 0)
+            //{
+            //    blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White));
+            //}
+
+            //return new InfoMessage(blocks);
         }
     }
 }

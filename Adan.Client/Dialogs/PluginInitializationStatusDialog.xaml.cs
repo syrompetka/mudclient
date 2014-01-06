@@ -60,7 +60,6 @@ namespace Adan.Client.Dialogs
         {
             txtPluginName.Text = _viewModel.CurrentPluginName;
             txtStatus.Text = _viewModel.PluginInitializationStatus;
-            //Thread.Sleep(1000);
         }
     }
 }

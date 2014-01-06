@@ -98,5 +98,13 @@ namespace Adan.Client.Common.Themes
         /// <returns></returns>
         [NotNull]
         public abstract TextColor GetTextColorByBrush(SolidColorBrush color, bool isBackground);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBackGround"></param>
+        /// <returns></returns>
+        [NotNull]
+        public abstract SolidColorBrush GetSelectionBrushByTextColor(bool isBackGround);
     }
 }

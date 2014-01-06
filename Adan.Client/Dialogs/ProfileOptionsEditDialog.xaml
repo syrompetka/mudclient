@@ -51,7 +51,7 @@
             <Button Command="{Binding Path=ImportProfileCommand}" MinWidth="50">Import</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
-            <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+            <Button Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="2" IsDefault="True"  MinWidth="50">Close</Button>
         </StackPanel>
     </Grid>
 </Window>

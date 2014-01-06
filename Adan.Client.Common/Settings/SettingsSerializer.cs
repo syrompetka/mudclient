@@ -105,6 +105,15 @@ namespace Adan.Client.Common.Settings
         /// <summary>
         /// 
         /// </summary>
+        public bool AutoConnect
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         [NotNull]
         public bool IsLogCommands
         {

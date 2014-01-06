@@ -21,27 +21,17 @@ namespace Adan.Client.Map.MessageDeserializers
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Map.Messages;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> implementation to handle "current room" messages.
     /// </summary>
     public class CurrentRoomMessageDeserializer : MessageDeserializer
     {
-        private readonly ZoneManager _zoneManager;
-
         private readonly StringBuilder _builder = new StringBuilder();
         private readonly Encoding _encoding = Encoding.GetEncoding(1251);
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(CurrentRoomMessage));
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="zoneManager"></param>
-        public CurrentRoomMessageDeserializer([NotNull] ZoneManager zoneManager)
-        {
-            Assert.ArgumentNotNull(zoneManager, "zoneManager");
-            _zoneManager = zoneManager;
-        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -69,31 +59,35 @@ namespace Adan.Client.Map.MessageDeserializers
         {
             Assert.ArgumentNotNull(data, "data");
 
-            try
+            var messageXml = _encoding.GetString(data, offset, bytesReceived);
+            _builder.Append(messageXml);
+
+            if (isComplete)
             {
-                var messageXml = _encoding.GetString(data, offset, bytesReceived);
-                _builder.Append(messageXml);
-                if (isComplete)
+                string str = _builder.ToString();
+                _builder.Clear();
+                Task.Factory.StartNew(() =>
                 {
-                        using (var stringReader = new StringReader(_builder.ToString()))
+                    try
+                    {
+                        using (var stringReader = new StringReader(str.ToString()))
                         {
                             var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
-                            PushMessageToConveyor(message);                            
+                            PushMessageToConveyor(message);
                         }
-
-                    _builder.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
-                var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
-                string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
-                byte[] buf = _encoding.GetBytes(str);
-                deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
-                PushMessageToConveyor(new OutputToMainWindowMessage(str));
-                _builder.Clear();
-                //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
-                PushMessageToConveyor(new ErrorMessage(ex.Message));
+                    }
+                    catch (Exception ex)
+                    {
+                        //var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
+                        //string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
+                        //byte[] buf = _encoding.GetBytes(str);
+                        //deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
+                        //PushMessageToConveyor(new OutputToMainWindowMessage(str));
+                        _builder.Clear();
+                        //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                        PushMessageToConveyor(new ErrorMessage(ex.Message));
+                    }
+                });
             }
         }
 
@@ -103,7 +97,7 @@ namespace Adan.Client.Map.MessageDeserializers
         /// <returns></returns>
         public override MessageDeserializer NewInstance()
         {
-            return new CurrentRoomMessageDeserializer(_zoneManager);
+            return new CurrentRoomMessageDeserializer();
         }
     }
 }

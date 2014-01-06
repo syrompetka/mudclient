@@ -30,12 +30,20 @@ namespace Adan.Client.Plugins.OutputWindow
     /// A <see cref="PluginBase"/> implementation to add additional output window.
     /// </summary>
     [Export(typeof(PluginBase))]
-    public sealed class OutputToAdditionalWindowPlugin : PluginBase, IDisposable
+    public sealed class OutputToAdditionalWindowPlugin : PluginBase
     {
-        private readonly AdditionalOutputWindow _additionalOutputWindowControl = new AdditionalOutputWindow();
+        private AdditionalOutputWindowManager _manager;
+        private AdditionalOutputWindow _additionalOutputWindowControl;
         private WidgetDescription _widget;
-
         private OutputToAdditionalWindowConveyorUnit _conveyorUnit;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public OutputToAdditionalWindowPlugin()
+        {
+            _additionalOutputWindowControl = new AdditionalOutputWindow();
+        }
 
         /// <summary>
         /// Gets the conveyor units that this plugin exposes.
@@ -103,9 +111,38 @@ namespace Adan.Client.Plugins.OutputWindow
 
             initializationStatusModel.CurrentPluginName = "Additional window";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
+            
+            _manager = new AdditionalOutputWindowManager(_additionalOutputWindowControl);
 
             _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl, false);
-            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(_additionalOutputWindowControl);
+            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(_manager);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        public override void OnCreatedOutputWindow(RootModel rootModel)
+        {
+            _manager.OutputWindowCreated(rootModel);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        public override void OnChangedOutputWindow(RootModel rootModel)
+        {
+            _manager.OutputWindowChanged(rootModel);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        public override void OnClosedOutputWindow(RootModel rootModel)
+        {
+            _manager.OutputWindowClosed(rootModel);
         }
     }
 }

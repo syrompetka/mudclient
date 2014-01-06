@@ -33,5 +33,10 @@ namespace Adan.Client.Common.Commands
         /// 
         /// </summary>
         public const int ShowMainOutputCommand = 4;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int SendToWindow = 5;
     }
 }

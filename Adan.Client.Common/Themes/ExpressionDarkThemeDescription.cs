@@ -20,7 +20,6 @@ namespace Adan.Client.Common.Themes
     {
         private readonly IList<string> _dictionariesToMerge = new List<string>();
         private readonly IDictionary<TextColor, SolidColorBrush> _textColors = new Dictionary<TextColor, SolidColorBrush>();
-        //private readonly SolidColorBrush _defaultTextColor = new SolidColorBrush(Color.FromRgb(192, 192, 192));
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExpressionDarkThemeDescription"/> class.
@@ -48,13 +47,20 @@ namespace Adan.Client.Common.Themes
             _textColors[TextColor.RepeatCommandTextColor] = new SolidColorBrush(Color.FromRgb(128, 128, 0));
             _textColors[TextColor.Yellow] = new SolidColorBrush(Color.FromRgb(128, 128, 0));
             _textColors[TextColor.White] = new SolidColorBrush(Color.FromRgb(128, 128, 128));
-            //New text colors
-            _textColors[TextColor.Brown] = new SolidColorBrush(Color.FromRgb(128, 64, 0));
-            _textColors[TextColor.Charcoal] = new SolidColorBrush(Color.FromRgb(128, 128, 64));
-            _textColors[TextColor.Grey] = new SolidColorBrush(Color.FromRgb(192, 192, 192));
+
+            foreach(var brush in _textColors)
+            {
+                if (brush.Value.CanFreeze)
+                    brush.Value.Freeze();
+            }
 
             DefaultTextColor = new SolidColorBrush(Color.FromRgb(192, 192, 192));
+            if (DefaultTextColor.CanFreeze)
+                DefaultTextColor.Freeze();
+
             DefaultBackGroundColor = Brushes.Black;
+            if (DefaultBackGroundColor.CanFreeze)
+                DefaultBackGroundColor.Freeze();
         }
 
         /// <summary>
@@ -96,6 +102,16 @@ namespace Adan.Client.Common.Themes
         public override TextColor GetTextColorByBrush(SolidColorBrush color, bool isBackground)
         {
             return _textColors.FirstOrDefault(x => x.Value == color).Key;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBackGround"></param>
+        /// <returns></returns>
+        public override SolidColorBrush GetSelectionBrushByTextColor(bool isBackGround)
+        {
+            return isBackGround ? _textColors[TextColor.White] : _textColors[TextColor.Black];
         }
     }
 }

@@ -94,9 +94,9 @@ namespace Adan.Client.Map
         /// </summary>
         public override void Dispose()
         {
-            base.Dispose();
-
             _zoneManager.Dispose();
+
+            base.Dispose();
         }
 
         /// <summary>
@@ -111,44 +111,45 @@ namespace Adan.Client.Map
 
             initializationStatusModel.CurrentPluginName = "Map";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
-            MapDownloader.DownloadMaps(initializationStatusModel);
 
+            _messageDeserializer = new CurrentRoomMessageDeserializer();
+            
             var routeManger = new RouteManager(mainWindow);
-            routeManger.LoadRoutes();
             _mapControl.RouteManager = routeManger;
             _routeUnit = new RouteUnit(routeManger);
             _zoneManager = new ZoneManager(_mapControl, mainWindow, routeManger);
-            _messageDeserializer = new CurrentRoomMessageDeserializer(_zoneManager);
+
+            MapDownloader.DownloadMaps(initializationStatusModel);
+
+            initializationStatusModel.PluginInitializationStatus = "Routes loading";
+            routeManger.LoadRoutes();
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="UID"></param>
-        public override void OnChangedOutputWindow(RootModel rootModel, string UID)
+        public override void OnChangedOutputWindow(RootModel rootModel)
         {
-            _zoneManager.OutputWindowChanged(rootModel, UID);
+            _zoneManager.OutputWindowChanged(rootModel);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="UID"></param>
-        public override void OnCreatedOutputWindow(RootModel rootModel, string UID)
+        public override void OnCreatedOutputWindow(RootModel rootModel)
         {
-            _zoneManager.OutputWindowCreated(rootModel, UID);
+            _zoneManager.OutputWindowCreated(rootModel);
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="UID"></param>
-        public override void OnClosedOutputWindow(RootModel rootModel, string UID)
+        public override void OnClosedOutputWindow(RootModel rootModel)
         {
-            _zoneManager.OutputWindowClosed(UID);
+            _zoneManager.OutputWindowClosed(rootModel.Uid);
         }
     }
 }

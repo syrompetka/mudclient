@@ -138,10 +138,10 @@ namespace Adan.Client.Plugins.OutputWindow
             {
                 if (OutputEntireMessageKeepingColors)
                 {
-                    return "#outAdd";
+                    return "#output";
                 }
 
-                return "#outAdd " + TextToOutput + ParametersModel.ActionParametersDescription;
+                return "#output " + TextToOutput + ParametersModel.ActionParametersDescription;
             }
         }
 

@@ -29,9 +29,12 @@ namespace Adan.Client
     /// </summary>
     public sealed class PluginHost : IDisposable
     {
+        private static PluginHost _instance;
+
         private readonly AggregateCatalog _catalog;
         private readonly CompositionContainer _container;
-        private static PluginHost _instance;
+
+        private string currentOutputWindow = string.Empty;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="PluginHost"/> class from being created.
@@ -92,7 +95,7 @@ namespace Adan.Client
         public void OutputWindowCreated(OutputWindow outputWindow)
         {
             foreach (var plugin in Plugins)
-                plugin.OnCreatedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+                plugin.OnCreatedOutputWindow(outputWindow.RootModel);
         }
 
         /// <summary>
@@ -101,8 +104,13 @@ namespace Adan.Client
         /// <param name="outputWindow"></param>
         public void OutputWindowChanged(OutputWindow outputWindow)
         {
-            foreach (var plugin in Plugins)
-                plugin.OnChangedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+            if (outputWindow.Uid != currentOutputWindow)
+            {
+                foreach (var plugin in Plugins)
+                    plugin.OnChangedOutputWindow(outputWindow.RootModel);
+
+                currentOutputWindow = outputWindow.Uid;
+            }
         }
 
         /// <summary>
@@ -112,7 +120,7 @@ namespace Adan.Client
         public void OutputWindowClose(OutputWindow outputWindow)
         {
             foreach (var plugin in Plugins)
-                plugin.OnClosedOutputWindow(outputWindow.RootModel, outputWindow.Uid);
+                plugin.OnClosedOutputWindow(outputWindow.RootModel);
         }
 
         /// <summary>

@@ -12,18 +12,16 @@ namespace Adan.Client.MessageDeserializers
     #region Namespace Imports
 
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Text;
-
     using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
     using Common.Themes;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using Messages;
 
     #endregion
@@ -91,6 +89,11 @@ namespace Adan.Client.MessageDeserializers
         {
             Assert.ArgumentNotNull(data, "data");
 
+#if DEBUG
+            Stopwatch sw = new Stopwatch();
+            sw.Start();
+#endif
+
             int currentDataBufferPosition = 0;
 
             var incomingCharsCount = _encoding.GetChars(data, offset, bytesReceived, _charBuffer, 0);
@@ -109,6 +112,7 @@ namespace Adan.Client.MessageDeserializers
                     }
                     else if (currentChar == '\n')
                     {
+                        FlushCurrentBlockToBlocksList();
                         // end of line achieved - flushing current text.
                         FlushCurrentLineToConveyor();
                     }
@@ -164,6 +168,11 @@ namespace Adan.Client.MessageDeserializers
 
                 currentDataBufferPosition++;
             }
+
+#if DEBUG
+            sw.Stop();
+            //PushMessageToConveyor(new InfoMessage(string.Format("TextMessageDeserializer = {0} ms", sw.ElapsedMilliseconds)));
+#endif
         }
 
         /// <summary>
@@ -181,18 +190,18 @@ namespace Adan.Client.MessageDeserializers
 
         private void FlushCurrentBlockToBlocksList()
         {
-            var textblock = new TextMessageBlock(_stringBuilder.ToString(), ConvertAnsiColorToTextColor(_currentForeColor, _isBright), ConvertAnsiColorToTextColor(_currentBackColor, _isBright));
-            _messageBlocks.Add(textblock);
-            _stringBuilder.Clear();
+            if (_stringBuilder.Length > 0)
+            {
+                var textblock = new TextMessageBlock(_stringBuilder.ToString(), ConvertAnsiColorToTextColor(_currentForeColor, _isBright), ConvertAnsiColorToTextColor(_currentBackColor, _isBright));
+                _messageBlocks.Add(textblock);
+                _stringBuilder.Clear();
+            }
         }
 
         private void FlushCurrentLineToConveyor()
         {
-            var textblock = new TextMessageBlock(_stringBuilder.ToString(), ConvertAnsiColorToTextColor(_currentForeColor, _isBright), ConvertAnsiColorToTextColor(_currentBackColor, _isBright));
-            _messageBlocks.Add(textblock);
-            PushMessageToConveyor(new OutputToMainWindowMessage(new List<TextMessageBlock>(_messageBlocks)));
+            //PushMessageToConveyor(new OutputToMainWindowMessage(new List<TextMessageBlock>(_messageBlocks)));
             _messageBlocks.Clear();
-            _stringBuilder.Clear();
         }
 
         /// <summary>

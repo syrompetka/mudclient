@@ -67,6 +67,7 @@ namespace Adan.Client.Map
                     }
 
                     initializationStatusModel.PluginInitializationStatus = "Unpacking maps";
+
                     using (var zip = ZipFile.Read(Path.Combine(GetMapsFolder(), "Maps.zip")))
                     {
                         foreach (var zipEntry in zip.Entries)
@@ -85,9 +86,11 @@ namespace Adan.Client.Map
             catch (Exception)
             {
                 initializationStatusModel.PluginInitializationStatus = "Error connecting to server";
+                Thread.Sleep(1000);
             }
 
             initializationStatusModel.PluginInitializationStatus = string.Empty;
+
             Settings.Default.Save();
         }
 

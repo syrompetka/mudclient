@@ -18,6 +18,8 @@ using System.IO;
 using System.Threading.Tasks;
 using Adan.Client.Properties;
 using System.Globalization;
+using System.Diagnostics;
+using System.Timers;
 
 namespace Adan.Client
 {
@@ -29,16 +31,27 @@ namespace Adan.Client
         private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
-        private MainOutputWindow _window;
-        private object _loggingQueueLockObject = new object();
+        //private MainOutputWindowEx _window;
+        private MainOutputWindowExx _window;
+        private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
         private bool _isLogging;
 
+#if DEBUG
+        private object _renderLockObject = new object();
+        private TimeSpan _addMessageTime = TimeSpan.Zero;
+        private TimeSpan _renderTime = TimeSpan.Zero;
+        private int _addMessageCount = 0;
+        private int _renderCount = 0;
+        private Timer _timer;
+#endif
+        
         /// <summary>
         /// 
         /// </summary>
         public OutputWindow(MainWindow mainWindow, string name)
         {
+
             Name = name;
 
             var conveyor = new MessageConveyor(new MccpClient());
@@ -48,22 +61,62 @@ namespace Adan.Client
 
             conveyor.MessageReceived += HandleMessage;
 
-            _window = new MainOutputWindow(mainWindow, RootModel);
+            //_window = new MainOutputWindowEx(mainWindow, RootModel);
+            _window = new MainOutputWindowExx(mainWindow, RootModel);
+            VisibleControl = _window;
             
             _window.txtCommandInput.RootModel = RootModel;
             _window.txtCommandInput.LoadHistory(RootModel.Profile);
             _window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
 
-            var scroll = new ScrollViewer();
-            scroll.Content = _window;
-            scroll.CanContentScroll = true;
-            scroll.HorizontalScrollBarVisibility = ScrollBarVisibility.Hidden;
-            scroll.VerticalScrollBarVisibility = ScrollBarVisibility.Visible;
-            scroll.Focusable = false;
-            VisibleControl = scroll;
-
             IsLogging = false;
+
+#if DEBUG
+            _timer = new Timer(10000);
+            _timer.AutoReset = false;
+            _timer.Elapsed += _timer_Elapsed;
+            _timer.Start();
+#endif
         }
+
+#if DEBUG
+        void _timer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            lock(_renderLockObject)
+            {
+                    _renderTime += _window.RenderTime;
+                    _window.RenderTime = TimeSpan.Zero;
+                    _renderCount = _window.Count;
+                    _window.Count = 0;
+
+                double addTime = 0;
+                double renderTime = 0;
+                int addCount = 0;
+                int renderCount = 0;
+                if (_addMessageCount > 0)
+                {
+                    addTime = _addMessageTime.TotalMilliseconds / (double)_addMessageCount;
+                    addCount = _addMessageCount;
+                }
+
+                //if (_renderCount > 0)
+                {
+                    renderTime = _renderTime.TotalMilliseconds;
+                    renderCount = _renderCount;
+                }
+
+                _addMessageTime = TimeSpan.Zero;
+                _addMessageCount = 0;
+                _renderCount = 0;
+                _renderTime = TimeSpan.Zero;
+
+                RootModel.PushMessageToConveyor(new InfoMessage(string.Format("AddMessageAvgTimer = {0}x{1}, RenderAvgTimer = {2}x{3}",
+                    addCount, addTime, renderCount, renderTime)));
+            }
+
+            _timer.Start();
+        }
+#endif
 
         private void txtCommandInput_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -169,6 +222,10 @@ namespace Adan.Client
             try
             {
                 var fullLogPath = Path.Combine(GetLogsFolder(), logName + ".log");
+                var directoryPath = Path.GetDirectoryName(fullLogPath);
+
+                if (!Directory.Exists(directoryPath))
+                    Directory.CreateDirectory(directoryPath);
 
                 var fileStream = new FileStream(fullLogPath, FileMode.Append, FileAccess.Write);
 
@@ -196,7 +253,7 @@ namespace Adan.Client
 
                 if (_streamWriter != null)
                 {
-                    lock (_loggingQueueLockObject)
+                    lock (_loggingLockObject)
                     {
                         _streamWriter.Close();
                         _streamWriter = null;
@@ -227,9 +284,10 @@ namespace Adan.Client
                 RootModel.MessageConveyor.Dispose();
                 if (_streamWriter != null)
                 {
-                    lock (_loggingQueueLockObject)
+                    lock (_loggingLockObject)
                     {
                         _streamWriter.Close();
+                        _streamWriter = null;
                     }
                 }
             }
@@ -249,13 +307,16 @@ namespace Adan.Client
                     _messageQueue.Enqueue(message);
                 }
 
-                Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Send);
+                if (_window.IsVisible)
+                    Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Loaded);
+                else
+                    Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
 
                 if (IsLogging)
                 {
                     Task.Factory.StartNew(() =>
                     {
-                        lock (_loggingQueueLockObject)
+                        lock (_loggingLockObject)
                         {
                             if (IsLogging)
                             {
@@ -281,7 +342,21 @@ namespace Adan.Client
 
             if (messages.Count > 0)
             {
+#if DEBUG
+                Stopwatch sw = new Stopwatch();
+                sw.Start();
+#endif
+
                 _window.AddMessages(messages);
+
+#if DEBUG
+                sw.Stop();
+                lock (_renderLockObject)
+                {
+                    _addMessageCount++;
+                    _addMessageTime += sw.Elapsed;
+                }
+#endif
             }
         }
 

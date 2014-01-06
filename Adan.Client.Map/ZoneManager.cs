@@ -153,23 +153,22 @@ namespace Adan.Client.Map
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public void OutputWindowCreated(RootModel rootModel, string uid)
+        public void OutputWindowCreated(RootModel rootModel)
         {
-            _zoneHolders.Add(uid, new ZoneHolder(this, rootModel, uid));
+            _zoneHolders.Add(rootModel.Uid, new ZoneHolder(this, rootModel));
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public void OutputWindowChanged(RootModel rootModel, string uid)
+        public void OutputWindowChanged(RootModel rootModel)
         {
 
 #if DEBUG
             System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
 #endif
+            var uid = rootModel.Uid;
 
             if (_mapControl.ViewModel == null)
             {

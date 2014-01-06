@@ -21,6 +21,8 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Plugins.GroupWidget.Messages;
+    using System.Diagnostics;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="GroupStatusMessage"/> messages.
@@ -55,26 +57,30 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
         public override void DeserializeDataFromServer(int offset, int bytesReceived, byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
-            try
+            var messageXml = _encoding.GetString(data, offset, bytesReceived);
+            _builder.Append(messageXml);
+            if (isComplete)
             {
-                var messageXml = _encoding.GetString(data, offset, bytesReceived);
-                _builder.Append(messageXml);
-                if (isComplete)
-                {
-                    using (var stringReader = new StringReader(_builder.ToString()))
-                    {
-                        var message = (GroupStatusMessage)_serializer.Deserialize(stringReader);
-                        PushMessageToConveyor(message);
-                    }
-
-                    _builder.Clear();
-                }
-            }
-            catch (Exception ex)
-            {
+                string str = _builder.ToString();
                 _builder.Clear();
-                //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
-                PushMessageToConveyor(new ErrorMessage(ex.Message));
+
+                Task.Factory.StartNew(() =>
+                    {
+                        try
+                        {
+                            using (var stringReader = new StringReader(str))
+                            {
+                                var message = (GroupStatusMessage)_serializer.Deserialize(stringReader);
+                                PushMessageToConveyor(message);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            _builder.Clear();
+                            //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                            PushMessageToConveyor(new ErrorMessage(ex.Message));
+                        }
+                    });
             }
         }
 

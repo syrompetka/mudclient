@@ -22,12 +22,11 @@ namespace Adan.Client.Map.Model
         /// </summary>
         /// <param name="zoneManager"></param>
         /// <param name="rootModel"></param>
-        /// <param name="uid"></param>
-        public ZoneHolder(ZoneManager zoneManager, [NotNull] RootModel rootModel, string uid)
+        public ZoneHolder(ZoneManager zoneManager, [NotNull] RootModel rootModel)
         {
             _zoneManager = zoneManager;
             _rootModel = rootModel;
-            Uid = uid;
+            Uid = rootModel.Uid;
             ZoneId = -1;
             RoomId = -1;
 

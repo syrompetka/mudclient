@@ -430,15 +430,21 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
         public IEnumerable<InfoMessage> ConvertToMessages()
         {
             var result = new List<InfoMessage>();
+            {
+                var infoMessage = new InfoMessage(Resources.Object + " ", TextColor.BrightWhite);
+                infoMessage.AddText("'" + ObjectName + "'", TextColor.BrightCyan);
+                infoMessage.AddText(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite);
+                result.Add(infoMessage);
+            }
 
-            result.Add(
-                new InfoMessage(
-                    new[]
-                        {
-                            new TextMessageBlock(Resources.Object + " ", TextColor.BrightWhite),
-                            new TextMessageBlock("'" + ObjectName + "'", TextColor.BrightCyan),
-                            new TextMessageBlock(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite),
-                        }));
+            //result.Add(
+            //    new InfoMessage(
+            //        new[]
+            //            {
+            //                new TextMessageBlock(Resources.Object + " ", TextColor.BrightWhite),
+            //                new TextMessageBlock("'" + ObjectName + "'", TextColor.BrightCyan),
+            //                new TextMessageBlock(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite),
+            //            }));
             if (IsFull)
             {
                 int maxLength = 0;
@@ -474,24 +480,35 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
 
             if (ScrollOrPotionSpells.Any())
             {
-                result.Add(
-                    new InfoMessage(
-                        new[]
-                            {
-                                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
-                                new TextMessageBlock(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green),
-                            }));
+                {
+                    var infoMessage = new InfoMessage(Resources.Spells + ": ", TextColor.BrightWhite);
+                    infoMessage.AddText(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green);
+                    result.Add(infoMessage);
+                }
+
+                //result.Add(
+                //    new InfoMessage(
+                //        new[]
+                //            {
+                //                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
+                //                new TextMessageBlock(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green),
+                //            }));
             }
 
             if (WandOrStaffSpell != null)
             {
-                result.Add(
-                new InfoMessage(
-                    new[]
-                            {
-                                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
-                                new TextMessageBlock(WandOrStaffSpell.SpellName, TextColor.Green),
-                            }));
+                {
+                    var infoMessage = new InfoMessage(Resources.Spells + ": ", TextColor.BrightWhite);
+                    infoMessage.AddText(WandOrStaffSpell.SpellName, TextColor.Green);
+                    result.Add(infoMessage);
+                }
+                //result.Add(
+                //new InfoMessage(
+                //    new[]
+                //            {
+                //                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
+                //                new TextMessageBlock(WandOrStaffSpell.SpellName, TextColor.Green),
+                //            }));
                 result.Add(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.StaffCharges, WandOrStaffSpell.TotalCharges, WandOrStaffSpell.ChargesLeft)));
             }
 
@@ -553,18 +570,30 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             Assert.ArgumentNotNullOrWhiteSpace(header, "header");
             Assert.ArgumentNotNull(flags, "flags");
 
-            var headerBlock = new TextMessageBlock(header.PadRight(headerLength) + ": ", TextColor.BrightWhite);
-            TextMessageBlock contentsBlock;
+            var infoMessage = new InfoMessage(header.PadRight(headerLength) + ": ", TextColor.BrightWhite);
             if (flags.Any())
             {
-                contentsBlock = new TextMessageBlock(string.Join(", ", flags), TextColor.Cyan);
+                infoMessage.AddText(string.Join(", ", flags), TextColor.Cyan);
             }
             else
             {
-                contentsBlock = new TextMessageBlock("NONE", TextColor.Cyan);
+                infoMessage.AddText("NONE", TextColor.Cyan);
             }
 
-            return new InfoMessage(new[] { headerBlock, contentsBlock });
+            return infoMessage;
+
+            //var headerBlock = new TextMessageBlock(header.PadRight(headerLength) + ": ", TextColor.BrightWhite);
+            //TextMessageBlock contentsBlock;
+            //if (flags.Any())
+            //{
+            //    contentsBlock = new TextMessageBlock(string.Join(", ", flags), TextColor.Cyan);
+            //}
+            //else
+            //{
+            //    contentsBlock = new TextMessageBlock("NONE", TextColor.Cyan);
+            //}
+
+            //return new InfoMessage(new[] { headerBlock, contentsBlock });
         }
     }
 }

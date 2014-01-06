@@ -12,13 +12,12 @@ namespace Adan.Client.Common.Model
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Xml.Serialization;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
     using Themes;
-
     using Utils.PatternMatching;
 
     /// <summary>
@@ -39,7 +38,7 @@ namespace Adan.Client.Common.Model
         public Highlight()
         {
             _textToHighlight = string.Empty;
-            TextColor = TextColor.None;
+            ForegroundColor = TextColor.None;
             BackgroundColor = TextColor.None;
         }
 
@@ -63,7 +62,7 @@ namespace Adan.Client.Common.Model
         /// The color of the text.
         /// </value>
         [XmlAttribute]
-        public TextColor TextColor
+        public TextColor ForegroundColor
         {
             get;
             set;
@@ -102,71 +101,77 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(textMessage, "textMessage");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            var messageBlocks = textMessage.MessageBlocks;
-            bool matchSuccess = false;
+            //var messageBlocks = textMessage.MessageBlocks;
+            //bool matchSuccess = false;
             int position = 0;
             ClearMatchingResults();
-            var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
+            string text = textMessage.InnerText;
+            var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
 
             while (res.IsSuccess)
             {
-                matchSuccess = true;
-                var newBlocks = new List<TextMessageBlock>();
-                var matchIndex = res.StartPosition;
-                var matchLength = res.EndPosition - res.StartPosition;
+                textMessage.Highlight(ForegroundColor, BackgroundColor, res.StartPosition, res.EndPosition - res.StartPosition);
                 position = res.EndPosition;
-                bool matchTextAdded = false;
-                foreach (var block in messageBlocks)
-                {
-                    if (matchLength <= 0)
-                    {
-                        newBlocks.Add(block);
-                    }
-                    else if (matchIndex < block.Text.Length)
-                    {
-                        var charsToRemove = Math.Min(block.Text.Length - matchIndex, matchLength);
-                        newBlocks.Add(
-                            new TextMessageBlock(block.Text.Remove(matchIndex), block.Foreground, block.Background));
-                        if (!matchTextAdded)
-                        {
-                            newBlocks.Add(new TextMessageBlock(textMessage.InnerText.Substring(res.StartPosition, res.EndPosition - res.StartPosition), TextColor, BackgroundColor));
-                            matchTextAdded = true;
-                        }
-
-                        if (matchLength + matchIndex < block.Text.Length)
-                        {
-                            newBlocks.Add(
-                                new TextMessageBlock(
-                                    block.Text.Substring(
-                                        matchLength + matchIndex, block.Text.Length - matchLength - matchIndex),
-                                    block.Foreground,
-                                    block.Background));
-                        }
-
-                        matchLength -= charsToRemove;
-                        matchIndex = 0;
-                    }
-                    else
-                    {
-                        newBlocks.Add(block);
-                        matchIndex -= block.Text.Length;
-                    }
-
-                    if (matchIndex < 0)
-                    {
-                        matchIndex = 0;
-                    }
-                }
-
-                messageBlocks = newBlocks;
                 ClearMatchingResults();
-                res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
+                res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+
+                //matchSuccess = true;
+                //var newBlocks = new List<TextMessageBlock>();
+                //var matchIndex = res.StartPosition;
+                //var matchLength = res.EndPosition - res.StartPosition;
+                //position = res.EndPosition;
+                //bool matchTextAdded = false;
+                //foreach (var block in messageBlocks)
+                //{
+                //    if (matchLength <= 0)
+                //    {
+                //        newBlocks.Add(block);
+                //    }
+                //    else if (matchIndex < block.Text.Length)
+                //    {
+                //        var charsToRemove = Math.Min(block.Text.Length - matchIndex, matchLength);
+                //        newBlocks.Add(
+                //            new TextMessageBlock(block.Text.Remove(matchIndex), block.Foreground, block.Background));
+                //        if (!matchTextAdded)
+                //        {
+                //            newBlocks.Add(new TextMessageBlock(textMessage.InnerText.Substring(res.StartPosition, res.EndPosition - res.StartPosition), TextColor, BackgroundColor));
+                //            matchTextAdded = true;
+                //        }
+
+                //        if (matchLength + matchIndex < block.Text.Length)
+                //        {
+                //            newBlocks.Add(
+                //                new TextMessageBlock(
+                //                    block.Text.Substring(
+                //                        matchLength + matchIndex, block.Text.Length - matchLength - matchIndex),
+                //                    block.Foreground,
+                //                    block.Background));
+                //        }
+
+                //        matchLength -= charsToRemove;
+                //        matchIndex = 0;
+                //    }
+                //    else
+                //    {
+                //        newBlocks.Add(block);
+                //        matchIndex -= block.Text.Length;
+                //    }
+
+                //    if (matchIndex < 0)
+                //    {
+                //        matchIndex = 0;
+                //    }
+                //}
+
+                //messageBlocks = newBlocks;
+                //ClearMatchingResults();
+                //res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
             }
 
-            if (matchSuccess)
-            {
-                textMessage.UpdateMessageBlocks(messageBlocks);
-            }
+            //if (matchSuccess)
+            //{
+            //    textMessage.UpdateMessageBlocks(messageBlocks);
+            //}
         }
 
         private void ClearMatchingResults()

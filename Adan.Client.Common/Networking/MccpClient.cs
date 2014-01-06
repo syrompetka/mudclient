@@ -39,7 +39,7 @@ namespace Adan.Client.Common.Networking
         /// <summary>
         /// Gets the number of bytes recieved.
         /// </summary>
-        public int TotalBytesReceived
+        public uint TotalBytesReceived
         {
             get;
             private set;
@@ -48,7 +48,7 @@ namespace Adan.Client.Common.Networking
         /// <summary>
         /// Gets the number of bytes decompressed.
         /// </summary>
-        public int BytesDecompressed
+        public uint BytesDecompressed
         {
             get;
             private set;
@@ -118,7 +118,7 @@ namespace Adan.Client.Common.Networking
 
             int offset = e.Offset;
             int bytesReceived = e.BytesReceived;
-            TotalBytesReceived += bytesReceived;
+            TotalBytesReceived += (uint) bytesReceived;
             byte[] data = e.GetData();
             if (!_compressionEnabled)
             {
@@ -144,8 +144,8 @@ namespace Adan.Client.Common.Networking
                 {
                     _customProtocolEnabled = true;
                     base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CustomProtocolCode }, 0, 3);
+                    //base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoNotCode, TelnetConstants.CustomProtocolCode }, 0, 3);
                     offset += 3;
-                    bytesReceived -= 3;
                 }
             }
 
@@ -162,7 +162,6 @@ namespace Adan.Client.Common.Networking
                     _compressionInProgress = true;
                     _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);
                     offset += 5;
-                    bytesReceived -= 5;
                 }
             }
 
@@ -170,12 +169,13 @@ namespace Adan.Client.Common.Networking
             {
                 if (_compressionInProgress)
                 {
+                    int length = bytesReceived - offset;
                     _compressedDataStream.Seek(0, SeekOrigin.Begin);
-                    _compressedDataStream.Write(data, offset, bytesReceived);
-                    _compressedDataStream.SetLength(bytesReceived);
+                    _compressedDataStream.Write(data, offset, length);
+                    _compressedDataStream.SetLength(length);
                     _compressedDataStream.Seek(0, SeekOrigin.Begin);
-                    bytesReceived = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
-                    if (bytesReceived < 0)
+                    int bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
+                    if (bytesDecompresed < 0)
                     {
                         _compressionInProgress = false;
                         _zlibDecompressionStream.Dispose();
@@ -184,13 +184,13 @@ namespace Adan.Client.Common.Networking
                     else
                     {
                         offset = 0;
-                        BytesDecompressed += bytesReceived;
-                        base.OnDataReceived(this, new DataReceivedEventArgs(bytesReceived, offset, _unpackBuffer));
+                        BytesDecompressed += (uint)bytesDecompresed;
+                        base.OnDataReceived(this, new DataReceivedEventArgs(bytesDecompresed, offset, _unpackBuffer));
                     }
                 }
                 else
                 {
-                    BytesDecompressed += bytesReceived;
+                    BytesDecompressed += (uint) bytesReceived;
                     base.OnDataReceived(this, new DataReceivedEventArgs(bytesReceived, offset, data));
                 }
             }
