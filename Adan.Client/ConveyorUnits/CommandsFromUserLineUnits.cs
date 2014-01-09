@@ -250,9 +250,11 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length == 3)
                     groupName = args[2];
 
+                string comm = Regex.Replace(args[0], "%[0-9]", "").Trim();
+
                 CommandAlias commandAlias = new CommandAlias()
                 {
-                    Command = args[0]
+                    Command = comm
                 };
 
                 commandAlias.Actions.Add(new SendTextAction()

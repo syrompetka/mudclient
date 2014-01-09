@@ -82,8 +82,6 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
             {
                 PushMessageToConveyor(new InfoMessage(Resources.LoreHelp, TextColor.BrightYellow), rootModel);
                 PushMessageToConveyor(new InfoMessage(Resources.LoreCommentsHelp, TextColor.BrightYellow), rootModel);
-                //PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreHelp, TextColor.BrightYellow) }), rootModel);
-                //PushMessageToConveyor(new InfoMessage(new[] { new TextMessageBlock(Resources.LoreCommentsHelp, TextColor.BrightYellow) }), rootModel);
                 command.Handled = true;
                 return;
             }

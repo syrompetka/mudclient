@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Common.Messages
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
@@ -24,7 +25,7 @@ namespace Adan.Client.Common.Messages
     {
         private bool _isInnerTextComputed;
         private string _innerText;
-        private string _coloredText;
+        private string _coloredText = string.Empty;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
@@ -44,18 +45,6 @@ namespace Adan.Client.Common.Messages
             }
 
             _coloredText = originalMessage.ColoredText;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextMessage"/> class.
-        /// </summary>
-        /// <param name="text">The text to display.</param>
-        /// <param name="foregroundColor">Color of the foreground.</param>
-        protected TextMessage([NotNull] string text, TextColor foregroundColor)
-        {
-            Assert.ArgumentNotNull(text, "text");
-
-            this.AddText(text, foregroundColor);
         }
 
         /// <summary>
@@ -83,12 +72,24 @@ namespace Adan.Client.Common.Messages
         /// </summary>
         /// <param name="text">The text to display.</param>
         /// <param name="foregroundColor">Color of the foreground.</param>
+        protected TextMessage([NotNull] string text, TextColor foregroundColor)
+        {
+            Assert.ArgumentNotNull(text, "text");
+
+            this.AddText(text, foregroundColor);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TextMessage"/> class.
+        /// </summary>
+        /// <param name="text">The text to display.</param>
+        /// <param name="foregroundColor">Color of the foreground.</param>
         /// <param name="backgroundColor">Color of the background.</param>
         protected TextMessage([NotNull] string text, TextColor foregroundColor, TextColor backgroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
 
-            AddText(text, foregroundColor, backgroundColor);
+            this.AddText(text, foregroundColor, backgroundColor);
         }
 
         /// <summary>
@@ -98,8 +99,58 @@ namespace Adan.Client.Common.Messages
         /// <param name="background"></param>
         /// <param name="offset"></param>
         /// <param name="length"></param>
-        public void Highlight(TextColor foreground, TextColor background, int offset, int length)
+        public void HighlightColoredText(TextColor foreground, TextColor background, int offset, int length)
         {
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException();
+
+            StringBuilder sb = new StringBuilder(_coloredText.Length + 20);
+            int coloredPosition = offset;
+
+            if (coloredPosition > 0)
+                sb.Append(_coloredText, 0, coloredPosition);
+
+            sb.Append("\x1B[2;");
+
+            if (foreground == TextColor.None && background == TextColor.None)
+            {
+                sb.Append("0");
+            }
+            else
+            {
+                if (foreground != TextColor.None)
+                {
+                    sb.Append(ConvertTextColorToAnsi(foreground, false));
+                    sb.Append(';');
+                }
+                if (background != TextColor.None)
+                    sb.Append(ConvertTextColorToAnsi(background, true));
+            }
+
+            sb.Append('m');
+
+            sb.Append(_coloredText, coloredPosition, length);
+            sb.Append("\x1B[3m");
+
+            int endPosition = coloredPosition + length;
+            if (endPosition < _coloredText.Length)
+                sb.Append(_coloredText, endPosition, _coloredText.Length - endPosition);
+
+            _coloredText = sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="foreground"></param>
+        /// <param name="background"></param>
+        /// <param name="offset"></param>
+        /// <param name="length"></param>
+        public void HighlightInnerText(TextColor foreground, TextColor background, int offset, int length)
+        {
+            if (length <= 0)
+                throw new ArgumentOutOfRangeException();
+
             StringBuilder sb = new StringBuilder(_coloredText.Length + 20);
             int coloredPosition = 0;
 
@@ -358,23 +409,15 @@ namespace Adan.Client.Common.Messages
         /// <param name="foreground"></param>
         public void AddText(string text, TextColor foreground)
         {
+            int offset = _coloredText.Length;
             StringBuilder sb = new StringBuilder(_coloredText);
-            sb.Append('\x1B');
-            sb.Append('[');
-
-            if (foreground == TextColor.None)
-            {
-                sb.Append("0");
-            }
-            else
-            {
-                sb.Append(ConvertTextColorToAnsi(foreground, false));
-            }
-
-            sb.Append('m');
             sb.Append(text);
             _coloredText = sb.ToString();
             _isInnerTextComputed = false;
+            if (!String.IsNullOrEmpty(_coloredText))
+            {
+                this.HighlightColoredText(foreground, TextColor.None, offset, _coloredText.Length - offset);
+            }
         }
 
         /// <summary>
@@ -385,26 +428,15 @@ namespace Adan.Client.Common.Messages
         /// <param name="background"></param>
         public void AddText(string text, TextColor foreground, TextColor background)
         {
+            int offset = _coloredText.Length;
             StringBuilder sb = new StringBuilder(_coloredText);
-            sb.Append('\x1B');
-            sb.Append('[');
-
-            if (foreground == TextColor.None && background == TextColor.None)
-            {
-                sb.Append("0");
-            }
-            else
-            {
-                if (foreground != TextColor.None)
-                    sb.Append(ConvertTextColorToAnsi(foreground, false));
-                if (background != TextColor.None)
-                    sb.Append(ConvertTextColorToAnsi(background, true));
-            }
-
-            sb.Append('m');
             sb.Append(text);
             _coloredText = sb.ToString();
             _isInnerTextComputed = false;
+            if (!String.IsNullOrEmpty(_coloredText))
+            {
+                this.HighlightColoredText(foreground, background, offset, _coloredText.Length - offset);
+            }
         }
 
         /// <summary>

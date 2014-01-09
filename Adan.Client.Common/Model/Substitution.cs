@@ -14,6 +14,7 @@ namespace Adan.Client.Common.Model
     using System.Diagnostics;
     using System.Linq;
     using System.Text;
+    using System.Text.RegularExpressions;
     using System.Xml.Serialization;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -47,6 +48,17 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
+        /// Is Regular Expression
+        /// </summary>
+        [NotNull]
+        [XmlIgnore]
+        public bool IsRegExp
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Gets or sets the pattern.
         /// </summary>
         /// <value>
@@ -65,7 +77,17 @@ namespace Adan.Client.Common.Model
             {
                 Assert.ArgumentNotNull(value, "value");
 
-                _pattern = value;
+                if (!string.IsNullOrEmpty(value) && value[0] == '/' && value[value.Length - 1] == '/')
+                {
+                    _pattern = value.Substring(1, value.Length - 2);
+                    IsRegExp = true;
+                }
+                else
+                {
+                    _pattern = value;
+                    IsRegExp = false;
+                }
+
                 _rootPatternToken = null;
             }
         }
@@ -106,43 +128,50 @@ namespace Adan.Client.Common.Model
 
             ClearMatchingResults();
             string text = textMessage.InnerText;
-            var res = GetRootPatternToken(rootModel).Match(text, 0, _matchingResults);
-            if (res.IsSuccess)
+            if (IsRegExp)
             {
-                int position = 0;
-                int coloredPosition = 0;
-                int coloredStartPosition = 0;
-                int lastPosition = res.StartPosition - position;
-                string coloredText = textMessage.ColoredText;
-                StringBuilder sb = new StringBuilder(coloredText.Length);
-                do
+                Regex rExp = new Regex(_pattern);
+                var matches = rExp.Matches(text);
+
+                if (matches.Count == 0)
+                    return;
+
+                StringBuilder sb = new StringBuilder(text.Length);
+                int offset = 0;
+                for (int i = 0; i < matches.Count; ++i)
                 {
-                    int count = 0;
-                    if (lastPosition == 0)
-                    {
-                        while (coloredText[coloredStartPosition] == '\x1B')
-                        {
-                            coloredStartPosition += 2;
-                            var tt = coloredText[coloredStartPosition];
+                    if (offset < matches[i].Index)
+                        sb.Append(text, offset, matches[i].Index - offset);
 
-                            while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
-                                coloredStartPosition++;
+                    offset = matches[i].Index + matches[i].Length;
 
-                            if (coloredStartPosition == coloredText.Length)
-                            {
-                                coloredStartPosition = 0;
-                            }
-                            else
-                            {
-                                coloredStartPosition++;
-                            }
-                        }
-                    }
-                    else
+                    StringBuilder value = new StringBuilder(SubstituteWith);
+                    for (int k = 1; k < matches[i].Groups.Count; ++k)
+                        value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
+
+                    sb.Append(value);
+                }
+
+                textMessage.Clear();
+                textMessage.AddText(sb.ToString());
+            }
+            else
+            {
+                var res = GetRootPatternToken(rootModel).Match(text, 0, _matchingResults);
+                if (res.IsSuccess)
+                {
+                    int position = 0;
+                    int coloredPosition = 0;
+                    int coloredStartPosition = 0;
+                    int lastPosition = res.StartPosition - position;
+                    string coloredText = textMessage.ColoredText;
+                    StringBuilder sb = new StringBuilder(coloredText.Length);
+                    do
                     {
-                        while (count < lastPosition)
+                        int count = 0;
+                        if (lastPosition == 0)
                         {
-                            if (coloredText[coloredStartPosition] == '\x1B')
+                            while (coloredText[coloredStartPosition] == '\x1B')
                             {
                                 coloredStartPosition += 2;
                                 var tt = coloredText[coloredStartPosition];
@@ -151,62 +180,85 @@ namespace Adan.Client.Common.Model
                                     coloredStartPosition++;
 
                                 if (coloredStartPosition == coloredText.Length)
+                                {
+                                    coloredStartPosition = 0;
+                                }
+                                else
+                                {
+                                    coloredStartPosition++;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            while (count < lastPosition)
+                            {
+                                if (coloredText[coloredStartPosition] == '\x1B')
+                                {
+                                    coloredStartPosition += 2;
+                                    var tt = coloredText[coloredStartPosition];
+
+                                    while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
+                                        coloredStartPosition++;
+
+                                    if (coloredStartPosition == coloredText.Length)
+                                        break;
+
+                                    coloredStartPosition++;
+                                }
+                                else
+                                {
+                                    count++;
+                                    coloredStartPosition++;
+                                }
+                            }
+                        }
+
+                        sb.Append(coloredText, coloredPosition, coloredStartPosition - coloredPosition);
+                        sb.Append(GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults));
+
+                        lastPosition = res.EndPosition - position;
+                        count = 0;
+                        while (count < lastPosition)
+                        {
+                            if (coloredText[coloredPosition] == '\x1B')
+                            {
+                                coloredPosition += 2;
+                                var tt = coloredText[coloredPosition];
+
+                                while (coloredPosition < coloredText.Length && coloredText[coloredPosition] != 'm')
+                                    coloredPosition++;
+
+                                if (coloredPosition == coloredText.Length)
                                     break;
 
-                                coloredStartPosition++;
+                                coloredPosition++;
                             }
                             else
                             {
                                 count++;
-                                coloredStartPosition++;
+                                coloredPosition++;
                             }
                         }
-                    }
 
-                    sb.Append(coloredText, coloredPosition, coloredStartPosition - coloredPosition);
-                    sb.Append(GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults));
-
-                    lastPosition = res.EndPosition - position;
-                    count = 0;
-                    while (count < lastPosition)
-                    {
-                        if (coloredText[coloredPosition] == '\x1B')
+                        position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
+                        ClearMatchingResults();
+                        if (position >= text.Length)
                         {
-                            coloredPosition += 2;
-                            var tt = coloredText[coloredPosition];
-
-                            while (coloredPosition < coloredText.Length && coloredText[coloredPosition] != 'm')
-                                coloredPosition++;
-
-                            if (coloredPosition == coloredText.Length)
-                                break;
-
-                            coloredPosition++;
+                            break;
                         }
-                        else
-                        {
-                            count++;
-                            coloredPosition++;
-                        }
-                    }
 
-                    position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
-                    ClearMatchingResults();
-                    if (position >= text.Length)
-                    {
-                        break;
-                    }
+                        res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+                    } while (res.IsSuccess);
 
-                    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-                } while (res.IsSuccess);
+                    if (coloredPosition < coloredText.Length)
+                        sb.Append(coloredText, coloredPosition, coloredText.Length - coloredPosition);
 
-                if (coloredPosition < coloredText.Length)
-                    sb.Append(coloredText, coloredPosition, coloredText.Length - coloredPosition);
-
-                textMessage.Clear();
-                textMessage.AddText(sb.ToString());
-                //rootModel.PushMessageToConveyor(textMessage.NewInstance());
-                //textMessage.Handled = true;
+                    textMessage.Clear();
+                    textMessage.AddText(sb.ToString());
+                    //rootModel.PushMessageToConveyor(textMessage.NewInstance());
+                    //textMessage.Handled = true;
+                }
             }
         }
 

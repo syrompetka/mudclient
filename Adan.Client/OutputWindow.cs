@@ -110,8 +110,15 @@ namespace Adan.Client
                 _renderCount = 0;
                 _renderTime = TimeSpan.Zero;
 
-                RootModel.PushMessageToConveyor(new InfoMessage(string.Format("AddMessageAvgTimer = {0}x{1}, RenderAvgTimer = {2}x{3}",
-                    addCount, addTime, renderCount, renderTime)));
+                double decompressTime = 0;
+                var decompressCount = _rootModel.MessageConveyor.MccpClient.Count;
+                if(decompressCount > 0)
+                    decompressTime = _rootModel.MessageConveyor.MccpClient.DecompressTime.TotalMilliseconds / (double)decompressCount;
+                _rootModel.MessageConveyor.MccpClient.DecompressTime = TimeSpan.Zero;
+                _rootModel.MessageConveyor.MccpClient.Count = 0;
+
+                RootModel.PushMessageToConveyor(new InfoMessage(string.Format("AddMessageAvgTimer = {0}x{1}, RenderAvgTimer = {2}x{3}, DecompressTime = {4}x{5}",
+                    addCount, addTime, renderCount, renderTime, decompressCount, decompressTime)));
             }
 
             _timer.Start();
