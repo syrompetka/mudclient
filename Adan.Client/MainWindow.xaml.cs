@@ -340,11 +340,10 @@ namespace Adan.Client
         /// <param name="command"></param>
         public void SendToWindow(string name, Command command)
         {
-            var outputWindow = _outputWindows.FirstOrDefault(output => output.Name == name);
-
-            if (outputWindow != null)
+            foreach(var outputWindow in _outputWindows)
             {
-                outputWindow.RootModel.PushCommandToConveyor(command);
+                if(outputWindow.Name == name)
+                    outputWindow.RootModel.PushCommandToConveyor(command);
             }
         }
 
