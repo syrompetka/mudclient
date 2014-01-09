@@ -39,6 +39,11 @@ namespace Adan.Client.Common.Conveyor
         /// </summary>
         public event EventHandler<MessageReceivedEventArgs> MessageReceived;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler OnDisconnected;
+
         #endregion
 
         #region Constants and Fields
@@ -57,6 +62,19 @@ namespace Adan.Client.Common.Conveyor
         private int _currentMessageType = BuiltInMessageTypes.TextMessage;
 
         #endregion
+
+#if DEBUG
+        /// <summary>
+        /// 
+        /// </summary>
+        public MccpClient MccpClient
+        {
+            get
+            {
+                return _mccpClient;
+            }
+        }
+#endif
 
         #region Constructors and Destructors
 
@@ -302,6 +320,11 @@ namespace Adan.Client.Common.Conveyor
         public void Disconnect()
         {
             _mccpClient.Disconnect();
+
+            if (OnDisconnected != null)
+            {
+                OnDisconnected(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

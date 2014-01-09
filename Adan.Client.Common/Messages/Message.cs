@@ -17,6 +17,17 @@ namespace Adan.Client.Common.Messages
     public abstract class Message
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public Message()
+        {
+            Handled = false;
+            SkipHighlight = false;
+            SkipSubstitution = false;
+            SkipTriggers = false;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether this <see cref="Message"/> was handled by some conveyor unit.
         /// </summary>
         /// <value>
@@ -59,6 +70,16 @@ namespace Adan.Client.Common.Messages
         /// </summary>
         [XmlIgnore]
         public bool SkipSubstitution
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public bool SkipHighlight
         {
             get;
             set;

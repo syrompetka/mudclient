@@ -112,7 +112,7 @@ namespace Adan.Client.Common.Networking
         /// <summary>
         /// Disconnects this instance.
         /// </summary>
-        public void Disconnect()
+        public virtual void Disconnect()
         {
             if (_theSocket != null)
             {

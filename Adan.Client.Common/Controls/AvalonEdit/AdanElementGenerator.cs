@@ -95,6 +95,9 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             TextColor currentForeColor = TextColor.None;
             bool isBright = false;
 
+            if(curOffset == document.TextLength)
+                return null;
+
             if (document.GetCharAt(curOffset) == '\x1B')
             {
                 curOffset += 2;

@@ -16,6 +16,7 @@ namespace Adan.Client.Map.ViewModel
     using System.Threading.Tasks;
     using System.Windows.Threading;
     using Adan.Client.Map.Messages;
+    using Adan.Client.Map.Properties;
     using Common.Model;
     using Common.ViewModel;
     using CSLib.Net.Annotations;
@@ -31,7 +32,7 @@ namespace Adan.Client.Map.ViewModel
         private readonly IEnumerable<AdditionalRoomParameters> _additionalRoomParameters;
         //private readonly ZoneManager _zoneManager;
         //private RootModel _rootModel;
-        private double _zoomLevel;
+        private static double _zoomLevel;
         private int _currentLevel;
         private RoomViewModel _currentRoom;
 
@@ -48,7 +49,6 @@ namespace Adan.Client.Map.ViewModel
             AllRooms = new List<RoomViewModel>();
             _zone = zone;
             _additionalRoomParameters = additionalRoomParameters;
-            _zoomLevel = 1;
             CurrentLevelRooms = new ObservableCollection<RoomViewModel>();
             BuildRoomsViewModel();
             BuildCurrentLevelRooms();
@@ -98,6 +98,7 @@ namespace Adan.Client.Map.ViewModel
                 }
 
                 _zoomLevel = value;
+                Settings.Default.MapZoomLevel = value;
                 OnPropertyChanged("ZoomLevel");
             }
         }

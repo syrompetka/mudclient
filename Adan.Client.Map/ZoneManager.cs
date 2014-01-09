@@ -116,7 +116,7 @@ namespace Adan.Client.Map
                 }
             }
         }
-        
+
 #if DEBUG
         private void SaveZoneDebugInfo(ZoneViewModel zoneViewModel)
         {
@@ -177,7 +177,7 @@ namespace Adan.Client.Map
 #if DEBUG
                 sw.Start();
 #endif
-                var zoneViewModel = LoadZone(_zoneHolders[uid].ZoneId);
+                var zoneViewModel = GetZone(_zoneHolders[uid].ZoneId);
 #if DEBUG
                 sw.Stop();
                 rootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));
@@ -202,7 +202,7 @@ namespace Adan.Client.Map
 #if DEBUG
                     sw.Start();
 #endif
-                    var zoneViewModel = LoadZone(_zoneHolders[uid].ZoneId);
+                    var zoneViewModel = GetZone(_zoneHolders[uid].ZoneId);
 #if DEBUG
                     sw.Stop();
                     rootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));
@@ -279,13 +279,13 @@ namespace Adan.Client.Map
 
             if (_mapControl.ViewModel != null && _mapControl.ViewModelUid == zoneHolder.Uid)
             {
-                if(_mapControl.ViewModel.Id != zoneHolder.ZoneId)
+                if (_mapControl.ViewModel.Id != zoneHolder.ZoneId)
                 {
 #if DEBUG
                     System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
                     sw.Start();
 #endif
-                    var zoneViewModel = LoadZone(zoneHolder.ZoneId);
+                    var zoneViewModel = GetZone(zoneHolder.ZoneId);
 #if DEBUG
                     sw.Stop();
                     zoneHolder.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));

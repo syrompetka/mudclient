@@ -31,6 +31,14 @@ namespace Adan.Client.Map.Model
             RoomId = -1;
 
             rootModel.MessageConveyor.MessageReceived += MessageConveyor_MessageReceived;
+            rootModel.MessageConveyor.OnDisconnected += MessageConveyor_OnDisconnected;
+        }
+
+        private void MessageConveyor_OnDisconnected(object sender, EventArgs e)
+        {
+            ZoneId = -1;
+            RoomId = -1;
+            _zoneManager.UpdateControl(this);
         }
 
         /// <summary>

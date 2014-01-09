@@ -35,6 +35,13 @@ namespace Adan.Client.Plugins.GroupWidget.Model
             Characters = new List<CharacterStatus>();
 
             rootModel.MessageConveyor.MessageReceived += MessageConveyor_MessageReceived;
+            rootModel.MessageConveyor.OnDisconnected += MessageConveyor_OnDisconnected;
+        }
+
+        private void MessageConveyor_OnDisconnected(object sender, EventArgs e)
+        {
+            Characters = new List<CharacterStatus>();
+            _groupManager.UpdateGroup(this);
         }
 
         /// <summary>

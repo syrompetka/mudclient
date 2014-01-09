@@ -110,7 +110,7 @@ namespace Adan.Client.Common.Model
 
             while (res.IsSuccess)
             {
-                textMessage.Highlight(ForegroundColor, BackgroundColor, res.StartPosition, res.EndPosition - res.StartPosition);
+                textMessage.HighlightInnerText(ForegroundColor, BackgroundColor, res.StartPosition, res.EndPosition - res.StartPosition);
                 position = res.EndPosition;
                 ClearMatchingResults();
                 res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);

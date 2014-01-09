@@ -149,8 +149,8 @@ namespace Adan.Client
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
             MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
-            MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
             MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
+            MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
             MessageConveyor.AddConveyorUnit(new CommandMultiplierUnit());
             MessageConveyor.AddConveyorUnit(new SubstitutionUnit());
             MessageConveyor.AddConveyorUnit(new TriggerUnit());

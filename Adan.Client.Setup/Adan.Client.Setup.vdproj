@@ -745,7 +745,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.31.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_6AA570002F283AA93773BC1D3336B33C"
@@ -1135,15 +1135,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Adamant mud client"
-        "ProductCode" = "8:{0D766DEA-CE7A-4D61-B1F4-77993065EE24}"
-        "PackageCode" = "8:{DC006A5A-0B2D-4FE4-872B-7AF33711E61D}"
+        "ProductCode" = "8:{83D72F30-976A-4DED-B6B9-FE5E43283C20}"
+        "PackageCode" = "8:{52A721B4-D5D0-4304-8AEA-59249D8C91AD}"
         "UpgradeCode" = "8:{57566A6A-532F-4B87-AC64-05A74AA4919D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.30"
+        "ProductVersion" = "8:1.1.32"
         "Manufacturer" = "8:Adan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"

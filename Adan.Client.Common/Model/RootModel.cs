@@ -467,6 +467,7 @@ namespace Adan.Client.Common.Model
             if (e.Name == Profile.Name)
             {
                 Profile = SettingsHolder.Instance.GetProfile(e.Name);
+                RecalculatedEnabledTriggersPriorities();
             }
         }
     }

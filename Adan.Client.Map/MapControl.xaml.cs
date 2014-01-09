@@ -44,6 +44,7 @@ namespace Adan.Client.Map
             _toolTip.Content = _roomDetailsControl;
             _toolTip.PlacementTarget = this;
             _toolTip.Placement = PlacementMode.RelativePoint;
+            _toolTip.Opacity = 0.9;
             _contextMenu.PlacementTarget = this;
             _contextMenu.Placement = PlacementMode.RelativePoint;
             _contextMenu.RoomEditDialogRequired += OnRoomEditDialogRequired;

@@ -34,6 +34,7 @@ namespace Adan.Client.Controls
         private RootModel _rootModel;
 
         private bool _isMainOutputEndToScroll = true;
+        private bool _needMainOutputScrollToEnd = false;
 
         static MainOutputWindowExx()
         {
@@ -246,6 +247,9 @@ namespace Adan.Client.Controls
             var textView = sender as TextView;
             if (scrollGridRow.Height.Value != 0 && textView.DocumentHeight - (textView.VerticalOffset + secondScrollOutput.ViewportHeight + splitterGridRow.Height.Value) < 0.01)
             {
+                if (_isMainOutputEndToScroll)
+                    _needMainOutputScrollToEnd = true;
+
                 if (!gridSplitter.IsDragging)
                 {
                     scrollGridRow.Height = new GridLength(0);
@@ -321,13 +325,28 @@ namespace Adan.Client.Controls
 
             if (e.Key == Key.PageDown)
             {
-                secondScrollOutput.PageDown();
+                if (scrollGridRow.Height.Value == 0)
+                {
+                    mainScrollOutput.PageDown();
+                }
+                else
+                {
+                    secondScrollOutput.PageDown();
+                }
                 e.Handled = true;
             }
 
-            if (e.Key == Key.End)
+            if (e.Key == Key.End && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                secondScrollOutput.ScrollToEnd();
+                if (scrollGridRow.Height.Value == 0)
+                {
+                    mainScrollOutput.ScrollToEnd();
+                }
+                else
+                {
+                    mainScrollOutput.ScrollToLine(mainScrollOutput.LineCount);
+                }
+
                 e.Handled = true;
             }
 
@@ -358,8 +377,9 @@ namespace Adan.Client.Controls
                 mainScrollOutput.AppendText(message.ColoredText);
             }
 
-            if (mainScrollOutput.ExtentHeight == 0 || _isMainOutputEndToScroll)
+            if (mainScrollOutput.ExtentHeight == 0 || _isMainOutputEndToScroll || _needMainOutputScrollToEnd)
             {
+                _needMainOutputScrollToEnd = false;
                 mainScrollOutput.ScrollToLine(mainScrollOutput.LineCount);
             }
             else
@@ -379,7 +399,7 @@ namespace Adan.Client.Controls
             if (mainScrollOutput.LineCount > SettingsHolder.Instance.Settings.ScrollBuffer)
             {
                 int offset = mainScrollOutput.Document.GetOffset(
-                    Math.Max(SettingsHolder.Instance.Settings.ScrollBuffer - 1, 1), 0);
+                    Math.Max(mainScrollOutput.LineCount - SettingsHolder.Instance.Settings.ScrollBuffer, 1), 0);
 
                 mainScrollOutput.Document.Remove(0, offset);
             }

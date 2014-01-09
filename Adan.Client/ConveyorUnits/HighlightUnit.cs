@@ -72,11 +72,14 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+            if (!textMessage.SkipHighlight)
             {
-                foreach (var highlight in group.Highlights)
+                foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
                 {
-                    highlight.ProcessMessage(textMessage, rootModel);
+                    foreach (var highlight in group.Highlights)
+                    {
+                        highlight.ProcessMessage(textMessage, rootModel);
+                    }
                 }
             }
         }

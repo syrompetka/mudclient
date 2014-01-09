@@ -109,17 +109,19 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
         {
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
-            if (OutputEntireMessageKeepingColors)
+
+            var textMessage = context.CurrentMessage as TextMessage;
+            if (textMessage != null)
             {
-                var textMessage = context.CurrentMessage as TextMessage;
-                if (textMessage != null)
+                string str = PostProcessString(TextToOutput + GetParametersString(model, context), model, context);
+                if (OutputEntireMessageKeepingColors)
                 {
-                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(textMessage) { SkipTriggers = true });
+                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
                 }
-            }
-            else
-            {
-                model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(PostProcessString(TextToOutput + GetParametersString(model, context), model, context), TextColor, BackgroundColor) { SkipTriggers = true });
+                else
+                {
+                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str, TextColor, BackgroundColor) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
+                }
             }
         }
     }

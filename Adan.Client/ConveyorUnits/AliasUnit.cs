@@ -88,11 +88,6 @@ namespace Adan.Client.ConveyorUnits
                         continue;
                     }
 
-#if DEBUG
-                    if(_context.Parameters.Count > 1)
-                        throw new Exception("WTF?! Action context more than 1");
-#endif
-
                     int ind = commandText.IndexOf(' ');
 
                     if (ind != -1)
