@@ -296,7 +296,6 @@ namespace Adan.Client
                     {
                         try
                         {
-
                             floatingWindow.Close();
                         }
                         catch { }
@@ -418,35 +417,45 @@ namespace Adan.Client
 #if DEBUG
             sw.Start();
 #endif
-            
-            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
-            if (!Directory.Exists(layoutFullPath))
+
+            base.OnClosing(e);
+
+            try
             {
-                Directory.CreateDirectory(layoutFullPath);
+
+                var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
+                if (!Directory.Exists(layoutFullPath))
+                {
+                    Directory.CreateDirectory(layoutFullPath);
+                }
+
+                layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
+                if (File.Exists(layoutFullPath))
+                    File.Delete(layoutFullPath);
+                dockManager.SaveLayout(layoutFullPath);
+
+                SettingsHolder.Instance.Settings.MainOutputs.Clear();
+
+                foreach (var outputWindow in _outputWindows)
+                {
+                    SettingsHolder.Instance.Settings.MainOutputs.Add(outputWindow.Uid);
+                    outputWindow.Save();
+                    outputWindow.Dispose();
+                }
+
+                SettingsHolder.Instance.SaveAllSettings();
+
+                PluginHost.Instance.Dispose();
             }
-
-            layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
-            dockManager.SaveLayout(layoutFullPath);
-
-            SettingsHolder.Instance.Settings.MainOutputs.Clear();
-
-            foreach (var outputWindow in _outputWindows)
+            catch (Exception ex)
             {
-                SettingsHolder.Instance.Settings.MainOutputs.Add(outputWindow.Uid);
-                outputWindow.Save();
-                outputWindow.Dispose();
+                MessageBox.Show(ex.ToString(), "Error save settings");
             }
-
-            SettingsHolder.Instance.Save();
-
-            PluginHost.Instance.Dispose();
 
 #if DEBUG
             sw.Stop();
             //MessageBox.Show(string.Format("OnClosingTime: {0} ms", sw.ElapsedMilliseconds));
 #endif
-
-            base.OnClosing(e);
         }
 
         /// <summary>
@@ -734,6 +743,7 @@ namespace Adan.Client
             };
 
             globalHotkeysDialog.ShowDialog();
+            SettingsHolder.Instance.SaveCommonSettings();
         }
 
         private void HandleAddNewWindow([NotNull] object sender, [NotNull] RoutedEventArgs e)

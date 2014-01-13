@@ -237,7 +237,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -261,7 +261,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -292,7 +292,8 @@ namespace Adan.Client.Common.Settings
                 catch (Exception e)
                 {
                     Groups = new List<Group>();
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -316,7 +317,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -340,7 +341,7 @@ namespace Adan.Client.Common.Settings
                 catch (Exception e)
                 {
                     Variables = new List<Variable>();
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -364,7 +365,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -389,7 +390,7 @@ namespace Adan.Client.Common.Settings
                 catch (Exception e)
                 {
                     CommandsHistory = new List<string>();
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }
@@ -413,7 +414,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show("Ошибка", e.Message, MessageBoxButton.OK);
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                 }
             }
         }

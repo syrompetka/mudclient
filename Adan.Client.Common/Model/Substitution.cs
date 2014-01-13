@@ -29,13 +29,13 @@ namespace Adan.Client.Common.Model
     {
         [NonSerialized]
         private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
-
         [NonSerialized]
         private PatternToken _rootPatternToken;
         [NonSerialized]
         private PatternToken _rootSubstituteWithPatternToken;
-
+        [NonSerialized]
         private string _pattern = string.Empty;
+        [NonSerialized]
         private string _substituteWith = string.Empty;
 
         /// <summary>
@@ -51,11 +51,11 @@ namespace Adan.Client.Common.Model
         /// Is Regular Expression
         /// </summary>
         [NotNull]
-        [XmlIgnore]
+        [XmlAttribute]
         public bool IsRegExp
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>

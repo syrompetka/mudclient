@@ -24,6 +24,7 @@ namespace Adan.Client.Common.Settings
     using Common.Themes;
     using CSLib.Net.Annotations;
     using System.Windows;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Class whos hold settings like colors, windows sizes etc.
@@ -211,22 +212,41 @@ namespace Adan.Client.Common.Settings
         /// <summary>
         /// Saves current settings.
         /// </summary>
-        public void Save()
+        public void SaveAllSettings()
+        {
+            SaveCommonSettings();
+            SaveProfiles();
+            ThemeManager.SaveSettings();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveCommonSettings()
         {
             var serializer = new XmlSerializer(typeof(SettingsSerializer), AllSerializationTypes.ToArray());
+
+            if (File.Exists(SettingsFilePath))
+            {
+                File.Delete(SettingsFilePath);
+            }
 
             using (var stream = File.OpenWrite(SettingsFilePath))
             {
                 serializer.Serialize(stream, Settings);
             }
+        }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveProfiles()
+        {
             lock (_profiles)
             {
                 foreach (var profile in _profiles)
                     profile.Save();
             }
-
-            ThemeManager.SaveSettings();
         }
 
         /// <summary>
@@ -306,7 +326,8 @@ namespace Adan.Client.Common.Settings
         /// 
         /// </summary>
         /// <param name="profile"></param>
-        public void SetProfile(ProfileHolder profile)
+        /// <param name="changeAllCurrentSettings"></param>
+        public void SetProfile(ProfileHolder profile, bool changeAllCurrentSettings)
         {
             lock (_profiles)
             {
@@ -318,8 +339,13 @@ namespace Adan.Client.Common.Settings
                 _profiles.Add(profile);
             }
 
-            if (ProfilesChanged != null)
+            if (changeAllCurrentSettings && ProfilesChanged != null)
                 ProfilesChanged(this, new SettingsChangedEventArgs(profile.Name, null));
+
+            lock (_profiles)
+            {
+                profile.Save();
+            }
         }
 
         #endregion
