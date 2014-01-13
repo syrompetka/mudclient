@@ -20,6 +20,7 @@ using Adan.Client.Properties;
 using System.Globalization;
 using System.Diagnostics;
 using System.Timers;
+using System.Windows.Forms.Integration;
 
 namespace Adan.Client
 {
@@ -31,7 +32,6 @@ namespace Adan.Client
         private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
-        //private MainOutputWindowEx _window;
         private MainOutputWindowExx _window;
         private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
@@ -61,7 +61,6 @@ namespace Adan.Client
 
             conveyor.MessageReceived += HandleMessage;
 
-            //_window = new MainOutputWindowEx(mainWindow, RootModel);
             _window = new MainOutputWindowExx(mainWindow, RootModel);
             VisibleControl = _window;
             
@@ -217,7 +216,7 @@ namespace Adan.Client
         public void Save()
         {
             _window.txtCommandInput.SaveCurrentHistory(RootModel.Profile);
-            SettingsHolder.Instance.SetProfile(RootModel.Profile);
+            SettingsHolder.Instance.SetProfile(RootModel.Profile, false);
         }
 
         /// <summary>
@@ -298,6 +297,8 @@ namespace Adan.Client
                     }
                 }
             }
+
+            GC.SuppressFinalize(this);
         }
 
         private void HandleMessage([NotNull] object sender, [NotNull] MessageReceivedEventArgs e)

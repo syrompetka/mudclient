@@ -37,6 +37,7 @@ namespace Adan.Client.Common.Model
 
         [NonSerialized]
         private ActionExecutionContext _context;
+        [NonSerialized]
         private string _matchingPattern;
 
         /// <summary>
@@ -52,11 +53,11 @@ namespace Adan.Client.Common.Model
         /// Is Regular Expression
         /// </summary>
         [NotNull]
-        [XmlIgnore]
+        [XmlAttribute]
         public bool IsRegExp
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Adan.Client.Common.Model
 
                 if (!string.IsNullOrEmpty(value) && value[0] == '/' && value[value.Length - 1] == '/')
                 {
-                    _matchingPattern = value.Substring(1, value.Length - 1);
+                    _matchingPattern = value.Substring(1, value.Length - 2);
                     IsRegExp = true;
                 }
                 else
@@ -136,8 +137,6 @@ namespace Adan.Client.Common.Model
             }
             else
             {
-                if (MatchingPattern == "Введите имя своего аккаунта")
-                    ClearMatchingResults();
                 ClearMatchingResults();
                 var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
                 if (!res.IsSuccess)

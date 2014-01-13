@@ -70,31 +70,13 @@
         "Entry"
         {
         "MsmKey" = "8:_4A6D3ACC693F1C61BF95F813D3F168F4"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4A6D3ACC693F1C61BF95F813D3F168F4"
         "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_4A6D3ACC693F1C61BF95F813D3F168F4"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_4A6D3ACC693F1C61BF95F813D3F168F4"
         "OwnerKey" = "8:_3616A32DE7114B64B9939F13333286CC"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -142,19 +124,7 @@
         "Entry"
         {
         "MsmKey" = "8:_6AA570002F283AA93773BC1D3336B33C"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6AA570002F283AA93773BC1D3336B33C"
         "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_6AA570002F283AA93773BC1D3336B33C"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -166,25 +136,7 @@
         "Entry"
         {
         "MsmKey" = "8:_8747660F4D17AA64EB36C5852A4F3F42"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8747660F4D17AA64EB36C5852A4F3F42"
         "OwnerKey" = "8:_A82FF26BC87F4D19B21B3D9215ED7252"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8747660F4D17AA64EB36C5852A4F3F42"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -220,19 +172,7 @@
         "Entry"
         {
         "MsmKey" = "8:_9C72676FAAB165675EF2710DF3CE008D"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9C72676FAAB165675EF2710DF3CE008D"
         "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9C72676FAAB165675EF2710DF3CE008D"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -274,19 +214,7 @@
         "Entry"
         {
         "MsmKey" = "8:_9DEE49C9BB42EF3422273592FFCDF14C"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9DEE49C9BB42EF3422273592FFCDF14C"
         "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9DEE49C9BB42EF3422273592FFCDF14C"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -352,19 +280,7 @@
         "Entry"
         {
         "MsmKey" = "8:_A429A5E491DFECC01A3F59AAB0CBDDB1"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A429A5E491DFECC01A3F59AAB0CBDDB1"
         "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_A429A5E491DFECC01A3F59AAB0CBDDB1"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -388,19 +304,7 @@
         "Entry"
         {
         "MsmKey" = "8:_D3EA25723B62B11E9386D083AC424435"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D3EA25723B62B11E9386D083AC424435"
         "OwnerKey" = "8:_A82FF26BC87F4D19B21B3D9215ED7252"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_D3EA25723B62B11E9386D083AC424435"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -442,24 +346,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_942B7CD9579C4486B481B4E447AA5B2E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_574B8F22682C481E8B190374E93EA5B8"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D3EA25723B62B11E9386D083AC424435"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -467,6 +353,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_8747660F4D17AA64EB36C5852A4F3F42"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_716616B535DA4E8C8B518AFD174B51B1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -745,7 +637,7 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.31.0, Culture=neutral, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:Adan.Client.Common, Version=1.1.34.0, Culture=neutral, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
                     "_6AA570002F283AA93773BC1D3336B33C"
@@ -1135,15 +1027,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Adamant mud client"
-        "ProductCode" = "8:{83D72F30-976A-4DED-B6B9-FE5E43283C20}"
-        "PackageCode" = "8:{52A721B4-D5D0-4304-8AEA-59249D8C91AD}"
+        "ProductCode" = "8:{FFEF7C00-D1ED-4B63-9711-971C9C178904}"
+        "PackageCode" = "8:{A4D23990-084C-4395-B377-9E4BBDD8F7E2}"
         "UpgradeCode" = "8:{57566A6A-532F-4B87-AC64-05A74AA4919D}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:TRUE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.1.32"
+        "ProductVersion" = "8:1.1.34"
         "Manufacturer" = "8:Adan"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -1823,34 +1715,6 @@
                 {
                 }
             }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_574B8F22682C481E8B190374E93EA5B8"
-            {
-            "SourcePath" = "8:..\\Adan.Client.Map\\obj\\Release\\Adan.Client.Map.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{BF656B2E-A08B-446C-923A-C3AB523F9387}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_6302BB41BCAE489FA5D75B2FEFA4116E"
             {
             "SourcePath" = "8:"
@@ -2013,34 +1877,6 @@
             "ProjectOutputGroupRegister" = "3:1"
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:ContentFiles"
-            "OutputProjectGuid" = "8:{BF656B2E-A08B-446C-923A-C3AB523F9387}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_942B7CD9579C4486B481B4E447AA5B2E"
-            {
-            "SourcePath" = "8:..\\Adan.Client.Map\\obj\\Release\\Adan.Client.Map.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_8D2C2EDF1A2D4091B2CBCECB167E9E8E"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{BF656B2E-A08B-446C-923A-C3AB523F9387}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"

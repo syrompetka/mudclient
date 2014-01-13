@@ -168,7 +168,7 @@ namespace Adan.Client.ConveyorUnits
                     group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
-                group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
+                group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == trigger.MatchingPattern);
                 group.Triggers.Add(trigger);
 
                 rootModel.RecalculatedEnabledTriggersPriorities();
@@ -269,7 +269,7 @@ namespace Adan.Client.ConveyorUnits
                     group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 }
 
-                group.Aliases.RemoveAll(all => all.Command == args[0]);
+                group.Aliases.RemoveAll(allias => allias.Command == commandAlias.Command);
                 group.Aliases.Add(commandAlias);
 
                 if (!isImport)
@@ -302,7 +302,7 @@ namespace Adan.Client.ConveyorUnits
                     var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
-                        group.Aliases.RemoveAll(all => ((CommandAlias)all).Command == args[0]);
+                        group.Aliases.RemoveAll(all => all.Command == args[0]);
                         if (!isImport)
                             base.PushMessageToConveyor(new InfoMessage("#Алиас удален"), rootModel);
                     }
@@ -468,7 +468,7 @@ namespace Adan.Client.ConveyorUnits
 
                 Substitution subtitution = new Substitution() { Pattern = args[0], SubstituteWith = args[1] };
 
-                group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
+                group.Substitutions.RemoveAll(sub => sub.Pattern == subtitution.Pattern);
                 group.Substitutions.Add(subtitution);
 
                 if (!isImport)

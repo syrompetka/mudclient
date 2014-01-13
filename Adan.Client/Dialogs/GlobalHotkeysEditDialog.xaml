@@ -46,7 +46,7 @@
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=DeleteHotkeyCommand}">Delete</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" MinWidth="50">Close</Button>
+            <Button HorizontalAlignment="Right" Grid.Row="2" IsCancel="True" MinWidth="50">Close</Button>
         </StackPanel>
     </Grid>
 </Window>

@@ -213,6 +213,8 @@ namespace Adan.Client
             {
                 _catalog.Dispose();
             }
+
+            GC.SuppressFinalize(this);
         }
     }
 }
