@@ -812,7 +812,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            //TODO:
+            //TODO
             match = _regexStatus.Match(commandText);
             if (match.Success)
             {
@@ -860,6 +860,7 @@ namespace Adan.Client.ConveyorUnits
 
                 return;
             }
+
         }
     }
 }

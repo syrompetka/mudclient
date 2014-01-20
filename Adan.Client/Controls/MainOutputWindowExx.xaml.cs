@@ -88,6 +88,7 @@ namespace Adan.Client.Controls
             mainScrollOutput.TextArea.GotFocus += TextArea_GotFocus;
             mainScrollOutput.TextArea.TextView.ScrollOffsetChanged += MainOutput_TextView_ScrollOffsetChanged;
             mainScrollOutput.TextArea.LostMouseCapture += TextArea_LostMouseCapture;
+            mainScrollOutput.Document.UndoStack.SizeLimit = 0;
 
             secondScrollOutput.Foreground = ThemeManager.Instance.ActiveTheme.DefaultTextColor;
             secondScrollOutput.Background = ThemeManager.Instance.ActiveTheme.DefaultBackGroundColor;
@@ -100,6 +101,7 @@ namespace Adan.Client.Controls
             secondScrollOutput.TextArea.Caret.Hide();
             secondScrollOutput.TextArea.GotFocus += TextArea_GotFocus;
             secondScrollOutput.TextArea.LostMouseCapture += TextArea_LostMouseCapture;
+            secondScrollOutput.Document.UndoStack.SizeLimit = 0;
             secondScrollOutput.TextArea.TextView.ScrollOffsetChanged += Second_Output_TextView_ScrollOffsetChanged;
 
 #if DEBUG

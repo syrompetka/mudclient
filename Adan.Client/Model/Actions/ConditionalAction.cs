@@ -35,7 +35,7 @@ namespace Adan.Client.Model.Actions
             LeftConditionParameter = new TriggerOrCommandParameter();
             RightConditionParameter = new TriggerOrCommandParameter();
             Condition = ActionCondition.Equals;
-            ActionsToExecute = new List<ActionBase>();
+            ActionsToExecute = new List<ActionBase>() { new SendTextAction() };
         }
 
         /// <summary>

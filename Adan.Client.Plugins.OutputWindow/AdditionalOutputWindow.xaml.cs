@@ -73,6 +73,7 @@ namespace Adan.Client.Plugins.OutputWindow
             additionalOutputWindow.TextArea.Caret.Hide();
             additionalOutputWindow.TextArea.LostMouseCapture += TextArea_LostMouseCapture;
             additionalOutputWindow.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
+            additionalOutputWindow.Document.UndoStack.SizeLimit = 0;
         }
 
         void TextView_ScrollOffsetChanged(object sender, EventArgs e)
