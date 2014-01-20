@@ -772,9 +772,16 @@ namespace Adan.Client
             var result = chooseDialog.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                var name = chooseViewModel.SelectedProfile.NameProfile;
+                try
+                {
+                    var name = chooseViewModel.SelectedProfile.NameProfile;
 
-                CreateNewOutputWindow(name, name+ Guid.NewGuid().ToString("N"));
+                    CreateNewOutputWindow(name, name + Guid.NewGuid().ToString("N"));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(this, ex.ToString(), "Error");
+                }
             }
         }
     }

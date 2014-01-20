@@ -25,7 +25,7 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CommandMultiplierUnit : ConveyorUnit
     {
-        private readonly Regex _regex = new Regex(@"^\#([0-9]+)(.*)");
+        private readonly Regex _regex = new Regex(@"^\#([0-9]+)\s*(.*)", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMultiplierUnit"/> class.
@@ -73,15 +73,22 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            foreach (Match match in _regex.Matches(textCommand.CommandText.Trim()))
+            var match = _regex.Match(textCommand.CommandText.Trim());
+            if(match.Success)
             {
                 command.Handled = true;
                 int count;
+                string str;
+                if (match.Groups[2].Value[0] == '{' && match.Groups[2].Value[match.Groups[2].Length - 1] == '}')
+                    str = match.Groups[2].Value.Substring(1, match.Groups[2].Value.Length - 2);
+                else
+                    str = match.Groups[2].Value;
+
                 if (int.TryParse(match.Groups[1].Value, NumberStyles.Integer, CultureInfo.InvariantCulture, out count))
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        PushCommandToConveyor(new TextCommand(match.Groups[2].Value), rootModel);
+                        PushCommandToConveyor(new TextCommand(str), rootModel);
                     }
                 }
             }

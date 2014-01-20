@@ -193,7 +193,6 @@ namespace Adan.Client.Plugins.GroupWidget
             var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.MonstersWidgetOptions, allAffects, displayedAffects);
             var window = new OptionsDialog { DataContext = optionsViewModel, Owner = parentWindow };
             var result = window.ShowDialog();
-
             if (result.HasValue && result.Value)
             {
                 Settings.Default.MonsterAffects = optionsViewModel.DisplayedAffects.Select(af => af.Name).ToArray();
