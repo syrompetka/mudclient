@@ -216,6 +216,12 @@
   <data name="Stun" xml:space="preserve">
     <value>Оглушение</value>
   </data>
+  <data name="StunImmune" xml:space="preserve">
+    <value>Иммунитет к оглушению</value>
+  </data>
+  <data name="Tornado" xml:space="preserve">
+    <value>Торнадо</value>
+  </data>
   <data name="Weakness" xml:space="preserve">
     <value>Слабость</value>
   </data>

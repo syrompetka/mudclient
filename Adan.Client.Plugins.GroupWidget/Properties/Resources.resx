@@ -216,6 +216,12 @@
   <data name="Stun" xml:space="preserve">
     <value>Stun</value>
   </data>
+  <data name="StunImmune" xml:space="preserve">
+    <value>Stun immune</value>
+  </data>
+  <data name="Tornado" xml:space="preserve">
+    <value>Tornado</value>
+  </data>
   <data name="Weakness" xml:space="preserve">
     <value>Weakness</value>
   </data>
