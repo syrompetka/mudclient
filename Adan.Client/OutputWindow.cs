@@ -33,6 +33,7 @@ namespace Adan.Client
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
         private MainOutputWindowExx _window;
+       //private MainOutputWindowNative _window;
         private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
         private bool _isLogging;
@@ -62,11 +63,13 @@ namespace Adan.Client
             conveyor.MessageReceived += HandleMessage;
 
             _window = new MainOutputWindowExx(mainWindow, RootModel);
+            //_window = new MainOutputWindowNative(mainWindow, RootModel);
             VisibleControl = _window;
             
             _window.txtCommandInput.RootModel = RootModel;
             _window.txtCommandInput.LoadHistory(RootModel.Profile);
-            _window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
+            //_window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
+            _window.txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
 
             IsLogging = false;
 
@@ -315,10 +318,13 @@ namespace Adan.Client
                     _messageQueue.Enqueue(message);
                 }
 
-                if (_window.IsVisible)
-                    Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Loaded);
-                else
-                    Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
+                if (Application.Current != null)
+                {
+                    if (_window.IsVisible)
+                        Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Loaded);
+                    else
+                        Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
+                }
 
                 if (IsLogging)
                 {

@@ -43,6 +43,7 @@
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Label Grid.Row="0" Grid.Column="0" Padding="5">Group name:</Label>
             <ComboBox Grid.Row="1" Grid.Column="0" Padding="5" Width="150" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" SelectedValue="{Binding Path=TriggersGroup}" />
@@ -82,8 +83,9 @@
                     <System:Int32>10</System:Int32>
                 </ComboBoxItem>
             </ComboBox>
-            <CheckBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=StopProcessingTriggersForMessage}">Do not run other triggers for this message anymore.</CheckBox>
+            <CheckBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=StopProcessingTriggersForMessage}">Stop processing trigger for this message.</CheckBox>
             <CheckBox Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=DoNotDisplayOriginalMessage}">Do not display original message.</CheckBox>
+            <CheckBox Grid.Column="4" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=IsRegExp}">IsRegExp</CheckBox>
         </Grid>
         <StackPanel HorizontalAlignment="Right" Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
             <Button HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Click="HandleOkClicked">Ok</Button>

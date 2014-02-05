@@ -57,6 +57,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public RootModel RootModel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the selected monster.
         /// </summary>
         /// <value>
@@ -73,6 +82,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedMonster = value;
+                if(RootModel != null)
+                    RootModel.SelectedRoomMonster = value != null ? value.MonsterStatus : null;
                 OnPropertyChanged("SelectedMonster");
             }
         }

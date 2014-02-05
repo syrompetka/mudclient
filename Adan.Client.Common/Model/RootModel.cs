@@ -240,7 +240,7 @@ namespace Adan.Client.Common.Model
         public IList<CharacterStatus> GroupStatus
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -263,7 +263,7 @@ namespace Adan.Client.Common.Model
         public IList<MonsterStatus> RoomMonstersStatus
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -466,7 +466,9 @@ namespace Adan.Client.Common.Model
         {
             if (e.Name == Profile.Name)
             {
-                Profile = SettingsHolder.Instance.GetProfile(e.Name);
+                var profile = SettingsHolder.Instance.GetProfile(e.Name);
+                profile.Variables = Profile.Variables;
+                Profile = profile;
                 RecalculatedEnabledTriggersPriorities();
             }
         }

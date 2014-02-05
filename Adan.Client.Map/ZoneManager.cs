@@ -239,7 +239,7 @@ namespace Adan.Client.Map
             {
                 if (_additionalRoomParametersSerializer == null)
                 {
-                    _additionalRoomParametersSerializer = new XmlSerializer(typeof(List<AdditionalRoomParameters>), RootModel.CustomSerializationTypes.ToArray());
+                    _additionalRoomParametersSerializer = new XmlSerializer(typeof(List<AdditionalRoomParameters>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
                 }
 
                 return _additionalRoomParametersSerializer;
@@ -307,9 +307,10 @@ namespace Adan.Client.Map
         /// <param name="zoneHolder"></param>
         public void ExecuteRoomAction(ZoneHolder zoneHolder)
         {
-            if (_mapControl.ViewModel != null)
+            ZoneViewModel zone = GetZone(zoneHolder.ZoneId);
+            if (zone != null)
             {
-                var room = _mapControl.ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
+                var room = zone.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
                 if (room != null)
                 {
                     foreach (var action in room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry)
@@ -404,18 +405,18 @@ namespace Adan.Client.Map
                 {
                     //TODO: Разобраться что это такое
                     // legacy format support - remove in next version.
-                    var zoneVisitsFileName = Path.Combine(GetZoneVisitsFolder(), zoneId.ToString(CultureInfo.InvariantCulture) + ".xml");
-                    if (File.Exists(zoneVisitsFileName))
-                    {
-                        using (var inStream = File.OpenRead(zoneVisitsFileName))
-                        {
-                            var visits = (List<int>)_zoneVisitsSerializer.Deserialize(inStream);
-                            foreach (var visit in visits)
-                            {
-                                zoneVisits.Add(new AdditionalRoomParameters { RoomId = visit, HasBeenVisited = true });
-                            }
-                        }
-                    }
+                    //var zoneVisitsFileName = Path.Combine(GetZoneVisitsFolder(), zoneId.ToString(CultureInfo.InvariantCulture) + ".xml");
+                    //if (File.Exists(zoneVisitsFileName))
+                    //{
+                    //    using (var inStream = File.OpenRead(zoneVisitsFileName))
+                    //    {
+                    //        var visits = (List<int>)_zoneVisitsSerializer.Deserialize(inStream);
+                    //        foreach (var visit in visits)
+                    //        {
+                    //            zoneVisits.Add(new AdditionalRoomParameters { RoomId = visit, HasBeenVisited = true });
+                    //        }
+                    //    }
+                    //}
                 }
                 zoneViewModel = new ZoneViewModel(loadedZone, zoneVisits);
                 _loadedZones.TryAdd(zoneId, zoneViewModel);
@@ -459,7 +460,16 @@ namespace Adan.Client.Map
             using (var streamWriter = new XmlTextWriter(outStream, Encoding.UTF8))
             {
                 streamWriter.Formatting = Formatting.Indented;
-                AdditionalRoomParametersSerializer.Serialize(streamWriter, zoneViewModel.AllRooms.Select(r => r.AdditionalRoomParameters).ToList());
+
+                var tmp = zoneViewModel.AllRooms.Select(r => r.AdditionalRoomParameters).ToList();
+                try
+                {
+                    AdditionalRoomParametersSerializer.Serialize(streamWriter, tmp);
+                }
+                catch (Exception e)
+                {
+                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                }
             }
         }
 

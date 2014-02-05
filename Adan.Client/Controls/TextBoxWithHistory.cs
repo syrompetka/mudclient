@@ -24,31 +24,79 @@ namespace Adan.Client.Controls
     using Adan.Client.Common.Settings;
     using Adan.Client.Common.Controls;
     using Adan.Client.Common.Model;
+    using System.Windows.Input;
+
+    /* В WPF при выделении CaretIndex определяет крайнее левое положение выделения, а SelectionLength его длину.
+     * При перемещении каретки влево или вправо она передвигается всегда относительно CaretIndex,
+     * независимо от выделения слева направо или справо налево.
+     * Этот класс реализоввывает более привычное и понятное поведение каретки.
+     */
 
     /// <summary>
     /// Control that enhances basic text box to support input history.
+    /// Улучшено поведение каретки.
     /// </summary>
     public class TextBoxWithHistory : TextBox
     {
         private int _queueSize;
         private List<string> _enteredCommandsQueue;
         private int _currentQueueElementIndex = -1;
-        private bool _selfChanges = false;
+        private bool _selfTextChanges = false;
         private string oldText = String.Empty;
 
-        private int oldCaretIndex;
-        private int realCaretIndex = -1;
+        private int oldCaretIndex = 0;
+        private int realStartSelection = -1;
+        private int correctCaretIndex = 0;
+        private bool needCorrectCaret = false;
+        private bool isSelected = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxWithHistory"/> class.
         /// </summary>
         public TextBoxWithHistory()
         {
-            AcceptsReturn = false;
-            AcceptsTab = false;
+            this.AcceptsReturn = false;
+            this.AcceptsTab = false;
+            this.AutoWordSelection = false;
 
             _queueSize = SettingsHolder.Instance.Settings.CommandsHistorySize;
             _enteredCommandsQueue = new List<string>();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="e"></param>
+        protected override void OnPreviewKeyDown(System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Left && Keyboard.Modifiers == ModifierKeys.None && SelectionLength > 0)
+            {
+                if (CaretIndex == realStartSelection)
+                {
+                    correctCaretIndex = CaretIndex + SelectionLength - 1;
+                    needCorrectCaret = true;
+                }
+                else if (CaretIndex < realStartSelection)
+                {
+                    correctCaretIndex = CaretIndex > 0 ? CaretIndex - 1 : 0;
+                    needCorrectCaret = true;
+                }
+            }
+            else if (e.Key == Key.Right && Keyboard.Modifiers == ModifierKeys.None && SelectionLength > 0)
+            {
+                if (CaretIndex == realStartSelection)
+                {
+                    correctCaretIndex = CaretIndex + SelectionLength == Text.Length ? CaretIndex + SelectionLength : CaretIndex + SelectionLength + 1;
+                    needCorrectCaret = true;
+                }
+                else if (CaretIndex < realStartSelection)
+                {
+                    correctCaretIndex = CaretIndex + 1;
+                    needCorrectCaret = true;
+                }
+            }
+
+            base.OnPreviewKeyDown(e);
         }
 
         /// <summary>
@@ -81,7 +129,7 @@ namespace Adan.Client.Controls
         }
 
         /// <summary>
-        /// 
+        /// Load command's history from profile.
         /// </summary>
         /// <param name="profile"></param>
         public void LoadHistory(ProfileHolder profile)
@@ -162,26 +210,26 @@ namespace Adan.Client.Controls
             RootModel.PushCommandToConveyor(new TextCommand(command));
             if (SettingsHolder.Instance.Settings.AutoClearInput)
             {
-                _selfChanges = true;
+                _selfTextChanges = true;
                 Clear();
             }
             else
             {
                 SelectAll();
-                realCaretIndex = Text.Length;
+                realStartSelection = 0;
             }
         }
 
         private void FindTextInHistoryAndUpdateTextBox(bool lookBackWard)
         {
-            int ind = -1;
+            int index = -1;
             lock (_enteredCommandsQueue)
             {
                 if (lookBackWard)
                 {
                     if (_currentQueueElementIndex > 0)
                     {
-                        ind = _enteredCommandsQueue.FindLastIndex(_currentQueueElementIndex - 1, _currentQueueElementIndex,
+                        index = _enteredCommandsQueue.FindLastIndex(_currentQueueElementIndex - 1, _currentQueueElementIndex,
                             x => x.StartsWith(oldText));
                     }
                 }
@@ -189,23 +237,23 @@ namespace Adan.Client.Controls
                 {
                     if (_currentQueueElementIndex < _enteredCommandsQueue.Count)
                     {
-                        ind = _enteredCommandsQueue.FindIndex(_currentQueueElementIndex + 1, _enteredCommandsQueue.Count - (_currentQueueElementIndex + 1),
+                        index = _enteredCommandsQueue.FindIndex(_currentQueueElementIndex + 1, _enteredCommandsQueue.Count - (_currentQueueElementIndex + 1),
                             x => x.StartsWith(oldText));
 
-                        if (ind == -1)
+                        if (index == -1)
                         {
-                            _selfChanges = true;
+                            _selfTextChanges = true;
                             Text = oldText;
                             _currentQueueElementIndex = _enteredCommandsQueue.Count;
                         }
                     }
                 }
 
-                if (ind >= 0)
+                if (index >= 0)
                 {
-                    _selfChanges = true;
-                    Text = _enteredCommandsQueue[ind];
-                    _currentQueueElementIndex = ind;
+                    _selfTextChanges = true;
+                    Text = _enteredCommandsQueue[index];
+                    _currentQueueElementIndex = index;
                 }
             }
 
@@ -221,61 +269,40 @@ namespace Adan.Client.Controls
         /// <param name="e"></param>
         protected override void OnTextChanged(TextChangedEventArgs e)
         {
-            if (!_selfChanges)
+            if (!_selfTextChanges)
             {
                 oldText = Text;
                 _currentQueueElementIndex = _enteredCommandsQueue.Count;
             }
             else
-                _selfChanges = false;
+                _selfTextChanges = false;
 
             base.OnTextChanged(e);
         }
 
         /// <summary>
-        /// Улучшенное поведение каретки.
+        /// 
         /// </summary>
         /// <param name="e"></param>
         protected override void OnSelectionChanged(System.Windows.RoutedEventArgs e)
         {
             if (SelectionLength > 0)
             {
-                if (oldCaretIndex == CaretIndex)
+                if(!isSelected)
                 {
-                    realCaretIndex = CaretIndex + SelectionLength;
-                }
-                else
-                {
-                    realCaretIndex = CaretIndex;
+                    realStartSelection = oldCaretIndex;
+                    isSelected = true;
                 }
             }
             else
             {
-                if (realCaretIndex != -1)
+                if (needCorrectCaret)
                 {
-                    int newCaretIndex = -1;
-                    if (oldCaretIndex == CaretIndex)
-                    {
-                        if (realCaretIndex > 0)
-                            newCaretIndex = realCaretIndex - 1;
-                        else
-                            newCaretIndex = realCaretIndex;
-                    }
-                    else if (oldCaretIndex < CaretIndex)
-                    {
-                        if (realCaretIndex < Text.Length)
-                            newCaretIndex = realCaretIndex + 1;
-                        else
-                            newCaretIndex = realCaretIndex;
-                    }
-                    else
-                    {
-                        RootModel.PushMessageToConveyor(new ErrorMessage(string.Format("#Ошибка, просьба передать это разработчикам: TextBoxWithHistory: oldCaretIndex = {0}, CaretIndex = {1}", oldCaretIndex, CaretIndex)));
-                    }
-
-                    realCaretIndex = -1;
-                    CaretIndex = newCaretIndex;
+                    needCorrectCaret = false;
+                    CaretIndex = correctCaretIndex;
                 }
+
+                isSelected = false;
             }
 
             oldCaretIndex = CaretIndex;

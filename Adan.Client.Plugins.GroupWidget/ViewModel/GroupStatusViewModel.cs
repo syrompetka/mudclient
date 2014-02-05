@@ -49,6 +49,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// 
         /// </summary>
+        public RootModel RootModel
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public string Uid
         {
             get;
@@ -81,6 +90,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedGroupMate = value;
+                if(RootModel != null)
+                    RootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
                 OnPropertyChanged("SelectedGroupMate");
             }
         }

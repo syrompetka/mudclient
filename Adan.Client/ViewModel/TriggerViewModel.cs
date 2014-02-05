@@ -144,6 +144,22 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public bool IsRegExp
+        {
+            get
+            {
+                return Trigger.IsRegExp;
+            }
+            set
+            {
+                Trigger.IsRegExp = value;
+                OnPropertyChanged("IsRegExp");
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the triggers group.
         /// </summary>
         /// <value>
@@ -223,6 +239,7 @@ namespace Adan.Client.ViewModel
             var textTrigger = new TextTrigger();
             return new TriggerViewModel(AllGroups, TriggersGroup, textTrigger, _actionDescriptions)
             {
+                IsRegExp = IsRegExp,
                 Priority = Priority,
                 DoNotDisplayOriginalMessage = DoNotDisplayOriginalMessage,
                 MatchingPattern = MatchingPattern,

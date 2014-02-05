@@ -396,6 +396,9 @@ namespace Adan.Client.Common.Messages
         /// <param name="text"></param>
         public void AddText(string text)
         {
+            if (String.IsNullOrEmpty(text))
+                return;
+
             StringBuilder sb = new StringBuilder(_coloredText);
             sb.Append(text);
             _coloredText = sb.ToString();
@@ -409,6 +412,9 @@ namespace Adan.Client.Common.Messages
         /// <param name="foreground"></param>
         public void AddText(string text, TextColor foreground)
         {
+            if (String.IsNullOrEmpty(text))
+                return;
+
             int offset = _coloredText.Length;
             StringBuilder sb = new StringBuilder(_coloredText);
             sb.Append(text);
@@ -428,6 +434,9 @@ namespace Adan.Client.Common.Messages
         /// <param name="background"></param>
         public void AddText(string text, TextColor foreground, TextColor background)
         {
+            if (String.IsNullOrEmpty(text))
+                return;
+
             int offset = _coloredText.Length;
             StringBuilder sb = new StringBuilder(_coloredText);
             sb.Append(text);

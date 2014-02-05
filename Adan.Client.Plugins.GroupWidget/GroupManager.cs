@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows;
 using Adan.Client.Common.Model;
 using Adan.Client.Plugins.GroupWidget.Model;
+using Adan.Client.Plugins.GroupWidget.ViewModel;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
@@ -65,8 +66,14 @@ namespace Adan.Client.Plugins.GroupWidget
 
             if (_groupHolders.ContainsKey(uid))
             {
+                var groupViewModel = _groupWidget.DataContext as GroupStatusViewModel;
+                if (groupViewModel.RootModel != null)
+                {
+                    groupViewModel.RootModel.SelectedGroupMate = null;
+                }
+                groupViewModel.RootModel = _groupHolders[uid].RootModel;
                 _groupWidget.ViewModelUid = uid;
-                _groupWidget.UpdateModel(_groupHolders[uid].RootModel, _groupHolders[uid].Characters);
+                _groupWidget.UpdateModel(_groupHolders[uid].Characters);
             }
         }
 
@@ -80,7 +87,7 @@ namespace Adan.Client.Plugins.GroupWidget
 
             if (_groupWidget.ViewModelUid == groupHolder.Uid)
             {
-                _groupWidget.UpdateModel(groupHolder.RootModel, groupHolder.Characters);
+                _groupWidget.UpdateModel(groupHolder.Characters);
             }
         }
     }

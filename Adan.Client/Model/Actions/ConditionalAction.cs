@@ -27,6 +27,8 @@ namespace Adan.Client.Model.Actions
     [Serializable]
     public class ConditionalAction : ActionBase
     {
+        private List<ActionBase> _actionsToExecute;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConditionalAction"/> class.
         /// </summary>
@@ -35,7 +37,7 @@ namespace Adan.Client.Model.Actions
             LeftConditionParameter = new TriggerOrCommandParameter();
             RightConditionParameter = new TriggerOrCommandParameter();
             Condition = ActionCondition.Equals;
-            ActionsToExecute = new List<ActionBase>() { new SendTextAction() };
+            ActionsToExecute = new List<ActionBase>();
         }
 
         /// <summary>
@@ -97,8 +99,14 @@ namespace Adan.Client.Model.Actions
         [NotNull]
         public List<ActionBase> ActionsToExecute
         {
-            get;
-            set;
+            get
+            {
+                return _actionsToExecute;
+            }
+            set
+            {
+                _actionsToExecute = value;
+            }
         }
 
         /// <summary>

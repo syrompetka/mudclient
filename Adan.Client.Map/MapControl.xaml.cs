@@ -92,7 +92,7 @@ namespace Adan.Client.Map
             {
                 zoneVisual.DisplayCurrentRoomArrow = value;
             }
-        }
+        }        
 
         /// <summary>
         /// 
