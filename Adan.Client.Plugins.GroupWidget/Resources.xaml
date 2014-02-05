@@ -6041,7 +6041,10 @@
             </Canvas>
         </VisualBrush.Visual>
     </VisualBrush>
-
+    <ImageBrush x:Key="Brush_Tornado"
+                ImageSource="Images/tornado.png" />
+    <ImageBrush x:Key="Brush_StunImmune"
+                ImageSource="Images/stun-immune.png" />
     <GeometryDrawing x:Key="Drawing_Standing"
                      Brush="{StaticResource Brush_Standing}">
         <GeometryDrawing.Geometry>
@@ -6276,6 +6279,18 @@
             <RectangleGeometry Rect="0,0,100,100" />
         </GeometryDrawing.Geometry>
     </GeometryDrawing>
+    <GeometryDrawing x:Key="Drawing_Tornado"
+                     Brush="{StaticResource Brush_Tornado}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
+    <GeometryDrawing x:Key="Drawing_StunImmune"
+                     Brush="{StaticResource Brush_StunImmune}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
     <GeometryDrawing x:Key="Drawing_Accuracy"
                      Brush="{StaticResource Brush_Accuracy}">
         <GeometryDrawing.Geometry>
@@ -6362,7 +6377,11 @@
     <DrawingImage x:Key="ImageSource_Weakness"
                   Drawing="{StaticResource Drawing_Weakness}" />
     <DrawingImage x:Key="ImageSource_Accuracy"
-                  Drawing="{StaticResource Drawing_Accuracy}" />  
+                  Drawing="{StaticResource Drawing_Accuracy}" />
+    <DrawingImage x:Key="ImageSource_Tornado"
+                  Drawing="{StaticResource Drawing_Tornado}" />
+    <DrawingImage x:Key="ImageSource_StunImmune"
+                  Drawing="{StaticResource Drawing_StunImmune}" />
     <DrawingBrush Stretch="None"
                   TileMode="Tile"
                   Viewport="0,0,6,4"
@@ -6503,6 +6522,10 @@
                            Then="{StaticResource ImageSource_Accuracy}" />
         <Utils:SwitchCase  When="Weakness"
                            Then="{StaticResource ImageSource_Weakness}" />
+        <Utils:SwitchCase  When="Tornado"
+                           Then="{StaticResource ImageSource_Tornado}" />
+        <Utils:SwitchCase  When="StunImmune"
+                           Then="{StaticResource ImageSource_StunImmune}" />        
     </Utils:SwitchConverter>
 
     <Style x:Key="SmallIcon"

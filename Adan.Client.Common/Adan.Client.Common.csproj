@@ -76,7 +76,6 @@
     <Compile Include="Controls\AvalonEdit\VisualLineElements\IAdanVisualLineElement.cs" />
     <Compile Include="Controls\AvalonEdit\SelectionColorizer.cs" />
     <Compile Include="Controls\AvalonEdit\TextColorHolder.cs" />
-    <Compile Include="Controls\TextBoxNative.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>
