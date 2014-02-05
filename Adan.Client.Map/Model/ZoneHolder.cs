@@ -84,10 +84,13 @@ namespace Adan.Client.Map.Model
             if (e.Message.MessageType == Constants.CurrentRoomMessageType)
             {
                 var mapMessage = e.Message as CurrentRoomMessage;
-                RoomId = mapMessage.RoomId;
-                ZoneId = mapMessage.ZoneId;
+                if (RoomId != mapMessage.RoomId || ZoneId != mapMessage.ZoneId)
+                {
+                    RoomId = mapMessage.RoomId;
+                    ZoneId = mapMessage.ZoneId;
 
-                _zoneManager.UpdateControl(this);
+                    _zoneManager.UpdateControl(this);
+                }
             }
         }
     }

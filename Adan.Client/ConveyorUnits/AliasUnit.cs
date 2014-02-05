@@ -95,6 +95,8 @@ namespace Adan.Client.ConveyorUnits
                     else
                         _context.Parameters[0] = String.Empty;
 
+                    _context.Parameters[1] = _context.Parameters[0];
+
                     foreach (var action in alias.Actions)
                     {
                         //Проверка старых, неправильно работающих алиасов

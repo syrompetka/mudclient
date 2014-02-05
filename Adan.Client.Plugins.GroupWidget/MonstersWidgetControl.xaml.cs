@@ -48,11 +48,9 @@ namespace Adan.Client.Plugins.GroupWidget
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="rootModel"></param>
         /// <param name="characters"></param>
-        public void UpdateModel([NotNull] RootModel rootModel, [NotNull] List<MonsterStatus> characters)
+        public void UpdateModel([NotNull] List<MonsterStatus> characters)
         {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
             Assert.ArgumentNotNull(characters, "roomMonstersMessage");
 
             Action actToExecute = () =>

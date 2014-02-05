@@ -79,6 +79,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model
                 var monsterMessage = e.Message as RoomMonstersMessage;
 
                 Characters = monsterMessage.Monsters;
+                RootModel.RoomMonstersStatus = Characters;
                 _monsterManager.UpdateMonsters(this);
             }
         }

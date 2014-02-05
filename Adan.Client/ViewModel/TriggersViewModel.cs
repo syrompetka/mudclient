@@ -138,7 +138,7 @@ namespace Adan.Client.ViewModel
         private void AddTriggerCommandExecute([NotNull] object obj)
         {
             Assert.ArgumentNotNull(obj, "obj");
-            var textTrigger = new TextTrigger();
+            var textTrigger = new TextTrigger() { IsRegExp = false };
             textTrigger.Actions.Add(new SendTextAction());
             var triggerToAdd = new TriggerViewModel(Groups, Groups.First(g => g.IsBuildIn), textTrigger, _actionDescriptions);
             var trigerEditDialog = new TriggerEditDialog { DataContext = triggerToAdd, Owner = (Window)obj };

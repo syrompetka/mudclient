@@ -47,6 +47,7 @@ namespace Adan.Client.Common.Model
         {
             MatchingPattern = string.Empty;
             _context = new ActionExecutionContext();
+            IsRegExp = false;
         }
 
         /// <summary>
@@ -85,10 +86,7 @@ namespace Adan.Client.Common.Model
                     IsRegExp = true;
                 }
                 else
-                {
                     _matchingPattern = value;
-                    IsRegExp = false;
-                }
                 
                 _rootPatternToken = null;
             }

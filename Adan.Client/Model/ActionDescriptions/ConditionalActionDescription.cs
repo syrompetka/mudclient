@@ -50,7 +50,9 @@ namespace Adan.Client.Model.ActionDescriptions
         /// </returns>
         public override ActionBase CreateAction()
         {
-            return new ConditionalAction();
+            var condAction = new ConditionalAction();
+            condAction.ActionsToExecute.Add(new SendTextAction());
+            return condAction;
         }
 
         /// <summary>

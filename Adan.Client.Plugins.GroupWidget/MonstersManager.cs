@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Adan.Client.Common.Model;
 using Adan.Client.Plugins.GroupWidget.Model;
+using Adan.Client.Plugins.GroupWidget.ViewModel;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
@@ -62,8 +63,14 @@ namespace Adan.Client.Plugins.GroupWidget
 
             if (_monsterHolders.ContainsKey(uid))
             {
+                var monstersViewModel = _monstersWidget.DataContext as RoomMonstersViewModel;
+                if (monstersViewModel.RootModel != null)
+                {
+                    monstersViewModel.RootModel.SelectedRoomMonster = null;
+                }
+                monstersViewModel.RootModel = _monsterHolders[uid].RootModel;
                 _monstersWidget.ViewModelUid = uid;
-                _monstersWidget.UpdateModel(_monsterHolders[uid].RootModel, _monsterHolders[uid].Characters);
+                _monstersWidget.UpdateModel(_monsterHolders[uid].Characters);
             }
         }
 
@@ -77,7 +84,7 @@ namespace Adan.Client.Plugins.GroupWidget
 
             if (_monstersWidget.ViewModelUid == monsterHolder.Uid)
             {
-                _monstersWidget.UpdateModel(monsterHolder.RootModel, monsterHolder.Characters);
+                _monstersWidget.UpdateModel(monsterHolder.Characters);
             }
         }
     }
