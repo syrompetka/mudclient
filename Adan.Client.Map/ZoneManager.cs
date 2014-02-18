@@ -75,7 +75,7 @@ namespace Adan.Client.Map
             _mapControl.RoadMapShowRequired += ShowRoadMap;
             _mapControl.RoomEditDialogRequired += ShowRoomEditDialog;
             _mapControl.NavigateToRoomRequired += NavigateToRoom;
-            //_mapControl.RoutesDialogShowRequired += (o, e) => _routeManger.ShowRoutesDialog();
+            _mapControl.RoutesDialogShowRequired += (o, e) => _routeManger.ShowRoutesDialog();
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -147,6 +147,8 @@ namespace Adan.Client.Map
                 SaveZoneDebugInfo(zoneViewModel);
 #endif
             }
+
+            Settings.Default.Save();
         }
 
         /// <summary>
@@ -184,9 +186,13 @@ namespace Adan.Client.Map
 #endif
 
                 if (zoneViewModel != null)
+                {
                     _mapControl.UpdateCurrentZone(zoneViewModel, null);
+                }
                 else
+                {
                     _mapControl.UpdateCurrentZone(_emptyZone, null);
+                }
 
                 return;
             }

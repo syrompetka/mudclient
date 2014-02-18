@@ -149,8 +149,8 @@ namespace Adan.Client.Map
                 NavigateToCurrentRoom(currentRoom);
                 ViewModel.CurrentRoom = currentRoom;
 
-                //if (RouteManager != null)
-                    //RouteManager.UpdateCurrentRoom(currentRoom, newZone);
+                if (RouteManager != null)
+                    RouteManager.UpdateCurrentRoom(currentRoom, newZone);
             });
 
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);

@@ -71,99 +71,99 @@ namespace Adan.Client.Map.ConveyorUnits
         {
             Assert.ArgumentNotNull(command, "command");
 
-            //var textCommand = command as TextCommand;
-            //if (textCommand == null)
-            //{
-            //    return;
-            //}
+            var textCommand = command as TextCommand;
+            if (textCommand == null)
+            {
+                return;
+            }
 
-            //var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
-            //var splittedCommands = commandText.Split(' ');
+            var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
+            var splittedCommands = commandText.Split(' ');
 
-            //if (splittedCommands.Length < 2)
-            //{
-            //    return;
-            //}
+            if (splittedCommands.Length < 2)
+            {
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[0], Resources.RouteCommndGoto))
-            //{
-            //    _routeManager.NavigateToRoom(string.Join(" ", splittedCommands.Skip(1)));
-            //    command.Handled = true;
-            //    return;
-            //}
+            if (string.Equals(splittedCommands[0], Resources.RouteCommandGoto))
+            {
+                _routeManager.NavigateToRoom(string.Join(" ", splittedCommands.Skip(1)));
+                command.Handled = true;
+                return;
+            }
 
-            //if (!string.Equals(splittedCommands[0], Resources.RouteCommandPrefix))
-            //{
-            //    return;
-            //}
+            if (!string.Equals(splittedCommands[0], Resources.RouteCommandPrefix))
+            {
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandHelp))
-            //{
-            //    _routeManager.PrintHelp();
-            //    command.Handled = true;
-            //    return;
-            //}
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandHelp))
+            {
+                _routeManager.PrintHelp();
+                command.Handled = true;
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandStartRecording) && _routeManager.CanCreateNewRoute)
-            //{
-            //    if (splittedCommands.Length > 2)
-            //    {
-            //        _routeManager.StartNewRouteRecording(string.Join(" ", splittedCommands.Skip(2)));
-            //    }
-            //    else
-            //    {
-            //        _routeManager.StartNewRouteRecording();
-            //    }
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandStartRecording) && _routeManager.CanCreateNewRoute)
+            {
+                if (splittedCommands.Length > 2)
+                {
+                    _routeManager.StartNewRouteRecording(string.Join(" ", splittedCommands.Skip(2)));
+                }
+                else
+                {
+                    _routeManager.StartNewRouteRecording();
+                }
 
-            //    command.Handled = true;
-            //    return;
-            //}
+                command.Handled = true;
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandStopRecording) && _routeManager.CanStopCurrentRouteRecording)
-            //{
-            //    if (splittedCommands.Length > 2)
-            //    {
-            //        _routeManager.StopRouteRecording(string.Join(" ", splittedCommands.Skip(2)));
-            //    }
-            //    else
-            //    {
-            //        _routeManager.StopRouteRecording();
-            //    }
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandStopRecording) && _routeManager.CanStopCurrentRouteRecording)
+            {
+                if (splittedCommands.Length > 2)
+                {
+                    _routeManager.StopRouteRecording(string.Join(" ", splittedCommands.Skip(2)));
+                }
+                else
+                {
+                    _routeManager.StopRouteRecording();
+                }
 
-            //    command.Handled = true;
-            //    return;
-            //}
+                command.Handled = true;
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandCancelRecording) && _routeManager.CanCancelCurrentRouteRecording)
-            //{
-            //    _routeManager.CancelRouteRecording();
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandCancelRecording) && _routeManager.CanCancelCurrentRouteRecording)
+            {
+                _routeManager.CancelRouteRecording();
 
-            //    command.Handled = true;
-            //    return;
-            //}
+                command.Handled = true;
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandGoto) && _routeManager.CanStartRoute)
-            //{
-            //    if (splittedCommands.Length > 2)
-            //    {
-            //        _routeManager.GotoDestination(string.Join(" ", splittedCommands.Skip(2)));
-            //    }
-            //    else
-            //    {
-            //        _routeManager.GotoDestination();
-            //    }
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandGoto) && _routeManager.CanStartRoute)
+            {
+                if (splittedCommands.Length > 2)
+                {
+                    _routeManager.GotoDestination(string.Join(" ", splittedCommands.Skip(2)));
+                }
+                else
+                {
+                    _routeManager.GotoDestination();
+                }
 
-            //    command.Handled = true;
-            //    return;
-            //}
+                command.Handled = true;
+                return;
+            }
 
-            //if (string.Equals(splittedCommands[1], Resources.RouteCommandStop) && _routeManager.CanStopCurrentRoute)
-            //{
-            //    _routeManager.StopRoutingToDestination();
+            if (string.Equals(splittedCommands[1], Resources.RouteCommandStop) && _routeManager.CanStopCurrentRoute)
+            {
+                _routeManager.StopRoutingToDestination();
 
-            //    command.Handled = true;
-            //    return;
-            //}
+                command.Handled = true;
+                return;
+            }
         }
     }
 }

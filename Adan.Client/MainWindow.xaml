@@ -7,7 +7,8 @@
         Name="mainWindow"
         WindowState="Maximized"
         Title="Adamant mud client"
-        Icon="icon.ico">
+        Icon="icon.ico"
+        WindowStyle="SingleBorderWindow">
     <Window.Resources>
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
@@ -17,7 +18,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Menu Grid.Row="0" Focusable="False" IsMainMenu="False" IsTabStop="False">
-            <MenuItem Header="File" Height="19" Margin="0,0,0,1" VerticalAlignment="Bottom" >
+            <MenuItem Header="File">
                 <MenuItem Header="Connect" Click="HandleConnect"/>
                 <MenuItem Header="Connect all" Click="HandleConnectAll" />
                 <MenuItem Header="Disconnect" Click="HandleDisconnect" />
