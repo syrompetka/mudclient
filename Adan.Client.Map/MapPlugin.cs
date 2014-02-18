@@ -36,6 +36,7 @@ namespace Adan.Client.Map
         private ZoneManager _zoneManager;
         private CurrentRoomMessageDeserializer _messageDeserializer;
         private RouteUnit _routeUnit;
+        private RouteManager _routeManager;
 
         /// <summary>
         /// 
@@ -113,16 +114,16 @@ namespace Adan.Client.Map
             initializationStatusModel.PluginInitializationStatus = "Initializing";
 
             _messageDeserializer = new CurrentRoomMessageDeserializer();
-            
-            var routeManger = new RouteManager(mainWindow);
-            _mapControl.RouteManager = routeManger;
-            _routeUnit = new RouteUnit(routeManger);
-            _zoneManager = new ZoneManager(_mapControl, mainWindow, routeManger);
+
+            _routeManager = new RouteManager(mainWindow);
+            _mapControl.RouteManager = _routeManager;
+            _routeUnit = new RouteUnit(_routeManager);
+            _zoneManager = new ZoneManager(_mapControl, mainWindow, _routeManager);
 
             MapDownloader.DownloadMaps(initializationStatusModel);
 
             initializationStatusModel.PluginInitializationStatus = "Routes loading";
-            routeManger.LoadRoutes();
+            _routeManager.LoadRoutes();
         }
 
         /// <summary>
@@ -131,6 +132,7 @@ namespace Adan.Client.Map
         /// <param name="rootModel"></param>
         public override void OnChangedOutputWindow(RootModel rootModel)
         {
+            _routeManager.OutputWindowChanged(rootModel);
             _zoneManager.OutputWindowChanged(rootModel);
         }
 

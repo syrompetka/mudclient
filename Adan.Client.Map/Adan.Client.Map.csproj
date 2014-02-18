@@ -81,7 +81,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
-    <Compile Include="Messages\CurrentRoomMessage.cs" />
     <Compile Include="MessageDeserializers\CurrentRoomMessageDeserializer.cs" />
     <Compile Include="Dialogs\RouteDeleteDialog.xaml.cs">
       <DependentUpon>RouteDeleteDialog.xaml</DependentUpon>
@@ -101,6 +100,7 @@
     </Compile>
     <Compile Include="MapDownloader.cs" />
     <Compile Include="MapPlugin.cs" />
+    <Compile Include="Messages\CurrentRoomMessage.cs" />
     <Compile Include="Model\AdditionalRoomParameters.cs" />
     <Compile Include="Model\ExitDirection.cs" />
     <Compile Include="Model\Room.cs" />

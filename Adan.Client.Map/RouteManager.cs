@@ -38,12 +38,12 @@ namespace Adan.Client.Map
     public sealed class RouteManager
     {
         private readonly XmlSerializer _routesSerializer = new XmlSerializer(typeof(List<Route>));
-        private readonly RootModel _rootModel;
         private readonly Window _mainWindow;
         private readonly HashSet<int> _routeRoomIdentifiers = new HashSet<int>();
         private readonly HashSet<int> _routeEndRoomIdentifiers = new HashSet<int>();
         private readonly Queue<Tuple<RoomViewModel, ZoneViewModel>> _pendingUpdates = new Queue<Tuple<RoomViewModel, ZoneViewModel>>();
 
+        private RootModel _rootModel;
         private bool _isUpdateInProgress;
         private int _groupMembersCountOnRouteStart;
         private Route _currentlyRecordedRoute;
@@ -208,6 +208,10 @@ namespace Adan.Client.Map
         public void UpdateCurrentRoom([CanBeNull] RoomViewModel newCurrentRoom, [NotNull] ZoneViewModel newCurrentZone)
         {
             Assert.ArgumentNotNull(newCurrentZone, "newCurrentZone");
+            if (_rootModel == null)
+            {
+                return;
+            }
 
             if (_isUpdateInProgress || _pendingUpdates.Count > 0)
             {
@@ -235,6 +239,11 @@ namespace Adan.Client.Map
         public bool StartNewRouteRecording()
         {
             string startName = string.Empty;
+            if (_rootModel == null)
+            {
+                return false;
+            } 
+            
             if (_currentRoom == null)
             {
                 return false;
@@ -278,6 +287,12 @@ namespace Adan.Client.Map
         public bool StartNewRouteRecording([NotNull]string startName)
         {
             Assert.ArgumentNotNull(startName, "startName");
+
+            if (_rootModel == null)
+            {
+                return false;
+            } 
+            
             if (_currentRoom == null)
             {
                 return false;
@@ -324,6 +339,11 @@ namespace Adan.Client.Map
         public bool StopRouteRecording()
         {
             string endName = string.Empty;
+            if (_rootModel == null)
+            {
+                return false; 
+            }
+
             if (_currentRoom == null)
             {
                 return false;
@@ -369,6 +389,12 @@ namespace Adan.Client.Map
         public bool StopRouteRecording([NotNull]string endName)
         {
             Assert.ArgumentNotNull(endName, "endName");
+
+            if (_rootModel == null)
+            {
+                return false;
+            } 
+            
             if (_currentlyRecordedRoute == null)
             {
                 return false;
@@ -421,6 +447,11 @@ namespace Adan.Client.Map
         /// </summary>
         public void CancelRouteRecording()
         {
+            if (_rootModel == null)
+            {
+                return;
+            } 
+            
             if (_currentlyRecordedRoute == null)
             {
                 return;
@@ -437,6 +468,11 @@ namespace Adan.Client.Map
         /// <returns><c>true</c> if route was deleted; otherwise - <c>false</c></returns>
         public bool DeleteRoute()
         {
+            if (_rootModel == null)
+            {
+                return false;
+            }
+
             var deleteDialog = new RouteDeleteDialog { Owner = _mainWindow, DataContext = this };
             var res = deleteDialog.ShowDialog();
             if (res.HasValue && res.Value && SelectedRoute != null)
@@ -459,7 +495,12 @@ namespace Adan.Client.Map
         public void NavigateToRoom([NotNull] string roomAliasOrName)
         {
             Assert.ArgumentNotNullOrWhiteSpace(roomAliasOrName, "roomAliasOrName");
-            
+
+            if (_rootModel == null)
+            {
+                return;
+            }
+
             if (_currentRoom == null || _currentZone == null)
             {
                 return;
@@ -485,6 +526,11 @@ namespace Adan.Client.Map
         public void NavigateToRoom([NotNull] RoomViewModel roomToNavigateTo)
         {
             Assert.ArgumentNotNull(roomToNavigateTo, "roomToNavigateTo");
+            
+            if (_rootModel == null)
+            {
+                return;
+            }
 
             if (_currentRoom == null || _currentZone == null)
             {
@@ -523,6 +569,11 @@ namespace Adan.Client.Map
         /// <returns><c>true</c> if routing was started; otherwise - <c>false</c>.</returns>
         public bool GotoDestination()
         {
+            if (_rootModel == null)
+            {
+                return false;
+            }
+
             if (_currentRoom == null)
             {
                 return false;
@@ -555,6 +606,11 @@ namespace Adan.Client.Map
         {
             Assert.ArgumentNotNull(selectedRouteDestination, "selectedRouteDestination");
 
+            if (_rootModel == null)
+            {
+                return false;
+            }
+
             if (_currentRoom == null)
             {
                 return false;
@@ -586,6 +642,16 @@ namespace Adan.Client.Map
         /// </summary>
         public void StopRoutingToDestination()
         {
+            if (_rootModel == null)
+            {
+                return;
+            }
+
+            if(string.IsNullOrEmpty(_currentRouteTarget))
+            {
+                return;
+            }
+
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteStopped, TextColor.BrightYellow));
             _currentRouteTarget = string.Empty;
         }
@@ -595,6 +661,11 @@ namespace Adan.Client.Map
         /// </summary>
         public void PrintHelp()
         {
+            if(_rootModel==null)
+            {
+                return;
+            }
+
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpGoto, TextColor.BrightYellow));
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpStartRecording, TextColor.BrightYellow));
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpStopRecording, TextColor.BrightYellow));
@@ -602,6 +673,17 @@ namespace Adan.Client.Map
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpRoute, TextColor.BrightYellow));
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpStopRoute, TextColor.BrightYellow));
             _rootModel.PushMessageToConveyor(new InfoMessage(Resources.RouteHelpHelp, TextColor.BrightYellow));
+        }
+
+        /// <summary>
+        /// Handles the change of main output window.
+        /// </summary>
+        /// <param name="rootModel">The root model of new output window.</param>
+        public void OutputWindowChanged(RootModel rootModel)
+        {
+            CancelRouteRecording();
+            StopRoutingToDestination();
+            _rootModel = rootModel;
         }
 
         [NotNull]
