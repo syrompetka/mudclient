@@ -17,7 +17,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Focusable="False" IsMainMenu="False" IsTabStop="False">
+        <Menu Grid.Row="0" Focusable="False" IsMainMenu="False" IsTabStop="False" Name="mainMenu">
             <MenuItem Header="File">
                 <MenuItem Header="Connect" Click="HandleConnect"/>
                 <MenuItem Header="Connect all" Click="HandleConnectAll" />

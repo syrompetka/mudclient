@@ -12,19 +12,12 @@ namespace Adan.Client.Common.Settings
     using System;
     using System.Linq;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
-    using System.Text;
-    using System.Xml;
     using System.Xml.Serialization;
-    using Adan.Client.Common;
     using Adan.Client.Common.Controls;
-    using Adan.Client.Common.Properties;
-    using Common.Model;
     using Common.Themes;
     using CSLib.Net.Annotations;
     using System.Windows;
-    using System.Threading.Tasks;
 
     /// <summary>
     /// Class whos hold settings like colors, windows sizes etc.
@@ -32,9 +25,6 @@ namespace Adan.Client.Common.Settings
     public class SettingsHolder
     {
         #region Constants and Fields
-
-        private const string SettingsFilePath = @".\Options.xml";
-
         private static SettingsHolder _instance = new SettingsHolder();
 
         private SettingsFolder _settingsFolder;
@@ -167,7 +157,7 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public void ReloadSettings()
         {
-            if (!File.Exists(SettingsFilePath))
+            if (!File.Exists(Path.Combine(Folder, "Options.xml")))
             {
                 LoadDefaultSettings();
 
@@ -178,7 +168,7 @@ namespace Adan.Client.Common.Settings
 
             try
             {
-                using (var stream = File.OpenRead(SettingsFilePath))
+                using (var stream = File.OpenRead(Path.Combine(Folder, "Options.xml")))
                 {
                     Settings = (SettingsSerializer)serializer.Deserialize(stream);
                 }
@@ -206,6 +196,11 @@ namespace Adan.Client.Common.Settings
                 ScrollBuffer = 5000,
                 IsLogCommands = false,
                 AutoConnect = true,
+                MainWindowLeft = 0,
+                MainWindowTop = 0,
+                MainWindowWidth = 800,
+                MainWindowHeight = 600,
+                MainWindowState = WindowState.Maximized,
             };
         }
 
@@ -226,12 +221,12 @@ namespace Adan.Client.Common.Settings
         {
             var serializer = new XmlSerializer(typeof(SettingsSerializer), AllSerializationTypes.ToArray());
 
-            if (File.Exists(SettingsFilePath))
+            if (File.Exists(Path.Combine(Folder, "Options.xml")))
             {
-                File.Delete(SettingsFilePath);
+                File.Delete(Path.Combine(Folder, "Options.xml"));
             }
 
-            using (var stream = File.OpenWrite(SettingsFilePath))
+            using (var stream = File.OpenWrite(Path.Combine(Folder, "Options.xml")))
             {
                 serializer.Serialize(stream, Settings);
             }

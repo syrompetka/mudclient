@@ -4,6 +4,7 @@ using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using CSLib.Net.Annotations;
@@ -225,6 +226,49 @@ namespace Adan.Client.Common.Settings
                 if (SettingsChanged != null)
                     SettingsChanged(this, new SettingsChangedEventArgs("CommandsHistorySize", value));
             }
+        }
+
+        /// <summary>
+        /// Get the state of main window as it was before it was closed last time.
+        /// </summary>
+        public WindowState MainWindowState
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Get the Y coordinate of main window as it was before it was closed last time.
+        /// </summary>
+        public int MainWindowTop
+        {
+            get; set;
+        }
+
+        /// <summary>
+        /// Get the X coordinate of main window as it was before it was closed last time.
+        /// </summary>
+        public int MainWindowLeft
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get the width of main window as it was before it was closed last time.
+        /// </summary>
+        public int MainWindowWidth
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Get the Height of main window as it was before it was closed last time.
+        /// </summary>
+        public int MainWindowHeight
+        {
+            get;
+            set;
         }
     }
 }

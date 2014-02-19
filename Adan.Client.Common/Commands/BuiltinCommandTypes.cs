@@ -30,13 +30,18 @@ namespace Adan.Client.Common.Commands
         public const int ConnectionCommands = 3;
 
         /// <summary>
-        /// 
+        /// Type of command to switch output windows.
         /// </summary>
         public const int ShowMainOutputCommand = 4;
 
         /// <summary>
-        /// 
+        /// Type of command to send data to another output window.
         /// </summary>
         public const int SendToWindow = 5;
+
+        /// <summary>
+        /// Type of command to toggle full screen mode of the main window.
+        /// </summary>
+        public const int ToggleFullScreenMode = 6;
     }
 }

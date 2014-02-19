@@ -9,9 +9,9 @@
              d:DesignHeight="300" d:DesignWidth="300">
     <UserControl.Resources>
         <Controls:GenericTemplateSelector x:Key="actionTemplateSelector" />
-    	<Utils:TextColorToBrushConverter x:Key="TextColorToBrushConverter" />
+        <Utils:TextColorToBrushConverter x:Key="TextColorToBrushConverter" />
         <Utils:BackgroundTextColorToBrushConverter x:Key="BackgroundTextColorToBrushConverter" />
-
+        <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
         <DataTemplate x:Key="SendTextActionViewModelTemplate" DataType="SendTextActionViewModel">
             <Grid>
                 <Grid.RowDefinitions>
@@ -118,6 +118,23 @@
                 <Label>Group to disable:</Label>
                 <ComboBox Width="200"  Text="{Binding Path=GroupNameToDisable,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" IsEditable="True" HorizontalAlignment="Left" Margin="0,0,0,5" />
             </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ShowOutputWindowActionViewModelTemplate" DataType="ShowOutputWindowActionViewModel">
+            <StackPanel>
+                <Label>Window name to switch to (if left empty will switch to next window in a cycle):</Label>
+                <ComboBox Width="200"  Text="{Binding Path=OutputWindowName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" IsEditable="True" HorizontalAlignment="Left" Margin="0,0,0,5" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="SendToWindowActionViewModelTemplate" DataType="SendToWindowActionViewModel">
+            <StackPanel>
+                <Label>Window name to send commands to:</Label>
+                <ComboBox Width="200"  Text="{Binding Path=OutputWindowName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" IsEditable="True" HorizontalAlignment="Left" Margin="0,0,0,5" IsEnabled="{Binding Path=SendToAllWindows, Converter={StaticResource InverseBooleanConverter}}" />
+                <CheckBox Content="Send to all windows." IsChecked="{Binding Path=SendToAllWindows, Mode=TwoWay}"/>
+                <TextBlock Text="Actions to execute if condition is true:" />
+                <Controls:ActionEditorControl DataContext="{Binding Path=ActionsToExecute}" VerticalAlignment="Stretch" />
+            </StackPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="ToggleFullScreenModeActionViewModelTemplate" DataType="ToggleFullScreenModeActionViewModel">
         </DataTemplate>
     </UserControl.Resources>
     <Grid>
