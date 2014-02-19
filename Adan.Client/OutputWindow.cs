@@ -38,14 +38,6 @@ namespace Adan.Client
         private StreamWriter _streamWriter;
         private bool _isLogging;
 
-#if DEBUG
-        private object _renderLockObject = new object();
-        private TimeSpan _addMessageTime = TimeSpan.Zero;
-        private TimeSpan _renderTime = TimeSpan.Zero;
-        private int _addMessageCount = 0;
-        private int _renderCount = 0;
-        private Timer _timer;
-#endif
         
         /// <summary>
         /// 
@@ -72,60 +64,7 @@ namespace Adan.Client
             _window.txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
 
             IsLogging = false;
-
-#if DEBUG
-            _timer = new Timer(10000);
-            _timer.AutoReset = false;
-            _timer.Elapsed += _timer_Elapsed;
-            _timer.Start();
-#endif
         }
-
-#if DEBUG
-        void _timer_Elapsed(object sender, ElapsedEventArgs e)
-        {
-            lock(_renderLockObject)
-            {
-                    _renderTime += _window.RenderTime;
-                    _window.RenderTime = TimeSpan.Zero;
-                    _renderCount = _window.Count;
-                    _window.Count = 0;
-
-                double addTime = 0;
-                double renderTime = 0;
-                int addCount = 0;
-                int renderCount = 0;
-                if (_addMessageCount > 0)
-                {
-                    addTime = _addMessageTime.TotalMilliseconds / (double)_addMessageCount;
-                    addCount = _addMessageCount;
-                }
-
-                //if (_renderCount > 0)
-                {
-                    renderTime = _renderTime.TotalMilliseconds;
-                    renderCount = _renderCount;
-                }
-
-                _addMessageTime = TimeSpan.Zero;
-                _addMessageCount = 0;
-                _renderCount = 0;
-                _renderTime = TimeSpan.Zero;
-
-                double decompressTime = 0;
-                var decompressCount = _rootModel.MessageConveyor.MccpClient.Count;
-                if(decompressCount > 0)
-                    decompressTime = _rootModel.MessageConveyor.MccpClient.DecompressTime.TotalMilliseconds / (double)decompressCount;
-                _rootModel.MessageConveyor.MccpClient.DecompressTime = TimeSpan.Zero;
-                _rootModel.MessageConveyor.MccpClient.Count = 0;
-
-                RootModel.PushMessageToConveyor(new InfoMessage(string.Format("AddMessageAvgTimer = {0}x{1}, RenderAvgTimer = {2}x{3}, DecompressTime = {4}x{5}",
-                    addCount, addTime, renderCount, renderTime, decompressCount, decompressTime)));
-            }
-
-            _timer.Start();
-        }
-#endif
 
         private void txtCommandInput_GotFocus(object sender, RoutedEventArgs e)
         {
@@ -356,21 +295,7 @@ namespace Adan.Client
 
             if (messages.Count > 0)
             {
-#if DEBUG
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-#endif
-
                 _window.AddMessages(messages);
-
-#if DEBUG
-                sw.Stop();
-                lock (_renderLockObject)
-                {
-                    _addMessageCount++;
-                    _addMessageTime += sw.Elapsed;
-                }
-#endif
             }
         }
 

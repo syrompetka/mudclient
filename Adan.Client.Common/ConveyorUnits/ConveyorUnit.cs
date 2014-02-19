@@ -53,11 +53,11 @@ namespace Adan.Client.Common.ConveyorUnits
         #region Methods
 
         /// <summary>
-        /// 
+        /// Handles the command.
         /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
+        /// <param name="command">The command.</param>
+        /// <param name="rootModel">The root model.</param>
+        /// <param name="isImport">if set to <c>true</c> [is import].</param>
         public virtual void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");

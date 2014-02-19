@@ -22,7 +22,7 @@ namespace Adan.Client.Common.Model
     public abstract class ActionBase
     {
         /// <summary>
-        /// 
+        /// Gets a value indicating whether this action can be executed in global scope or not.
         /// </summary>
         public abstract bool IsGlobal
         {

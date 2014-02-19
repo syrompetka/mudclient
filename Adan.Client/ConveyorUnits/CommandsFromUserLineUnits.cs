@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Adan.Client.ConveyorUnits
 {
+    using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
     using System.Windows.Input;
 
     using Common.Commands;
-    using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Model;
     using Common.Messages;
@@ -21,9 +16,9 @@ namespace Adan.Client.ConveyorUnits
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Commands;
-    using Adan.Client.Model.Actions;
-    using Adan.Client.Messages;
+    using Commands;
+    using Model.Actions;
+    using Messages;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementation that use commands string from line

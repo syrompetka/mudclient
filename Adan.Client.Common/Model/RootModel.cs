@@ -13,9 +13,7 @@ namespace Adan.Client.Common.Model
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Adan.Client.Common.Settings;
+    using Settings;
     using Commands;
     using Conveyor;
     using CSLib.Net.Annotations;

@@ -22,7 +22,7 @@ namespace Adan.Client.Model.ActionDescriptions
         /// </summary>
         /// <param name="allDescriptions">All descriptions.</param>
         public ShowOutputWindowActionDescription([NotNull] IEnumerable<ActionDescription> allDescriptions)
-            : base("Show output window", allDescriptions)
+            : base("Switch output window", allDescriptions)
         {
             Assert.ArgumentNotNull(allDescriptions, "allDescriptions");
         }

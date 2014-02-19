@@ -13,7 +13,6 @@ namespace Adan.Client
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -22,34 +21,26 @@ namespace Adan.Client
     using System.Windows.Data;
     using System.Windows.Input;
     using System.Windows.Media;
-    using Adan.Client.Common;
     using Adan.Client.Common.Controls;
     using AvalonDock;
     using Commands;
     using CommandSerializers;
     using Common.Commands;
     using Common.Conveyor;
-    using Common.Messages;
     using Common.Model;
-    using Common.Networking;
     using Common.Plugins;
     using Common.Themes;
-    using Common.Utils;
     using ConveyorUnits;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Dialogs;
     using MessageDeserializers;
-    using Microsoft.Win32;
     using Model.ActionDescriptions;
     using Model.ActionParameters;
     using Model.Actions;
     using Model.ParameterDescriptions;
     using ViewModel;
     using Adan.Client.Common.ViewModel;
-    using Adan.Client.Controls;
-    using System.Xml;
-    using Adan.Client.Model;
     using Adan.Client.Common.Settings;
     using Adan.Client.Properties;
 
@@ -58,29 +49,19 @@ namespace Adan.Client
     /// </summary>
     public partial class MainWindow
     {
+        private WindowState nonFullScreenWindowState;
         private IList<DockableContent> _allWidgets = new List<DockableContent>();
         private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
         private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
-
-#if DEBUG
-        Stopwatch sw = new Stopwatch();
-#endif
+        private double nonFullScreenWindowWidth;
+        private double nonFullScreenWindowHeight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
         public MainWindow()
         {
-#if DEBUG
-            sw.Start();
-#endif
-
             InitializeComponent();
-            
-#if DEBUG
-            long initTime = sw.ElapsedMilliseconds;
-            sw.Restart();
-#endif
 
             var types = new List<Type>
                             {
@@ -100,6 +81,7 @@ namespace Adan.Client
                                 typeof(SendTextOneParameterAction),
                                 typeof(ShowOutputWindowAction),
                                 typeof(SendToWindowAction),
+                                typeof(ToggleFullScreenModeAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.Plugins)
@@ -130,9 +112,9 @@ namespace Adan.Client
             actionDescriptions.Add(new SetVariableValueActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StartLogActionDescription(actionDescriptions, parameterDescriptions));
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
-            //TODO: Заставить работать
-            //TODO: Добавить template
-            //actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
+            actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
+            actionDescriptions.Add(new SendToWindowActionDescription(actionDescriptions));
+            actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
@@ -144,7 +126,7 @@ namespace Adan.Client
 
             MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
-           // MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
+            // MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
             MessageConveyor.AddMessageDeserializer(new TextMessageDeserializerEx());
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
@@ -160,6 +142,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
             MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
+            MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -178,11 +161,6 @@ namespace Adan.Client
                 ViewModel = new InitializationStatusModel()
             };
 
-#if DEBUG
-            long varInitTime = sw.ElapsedMilliseconds;
-            sw.Restart();
-#endif
-
             Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
@@ -197,7 +175,7 @@ namespace Adan.Client
                     menuItem.Click += (o, e) => pluginClosure.ShowOptionsDialog(this);
                     optionsMenuItem.Items.Insert(0, menuItem);
 
-                    if(optionsSeparator.Visibility != Visibility.Visible)
+                    if (optionsSeparator.Visibility != Visibility.Visible)
                         optionsSeparator.Visibility = Visibility.Visible;
                 }
             }
@@ -218,19 +196,11 @@ namespace Adan.Client
                 CreateNewOutputWindow(uid.Substring(0, uid.Length - 32), uid);
             }
 
-#if DEBUG
-            long pluginInitTime = sw.ElapsedMilliseconds;
-            sw.Reset();
-
-            {
-                var outputWindow = _outputWindows.FirstOrDefault();
-                if (outputWindow != null)
-                {
-                    outputWindow.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("InitTime = {0} ms, varInitTime = {1} ms, pluginInitTime = {2} ms",
-                        initTime, varInitTime, pluginInitTime)));
-                }
-            }
-#endif
+            Top = SettingsHolder.Instance.Settings.MainWindowTop;
+            Left = SettingsHolder.Instance.Settings.MainWindowLeft;
+            Width = SettingsHolder.Instance.Settings.MainWindowWidth;
+            Height = SettingsHolder.Instance.Settings.MainWindowHeight;
+            WindowState = SettingsHolder.Instance.Settings.MainWindowState;
         }
 
         private void CreateNewOutputWindow(string name, string uid)
@@ -323,39 +293,77 @@ namespace Adan.Client
         /// <param name="name"></param>
         public void ShowOutputWindow(string name)
         {
-            var outputWindow = _outputWindows.FirstOrDefault(output => output.Name == name);
-
-            if (outputWindow != null)
+            OutputWindow outputWindowToSelect;
+            if (string.IsNullOrEmpty(name))
             {
-                dockManager.ActiveContent = outputWindow.DockContent;
-                outputWindow.Focus();
+                var currentWindow = _outputWindows.FirstOrDefault(w => w.DockContent.IsKeyboardFocusWithin);
+                if (currentWindow == null)
+                {
+                    return;
+                }
+
+                var currentWindowIndex = _outputWindows.IndexOf(currentWindow);
+                if (currentWindowIndex < 0)
+                {
+                    return;
+                }
+
+                if (currentWindowIndex == _outputWindows.Count - 1)
+                {
+                    currentWindowIndex = 0;
+                }
+                else
+                {
+                    currentWindowIndex++;
+                }
+
+                outputWindowToSelect = _outputWindows[currentWindowIndex];
+            }
+            else
+            {
+                outputWindowToSelect = _outputWindows.FirstOrDefault(output => output.Name == name);
+            }
+
+            if (outputWindowToSelect != null)
+            {
+                dockManager.ActiveContent = outputWindowToSelect.DockContent;
+                outputWindowToSelect.Focus();
             }
         }
 
         /// <summary>
-        /// 
+        /// Sends to window.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="command"></param>
-        public void SendToWindow(string name, Command command)
+        /// <param name="name">The name.</param>
+        /// <param name="actionsToExecute">The actions to execute.</param>
+        /// <param name="actionExecutionContext">The action execution context.</param>
+        public void SendToWindow(string name, IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
         {
-            foreach(var outputWindow in _outputWindows)
+            var outputWindow = _outputWindows.FirstOrDefault(w => w.Name == name);
+            if (outputWindow == null)
             {
-                if(outputWindow.Name == name)
-                    outputWindow.RootModel.PushCommandToConveyor(command);
+                return;
+            }
+
+            foreach (var action in actionsToExecute)
+            {
+                action.Execute(outputWindow.RootModel, actionExecutionContext);
             }
         }
 
         /// <summary>
-        /// 
+        /// Sends to all windows.
         /// </summary>
-        /// <param name="command"></param>
-        public void SendToAllWindows(Command command)
+        /// <param name="actionsToExecute">The actions to execute.</param>
+        /// <param name="actionExecutionContext">The action execution context.</param>
+        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext )
         {
             foreach (var outputWindow in _outputWindows)
             {
-                outputWindow.RootModel.PushCommandToConveyor(command);
-                command.Handled = false;
+                foreach (var action in actionsToExecute)
+                {
+                    action.Execute(outputWindow.RootModel, actionExecutionContext);
+                }
             }
         }
 
@@ -414,14 +422,14 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-#if DEBUG
-            sw.Start();
-#endif
-
             base.OnClosing(e);
 
             try
             {
+                if (WindowStyle == WindowStyle.None)
+                {
+                    ToggleFullScreenMode();
+                }
 
                 var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
                 if (!Directory.Exists(layoutFullPath))
@@ -443,6 +451,12 @@ namespace Adan.Client
                     outputWindow.Dispose();
                 }
 
+                SettingsHolder.Instance.Settings.MainWindowTop = (int)Top;
+                SettingsHolder.Instance.Settings.MainWindowLeft = (int)Left;
+                SettingsHolder.Instance.Settings.MainWindowWidth = (int)Width;
+                SettingsHolder.Instance.Settings.MainWindowHeight = (int)Height;
+                SettingsHolder.Instance.Settings.MainWindowState = WindowState;
+
                 SettingsHolder.Instance.SaveAllSettings();
 
                 PluginHost.Instance.Dispose();
@@ -451,11 +465,6 @@ namespace Adan.Client
             {
                 MessageBox.Show(ex.ToString(), "Error save settings");
             }
-
-#if DEBUG
-            sw.Stop();
-            //MessageBox.Show(string.Format("OnClosingTime: {0} ms", sw.ElapsedMilliseconds));
-#endif
         }
 
         /// <summary>
@@ -507,10 +516,10 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            if(_outputWindows.Count == 0)
+            if (_outputWindows.Count == 0)
                 CreateNewOutputWindow("Default", Guid.NewGuid().ToString("N"));
 
-            foreach(OutputWindow window in _outputWindows)
+            foreach (OutputWindow window in _outputWindows)
                 window.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
         }
 
@@ -539,10 +548,10 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var connectionDialogViewModel = new ConnectionDialogViewModel 
-            { 
-                HostName = SettingsHolder.Instance.Settings.ConnectHostName, 
-                Port = SettingsHolder.Instance.Settings.ConnectPort 
+            var connectionDialogViewModel = new ConnectionDialogViewModel
+            {
+                HostName = SettingsHolder.Instance.Settings.ConnectHostName,
+                Port = SettingsHolder.Instance.Settings.ConnectPort
             };
 
             var dialog = new ConnectionDialog { DataContext = connectionDialogViewModel, Owner = this };
@@ -606,14 +615,14 @@ namespace Adan.Client
 
                 var menuItem = new MenuItem()
                 {
-                    Header = widgetDescription.Description, 
-                    Tag = dockContent 
+                    Header = widgetDescription.Description,
+                    Tag = dockContent
                 };
 
                 var visibleBinding = new Binding("IsVisible")
-                { 
-                    Source = dockContent, 
-                    Mode = BindingMode.OneWay 
+                {
+                    Source = dockContent,
+                    Mode = BindingMode.OneWay
                 };
 
                 menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
@@ -720,13 +729,13 @@ namespace Adan.Client
                     SettingsHolder.Instance.SettingsFolder = SettingsFolder.ProgramFolder;
 
                 int val;
-                if(int.TryParse(model.HistorySize, out val))
+                if (int.TryParse(model.HistorySize, out val))
                     SettingsHolder.Instance.Settings.CommandsHistorySize = val;
 
                 if (int.TryParse(model.MinLengthHistory, out val))
                     SettingsHolder.Instance.Settings.MinLengthHistory = val;
 
-                if(int.TryParse(model.ScrollBuffer, out val))
+                if (int.TryParse(model.ScrollBuffer, out val))
                     SettingsHolder.Instance.Settings.ScrollBuffer = val < 100000 ? val : 100000;
             }
         }
@@ -782,6 +791,36 @@ namespace Adan.Client
                 {
                     MessageBox.Show(this, ex.ToString(), "Error");
                 }
+            }
+        }
+
+        /// <summary>
+        /// Toggles the full screen mode.
+        /// </summary>
+        public void ToggleFullScreenMode()
+        {
+            if (this.WindowStyle == WindowStyle.None)
+            {
+                WindowStyle = WindowStyle.SingleBorderWindow;
+                WindowState = nonFullScreenWindowState; ;
+                ResizeMode = ResizeMode.CanResizeWithGrip;
+                Width = nonFullScreenWindowWidth;
+                Height = nonFullScreenWindowHeight;
+                mainMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                nonFullScreenWindowHeight = Height;
+                nonFullScreenWindowWidth = Width;
+                nonFullScreenWindowState = WindowState;
+                Width = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
+                Height = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
+                Top = 0;
+                Left = 0;
+                WindowState = System.Windows.WindowState.Normal;
+                WindowStyle = WindowStyle.None;
+                ResizeMode = System.Windows.ResizeMode.NoResize;
+                mainMenu.Visibility=Visibility.Collapsed;
             }
         }
     }

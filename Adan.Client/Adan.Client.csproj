@@ -106,6 +106,7 @@
     <Compile Include="Commands\DisconnectCommand.cs" />
     <Compile Include="Commands\SendToWindowCommand.cs" />
     <Compile Include="Commands\ShowMainOutputCommand.cs" />
+    <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
     <Compile Include="Controls\MainOutputWindowEx.xaml.cs">
       <DependentUpon>MainOutputWindowEx.xaml</DependentUpon>
     </Compile>
@@ -129,6 +130,7 @@
     <Compile Include="ConveyorUnits\SendToWindowUnit.cs" />
     <Compile Include="ConveyorUnits\ShowMainOutputUnit.cs" />
     <Compile Include="ConveyorUnits\SubstitutionUnit.cs" />
+    <Compile Include="ConveyorUnits\ToggleFullScreenModeUnit.cs" />
     <Compile Include="ConveyorUnits\TriggerUnit.cs" />
     <Compile Include="ConveyorUnits\VariableReplaceUnit.cs" />
     <Compile Include="Dialogs\AliasEditDialog.xaml.cs">
@@ -214,10 +216,12 @@
     <Compile Include="Model\ActionDescriptions\SendTextActionDescription.cs">
       <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
     </Compile>
+    <Compile Include="Model\ActionDescriptions\SendToWindowActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\SetVariableValueActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\ShowOutputWindowActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StartLogActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StopLogActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\ToggleFullScreenModeActionDescription.cs" />
     <Compile Include="Model\ActionParameters\ConstantStringParameter.cs" />
     <Compile Include="Model\ActionParameters\MathOperation.cs" />
     <Compile Include="Model\ActionParameters\MathExpressionParameter.cs" />
@@ -236,6 +240,7 @@
     <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />
     <Compile Include="Model\Actions\StartLogAction.cs" />
     <Compile Include="Model\Actions\StopLogAction.cs" />
+    <Compile Include="Model\Actions\ToggleFullScreenModeAction.cs" />
     <Compile Include="Model\ParameterDescriptions\ConstantStringParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\MathExpressionParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\TriggerOrCommandParameterDescription.cs" />
@@ -253,6 +258,7 @@
     <Compile Include="ViewModel\Actions\ExtensionMethods.cs" />
     <Compile Include="ViewModel\Actions\OutputToMainWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\SendTextActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\SendToWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\SetVariableValueActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\ShowOutputWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\StartLogActionViewModel.cs" />
@@ -278,6 +284,7 @@
     <Compile Include="ViewModel\ProfileViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionsViewModel.cs" />
     <Compile Include="ViewModel\SubstitutionViewModel.cs" />
+    <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
     <Page Include="Controls\MainOutputWindowEx.xaml">
