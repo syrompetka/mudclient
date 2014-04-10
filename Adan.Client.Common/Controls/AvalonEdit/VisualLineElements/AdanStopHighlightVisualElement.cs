@@ -12,7 +12,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit.VisualLineElements
     /// </summary>
     public class AdanStopHighlightVisualElement : VisualLineElement
     {
-        private static TextHidden _cashedTextHidden = new TextHidden(1);
+        private static TextHidden _cachedTextHidden = new TextHidden(1);
 
         /// <summary>
         /// 
@@ -29,7 +29,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit.VisualLineElements
         /// <returns></returns>
         public override TextRun CreateTextRun(int startVisualColumn, ITextRunConstructionContext context)
         {
-            return _cashedTextHidden;
+            return _cachedTextHidden;
         }
     }
 }

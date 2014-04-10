@@ -432,8 +432,8 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             var result = new List<InfoMessage>();
             {
                 var infoMessage = new InfoMessage(Resources.Object + " ", TextColor.BrightWhite);
-                infoMessage.AddText("'" + ObjectName + "'", TextColor.BrightCyan);
-                infoMessage.AddText(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite);
+                infoMessage.AppendText("'" + ObjectName + "'", TextColor.BrightCyan);
+                infoMessage.AppendText(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite);
                 result.Add(infoMessage);
             }
 
@@ -482,7 +482,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             {
                 {
                     var infoMessage = new InfoMessage(Resources.Spells + ": ", TextColor.BrightWhite);
-                    infoMessage.AddText(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green);
+                    infoMessage.AppendText(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green);
                     result.Add(infoMessage);
                 }
 
@@ -499,7 +499,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             {
                 {
                     var infoMessage = new InfoMessage(Resources.Spells + ": ", TextColor.BrightWhite);
-                    infoMessage.AddText(WandOrStaffSpell.SpellName, TextColor.Green);
+                    infoMessage.AppendText(WandOrStaffSpell.SpellName, TextColor.Green);
                     result.Add(infoMessage);
                 }
                 //result.Add(
@@ -573,11 +573,11 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             var infoMessage = new InfoMessage(header.PadRight(headerLength) + ": ", TextColor.BrightWhite);
             if (flags.Any())
             {
-                infoMessage.AddText(string.Join(", ", flags), TextColor.Cyan);
+                infoMessage.AppendText(string.Join(", ", flags), TextColor.Cyan);
             }
             else
             {
-                infoMessage.AddText("NONE", TextColor.Cyan);
+                infoMessage.AppendText("NONE", TextColor.Cyan);
             }
 
             return infoMessage;

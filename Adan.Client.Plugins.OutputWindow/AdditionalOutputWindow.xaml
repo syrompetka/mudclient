@@ -13,7 +13,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <AvalonEdit:TextEditor Background="Black" IsReadOnly="True" FontSize="16"
+            <AvalonEdit:TextEditor Background="Black" IsReadOnly="True" FontSize="14"
                                    x:Name="additionalOutputWindow" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
                                    Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             </AvalonEdit:TextEditor>

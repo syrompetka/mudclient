@@ -153,7 +153,7 @@ namespace Adan.Client.Common.Model
                 }
 
                 textMessage.Clear();
-                textMessage.AddText(sb.ToString());
+                textMessage.AppendText(sb.ToString());
             }
             else
             {
@@ -255,7 +255,7 @@ namespace Adan.Client.Common.Model
                         sb.Append(coloredText, coloredPosition, coloredText.Length - coloredPosition);
 
                     textMessage.Clear();
-                    textMessage.AddText(sb.ToString());
+                    textMessage.AppendText(sb.ToString());
                     //rootModel.PushMessageToConveyor(textMessage.NewInstance());
                     //textMessage.Handled = true;
                 }
