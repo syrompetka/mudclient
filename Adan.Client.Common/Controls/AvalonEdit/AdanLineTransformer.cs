@@ -38,7 +38,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
         }
 #endif
 
-        private IAdanVisualLineElement _savedEscapeElement;
+        private IAdanVisualLineElement escapeElement = null;
 
         /// <summary>
         /// 
@@ -53,26 +53,37 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             sw.Start();
 #endif
 
-            IAdanVisualLineElement escapeElement = null;
+            Stack<IAdanVisualLineElement> _savedElement = new Stack<IAdanVisualLineElement>();
+
             foreach (var element in elements)
             {
                 if (element is AdanColorVisualLineElement)
-                    escapeElement = (IAdanVisualLineElement)element;
+                {
+                    escapeElement = (IAdanVisualLineElement) element;
+                }
                 else if (element is AdanResetVisualLineElement)
+                {
                     escapeElement = null;
+                }
                 else if (element is AdanStartHighlightVisualElement)
                 {
-                    _savedEscapeElement = escapeElement;
-                    escapeElement = (IAdanVisualLineElement)element;
+                    _savedElement.Push(escapeElement);
+                    escapeElement = (IAdanVisualLineElement) element;
                 }
                 else if (element is AdanStopHighlightVisualElement)
                 {
-                    escapeElement = _savedEscapeElement;
+                    if (_savedElement.Count > 0)
+                        escapeElement = _savedElement.Pop();
+                    else
+                        escapeElement = null;
                 }
-                else if (escapeElement != null)
+                else
                 {
-                    element.TextRunProperties.SetForegroundBrush(escapeElement.Foreground);
-                    element.TextRunProperties.SetBackgroundBrush(escapeElement.Background);
+                    if (escapeElement != null)
+                    {
+                        element.TextRunProperties.SetForegroundBrush(escapeElement.Foreground);
+                        element.TextRunProperties.SetBackgroundBrush(escapeElement.Background);
+                    }
                 }
             }
 

@@ -95,8 +95,8 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             TextColor currentForeColor = TextColor.None;
             bool isBright = false;
 
-            if(curOffset == document.TextLength)
-                return null;
+            //if (curOffset == document.TextLength)
+            //    return null;
 
             if (document.GetCharAt(curOffset) == '\x1B')
             {
@@ -130,7 +130,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                         {
                             isHighlight = true;
                         }
-                        //Недокументированный код обозначающий конец хайлайта
+                        //Недокументированный код, обозначающий конец хайлайта
                         else if (value == 3)
                         {
                             return new AdanStopHighlightVisualElement(4);
@@ -172,7 +172,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                 else
                     return new AdanColorVisualLineElement(currentForeColor, currentBackColor, curOffset - offset);
             }
-            else if (offset == CurrentContext.VisualLine.FirstDocumentLine.Offset && offset > 0)
+            else
             {
                 while (curOffset >= 0)
                 {
@@ -264,7 +264,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             int endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
             var document = CurrentContext.Document;
 
-            if (startOffset == CurrentContext.VisualLine.FirstDocumentLine.Offset)
+            if (CurrentContext.VisualLine.FirstDocumentLine.Offset == startOffset)
                 return startOffset;
 
             while (curOffset < endOffset && document.GetCharAt(curOffset) != '\x1B')

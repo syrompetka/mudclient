@@ -27,7 +27,7 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNullOrWhiteSpace(errorText, "errorText");
 
-            base.AddText("\x1B[0m");
+            base.AppendText("\x1B[0m");
         }
 
         /// <summary>

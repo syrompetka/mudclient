@@ -45,15 +45,15 @@ namespace Adan.Client.ViewModel.Actions
            // AllGroups = availableGroups.Where(g => !g.IsBuildIn);
         }
 
-        /// <summary>
-        /// Gets all groups.
-        /// </summary>
-        [NotNull]
-        public IEnumerable<Group> AllGroups
-        {
-            get;
-            private set;
-        }
+        ///// <summary>
+        ///// Gets all groups.
+        ///// </summary>
+        //[NotNull]
+        //public IEnumerable<Group> AllGroups
+        //{
+        //    get;
+        //    private set;
+        //}
 
         /// <summary>
         /// Gets or sets the group name to disable.

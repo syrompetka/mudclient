@@ -92,15 +92,15 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         public override InfoMessage ConvertToInfoMessage()
         {
             var infoMessage = new InfoMessage(" " + ModifiedParameter + ": ");
-            infoMessage.AddText(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed);
+            infoMessage.AppendText(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed);
             if (!string.IsNullOrEmpty(SourceSkill))
             {
-                infoMessage.AddText(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White);
+                infoMessage.AppendText(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White);
             }
 
             if (Duration > 0)
             {
-                infoMessage.AddText(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White);
+                infoMessage.AppendText(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White);
             }
 
             return infoMessage;

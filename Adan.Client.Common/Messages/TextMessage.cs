@@ -76,7 +76,7 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNull(text, "text");
 
-            this.AddText(text, foregroundColor);
+            this.AppendText(text, foregroundColor);
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNull(text, "text");
 
-            this.AddText(text, foregroundColor, backgroundColor);
+            this.AppendText(text, foregroundColor, backgroundColor);
         }
 
         /// <summary>
@@ -105,10 +105,9 @@ namespace Adan.Client.Common.Messages
                 throw new ArgumentOutOfRangeException();
 
             StringBuilder sb = new StringBuilder(_coloredText.Length + 20);
-            int coloredPosition = offset;
 
-            if (coloredPosition > 0)
-                sb.Append(_coloredText, 0, coloredPosition);
+            if (offset > 0)
+                sb.Append(_coloredText, 0, offset);
 
             sb.Append("\x1B[2;");
 
@@ -128,15 +127,99 @@ namespace Adan.Client.Common.Messages
             }
 
             sb.Append('m');
-
-            sb.Append(_coloredText, coloredPosition, length);
+            sb.Append(_coloredText, offset, length);
             sb.Append("\x1B[3m");
 
-            int endPosition = coloredPosition + length;
+            int endPosition = offset + length;
             if (endPosition < _coloredText.Length)
                 sb.Append(_coloredText, endPosition, _coloredText.Length - endPosition);
 
             _coloredText = sb.ToString();
+        }
+
+        private int GetPositionInColoredText(int startPos, int textLength)
+        {
+            int coloredPosition = startPos;
+            int count = 0;
+
+            while (count < textLength)
+            {
+                if (_coloredText[coloredPosition] == '\x1B')
+                {
+                    coloredPosition += 2;
+
+                    while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                        coloredPosition++;
+
+                    if (coloredPosition == _coloredText.Length)
+                        break;
+
+                    coloredPosition++;
+                }
+                else
+                {
+                    count++;
+                    coloredPosition++;
+                }
+            }
+
+            return coloredPosition;
+        }
+
+        private string GetPositionInColoredText(int startPos, int textLength, out int position)
+        {
+            StringBuilder sb = new StringBuilder();
+            int coloredPosition = startPos;
+            int count = 0;
+
+            while (count < textLength)
+            {
+                if (_coloredText[coloredPosition] == '\x1B')
+                {
+                    int symbolPos = coloredPosition;
+                    coloredPosition += 2;
+
+                    while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                        coloredPosition++;
+
+                    if (coloredPosition == _coloredText.Length)
+                    {
+                        sb.Append(_coloredText, symbolPos, coloredPosition - symbolPos);
+                        break;
+                    }
+
+                    coloredPosition++;
+                    sb.Append(_coloredText, symbolPos, coloredPosition - symbolPos);
+                }
+                else
+                {
+                    count++;
+                    coloredPosition++;
+                }
+            }
+
+            position = coloredPosition;
+            return sb.ToString();
+        }
+
+        private int GetFirstCharPosition(int startPos)
+        {
+            int coloredPosition = startPos;
+
+            while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] == '\x1B')
+            {
+                coloredPosition += 2;
+
+                while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
+                    coloredPosition++;
+
+                coloredPosition++;
+
+                if (coloredPosition >= _coloredText.Length)
+                    return _coloredText.Length;
+            }
+
+            return coloredPosition;
         }
 
         /// <summary>
@@ -148,48 +231,16 @@ namespace Adan.Client.Common.Messages
         /// <param name="length"></param>
         public void HighlightInnerText(TextColor foreground, TextColor background, int offset, int length)
         {
-            if (length <= 0)
+            if (length <= 0 || offset + length > InnerText.Length)
                 throw new ArgumentOutOfRangeException();
 
             StringBuilder sb = new StringBuilder(_coloredText.Length + 20);
             int coloredPosition = 0;
 
             if (offset > 0)
-            {
-                int count = 0;
-                while (count < offset)
-                {
-                    if (_coloredText[coloredPosition] == '\x1B')
-                    {
-                        coloredPosition += 2;
-                        var tt = _coloredText[coloredPosition];
+                coloredPosition = GetPositionInColoredText(0, offset);
 
-                        while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
-                            coloredPosition++;
-
-                        if (coloredPosition == _coloredText.Length)
-                            break;
-
-                        coloredPosition++;
-                    }
-                    else
-                    {
-                        count++;
-                        coloredPosition++;
-                    }
-                }
-            }
-
-            while (_coloredText[coloredPosition] == '\x1B')
-            {
-                coloredPosition += 2;
-                var tt = _coloredText[coloredPosition];
-
-                while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
-                    coloredPosition++;
-
-                coloredPosition++;
-            }
+            coloredPosition = GetFirstCharPosition(coloredPosition);
 
             if (coloredPosition > 0)
                 sb.Append(_coloredText, 0, coloredPosition);
@@ -213,36 +264,11 @@ namespace Adan.Client.Common.Messages
 
             sb.Append('m');
 
-            int startPosition = coloredPosition;
-
-            {
-                int count = 0;
-                while (count < length)                    
-                {
-                    if (_coloredText[coloredPosition] == '\x1B')
-                    {
-                        coloredPosition += 2;
-                        var tt = _coloredText[coloredPosition];
-
-                        while (coloredPosition < _coloredText.Length && _coloredText[coloredPosition] != 'm')
-                            coloredPosition++;
-
-                        if (coloredPosition == _coloredText.Length)
-                            break;
-
-                        coloredPosition++;
-                    }
-                    else
-                    {
-                        count++;
-                        coloredPosition++;
-                    }
-                }
-            }
-
-            sb.Append(_coloredText, startPosition, coloredPosition - startPosition);
+            sb.Append(InnerText, offset, length);
             sb.Append("\x1B[3m");
 
+            sb.Append(GetPositionInColoredText(coloredPosition, length, out coloredPosition));
+            
             if (coloredPosition < _coloredText.Length)
                 sb.Append(_coloredText, coloredPosition, _coloredText.Length - coloredPosition);
 
@@ -394,7 +420,7 @@ namespace Adan.Client.Common.Messages
         /// 
         /// </summary>
         /// <param name="text"></param>
-        public void AddText(string text)
+        public void AppendText(string text)
         {
             if (String.IsNullOrEmpty(text))
                 return;
@@ -410,7 +436,7 @@ namespace Adan.Client.Common.Messages
         /// </summary>
         /// <param name="text"></param>
         /// <param name="foreground"></param>
-        public void AddText(string text, TextColor foreground)
+        public void AppendText(string text, TextColor foreground)
         {
             if (String.IsNullOrEmpty(text))
                 return;
@@ -432,7 +458,7 @@ namespace Adan.Client.Common.Messages
         /// <param name="text"></param>
         /// <param name="foreground"></param>
         /// <param name="background"></param>
-        public void AddText(string text, TextColor foreground, TextColor background)
+        public void AppendText(string text, TextColor foreground, TextColor background)
         {
             if (String.IsNullOrEmpty(text))
                 return;

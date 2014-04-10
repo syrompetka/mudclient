@@ -107,7 +107,7 @@ namespace Adan.Client.ViewModel.Actions
         {
             return new ClearVariableValueActionViewModel
                 (new ClearVariableValueAction(), ActionDescriptor, AllActionDescriptions)
-                {
+                { 
                     VariableName = VariableName,
                     SilentSet = SilentSet
                 };

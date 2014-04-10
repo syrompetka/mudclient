@@ -29,7 +29,7 @@ namespace Adan.Client.Common.Messages
         {
             Assert.ArgumentNotNull(text, "text");
 
-            base.AddText("\x1B[0m");
+            base.AppendText("\x1B[0m");
         }
 
         /// <summary>

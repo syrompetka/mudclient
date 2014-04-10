@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
+using System.Windows;
 using Adan.Client.Commands;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.ConveyorUnits;
@@ -14,9 +17,9 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class ShowMainOutputUnit : ConveyorUnit
     {
-        private readonly MainWindow _mainWindow;
-        private readonly Regex _regexShowOutputWindow = new Regex(@"^\#wind?o?w?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private MainWindow _mainWindow;
 
+        private Regex _regexShowOutputWindow = new Regex(@"^\#wind?o?w?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// 
@@ -45,7 +48,7 @@ namespace Adan.Client.ConveyorUnits
         {
             get 
             {
-                return new[] { BuiltInCommandTypes.ShowMainOutputCommand, BuiltInCommandTypes.TextCommand };
+                return new int[] { BuiltInCommandTypes.ShowMainOutputCommand, BuiltInCommandTypes.TextCommand };
             }
         }
 
@@ -65,7 +68,6 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-
             var textCommand = command as TextCommand;
             if (textCommand != null)
             {
@@ -75,6 +77,8 @@ namespace Adan.Client.ConveyorUnits
                     _mainWindow.ShowOutputWindow(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]);
                     command.Handled = true;
                 }
+
+                return;
             }
         }
     }
