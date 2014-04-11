@@ -169,6 +169,9 @@ namespace Adan.Client.ViewModel
 
             var owner = obj as Window;
 
+            if (SelectedProfile == null)
+                return;
+
             var profile = SettingsHolder.Instance.GetProfile(SelectedProfile.NameProfile);
 
             var profileOptionDialog = new ProfileOptionsEditDialog()
