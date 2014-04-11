@@ -23,6 +23,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
 
     using Properties;
     using Adan.Client.Plugins.StuffDatabase.Model.Affects;
+    using Adan.Client.Plugins.StuffDatabase.Model;
 
     /// <summary>
     /// Message containing stats of some object.
@@ -56,6 +57,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             _noFlags = new List<string>();
             _scrollOrPotionSpells = new List<ScrollOrPotionSpell>();
             _appliedAffects = new List<AppliedAffect>();
+            ItemSetAffects = new ItemSetAffects();
         }
 
         /// <summary>
@@ -160,6 +162,19 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
         /// </value>
         [XmlAttribute]
         public int Timer
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the offline timer of the object.
+        /// </summary>
+        /// <value>
+        /// The offline timer of the object.
+        /// </value>
+        [XmlAttribute]
+        public int OfflineTimer
         {
             get;
             set;
@@ -410,6 +425,17 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        [XmlElement("ItemSetAffects")]
+        public ItemSetAffects ItemSetAffects
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the comments.
         /// </summary>
         /// <value>
@@ -437,14 +463,6 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
                 result.Add(infoMessage);
             }
 
-            //result.Add(
-            //    new InfoMessage(
-            //        new[]
-            //            {
-            //                new TextMessageBlock(Resources.Object + " ", TextColor.BrightWhite),
-            //                new TextMessageBlock("'" + ObjectName + "'", TextColor.BrightCyan),
-            //                new TextMessageBlock(", " + Resources.ObjectType + ": " + ObjectType, TextColor.BrightWhite),
-            //            }));
             if (IsFull)
             {
                 int maxLength = 0;
@@ -467,7 +485,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
                 result.Add(FormatFlags(Resources.Affects, Affects, maxLength));
             }
 
-            result.Add(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.CommonStats, Weight, Price, RentPrice, RentPriceEquipped, Timer, Material)));
+            result.Add(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.CommonStats, Weight, Price, RentPrice, RentPriceEquipped, Timer, OfflineTimer, Material)));
             if (MinLevel > 1)
             {
                 result.Add(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.MinLevel, MinLevel)));
@@ -485,14 +503,6 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
                     infoMessage.AppendText(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green);
                     result.Add(infoMessage);
                 }
-
-                //result.Add(
-                //    new InfoMessage(
-                //        new[]
-                //            {
-                //                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
-                //                new TextMessageBlock(string.Join(", ", ScrollOrPotionSpells.Select(sp => sp.SpellName)), TextColor.Green),
-                //            }));
             }
 
             if (WandOrStaffSpell != null)
@@ -502,13 +512,6 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
                     infoMessage.AppendText(WandOrStaffSpell.SpellName, TextColor.Green);
                     result.Add(infoMessage);
                 }
-                //result.Add(
-                //new InfoMessage(
-                //    new[]
-                //            {
-                //                new TextMessageBlock(Resources.Spells + ": ", TextColor.BrightWhite),
-                //                new TextMessageBlock(WandOrStaffSpell.SpellName, TextColor.Green),
-                //            }));
                 result.Add(new InfoMessage(string.Format(CultureInfo.CurrentUICulture, Resources.StaffCharges, WandOrStaffSpell.TotalCharges, WandOrStaffSpell.ChargesLeft)));
             }
 
@@ -556,6 +559,20 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
                 result.AddRange(AppliedAffects.Select(appliedAffect => appliedAffect.ConvertToInfoMessage()));
             }
 
+            if (ItemSetAffects.AppliedAffects.Any())
+            {
+                result.Add(new InfoMessage(string.Format("Аффекты набора \"{0}\":", ItemSetAffects.Name)));
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if(ItemSetAffects.AppliedAffects.Any(affects => affects.NecessarySetItemsCount == i))
+                    {
+                        result.AddRange(ItemSetAffects.AppliedAffects.Where(affects => affects.NecessarySetItemsCount == i)
+                            .Select(appliedAffect => appliedAffect.ConvertToInfoMessage()));
+                    }
+                }
+            }
+
             if (!string.IsNullOrEmpty(Comments))
             {
                 result.Add(new InfoMessage(string.Format(CultureInfo.CurrentCulture, Resources.Comments, Comments)));
@@ -581,19 +598,6 @@ namespace Adan.Client.Plugins.StuffDatabase.Messages
             }
 
             return infoMessage;
-
-            //var headerBlock = new TextMessageBlock(header.PadRight(headerLength) + ": ", TextColor.BrightWhite);
-            //TextMessageBlock contentsBlock;
-            //if (flags.Any())
-            //{
-            //    contentsBlock = new TextMessageBlock(string.Join(", ", flags), TextColor.Cyan);
-            //}
-            //else
-            //{
-            //    contentsBlock = new TextMessageBlock("NONE", TextColor.Cyan);
-            //}
-
-            //return new InfoMessage(new[] { headerBlock, contentsBlock });
         }
     }
 }

@@ -18,6 +18,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
     using CSLib.Net.Annotations;
 
     using Properties;
+    using Adan.Client.Common.Themes;
 
     /// <summary>
     /// An enhancement of some skill.
@@ -66,7 +67,14 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         public override InfoMessage ConvertToInfoMessage()
         {
-            return new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.SkillEnhance, EnhanceValue, SkillName));
+            var infoMessage = new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.SkillEnhance, EnhanceValue, SkillName));
+
+            if (NecessarySetItemsCount > 0)
+            {
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+            }
+
+            return infoMessage;
         }
     }
 }

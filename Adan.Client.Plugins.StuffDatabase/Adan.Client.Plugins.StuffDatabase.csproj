@@ -66,6 +66,7 @@
     <Compile Include="Messages\LoreMessage.cs" />
     <Compile Include="MessageDeserializers\LoreMessageDeserializer.cs" />
     <Compile Include="Model\Affects\MagicArrows.cs" />
+    <Compile Include="Model\ItemSetAffects.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

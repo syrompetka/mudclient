@@ -92,7 +92,9 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         public override InfoMessage ConvertToInfoMessage()
         {
             var infoMessage = new InfoMessage(" " + ModifiedParameter + ": ");
+
             infoMessage.AppendText(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed);
+
             if (!string.IsNullOrEmpty(SourceSkill))
             {
                 infoMessage.AppendText(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White);
@@ -103,24 +105,12 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
                 infoMessage.AppendText(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White);
             }
 
+            if (NecessarySetItemsCount > 0)
+            {
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+            }
+
             return infoMessage;
-
-            //var blocks = new List<TextMessageBlock>
-            //                 {
-            //                     new TextMessageBlock(" " + ModifiedParameter + ": "),
-            //                     new TextMessageBlock(Value.ToString("+#;-#;", CultureInfo.CurrentCulture), Value > 0 ? TextColor.BrightGreen : TextColor.BrightRed)
-            //                 };
-            //if (!string.IsNullOrEmpty(SourceSkill))
-            //{
-            //    blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " ({0})", SourceSkill), TextColor.White));
-            //}
-
-            //if (Duration > 0)
-            //{
-            //    blocks.Add(new TextMessageBlock(string.Format(CultureInfo.CurrentUICulture, " [{0}]", GetAsciiTime(Duration)), TextColor.White));
-            //}
-
-            //return new InfoMessage(blocks);
         }
     }
 }

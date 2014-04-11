@@ -18,6 +18,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
     using CSLib.Net.Annotations;
 
     using Properties;
+    using Adan.Client.Common.Themes;
 
     /// <summary>
     /// "Envenom" skill enhancement.
@@ -43,7 +44,14 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         public override InfoMessage ConvertToInfoMessage()
         {
-            return new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectEnvenom, GetAsciiTime(Duration)));
+            var infoMessage = new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectEnvenom, GetAsciiTime(Duration)));
+
+            if (NecessarySetItemsCount > 0)
+            {
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+            }
+
+            return infoMessage;
         }
     }
 }

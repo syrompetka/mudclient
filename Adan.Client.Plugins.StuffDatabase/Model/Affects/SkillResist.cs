@@ -17,6 +17,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
     using CSLib.Net.Annotations;
 
     using Properties;
+    using Adan.Client.Common.Themes;
 
     /// <summary>
     /// A resistance to some skill.
@@ -64,7 +65,14 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         public override InfoMessage ConvertToInfoMessage()
         {
-            return new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.SkillResist, SkillName, ResistValue));
+            var infoMessage = new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.SkillResist, SkillName, ResistValue));
+            
+            if (NecessarySetItemsCount > 0)
+            {
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+            }
+
+            return infoMessage;
         }
     }
 }

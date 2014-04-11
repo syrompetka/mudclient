@@ -154,7 +154,7 @@
     <value>Можно одеть</value>
   </data>
   <data name="CommonStats" xml:space="preserve">
-    <value>Вес: {0:F0}, Цена: {1}, Рента: {2}({3}), Таймер: {4}, Материал: {5}</value>
+    <value>Вес: {0:F0}, Цена: {1}, Рента: {2}({3}), Таймер: {4}, Оффлайн таймер: {5}, Материал: {6}</value>
   </data>
   <data name="CraftBookMinLevel" xml:space="preserve">
     <value>Уровень использования: {0}</value>

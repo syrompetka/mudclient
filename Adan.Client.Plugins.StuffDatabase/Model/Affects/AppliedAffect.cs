@@ -11,11 +11,9 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
 {
     using System;
     using System.Globalization;
-
+    using System.Xml.Serialization;
     using Common.Messages;
-
     using CSLib.Net.Annotations;
-
     using Properties;
 
     /// <summary>
@@ -30,6 +28,17 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         [NotNull]
         public abstract InfoMessage ConvertToInfoMessage();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        [XmlAttribute]
+        public int NecessarySetItemsCount
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Gets the ASCII time.
