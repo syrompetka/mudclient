@@ -18,6 +18,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
     using CSLib.Net.Annotations;
 
     using Properties;
+    using Adan.Client.Common.Themes;
 
     /// <summary>
     /// "Magic arrows" skill enhancement.
@@ -92,9 +93,19 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
         /// <returns><see cref="InfoMessage"/> instance.</returns>
         public override InfoMessage ConvertToInfoMessage()
         {
-            return Duration > 0 
-                ? new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectMagicArrows, GetMagicType(), DiceSides, DiceCount, GetAsciiTime(Duration))) 
-                : new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectMagicArrowsUnlimited, GetMagicType(), DiceSides, DiceCount));
+            InfoMessage infoMessage;
+
+            if (Duration > 0)
+                infoMessage = new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectMagicArrows, GetMagicType(), DiceSides, DiceCount, GetAsciiTime(Duration)));
+            else
+                infoMessage = new InfoMessage(string.Format(CultureInfo.CurrentUICulture, " " + Resources.AffectMagicArrowsUnlimited, GetMagicType(), DiceSides, DiceCount));
+
+            if (NecessarySetItemsCount > 0)
+            {
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+            }
+
+            return infoMessage;
         }
 
         [NotNull]
