@@ -43,6 +43,7 @@ namespace Adan.Client
     using Adan.Client.Common.ViewModel;
     using Adan.Client.Common.Settings;
     using Adan.Client.Properties;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -619,10 +620,11 @@ namespace Adan.Client
                     Tag = dockContent
                 };
 
-                var visibleBinding = new Binding("IsVisible")
+                var visibleBinding = new Binding("State")
                 {
                     Source = dockContent,
-                    Mode = BindingMode.OneWay
+                    Mode = BindingMode.OneWay,
+                    Converter = new DockableContentStateToBoolConverter(),
                 };
 
                 menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
@@ -737,6 +739,8 @@ namespace Adan.Client
 
                 if (int.TryParse(model.ScrollBuffer, out val))
                     SettingsHolder.Instance.Settings.ScrollBuffer = val < 100000 ? val : 100000;
+
+                SettingsHolder.Instance.SaveCommonSettings();
             }
         }
 
@@ -766,7 +770,7 @@ namespace Adan.Client
 
             if (profiles.Count == 0)
             {
-                MessageBox.Show(this, "Create profile please", "Error");
+                MessageBox.Show(this, "Create profile first", "Error");
                 return;
             }
 

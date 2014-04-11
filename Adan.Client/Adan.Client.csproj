@@ -198,6 +198,7 @@
     <Compile Include="Controls\Fonts\FontSizeListItem.cs" />
     <Compile Include="Controls\Fonts\NameDictionaryHelper.cs" />
     <Compile Include="Controls\Fonts\TypeFaceListItem.cs" />
+    <Compile Include="DockableContentStateToBoolConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="MessageDeserializers\TextMessageDeserializerEx.cs" />
