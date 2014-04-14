@@ -44,6 +44,7 @@ namespace Adan.Client
     using Adan.Client.Common.Settings;
     using Adan.Client.Properties;
     using Adan.Client.Common.Utils;
+    using Adan.Client.Utils;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -82,7 +83,7 @@ namespace Adan.Client
                                 typeof(SendTextOneParameterAction),
                                 typeof(ShowOutputWindowAction),
                                 typeof(SendToWindowAction),
-                                typeof(ToggleFullScreenModeAction),
+                                //typeof(ToggleFullScreenModeAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.Plugins)
@@ -115,7 +116,7 @@ namespace Adan.Client
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
             actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
             actionDescriptions.Add(new SendToWindowActionDescription(actionDescriptions));
-            actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
+            //actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
@@ -143,7 +144,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
             MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
-            MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
+            //MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -427,10 +428,10 @@ namespace Adan.Client
 
             try
             {
-                if (WindowStyle == WindowStyle.None)
-                {
-                    ToggleFullScreenMode();
-                }
+                //if (WindowStyle == WindowStyle.None)
+                //{
+                //    ToggleFullScreenMode();
+                //}
 
                 var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
                 if (!Directory.Exists(layoutFullPath))
@@ -441,6 +442,7 @@ namespace Adan.Client
                 layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
                 if (File.Exists(layoutFullPath))
                     File.Delete(layoutFullPath);
+
                 dockManager.SaveLayout(layoutFullPath);
 
                 SettingsHolder.Instance.Settings.MainOutputs.Clear();
@@ -806,7 +808,7 @@ namespace Adan.Client
             if (this.WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
-                WindowState = nonFullScreenWindowState; ;
+                WindowState = nonFullScreenWindowState;
                 ResizeMode = ResizeMode.CanResizeWithGrip;
                 Width = nonFullScreenWindowWidth;
                 Height = nonFullScreenWindowHeight;

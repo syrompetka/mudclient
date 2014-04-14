@@ -83,6 +83,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
     <Compile Include="Model\ParameterDescriptions\SelectedGroupMateParameterDescription.cs" />
+    <Compile Include="Settings.cs" />
     <Compile Include="ViewModel\AffectDescription.cs" />
     <Compile Include="Constants.cs" />
     <Compile Include="Messages\GroupStatusMessage.cs" />
@@ -111,7 +112,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
