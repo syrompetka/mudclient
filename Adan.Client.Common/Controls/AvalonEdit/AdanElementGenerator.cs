@@ -96,7 +96,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             bool isBright = false;
 
             //if (curOffset == document.TextLength)
-            //    return null;
+               // return null;
 
             if (document.GetCharAt(curOffset) == '\x1B')
             {
@@ -263,6 +263,9 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             int curOffset = startOffset;
             int endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
             var document = CurrentContext.Document;
+
+            if(startOffset == endOffset)
+                return -1;
 
             if (CurrentContext.VisualLine.FirstDocumentLine.Offset == startOffset)
                 return startOffset;
