@@ -51,12 +51,10 @@ namespace Adan.Client
     /// </summary>
     public partial class MainWindow
     {
-        private WindowState nonFullScreenWindowState;
+        private WindowState _nonFullScreenWindowState;
         private IList<DockableContent> _allWidgets = new List<DockableContent>();
         private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
         private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
-        private double nonFullScreenWindowWidth;
-        private double nonFullScreenWindowHeight;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
@@ -358,7 +356,7 @@ namespace Adan.Client
         /// </summary>
         /// <param name="actionsToExecute">The actions to execute.</param>
         /// <param name="actionExecutionContext">The action execution context.</param>
-        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext )
+        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
         {
             foreach (var outputWindow in _outputWindows)
             {
@@ -808,25 +806,20 @@ namespace Adan.Client
             if (this.WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
-                WindowState = nonFullScreenWindowState;
-                ResizeMode = ResizeMode.CanResizeWithGrip;
-                Width = nonFullScreenWindowWidth;
-                Height = nonFullScreenWindowHeight;
+                WindowState = _nonFullScreenWindowState; ;
                 mainMenu.Visibility = Visibility.Visible;
             }
             else
             {
-                nonFullScreenWindowHeight = Height;
-                nonFullScreenWindowWidth = Width;
-                nonFullScreenWindowState = WindowState;
-                Width = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-                Height = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
-                Top = 0;
-                Left = 0;
+                mainMenu.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                _nonFullScreenWindowState = WindowState;
                 WindowState = System.Windows.WindowState.Normal;
                 WindowStyle = WindowStyle.None;
-                ResizeMode = System.Windows.ResizeMode.NoResize;
-                mainMenu.Visibility=Visibility.Collapsed;
+                WindowState = WindowState.Maximized;
+                mainMenu.Visibility = Visibility.Collapsed;
             }
         }
     }

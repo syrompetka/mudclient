@@ -97,7 +97,7 @@ namespace Adan.Client.Common.Settings
         {
             get
             {
-                if(_variables == null)
+                if (_variables == null)
                     ReadVariables();
 
                 return _variables;
@@ -172,30 +172,30 @@ namespace Adan.Client.Common.Settings
             //Task.Factory.StartNew(() =>
             //    {
             RootModel rootModel = new RootModel(profile);
-                    try
+            try
+            {
+                using (var stream = new StreamReader(file, Encoding.GetEncoding(1251), false, 1024))
+                {
+                    string line;
+                    while ((line = stream.ReadLine()) != null)
                     {
-                        using (var stream = new StreamReader(file, Encoding.Default, false, 1024))
+                        //XML не читает символ \x01B
+                        //TODO: Need FIX IT
+                        if (!line.Contains("\x001B"))
                         {
-                            string line;
-                            while ((line = stream.ReadLine()) != null)
-                            {
-                                //XML не читает символ \x01B
-                                //TODO: Need FIX IT
-                                if (!line.Contains("\x001B"))
-                                {
-                                    //rootModel.PushCommandToConveyor(new TextCommand(line))
-                                    MessageConveyor.ImportJMC(line, rootModel);
-                                }
-                            }
+                            //rootModel.PushCommandToConveyor(new TextCommand(line))
+                            MessageConveyor.ImportJMC(line, rootModel);
                         }
                     }
-                    catch 
-                    {
-                        return;
-                    }
+                }
+            }
+            catch
+            {
+                return;
+            }
 
-                    //SettingsHolder.Instance.SetProfile(rootModel.Profile);
-                //});
+            //SettingsHolder.Instance.SetProfile(rootModel.Profile);
+            //});
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Common.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.Unicode))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -306,7 +306,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Settings.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.Unicode))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -354,7 +354,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Variables.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.Unicode))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -385,7 +385,7 @@ namespace Adan.Client.Common.Settings
                 try
                 {
                     var serializer = new XmlSerializer(typeof(List<string>));
-                    CommandsHistory = (List<string>) serializer.Deserialize(stream);
+                    CommandsHistory = (List<string>)serializer.Deserialize(stream);
                 }
                 catch (Exception e)
                 {
@@ -403,7 +403,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "History.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.Unicode))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
