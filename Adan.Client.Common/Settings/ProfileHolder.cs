@@ -317,7 +317,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    MessageBox.Show(e.ToString(), "Ошибка", MessageBoxButton.OK);
                 }
             }
         }

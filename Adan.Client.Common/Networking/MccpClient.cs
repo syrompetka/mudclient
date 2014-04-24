@@ -10,6 +10,7 @@ namespace Adan.Client.Common.Networking
     using System.Diagnostics;
     using System.IO;
     using System.Text;
+    using Adan.Client.Common.Conveyor;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Ionic.Zlib;
@@ -28,40 +29,6 @@ namespace Adan.Client.Common.Networking
         private bool _compressionEnabled;
         private bool _customProtocolEnabled;
         private bool _compressionInProgress;
-
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler PropertyChanged;
-        private TimeSpan _renderTime = new TimeSpan();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan DecompressTime
-        {
-            get
-            {
-                return _renderTime;
-            }
-            set
-            {
-                _renderTime = value;
-                if (PropertyChanged != null)
-                    PropertyChanged(this, EventArgs.Empty);
-            }
-        }
-#endif
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MccpClient"/> class.
@@ -168,20 +135,12 @@ namespace Adan.Client.Common.Networking
             }
             else
             {
-#if DEBUG
-                Stopwatch sw = new Stopwatch();
-                sw.Start();
-#endif
                 _compressedDataStream.Seek(0, SeekOrigin.Begin);
                 _compressedDataStream.Write(data, e.Offset, e.BytesReceived);
                 _compressedDataStream.SetLength(e.BytesReceived);
                 _compressedDataStream.Seek(0, SeekOrigin.Begin);
+
                 int bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
-#if DEBUG
-                sw.Stop();
-                Count++;
-                DecompressTime += sw.Elapsed;
-#endif
                 if (bytesDecompresed < 0)
                 {
                     _compressionInProgress = false;
@@ -195,30 +154,33 @@ namespace Adan.Client.Common.Networking
                 }
             }
         }
-        
+
         private void ProcessData(byte[] data, int startOffset, int bytesCount)
         {
             int lastOffset = startOffset + bytesCount;
             int offset = startOffset;
             offset = FindIAC(data, offset, lastOffset - offset);
-            while (offset >= 0)
+            if (!_compressionEnabled || !_compressionInProgress || !_customProtocolEnabled)
             {
-                int codeLength = ProcessIAC(data, offset, lastOffset - offset);
-                if (codeLength > 0)
+                while (offset >= 0)
                 {
-                    if (offset != startOffset)
+                    int codeLength = ProcessIAC(data, offset, lastOffset - offset);
+                    if (codeLength > 0)
                     {
-                        base.OnDataReceived(this, new DataReceivedEventArgs(offset - startOffset, startOffset, data));
+                        if (offset != startOffset)
+                        {
+                            base.OnDataReceived(this, new DataReceivedEventArgs(offset - startOffset, startOffset, data));
+                        }
+
+                        if (lastOffset > offset + codeLength)
+                            this.OnDataReceived(this, new DataReceivedEventArgs(lastOffset - (offset + codeLength), offset + codeLength, data));
+
+                        return;
                     }
 
-                    if(lastOffset > offset + codeLength)
-                        this.OnDataReceived(this, new DataReceivedEventArgs(lastOffset - (offset + codeLength), offset + codeLength, data));
-
-                    return;
+                    offset++;
+                    offset = FindIAC(data, offset, lastOffset - offset);
                 }
-
-                offset++;
-                offset = FindIAC(data, offset, lastOffset - offset);
             }
 
             base.OnDataReceived(this, new DataReceivedEventArgs(bytesCount, startOffset, data));

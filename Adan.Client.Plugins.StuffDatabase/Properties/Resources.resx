@@ -154,7 +154,7 @@
     <value>Can be weared</value>
   </data>
   <data name="CommonStats" xml:space="preserve">
-    <value>Weight: {0:F0}, Price: {1}, Rent: {2}({3}), Timer: {4}, Material: {5}</value>
+    <value>Weight: {0:F0}, Price: {1}, Rent: {2}({3}), Timer: {4}, Offline Timer: {5}, Material: {6}</value>
   </data>
   <data name="CraftBookMinLevel" xml:space="preserve">
     <value>Minimum level: {0}</value>

@@ -10,10 +10,9 @@
 namespace Adan.Client.Model.Actions
 {
     using System;
+    using System.Text;
     using System.Xml.Serialization;
-
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -80,6 +79,18 @@ namespace Adan.Client.Model.Actions
             {
                 model.ClearVariableValue(VariableName, SilentSet);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#unvariable {").Append(VariableName).Append("}");
+
+            return sb.ToString();
         }
     }
 }

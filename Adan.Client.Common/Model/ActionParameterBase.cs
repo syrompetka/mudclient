@@ -29,5 +29,10 @@ namespace Adan.Client.Common.Model
         /// </returns>
         [NotNull]
         public abstract string GetParameterValue([NotNull]RootModel rootModel, [NotNull] ActionExecutionContext context);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract string GetParameterValue();
     }
 }

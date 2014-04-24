@@ -166,24 +166,12 @@ namespace Adan.Client.Map
         /// <param name="rootModel"></param>
         public void OutputWindowChanged(RootModel rootModel)
         {
-
-#if DEBUG
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-#endif
             var uid = rootModel.Uid;
 
             if (_mapControl.ViewModel == null)
             {
                 _mapControl.ViewModelUid = uid;
-
-#if DEBUG
-                sw.Start();
-#endif
                 var zoneViewModel = GetZone(_zoneHolders[uid].ZoneId);
-#if DEBUG
-                sw.Stop();
-                rootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));
-#endif
 
                 if (zoneViewModel != null)
                 {
@@ -205,14 +193,7 @@ namespace Adan.Client.Map
 
                 if (_mapControl.ViewModel.Id != zoneHolder.ZoneId)
                 {
-#if DEBUG
-                    sw.Start();
-#endif
                     var zoneViewModel = GetZone(_zoneHolders[uid].ZoneId);
-#if DEBUG
-                    sw.Stop();
-                    rootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));
-#endif
                     if (zoneViewModel != null)
                     {
                         var room = zoneViewModel.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
@@ -287,15 +268,7 @@ namespace Adan.Client.Map
             {
                 if (_mapControl.ViewModel.Id != zoneHolder.ZoneId)
                 {
-#if DEBUG
-                    System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-                    sw.Start();
-#endif
                     var zoneViewModel = GetZone(zoneHolder.ZoneId);
-#if DEBUG
-                    sw.Stop();
-                    zoneHolder.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("Load zone: {0} ms", sw.ElapsedMilliseconds)));
-#endif
                     var room = zoneViewModel.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
 
                     _mapControl.UpdateCurrentZone(zoneViewModel, room);
@@ -484,20 +457,12 @@ namespace Adan.Client.Map
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-#if DEBUG
-            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
-            sw.Start();
-#endif
-
             var zone = LoadZoneFromFile("roads.xml");
 
             if (zone == null)
                 return;
 
 #if DEBUG
-            long loadZoneTime = sw.ElapsedMilliseconds;
-            sw.Stop();
-
             var zoneMapFileName = Path.Combine(GetZoneVisitsFolder(), "roads.map");
             if (File.Exists(zoneMapFileName))
             {
@@ -523,8 +488,6 @@ namespace Adan.Client.Map
                     }
                 }
             }
-
-            sw.Start();
 #endif
             var roadMapDialog = new RoadMapDialog { Owner = _mainWindow };
             var zoneViewModel = new ZoneViewModel(zone, new List<AdditionalRoomParameters>()) { CurrentLevel = -201, ZoomLevel = 0.2f };
@@ -542,15 +505,6 @@ namespace Adan.Client.Map
             }
 
             roadMapDialog.MapControl.UpdateCurrentZone(zoneViewModel, currentRoom);
-#if DEBUG
-            long initDialogTime = sw.ElapsedMilliseconds;
-            sw.Stop();
-            if (_zoneHolders.Count > 0)
-            {
-                ZoneHolder zoneHolder = _zoneHolders.Values.FirstOrDefault();
-                zoneHolder.RootModel.PushMessageToConveyor(new InfoMessage(string.Format("LoadZoneTime = {0}, InitDialogTime = {1}", loadZoneTime, initDialogTime)));
-            }
-#endif
             roadMapDialog.ShowDialog();
 #if DEBUG
             using (var outStream = File.Open(zoneMapFileName, FileMode.Create, FileAccess.Write))

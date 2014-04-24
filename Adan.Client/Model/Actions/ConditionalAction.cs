@@ -12,12 +12,11 @@ namespace Adan.Client.Model.Actions
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Text;
+    using System.Linq;
     using System.Xml.Serialization;
-
     using ActionParameters;
-
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -179,6 +178,47 @@ namespace Adan.Client.Model.Actions
                     action.Execute(model, context);
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#if {").Append(LeftConditionParameter.GetParameterValue());
+            switch(Condition)
+            {
+                case ActionCondition.Equals:
+                    sb.Append("=");
+                    break;
+                case ActionCondition.Greater:
+                    sb.Append(">");
+                    break;
+                case ActionCondition.GreaterOrEquals:
+                    sb.Append(">=");
+                    break;
+                case ActionCondition.IsEmpty:
+                    sb.Append("= null");
+                    break;
+                case ActionCondition.IsNotEmpty:
+                    sb.Append("!= null");
+                    break;
+                case ActionCondition.Less:
+                    sb.Append("<");
+                    break;
+                case ActionCondition.LessOrEquals:
+                    sb.Append("<=");
+                    break;
+                case ActionCondition.NotEquals:
+                    sb.Append("!=");
+                    break;
+            }
+            sb.Append(LeftConditionParameter.GetParameterValue()).Append("} {");
+            sb.Append(String.Join(";", ActionsToExecute.Select(action => action.ToString()).ToArray())).Append("}");
+
+            return sb.ToString();
         }
     }
 }

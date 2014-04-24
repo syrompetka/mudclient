@@ -113,6 +113,9 @@
     <Compile Include="Controls\MainOutputWindowExx.xaml.cs">
       <DependentUpon>MainOutputWindowExx.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
+      <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\NumberTextBox.cs" />
     <Compile Include="Controls\OneCharTextBox.cs" />
     <Compile Include="Controls\TextBoxWithHistory.cs" />
@@ -121,7 +124,9 @@
     <Compile Include="ConveyorUnits\CommandMultiplierUnit.cs" />
     <Compile Include="ConveyorUnits\CommandRepeaterUnit.cs" />
     <Compile Include="ConveyorUnits\CommandSeparatorUnit.cs" />
-    <Compile Include="ConveyorUnits\CommandsFromUserLineUnits.cs" />
+    <Compile Include="ConveyorUnits\CommandsFromUserLineUnits.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ConveyorUnits\ConnectionUnit.cs" />
     <Compile Include="ConveyorUnits\HighlightUnit.cs" />
     <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
@@ -293,6 +298,10 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MainOutputWindowExx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\MainOutputWindowNative.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

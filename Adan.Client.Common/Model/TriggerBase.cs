@@ -21,7 +21,7 @@ namespace Adan.Client.Common.Model
     /// </summary>
     [Serializable]
     [XmlInclude(typeof(TextTrigger))]
-    public abstract class TriggerBase
+    public abstract class TriggerBase : IUndo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TriggerBase"/> class.
@@ -31,6 +31,8 @@ namespace Adan.Client.Common.Model
             Actions = new List<ActionBase>();
             StopProcessingTriggersAfterThis = true;
             Priority = 5;
+            Group = null;
+            Operation = UndoOperation.None;
         }
 
         /// <summary>
@@ -83,10 +85,47 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public UndoOperation Operation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [XmlIgnore]
+        public Group Group
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract string GetPatternString();
+
+        /// <summary>
         /// Handles the message.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="rootModel">The RootModel.</param>
         public abstract void HandleMessage([NotNull] Message message, [NotNull] RootModel rootModel);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract string UndoInfo();
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public abstract void Undo();
     }
 }

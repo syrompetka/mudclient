@@ -48,5 +48,14 @@ namespace Adan.Client.Model.Actions
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "#stoplog";
+        }
     }
 }

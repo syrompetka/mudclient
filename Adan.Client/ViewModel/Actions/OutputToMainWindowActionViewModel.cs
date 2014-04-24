@@ -116,7 +116,7 @@ namespace Adan.Client.ViewModel.Actions
         {
             get
             {
-                return "#out " + TextToOutput + ParametersModel.ActionParametersDescription;
+                return "#OutputToWindow " + TextToOutput + ParametersModel.ActionParametersDescription;
             }
         }
 

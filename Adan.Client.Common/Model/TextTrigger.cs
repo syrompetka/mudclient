@@ -44,6 +44,7 @@ namespace Adan.Client.Common.Model
         /// Initializes a new instance of the <see cref="TextTrigger"/> class.
         /// </summary>
         public TextTrigger()
+            : base()
         {
             MatchingPattern = string.Empty;
             _context = new ActionExecutionContext();
@@ -163,6 +164,55 @@ namespace Adan.Client.Common.Model
             if (DoNotDisplayOriginalMessage)
             {
                 textMessage.Handled = true;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string GetPatternString()
+        {
+            return MatchingPattern;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string UndoInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#Триггер: ").Append("#action {").Append(GetPatternString()).Append("} ");
+            switch (Operation)
+            {
+                case UndoOperation.Add:
+                    sb.Append("восстановлен");
+                    break;
+                case UndoOperation.Remove:
+                    sb.Append("удален");
+                    break;
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public override void Undo()
+        {
+            if (Group != null && Operation != UndoOperation.None)
+            {
+                switch (Operation)
+                {
+                    case UndoOperation.Add:
+                        Group.Triggers.Add(this);
+                        break;
+                    case UndoOperation.Remove:
+                        Group.Triggers.Remove(this);
+                        break;
+                }
             }
         }
 

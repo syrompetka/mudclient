@@ -24,7 +24,7 @@ namespace Adan.Client.Common.Model
     /// A highlight of all incoming strings that match certain pattern with a specific color and background.
     /// </summary>
     [Serializable]
-    public class Highlight
+    public class Highlight : IUndo
     {
         [NonSerialized]
         private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
@@ -40,6 +40,9 @@ namespace Adan.Client.Common.Model
             _textToHighlight = string.Empty;
             ForegroundColor = TextColor.None;
             BackgroundColor = TextColor.None;
+
+            Group = null;
+            Operation = UndoOperation.None;
         }
 
         /// <summary>
@@ -89,6 +92,25 @@ namespace Adan.Client.Common.Model
 
                 _textToHighlight = value;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public UndoOperation Operation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+                [XmlIgnore]
+        public Group Group
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -172,6 +194,47 @@ namespace Adan.Client.Common.Model
             //{
             //    textMessage.UpdateMessageBlocks(messageBlocks);
             //}
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string UndoInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#Хайлайт {").Append(TextToHighlight).Append("} {").Append(ForegroundColor);
+            sb.Append(",").Append(BackgroundColor).Append("} ");
+            switch (Operation)
+            {
+                case UndoOperation.Add:
+                    sb.Append("восстановлен");
+                    break;
+                case UndoOperation.Remove:
+                    sb.Append("удален");
+                    break;
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Undo()
+        {
+            if (Group != null && Operation != UndoOperation.None)
+            {
+                switch (Operation)
+                {
+                    case UndoOperation.Add:
+                        Group.Highlights.Add(this);
+                        break;
+                    case UndoOperation.Remove:
+                        Group.Highlights.Remove(this);
+                        break;
+                }
+            }
         }
 
         private void ClearMatchingResults()

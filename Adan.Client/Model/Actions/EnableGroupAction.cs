@@ -10,10 +10,9 @@
 namespace Adan.Client.Model.Actions
 {
     using System;
+    using System.Text;
     using System.Xml.Serialization;
-
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -70,6 +69,18 @@ namespace Adan.Client.Model.Actions
             {
                 model.EnableGroup(GroupNameToEnable);
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#enablegroup {").Append(GroupNameToEnable).Append("}");
+
+            return sb.ToString();
         }
     }
 }

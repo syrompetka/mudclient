@@ -60,5 +60,14 @@ namespace Adan.Client.Model.Actions
 
             model.PushCommandToConveyor(new TextCommand(PostProcessString(CommandText + GetParametersString(model, context), model, context)));
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return CommandText;
+        }
     }
 }

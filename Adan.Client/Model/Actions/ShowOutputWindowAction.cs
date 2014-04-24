@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Adan.Client.Commands;
 using Adan.Client.Common.Model;
 
@@ -46,6 +47,20 @@ namespace Adan.Client.Model.Actions
         public override void Execute(RootModel model, ActionExecutionContext context)
         {
             model.PushCommandToConveyor(new ShowMainOutputCommand(OutputWindowName));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder("#window");
+
+            if (OutputWindowName.Length > 0)
+                sb.Append(" {").Append(OutputWindowName).Append("}");
+
+            return sb.ToString();
         }
     }
 }

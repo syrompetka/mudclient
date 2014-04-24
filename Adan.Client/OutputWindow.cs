@@ -32,8 +32,11 @@ namespace Adan.Client
         private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
+#if NATIVE
+        private MainOutputWindowNative _window;
+#else
         private MainOutputWindowExx _window;
-       //private MainOutputWindowNative _window;
+#endif
         private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
         private bool _isLogging;
@@ -44,23 +47,25 @@ namespace Adan.Client
         /// </summary>
         public OutputWindow(MainWindow mainWindow, string name)
         {
-
             Name = name;
 
-            var conveyor = new MessageConveyor(new MccpClient());
+            var conveyor = new MessageConveyor(new MccpClientEx());
 
             RootModel = new RootModel(conveyor, SettingsHolder.Instance.GetProfile(name));
             conveyor.RootModel = RootModel;
 
             conveyor.MessageReceived += HandleMessage;
 
+#if NATIVE
+            _window = new MainOutputWindowNative(mainWindow, _rootModel);
+#else
             _window = new MainOutputWindowExx(mainWindow, RootModel);
-            //_window = new MainOutputWindowNative(mainWindow, RootModel);
+#endif
             VisibleControl = _window;
             
             _window.txtCommandInput.RootModel = RootModel;
             _window.txtCommandInput.LoadHistory(RootModel.Profile);
-            //_window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
+            _window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
             _window.txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
 
             IsLogging = false;
@@ -260,7 +265,7 @@ namespace Adan.Client
                 if (Application.Current != null)
                 {
                     if (_window.IsVisible)
-                        Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Loaded);
+                        Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Normal);
                     else
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
                 }

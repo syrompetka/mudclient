@@ -8,7 +8,7 @@ namespace Adan.Client.Common.Networking
 {
     using System;
     using System.Net.Sockets;
-
+    using System.Runtime.Remoting.Messaging;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -85,7 +85,7 @@ namespace Adan.Client.Common.Networking
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        public void Dispose()
+        public virtual void Dispose()
         {
             Dispose(true);
             GC.SuppressFinalize(this);

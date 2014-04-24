@@ -25,7 +25,7 @@ namespace Adan.Client.Common.Model
     /// A replacement of all incoming strings that match certain pattern to specific one.
     /// </summary>
     [Serializable]
-    public class Substitution
+    public class Substitution : IUndo
     {
         [NonSerialized]
         private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
@@ -45,6 +45,9 @@ namespace Adan.Client.Common.Model
         {
             _pattern = string.Empty;
             _substituteWith = string.Empty;
+
+            Group = null;
+            Operation = UndoOperation.None;
         }
 
         /// <summary>
@@ -114,6 +117,25 @@ namespace Adan.Client.Common.Model
                 _substituteWith = value;
                 _rootSubstituteWithPatternToken = null;
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public UndoOperation Operation
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+                [XmlIgnore]
+        public Group Group
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -258,6 +280,52 @@ namespace Adan.Client.Common.Model
                     textMessage.AppendText(sb.ToString());
                     //rootModel.PushMessageToConveyor(textMessage.NewInstance());
                     //textMessage.Handled = true;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public string UndoInfo()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#Замена {");
+            if (IsRegExp)
+                sb.Append("/");
+            sb.Append(Pattern);
+            if (IsRegExp)
+                sb.Append("/");
+            sb.Append("} ");
+            switch (Operation)
+            {
+                case UndoOperation.Add:
+                    sb.Append("восстановлена");
+                    break;
+                case UndoOperation.Remove:
+                    sb.Append("удалена");
+                    break;
+            }
+
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Undo()
+        {
+            if (Group != null && Operation != UndoOperation.None)
+            {
+                switch (Operation)
+                {
+                    case UndoOperation.Add:
+                        Group.Substitutions.Add(this);
+                        break;
+                    case UndoOperation.Remove:
+                        Group.Substitutions.Remove(this);
+                        break;
                 }
             }
         }

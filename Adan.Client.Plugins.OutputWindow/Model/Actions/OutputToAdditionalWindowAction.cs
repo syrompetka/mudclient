@@ -19,6 +19,7 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Plugins.OutputWindow.Messages;
+    using System.Text;
 
     /// <summary>
     /// Action that outputs some text to additional window.
@@ -123,6 +124,18 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
                     model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str, TextColor, BackgroundColor) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
                 }
             }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#output {").Append(TextToOutput).Append("}");
+
+            return sb.ToString();
         }
     }
 }
