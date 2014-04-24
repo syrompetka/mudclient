@@ -13,31 +13,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
     /// </summary>
     public class AdanLineTransformer : IVisualLineTransformer
     {
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler RenderTimeChanged;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-#endif
-
         private IAdanVisualLineElement escapeElement = null;
 
         /// <summary>
@@ -47,12 +22,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
         /// <param name="elements"></param>
         public void Transform(ITextRunConstructionContext context, IList<VisualLineElement> elements)
         {
-
-#if DEBUG
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
-
             Stack<IAdanVisualLineElement> _savedElement = new Stack<IAdanVisualLineElement>();
 
             foreach (var element in elements)
@@ -86,15 +55,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                     }
                 }
             }
-
-#if DEBUG
-            sw.Stop();
-            if (RenderTimeChanged != null)
-            {
-                RenderTime += sw.Elapsed;
-                RenderTimeChanged(this, EventArgs.Empty);
-            }
-#endif
         }
     }
 }

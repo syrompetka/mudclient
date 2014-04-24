@@ -36,5 +36,14 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
 
             return rootModel.SelectedGroupMate != null ? rootModel.SelectedGroupMate.TargetName : string.Empty;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string GetParameterValue()
+        {
+            return "$SelectedGroupMate";
+        }
     }
 }

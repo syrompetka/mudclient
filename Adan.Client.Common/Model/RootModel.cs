@@ -38,6 +38,15 @@ namespace Adan.Client.Common.Model
         private ProfileHolder _profile;
         private object _profileLockObject = new object();
 
+        private readonly List<CommandAlias> _aliasList;
+        private readonly List<TriggerBase> _triggersList;
+        private readonly List<Highlight> _highlightList;
+        private readonly List<Substitution> _substitutionList;
+        private readonly List<Hotkey> _hotkeyList;
+        private readonly List<Variable> _variableList;
+
+        private readonly Stack<IUndo> _undoStack;
+
         #endregion
 
         #region Constructors and Destructors
@@ -51,6 +60,15 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
 
+            _aliasList = new List<CommandAlias>();
+            _triggersList = new List<TriggerBase>();
+            _highlightList = new List<Highlight>();
+            _substitutionList = new List<Substitution>();
+            _hotkeyList = new List<Hotkey>();
+            _variableList = new List<Variable>();
+
+            _undoStack = new Stack<IUndo>();
+
             _profile = profile;
             MessageConveyor = conveyor;
 
@@ -63,6 +81,15 @@ namespace Adan.Client.Common.Model
         /// <param name="profile"></param>
         public RootModel(ProfileHolder profile)
         {
+            _aliasList = new List<CommandAlias>();
+            _triggersList = new List<TriggerBase>();
+            _highlightList = new List<Highlight>();
+            _substitutionList = new List<Substitution>();
+            _hotkeyList = new List<Hotkey>();
+            _variableList = new List<Variable>();
+
+            _undoStack = new Stack<IUndo>();
+
             _profile = profile;
 
             //TODO: Разобраться с кол-вом монстров, персонажей в группе
@@ -73,6 +100,83 @@ namespace Adan.Client.Common.Model
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<CommandAlias> AliasList
+        {
+            get
+            {
+                return _aliasList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<TriggerBase> TriggersList
+        {
+            get
+            {
+                return _triggersList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Highlight> HighlightList
+        {
+            get
+            {
+                return _highlightList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Substitution> SubstitutionList
+        {
+            get
+            {
+                return _substitutionList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Hotkey> HotkeyList
+        {
+            get
+            {
+                return _hotkeyList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<Variable> VariableList
+        {
+            get
+            {
+                return _variableList;
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public Stack<IUndo> UndoStack
+        {
+            get
+            {
+                return _undoStack;
+            }
+        }
 
         /// <summary>
         /// 

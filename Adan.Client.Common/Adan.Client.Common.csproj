@@ -76,6 +76,13 @@
     <Compile Include="Controls\AvalonEdit\VisualLineElements\IAdanVisualLineElement.cs" />
     <Compile Include="Controls\AvalonEdit\SelectionColorizer.cs" />
     <Compile Include="Controls\AvalonEdit\TextColorHolder.cs" />
+    <Compile Include="Controls\ContorlBoxNative\MyText.cs" />
+    <Compile Include="Controls\ContorlBoxNative\TextView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\TextBoxNative.cs" />
+    <Compile Include="Model\IUndo.cs" />
+    <Compile Include="Networking\MccpClientEx.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>

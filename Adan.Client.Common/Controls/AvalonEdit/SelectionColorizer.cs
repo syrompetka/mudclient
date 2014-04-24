@@ -48,41 +48,12 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             private set;
         }
 
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler RenderTimeChanged;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-#endif
-
         /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
         protected override void Colorize(ITextRunConstructionContext context)
         {
-#if DEBUG
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
             int lineStartOffset = context.VisualLine.FirstDocumentLine.Offset;
             int lineEndOffset = context.VisualLine.LastDocumentLine.Offset + context.VisualLine.LastDocumentLine.TotalLength;
 
@@ -114,15 +85,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                         element.TextRunProperties.SetBackgroundBrush(BackgroundBrush);
                     });
             }
-
-#if DEBUG
-            sw.Stop();
-            if (RenderTimeChanged != null)
-            {
-                RenderTime += sw.Elapsed;
-                RenderTimeChanged(this, EventArgs.Empty);
-            }
-#endif
         }
     }
 }

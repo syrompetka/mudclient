@@ -15,6 +15,7 @@ namespace Adan.Client.Model.Actions
     using Adan.Client.Common.Model;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using System.Text;
 
     /// <summary>
     /// Actions that starts logging to file.
@@ -67,6 +68,18 @@ namespace Adan.Client.Model.Actions
             Assert.ArgumentNotNull(context, "context");
 
             model.PushMessageToConveyor(new StartLoggingMessage(LogNameParameter.GetParameterValue(model, context)));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#startlog {").Append(LogNameParameter.GetParameterValue()).Append("}");
+
+            return sb.ToString();
         }
 
         #endregion

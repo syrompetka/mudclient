@@ -104,86 +104,8 @@ namespace Adan.Client.Controls
             secondScrollOutput.Document.UndoStack.SizeLimit = 0;
             secondScrollOutput.TextArea.TextView.ScrollOffsetChanged += Second_Output_TextView_ScrollOffsetChanged;
 
-#if DEBUG
-            adanLineTransformer.RenderTimeChanged += adanLineTransformer_RenderTimeChanged;
-            elementGenerator.RenderTimeChanged += elementGenerator_RenderTimeChanged;
-            mainSelectionColorizer.RenderTimeChanged += mainSelectionColorizer_RenderTimeChanged;
-            secondSelectionColorizer.RenderTimeChanged += mainSelectionColorizer_RenderTimeChanged;
-#endif
-
             Loaded += (o, e) => txtCommandInput.Focus();
         }
-
-#if DEBUG
-
-        void adanLineTransformer_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var selectionColorizer = sender as AdanLineTransformer;
-            RenderTime += selectionColorizer.RenderTime;
-            selectionColorizer.RenderTime = TimeSpan.Zero;
-            Count += selectionColorizer.Count;
-            selectionColorizer.Count = 0;
-        }
-
-        void elementGenerator_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var selectionColorizer = sender as AdanElementGenerator;
-            RenderTime += selectionColorizer.RenderTime;
-            selectionColorizer.RenderTime = TimeSpan.Zero;
-            Count += selectionColorizer.Count;
-            selectionColorizer.Count = 0;
-        }
-
-        private void mainSelectionColorizer_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var selectionColorizer = sender as SelectionColorizer;
-            RenderTime += selectionColorizer.RenderTime;
-            selectionColorizer.RenderTime = TimeSpan.Zero;
-            Count += selectionColorizer.Count;
-            selectionColorizer.Count = 0;
-        }
-
-        private void documentColorizier_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var documentColorizer = sender as DocumentColorizer;
-            RenderTime += documentColorizer.RenderTime;
-            documentColorizer.RenderTime = TimeSpan.Zero;
-            Count += documentColorizer.Count;
-            documentColorizer.Count = 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler PropertyChanged;
-        private TimeSpan _renderTime = new TimeSpan();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get
-            {
-                return _renderTime;
-            }
-            set
-            {
-                _renderTime = value;
-                if (PropertyChanged != null)
-                    PropertyChanged(this, EventArgs.Empty);
-            }
-        }
-#endif
 
         private void TextArea_LostMouseCapture(object sender, MouseEventArgs e)
         {

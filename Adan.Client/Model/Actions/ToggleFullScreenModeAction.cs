@@ -30,5 +30,14 @@ namespace Adan.Client.Model.Actions
         {
             model.PushCommandToConveyor(new ToggleFullScreenModeCommand());
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return "#togglefullscreen";
+        }
     }
 }

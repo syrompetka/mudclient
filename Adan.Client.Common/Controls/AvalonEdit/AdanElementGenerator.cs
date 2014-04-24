@@ -25,57 +25,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
         private const int _asciBackGroundCodeBase = 40;
         private const int _asciForeGroundCodeBase = 30;
 
-#if DEBUG
-
-        Stopwatch sw = new Stopwatch();
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler RenderTimeChanged;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        public override void StartGeneration(ITextRunConstructionContext context)
-        {
-            sw.Reset();
-            base.StartGeneration(context);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void FinishGeneration()
-        {
-            base.FinishGeneration();
-            sw.Stop();
-            if (RenderTimeChanged != null)
-            {
-                RenderTime += sw.Elapsed;
-                RenderTimeChanged(this, EventArgs.Empty);
-            }
-        }
-#endif
-
         /// <summary>
         /// 
         /// </summary>
@@ -174,7 +123,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             }
             else
             {
-                while (curOffset >= 0)
+                while (curOffset >= 0 && offset - curOffset >= 1000)
                 {
                     if (document.GetCharAt(curOffset) == '\x1B')
                     {

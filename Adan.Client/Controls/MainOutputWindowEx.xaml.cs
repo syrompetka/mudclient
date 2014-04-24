@@ -89,66 +89,8 @@ namespace Adan.Client.Controls
             secondScrollOutput.TextArea.PreviewMouseLeftButtonUp += TextArea_PreviewMouseLeftButtonUp;
             secondScrollOutput.TextArea.TextView.ScrollOffsetChanged += TextView_ScrollOffsetChanged;
 
-#if DEBUG
-            documentColorizier.RenderTimeChanged += documentColorizier_RenderTimeChanged;
-            mainSelectionColorizer.RenderTimeChanged += mainSelectionColorizer_RenderTimeChanged;
-            secondSelectionColorizer.RenderTimeChanged += mainSelectionColorizer_RenderTimeChanged;
-#endif
-
             Loaded += (o, e) => txtCommandInput.Focus();
         }
-
-#if DEBUG
-        private void mainSelectionColorizer_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var selectionColorizer = sender as SelectionColorizer;
-            RenderTime += selectionColorizer.RenderTime;
-            selectionColorizer.RenderTime = TimeSpan.Zero;
-            Count += selectionColorizer.Count;
-            selectionColorizer.Count = 0;
-        }
-
-        private void documentColorizier_RenderTimeChanged(object sender, EventArgs e)
-        {
-            var documentColorizer = sender as DocumentColorizer;
-            RenderTime += documentColorizer.RenderTime;
-            documentColorizer.RenderTime = TimeSpan.Zero;
-            Count += documentColorizer.Count;
-            documentColorizer.Count = 0;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler PropertyChanged;
-        private TimeSpan _renderTime = new TimeSpan();
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get
-            {
-                return _renderTime;
-            }
-            set
-            {
-                _renderTime = value;
-                if (PropertyChanged != null)
-                    PropertyChanged(this, EventArgs.Empty);
-            }
-        }
-#endif
 
         private void TextArea_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {

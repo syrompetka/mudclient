@@ -10,12 +10,10 @@
 namespace Adan.Client.Model.Actions
 {
     using System;
+    using System.Text;
     using System.Xml.Serialization;
-
     using ActionParameters;
-
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -100,5 +98,17 @@ namespace Adan.Client.Model.Actions
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#variable {").Append(VariableName).Append("} {").Append(ValueToSet.GetParameterValue()).Append("}");
+
+            return sb.ToString();
+        }
     }
 }

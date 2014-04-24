@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Linq;
 using Adan.Client.Commands;
 using Adan.Client.Common.Model;
 using CSLib.Net.Annotations;
@@ -38,7 +40,8 @@ namespace Adan.Client.Model.Actions
         /// </summary>
         public string OutputWindowName
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -46,7 +49,8 @@ namespace Adan.Client.Model.Actions
         /// </summary>
         public bool SendToAllWindows
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -73,6 +77,26 @@ namespace Adan.Client.Model.Actions
         public override void Execute(RootModel model, ActionExecutionContext context)
         {
             model.PushCommandToConveyor(new SendToWindowCommand(OutputWindowName, ActionsToExecute, SendToAllWindows, context));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+
+            sb.Append(SendToAllWindows ? "#sendall" : "#send");
+
+            sb.Append(" {");
+            if (ActionsToExecute.Count > 0)
+            {
+                sb.Append(String.Join(";", ActionsToExecute.Select(action => action.ToString()).ToArray()));
+            }
+            sb.Append("}");
+
+            return sb.ToString();
         }
     }
 }

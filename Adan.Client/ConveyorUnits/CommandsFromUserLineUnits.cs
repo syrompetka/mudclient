@@ -19,6 +19,8 @@ namespace Adan.Client.ConveyorUnits
     using Commands;
     using Model.Actions;
     using Messages;
+    using System.Text;
+    using System.Diagnostics;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementation that use commands string from line
@@ -51,13 +53,7 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexStatus = new Regex(@"#stat?u?s?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandsFromUserLineUnit"/> class.
-        /// </summary>
-        public CommandsFromUserLineUnit()
-            : base()
-        {
-        }
+        private readonly Regex _regexUndo = new Regex(@"#undo(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Gets a set of message types that this unit can handle.
@@ -97,23 +93,79 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            string commandText = textCommand.CommandText.Trim();
+            var commandText = textCommand.CommandText.Trim();
 
             if (!commandText.StartsWith(RootModel.CommandChar.ToString()))
                 return;
 
-            Match match;
-
-            match = _regexAction.Match(commandText);
-            if (match.Success)
+            if (this.TriggerCheck(commandText, rootModel, isImport) || this.AliasCheck(commandText, rootModel, isImport)
+                || this.ConnectCheck(commandText, rootModel, isImport) || this.GroupCheck(commandText, rootModel, isImport)
+                || this.HighLightCheck(commandText, rootModel, isImport) || this.HotkeyCheck(commandText, rootModel, isImport)
+                || this.LogCheck(commandText, rootModel, isImport) || this.ShowmeCheck(commandText, rootModel, isImport)
+                || this.StatusCheck(commandText, rootModel, isImport) || this.SubstitutionCheck(commandText, rootModel, isImport)
+                || this.VariableCheck(commandText, rootModel, isImport) || this.ZapCheck(commandText, rootModel, isImport)
+                || this.UndoCheck(commandText, rootModel, isImport))
             {
                 command.Handled = true;
+                return;
+            }
+        }
 
-                if (!match.Groups[1].Success)
+        private bool UndoCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexUndo.Match(commandText);
+            if (match.Success)
+            {
+                var undoStack = rootModel.UndoStack;
+                if (undoStack.Count > 0)
                 {
-                    if(!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Triggers List"), rootModel);
-                    return;
+                    IUndo undo = undoStack.Pop();
+                    undo.Undo();
+
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage(undo.UndoInfo()), rootModel);
+                }
+                else
+                {
+                    if (!isImport)
+                        base.PushMessageToConveyor(new InfoMessage("#Undo стэк пуст."), rootModel);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool AliasCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexAlias.Match(commandText);
+            if (match.Success)
+            {
+                var aliasList = rootModel.AliasList;
+
+                if (match.Groups[1].Length == 0)
+                {
+                    if (!isImport)
+                    {
+                        aliasList.Clear();
+                        aliasList.AddRange(rootModel.Groups.SelectMany(gr => gr.Aliases));
+                        if (aliasList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список алиасов:"), rootModel);
+                            for (int i = 0; i < aliasList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #alias {{{1}}} {{{2}}}",
+                                    i + 1, aliasList[i].Command, String.Join(";", aliasList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список алиасов пуст."), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -121,8 +173,227 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length < 2)
                 {
                     if (!isImport)
+                    {
+                        aliasList.Clear();
+                        aliasList.AddRange(rootModel.Groups.SelectMany(gr => gr.Aliases
+                            .Where(alias => Regex.IsMatch(alias.Command, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
+
+                        if (aliasList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список алиасов, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < aliasList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #alias {{{1}}} {{{2}}}",
+                                    i + 1, aliasList[i].Command, String.Join(";", aliasList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиасы, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
+                    }
+
+                    return true;
+                }
+
+                string groupName = "Default";
+
+                if (args.Length == 3)
+                    groupName = args[2];
+
+                CommandAlias commandAlias = new CommandAlias()
+                {
+                    Command = Regex.Replace(args[0], "%?%[0-9]", "").Trim()
+                };
+
+                commandAlias.Actions.Add(new SendTextAction()
+                {
+                    CommandText = args[1]
+                });
+
+                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                if (group == null)
+                {
+                    rootModel.AddGroup(groupName);
+                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
+                }
+
+
+                group.Aliases.RemoveAll(allias => allias.Command == commandAlias.Command);
+                group.Aliases.Add(commandAlias);
+
+                if (!isImport)
+                {
+                    commandAlias.Group = group;
+                    commandAlias.Operation = UndoOperation.Remove;
+                    rootModel.UndoStack.Push(commandAlias);
+
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиас добавлен: #alias {{{0}}} {{{1}}}",
+                        commandAlias.Command, commandAlias.Actions[0].ToString())), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                }
+
+                return true;
+            }
+
+            match = _regexUnAlias.Match(commandText);
+            if (!isImport && match.Success)
+            {
+                var aliasList = rootModel.AliasList;
+
+                string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
+
+                if (args.Length < 1)
+                {
+                    if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+
+                    return true;
+                }
+
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= aliasList.Count)
+                    {
+                        for (int i = 0; i < rootModel.Groups.Count; i++)
+                        {
+                            if (rootModel.Groups[i].Aliases.Remove(aliasList[num - 1]))
+                            {
+                                aliasList[num - 1].Group = rootModel.Groups[i];
+                                aliasList[num - 1].Operation = UndoOperation.Add;
+                                rootModel.UndoStack.Push(aliasList[num - 1]);
+                                if (!isImport)
+                                {
+                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиас удален: #alias {{{0}}} {{{1}}}",
+                                        aliasList[num - 1].Command, String.Join(";", aliasList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
+                }
+
+                if (args.Length == 2)
+                {
+                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
+                    if (group != null)
+                    {
+                        var alias = group.Aliases.FirstOrDefault(x => x.Command == args[0]);
+                        if (alias != null)
+                        {
+                            group.Aliases.Remove(alias);
+
+                            alias.Group = group;
+                            alias.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(alias);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиас удален: #alias {{{0}}} {{{1}}}",
+                                    alias.Command, String.Join(";", alias.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                            }
+                        }
+                    }
+                }
+                else
+                {
+                    foreach (var group in rootModel.Groups)
+                    {
+                        var alias = group.Aliases.FirstOrDefault(all => all.Command == args[0]);
+                        while (alias != null)
+                        {
+                            group.Aliases.Remove(alias);
+
+                            alias.Group = group;
+                            alias.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(alias);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиас удален: #alias {{{0}}} {{{1}}}",
+                                    alias.Command, String.Join(";", alias.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+
+                            alias = group.Aliases.FirstOrDefault(all => all.Command == args[0]);
+                        }
+                    }
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены последнего удаления используйте #undo"), rootModel);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool TriggerCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexAction.Match(commandText);
+            if (match.Success)
+            {
+                var triggersList = rootModel.TriggersList;
+
+                if (match.Groups[1].Length == 0)
+                {                   
+                    if (!isImport)
+                    {
+                        triggersList.Clear();
+                        triggersList.AddRange(rootModel.Groups.SelectMany(gr => gr.Triggers));
+
+                        if(triggersList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список триггеров:"), rootModel);
+                            for (int i = 0; i < triggersList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #action {{{1}}} {{{2}}}",
+                                    i + 1, triggersList[i].GetPatternString(), String.Join(";", triggersList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список триггеров пуст."), rootModel);
+                        }                        
+                    }
+
+                    return true;
+                }
+
+                string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
+
+                if (args.Length < 2)
+                {
+                    if (!isImport)
+                    {
+                        triggersList.Clear();
+                        triggersList.AddRange(rootModel.Groups.SelectMany(gr => gr.Triggers
+                            .Where(trig => Regex.IsMatch(trig.GetPatternString(), args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
+
+                        if (triggersList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список триггеров, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < triggersList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #action {{{1}}} {{{2}}}",
+                                    i + 1, triggersList[i].GetPatternString(), String.Join(";", triggersList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггеры, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string groupName = "Default";
@@ -133,9 +404,9 @@ namespace Adan.Client.ConveyorUnits
                     groupName = args[3];
                     if (!int.TryParse(args[2], out priority))
                     {
-                        if (!isImport) 
+                        if (!isImport)
                             base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                        return;
+                        return true;
                     }
                 }
                 else if (args.Length == 3)
@@ -168,21 +439,23 @@ namespace Adan.Client.ConveyorUnits
 
                 rootModel.RecalculatedEnabledTriggersPriorities();
 
-                if (!isImport) 
-                    base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен"), rootModel);
+                if (!isImport)
+                {
+                    trigger.Group = group;
+                    trigger.Operation = UndoOperation.Remove;
+                    rootModel.UndoStack.Push(trigger);
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер добавлен: #action {{{0}}} {{{1}}}",
+                        trigger.GetPatternString(), trigger.Actions[0].ToString())), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                }
 
-                return;
+                return true;
             }
 
             match = _regexUnAction.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
-                if (!match.Groups[1].Success)
-                {
-                    return;
-                }
+                var triggersList = rootModel.TriggersList;
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
 
@@ -190,7 +463,39 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+
+                    return true;
+                }
+
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= triggersList.Count)
+                    {
+                        for (int i = 0; i < rootModel.Groups.Count; i++)
+                        {
+                            if (rootModel.Groups[i].Triggers.Remove(triggersList[num - 1]))
+                            {
+                                triggersList[num - 1].Group = rootModel.Groups[i];
+                                triggersList[num - 1].Operation = UndoOperation.Add;
+                                rootModel.UndoStack.Push(triggersList[num - 1]);
+                                if (!isImport)
+                                {
+                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
+                                        triggersList[num - 1].GetPatternString(), String.Join(";", triggersList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
                 }
 
                 if (args.Length == 2)
@@ -198,37 +503,88 @@ namespace Adan.Client.ConveyorUnits
                     var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
-                        group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
+                        var trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
+                        if (trig != null)
+                        {
+                            group.Triggers.Remove(trig);
 
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."), rootModel);
+                            trig.Group = group;
+                            trig.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(trig);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
+                                    trig.GetPatternString(), String.Join(";", trig.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                            }
+                        }
                     }
                 }
                 else
                 {
                     foreach (var group in rootModel.Groups)
                     {
-                        group.Triggers.RemoveAll(tr => ((TextTrigger)tr).MatchingPattern == args[0]);
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Триггеры удалены."), rootModel);
+                        var trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
+                        while (trig != null)
+                        {
+                            group.Triggers.Remove(trig);
+
+                            trig.Group = group;
+                            trig.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(trig);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
+                                    trig.GetPatternString(), String.Join(";", trig.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+
+                            trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
+                        }
                     }
+
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены последнего удаления используйте #undo"), rootModel);
                 }
 
                 rootModel.RecalculatedEnabledTriggersPriorities();
 
-                return;
+                return true;
             }
 
-            match = _regexAlias.Match(commandText);
+            return false;
+        }
+
+        private bool HighLightCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexHighLight.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
-                if (!match.Groups[1].Success)
+                var highlightList = rootModel.HighlightList;
+                
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Alias List"), rootModel);
-                    return;
+                    {
+                        highlightList.Clear();
+                        highlightList.AddRange(rootModel.Groups.SelectMany(x => x.Highlights));
+
+                        if (highlightList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список хайлайтов:"), rootModel);
+                            for (int i = 0; i < highlightList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                    i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список хайлайтов пуст."), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -236,105 +592,27 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length < 2)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
-                }
-
-                string groupName = "Default";
-
-                if (args.Length == 3)
-                    groupName = args[2];
-
-                string comm = Regex.Replace(args[0], "%[0-9]", "").Trim();
-
-                CommandAlias commandAlias = new CommandAlias()
-                {
-                    Command = comm
-                };
-
-                commandAlias.Actions.Add(new SendTextAction()
-                {
-                    CommandText = args[1]
-                });
-
-                var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
-                if (group == null)
-                {
-                    rootModel.AddGroup(groupName);
-                    group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
-                }
-
-                group.Aliases.RemoveAll(allias => allias.Command == commandAlias.Command);
-                group.Aliases.Add(commandAlias);
-
-                if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Алиас добавлен"), rootModel);
-
-                return;
-            }
-
-            match = _regexUnAlias.Match(commandText);
-            if (match.Success)
-            {
-                command.Handled = true;
-
-                if (!match.Groups[1].Success)
-                {
-                    return;
-                }
-
-                string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
-
-                if (args.Length < 1)
-                {
-                    if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
-                }
-
-                if (args.Length == 2)
-                {
-                    var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
-                    if (group != null)
                     {
-                        group.Aliases.RemoveAll(all => all.Command == args[0]);
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Алиас удален"), rootModel);
-                    }
-                }
-                else
-                {
-                    foreach (var group in rootModel.Groups)
-                    {
-                        group.Aliases.RemoveAll(all => all.Command == args[0]);
+                        highlightList.Clear();
+                        highlightList.AddRange(rootModel.Groups.SelectMany(x => x.Highlights
+                            .Where(hi => Regex.IsMatch(hi.TextToHighlight, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
+
+                        if (highlightList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список хайлайтов, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < highlightList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                    i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлаты, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
                     }
 
-                    if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Алиас удален"), rootModel);
-                }
-
-                return;
-            }
-
-            match = _regexHighLight.Match(commandText);
-            if (match.Success)
-            {
-                command.Handled = true;
-
-                if (!match.Groups[1].Success)
-                {
-                    if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Highlight List"), rootModel);
-                    return;
-                }
-
-                string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
-
-                if (args.Length < 2)
-                {
-                    if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+                    return true;
                 }
 
                 string groupName = "Default";
@@ -357,7 +635,12 @@ namespace Adan.Client.ConveyorUnits
                 string[] colors = args[0].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
                 if (colors.Length < 2)
-                    return;
+                {
+                    if (!isImport)
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
+                    return true;
+                }
 
                 TextColor foregroundColor = TextColorParser.Parse(colors[0].Trim());
                 TextColor backgroundColor;
@@ -370,7 +653,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Ошибка цвета"), rootModel);
-                    return;
+
+                    return true;
                 }
 
                 highlight.ForegroundColor = foregroundColor;
@@ -379,21 +663,24 @@ namespace Adan.Client.ConveyorUnits
                 group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[2]);
                 group.Highlights.Add(highlight);
 
-                if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Подсветка добавлена"), rootModel);
+                highlight.Group = group;
+                highlight.Operation = UndoOperation.Remove;
+                rootModel.UndoStack.Push(highlight);
 
-                return;
+                if (!isImport)
+                {
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт добавлен: #highlight {{{0}}} {{{1}, {2}}}",
+                           highlight.TextToHighlight, highlight.ForegroundColor, highlight.BackgroundColor)), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                }
+
+                return true;
             }
 
             match = _regexUnHighLight.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
-                if (!match.Groups[1].Success)
-                {
-                    return;
-                }
+                var highlightList = rootModel.HighlightList;
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
 
@@ -401,7 +688,39 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+                    return true;
+                }
+
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= highlightList.Count)
+                    {
+                        for (int i = 0; i < rootModel.Groups.Count; i++)
+                        {
+                            if (rootModel.Groups[i].Highlights.Remove(highlightList[num - 1]))
+                            {
+                                highlightList[num - 1].Group = rootModel.Groups[i];
+                                highlightList[num - 1].Operation = UndoOperation.Add;
+                                rootModel.UndoStack.Push(highlightList[num - 1]);
+
+                                if (!isImport)
+                                {
+                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1}, {2}}}",
+                                        highlightList[num - 1].TextToHighlight, highlightList[num - 1].ForegroundColor, highlightList[num - 1].BackgroundColor)), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
                 }
 
                 if (args.Length == 2)
@@ -409,35 +728,85 @@ namespace Adan.Client.ConveyorUnits
                     var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
-                        group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[0]);
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"), rootModel);
+                        var high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
+                        if (high != null)
+                        {
+                            group.Highlights.Remove(high);
+
+                            high.Group = group;
+                            high.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(high);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                    high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                            }
+                        }
                     }
                 }
                 else
                 {
                     foreach (var group in rootModel.Groups)
                     {
-                        group.Highlights.RemoveAll(hi => ((Highlight)hi).TextToHighlight == args[0]);
+                        var high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
+                        while (high != null)
+                        {
+                            group.Highlights.Remove(high);
+
+                            high.Group = group;
+                            high.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(high);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                    high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
+                            }
+
+                            high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
+                        }
                     }
 
-                    if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Подсветка удалена"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены последнего удаления используйте #undo"), rootModel);
                 }
 
-                return;
+                return true;
             }
 
-            match = _regexSubstitution.Match(commandText);
-            if (match.Success)
-            {
-                command.Handled = true;
+            return false;
+        }
 
-                if (!match.Groups[1].Success)
+        private bool SubstitutionCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexSubstitution.Match(commandText);
+            if (match.Success)
+            {    
+                var substitutionList = rootModel.SubstitutionList;
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Substitute List"), rootModel);
-                    return;
+                    {
+                        substitutionList.Clear();
+                        substitutionList.AddRange(rootModel.Groups.SelectMany(x => x.Substitutions));
+
+                        if (substitutionList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список замен:"), rootModel);
+                            for (int i = 0; i < substitutionList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #substitution {{{1}}} {{{2}}}",
+                                    i + 1, substitutionList[i].Pattern, substitutionList[i].SubstituteWith)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список замен пуст."), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -445,8 +814,27 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length < 2)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+                    {
+                        substitutionList.Clear();
+                        substitutionList.AddRange(rootModel.Groups.SelectMany(x => x.Substitutions
+                            .Where(hi => Regex.IsMatch(hi.Pattern, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
+
+                        if (substitutionList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список замен, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < substitutionList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #substitution {{{1}}} {{{2}}}",
+                                    i + 1, substitutionList[i].Pattern, substitutionList[i].SubstituteWith)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Замены, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string groupName = "Default";
@@ -466,22 +854,31 @@ namespace Adan.Client.ConveyorUnits
                 group.Substitutions.RemoveAll(sub => sub.Pattern == subtitution.Pattern);
                 group.Substitutions.Add(subtitution);
 
-                if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Замена добавлена"), rootModel);
+                subtitution.Group = group;
+                subtitution.Operation = UndoOperation.Remove;
+                rootModel.UndoStack.Push(subtitution);
 
-                return;
+                if (!isImport)
+                {
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Замена добавлена: #subtitution {{{0}}} {{{1}}}",
+                           subtitution.Pattern, subtitution.SubstituteWith)), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                }
+                
+                return true;
             }
 
             match = _regexUnSubstitution.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
+                var substitutionList = rootModel.SubstitutionList;
 
-                if (!match.Groups[1].Success)
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
-                    return;
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -490,43 +887,127 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+
+                    return true;
                 }
 
-                if (args.Length == 2)
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= substitutionList.Count)
+                    {
+                        for (int i = 0; i < rootModel.Groups.Count; i++)
+                        {
+                            if (rootModel.Groups[i].Substitutions.Remove(substitutionList[num - 1]))
+                            {
+                                substitutionList[num - 1].Group = rootModel.Groups[i];
+                                substitutionList[num - 1].Operation = UndoOperation.Add;
+                                rootModel.UndoStack.Push(substitutionList[num - 1]);
+
+                                if (!isImport)
+                                {
+                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Замена удалена: #substitution {{{0}}} {{{1}}}",
+                                        substitutionList[num - 1].Pattern, substitutionList[num - 1].SubstituteWith)), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
+                }
+
+                if (args.Length >= 2)
                 {
                     var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
-                        group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Замена удалена"), rootModel);
+                        var sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
+                        if (sub != null)
+                        {
+                            group.Substitutions.Remove(sub);
+
+                            sub.Group = group;
+                            sub.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(sub);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Замена удалена: #substitution {{{0}}} {{{1}}}",
+                                    sub.Pattern, sub.SubstituteWith)), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                            }
+                        }
                     }
                 }
                 else
                 {
                     foreach (var group in rootModel.Groups)
                     {
-                        group.Substitutions.RemoveAll(sub => sub.Pattern == args[0]);
-                    }
+                        var sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
+                        while (sub != null)
+                        {
+                            group.Substitutions.Remove(sub);
 
-                    if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Замена удалена"), rootModel);
+                            sub.Group = group;
+                            sub.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(sub);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Замена удалена: #substitution {{{0}}} {{{1}}}",
+                                    sub.Pattern, sub.SubstituteWith)), rootModel);
+                            }
+
+                            sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
+                        }
+                    }
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены последнего удаления используйте #undo"), rootModel);
                 }
 
-                return;
+                return true;
             }
 
-            match = _regexHotkey.Match(commandText);
+            return false;
+        }
+
+        private bool HotkeyCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexHotkey.Match(commandText);
+
             if (match.Success)
             {
-                command.Handled = true;
+                var hotkeysList = rootModel.HotkeyList;
 
-                if (!match.Groups[1].Success)
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
-                    return;
+                    {
+                        hotkeysList.Clear();
+                        hotkeysList.AddRange(rootModel.Groups.SelectMany(x => x.Hotkeys));
+
+                        if (hotkeysList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список хоткеев:"), rootModel);
+                            for (int i = 0; i < hotkeysList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #hotkey {{{1}}} {{{2}}}",
+                                    i + 1, hotkeysList[i].GetKeyToString(), String.Join(";", hotkeysList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список хоткеев пуст."), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -534,8 +1015,27 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length < 2)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+                    {
+                        hotkeysList.Clear();
+                        hotkeysList.AddRange(rootModel.Groups.SelectMany(x => x.Hotkeys
+                            .Where(hot => Regex.IsMatch(hot.GetKeyToString(), args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
+
+                        if (hotkeysList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список хоткеев, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < hotkeysList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #hotkey {{{1}}} {{{2}}}",
+                                    i + 1, hotkeysList[i].GetKeyToString(), String.Join(";", hotkeysList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хоткеи, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string groupName = "Default";
@@ -557,7 +1057,7 @@ namespace Adan.Client.ConveyorUnits
 
                 string[] hotkeys = args[0].Split(new char[] { '+' }, StringSplitOptions.RemoveEmptyEntries);
 
-                Hotkey hot = new Hotkey();
+                Hotkey hotk = new Hotkey();
 
                 ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
                 KeyConverter keyConverter = new KeyConverter();
@@ -565,42 +1065,53 @@ namespace Adan.Client.ConveyorUnits
                 foreach (string hotkey in hotkeys)
                 {
                     if (modifierKeysConverter.IsValid(hotkey))
-                        hot.ModifierKeys |= (ModifierKeys)modifierKeysConverter.ConvertFrom(hotkey);
+                        hotk.ModifierKeys |= (ModifierKeys)modifierKeysConverter.ConvertFrom(hotkey);
                     else if (keyConverter.IsValid(hotkey))
-                        hot.Key |= (Key)keyConverter.ConvertFrom(hotkey);
+                        hotk.Key |= (Key)keyConverter.ConvertFrom(hotkey);
                     else
                     {
                         if (!isImport)
                             base.PushMessageToConveyor(new ErrorMessage("#Неверный код хоткея"), rootModel);
 
-                        return;
+                        return true;
                     }
                 }
 
-                hot.Actions.Add(new SendTextAction()
+                hotk.Actions.Add(new SendTextAction()
                 {
                     CommandText = args[1]
                 });
 
-                group.Hotkeys.RemoveAll(h => h.Key == hot.Key && h.ModifierKeys == hot.ModifierKeys);
-                group.Hotkeys.Add(hot);
+                group.Hotkeys.RemoveAll(h => h.Key == hotk.Key && h.ModifierKeys == hotk.ModifierKeys);
+                group.Hotkeys.Add(hotk);
+
+                hotk.Group = group;
+                hotk.Operation = UndoOperation.Remove;
+                rootModel.UndoStack.Push(hotk);
+
+                rootModel.RecalculatedEnabledTriggersPriorities();
 
                 if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Хоткей добавлен"), rootModel);
+                {
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хоткей добавлен: #hotkey {{{0}}} {{{1}}}",
+                        hotk.GetKeyToString(), hotk.Actions[0].ToString())), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                }
 
-                return;
+                return true;
             }
 
             match = _regexUnHotkey.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
+                var hotkeyList = rootModel.HotkeyList;
 
-                if (!match.Groups[1].Success)
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
-                    return;
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -609,7 +1120,41 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-                    return;
+
+                    return true;
+                }
+
+
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= hotkeyList.Count)
+                    {
+                        for (int i = 0; i < rootModel.Groups.Count; i++)
+                        {
+                            if (rootModel.Groups[i].Hotkeys.Remove(hotkeyList[num - 1]))
+                            {
+                                hotkeyList[num - 1].Group = rootModel.Groups[i];
+                                hotkeyList[num - 1].Operation = UndoOperation.Add;
+                                rootModel.UndoStack.Push(hotkeyList[num - 1]);
+
+                                if (!isImport)
+                                {
+                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хоткей удален: #hotkey {{{0}}} {{{1}}}",
+                                        hotkeyList[num - 1].GetKeyToString(), String.Join(";", hotkeyList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                }
+
+                                break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
                 }
 
                 ModifierKeysConverter modifierKeysConverter = new ModifierKeysConverter();
@@ -637,36 +1182,85 @@ namespace Adan.Client.ConveyorUnits
                     var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == args[1]);
                     if (group != null)
                     {
-                        group.Hotkeys.RemoveAll(hot => hot.Key == key && hot.ModifierKeys == modifierKeys);
-                        if (!isImport)
-                            base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"), rootModel);
+                        var hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
+                        if (hotkey != null)
+                        {
+                            group.Hotkeys.Remove(hotkey);
+
+                            hotkey.Group = group;
+                            hotkey.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(hotkey);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хоткей удален: #hotkey {{{0}}} {{{1}}}",
+                                    hotkey.GetKeyToString(), String.Join(";", hotkey.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                            }
+                        }
                     }
                 }
                 else
                 {
                     foreach (var group in rootModel.Groups)
                     {
-                        group.Hotkeys.RemoveAll(hot => hot.Key == key && hot.ModifierKeys == modifierKeys);
-                    }
+                        var hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
+                        while (hotkey != null)
+                        {
+                            group.Hotkeys.Remove(hotkey);
 
-                    if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Хоткей удален"), rootModel);
+                            hotkey.Group = group;
+                            hotkey.Operation = UndoOperation.Add;
+                            rootModel.UndoStack.Push(hotkey);
+
+                            if (!isImport)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хоткей удален: #hotkey {{{0}}} {{{1}}}",
+                                    hotkey.GetKeyToString(), String.Join(";", hotkey.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            }
+
+                            hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
+                        }
+                    }
+                    base.PushMessageToConveyor(new InfoMessage("#Для отмены последнего удаления используйте #undo"), rootModel);
                 }
 
-                return;
+                return true;
             }
 
-            match = _regexVariable.Match(commandText);
+            return false;
+        }
+
+        private bool VariableCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexVariable.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
+                var variableList = rootModel.VariableList;
 
-                if (!match.Groups[1].Success)
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
+                    {
+                        variableList.Clear();
+                        variableList.AddRange(rootModel.Variables);
 
-                    return;
+                        if (variableList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список переменных:"), rootModel);
+                            for (int i = 0; i < variableList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #variable {{{1}}} {{{2}}}",
+                                    i + 1, variableList[i].Name, variableList[i].Value)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage("#Список переменных пуст."), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -674,33 +1268,53 @@ namespace Adan.Client.ConveyorUnits
                 if (args.Length < 2 || (args.Length > 0 && String.IsNullOrEmpty(args[0])))
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+                    {
+                        variableList.Clear();
+                        variableList.AddRange(rootModel.Variables.Where(x => Regex.IsMatch(x.Value, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase)));
 
-                    return;
+                        if (variableList.Count > 0)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список переменных, содержащих строку \"{0}\":", args[0])), rootModel);
+                            for (int i = 0; i < variableList.Count; i++)
+                            {
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #variable {{{1}}} {{{2}}}",
+                                    i + 1, variableList[i].Name, variableList[i].Value)), rootModel);
+                            }
+                        }
+                        else
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Переменные, содержащие строку \"{0}\" не найдены.", args[0])), rootModel);
+                        }
+                    }
+
+                    return true;
                 }
 
-                if(!isImport)
+                if (!isImport)
                     rootModel.SetVariableValue(args[0], args[1], false);
                 else
                     rootModel.SetVariableValue(args[0], args[1], true);
 
                 if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Переменная добавлена"), rootModel);
+                {
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Переменная добавлена: #variable {{{0}}} {{{1}}}",
+                        args[0], args[1])), rootModel);
+                }
 
-                return;
+                return true;
             }
 
             match = _regexUnVariable.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
+                var variableList = rootModel.VariableList;
 
-                if (!match.Groups[1].Success)
+                if (match.Groups[1].Length == 0)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -710,28 +1324,54 @@ namespace Adan.Client.ConveyorUnits
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
+                }
+
+                int num;
+                if (int.TryParse(args[0], out num))
+                {
+                    if (num > 0 && num <= variableList.Count)
+                    {
+                        rootModel.ClearVariableValue(variableList[num].Name, true);
+                        if (!isImport)
+                        {
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Переменная удалена: #variable {{{0}}}",
+                                variableList[num - 1].Name)), rootModel);
+                        }
+                    }
+                    else
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("#Неверный номер"), rootModel);
+                    }
+
+                    return true;
                 }
 
                 rootModel.ClearVariableValue(args[0], false);
 
                 if (!isImport)
-                    base.PushMessageToConveyor(new InfoMessage("#Переменная удалена"), rootModel);
+                {
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Переменная удалена: #variable {{{0}}}",
+                        args[0])), rootModel);
+                }
 
-                return;
+                return true;
             }
 
-            match = _regexLog.Match(commandText);
+            return false;
+        }
+
+        private bool LogCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexLog.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
-                if(!match.Groups[1].Success)
-                {                   
+                if (match.Groups[1].Length == 0)
+                {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 if (rootModel.IsLogging)
@@ -739,36 +1379,42 @@ namespace Adan.Client.ConveyorUnits
                 else
                     rootModel.PushMessageToConveyor(new StartLoggingMessage(CommandLineParser.GetArgs(match.Groups[1].ToString())[0]));
 
-                return;
+                return true;
             }
 
-            match = _regexShowme.Match(commandText);
+            return false;
+        }
+
+        private bool ShowmeCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexShowme.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
                 if (!match.Groups[1].Success)
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new InfoMessage("#Action List"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 if (!isImport)
                     base.PushMessageToConveyor(new InfoMessage(match.Groups[1].ToString().Replace("{", String.Empty).Replace("}", String.Empty)), rootModel);
 
-                return;
+                return true;
             }
 
-            match = _regexConnect.Match(commandText);
+            return false;
+        }
+
+        private bool ConnectCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexConnect.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
                 if (!match.Groups[1].Success)
                 {
-                    return;
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
@@ -778,7 +1424,7 @@ namespace Adan.Client.ConveyorUnits
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 int port;
@@ -787,46 +1433,43 @@ namespace Adan.Client.ConveyorUnits
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 if (!isImport)
                     base.PushCommandToConveyor(new ConnectCommand(args[0], port), rootModel);
 
-                return;
+                return true;
             }
 
-            match = _regexZap.Match(commandText);
+            return false;
+        }
+
+        private bool ZapCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexZap.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
                 if (!isImport)
                     base.PushCommandToConveyor(new DisconnectCommand(), rootModel);
 
-                return;
+                return true;
             }
 
-            //TODO
-            match = _regexStatus.Match(commandText);
+            return false;
+        }
+
+        private bool GroupCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexGroup.Match(commandText);
             if (match.Success)
             {
-                command.Handled = true;
-
-                return;
-            }
-
-            match = _regexGroup.Match(commandText);
-            if (match.Success)
-            {
-                command.Handled = true;
-
                 if (!match.Groups[2].Success)
                 {
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[2].ToString());
@@ -836,7 +1479,7 @@ namespace Adan.Client.ConveyorUnits
                     if (!isImport)
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
 
-                    return;
+                    return true;
                 }
 
                 if (match.Groups[1].ToString() == "enable")
@@ -853,9 +1496,22 @@ namespace Adan.Client.ConveyorUnits
                         base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
                 }
 
-                return;
+                return true;
             }
 
+            return false;
+        }
+
+        //TODO
+        private bool StatusCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            var match = _regexStatus.Match(commandText);
+            if (match.Success)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

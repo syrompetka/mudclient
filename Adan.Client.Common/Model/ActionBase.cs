@@ -35,5 +35,11 @@ namespace Adan.Client.Common.Model
         /// <param name="model">The model.</param>
         /// <param name="context">The context.</param>
         public abstract void Execute([NotNull]RootModel model, [NotNull]ActionExecutionContext context);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public abstract override string ToString();
     }
 }

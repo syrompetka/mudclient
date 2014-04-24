@@ -10,12 +10,11 @@
 namespace Adan.Client.Model.Actions
 {
     using System;
+    using System.Text;
     using System.Xml.Serialization;
-
     using Common.Messages;
     using Common.Model;
     using Common.Themes;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -102,5 +101,17 @@ namespace Adan.Client.Model.Actions
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("#OutputToWindow {").Append(TextToOutput).Append("}");
+
+            return sb.ToString();
+        }
     }
 }

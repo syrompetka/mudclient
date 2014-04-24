@@ -102,7 +102,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Model.Affects
 
             if (NecessarySetItemsCount > 0)
             {
-                infoMessage.AppendText(string.Format(" (Необходимо {0} предметов из набора)", NecessarySetItemsCount), TextColor.BrightYellow);
+                infoMessage.AppendText(string.Format(" (Необходимо {0} предмет{1} из набора)", NecessarySetItemsCount, NecessarySetItemsCount < 5 ? "а" : "ов"), TextColor.BrightYellow);
             }
 
             return infoMessage;

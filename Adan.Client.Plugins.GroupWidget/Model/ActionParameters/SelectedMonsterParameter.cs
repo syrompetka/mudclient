@@ -60,5 +60,14 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
 
             return result;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string GetParameterValue()
+        {
+            return "#SelectedMonsterName";
+        }
     }
 }

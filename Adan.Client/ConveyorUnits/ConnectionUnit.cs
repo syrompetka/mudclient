@@ -48,7 +48,7 @@ namespace Adan.Client.ConveyorUnits
         {
             get
             {
-                return new[] { BuiltInMessageTypes.ConnectionMessages, BuiltInMessageTypes.TextMessage };
+                return new[] { BuiltInCommandTypes.ConnectionCommands, BuiltInCommandTypes.TextCommand };
             }
         }
 

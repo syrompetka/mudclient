@@ -178,7 +178,7 @@ namespace Adan.Client.Plugins.StuffDatabase.Properties {
         }
         
         /// <summary>
-        ///   Ищет локализованную строку, похожую на Weight: {0:F0}, Price: {1}, Rent: {2}({3}), Timer: {4}, Material: {5}.
+        ///   Ищет локализованную строку, похожую на Weight: {0:F0}, Price: {1}, Rent: {2}({3}), Timer: {4}, Offline Timer: {5}, Material: {6}.
         /// </summary>
         internal static string CommonStats {
             get {

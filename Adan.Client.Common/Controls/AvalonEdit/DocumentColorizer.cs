@@ -25,51 +25,6 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             set;
         }
 
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler RenderTimeChanged;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public int Count
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="context"></param>
-        protected override void Colorize(ITextRunConstructionContext context)
-        {
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-
-            base.Colorize(context);
-
-            sw.Stop();
-            if (RenderTimeChanged != null)
-            {
-                Count++;
-                RenderTime += sw.Elapsed;
-                RenderTimeChanged(this, EventArgs.Empty);
-            }
-        }
-#endif
-
         /// <summary>
         /// 
         /// </summary>

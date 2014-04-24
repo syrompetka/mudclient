@@ -62,20 +62,7 @@ namespace Adan.Client.Common.Conveyor
         private int _currentMessageType = BuiltInMessageTypes.TextMessage;
 
         #endregion
-
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public MccpClient MccpClient
-        {
-            get
-            {
-                return _mccpClient;
-            }
-        }
-#endif
-
+        
         #region Constructors and Destructors
 
         /// <summary>
@@ -407,7 +394,6 @@ namespace Adan.Client.Common.Conveyor
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             if(_mccpClient != null)
@@ -426,8 +412,7 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNull(e, "e");
 
             try
-            {
-                
+            {                
                 int offset = e.Offset;
                 int bytesRecieved = e.BytesReceived;
                 byte[] data = e.GetData();
@@ -486,7 +471,7 @@ namespace Adan.Client.Common.Conveyor
                         && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
                     {
                         var messageType = data[offset + i + 3];
-                        FlushBufferToSerializer(actualBytesReceived, true);
+                        FlushBufferToDeserializer(actualBytesReceived, true);
                         actualBytesReceived = 0;
                         _currentMessageType = messageType;
                         i += 3;
@@ -498,7 +483,7 @@ namespace Adan.Client.Common.Conveyor
                         && data[offset + i] == TelnetConstants.InterpretAsCommandCode
                         && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
                     {
-                        FlushBufferToSerializer(actualBytesReceived, true);
+                        FlushBufferToDeserializer(actualBytesReceived, true);
 
                         _currentMessageType = BuiltInMessageTypes.TextMessage;
                         actualBytesReceived = 0;
@@ -510,7 +495,7 @@ namespace Adan.Client.Common.Conveyor
                     actualBytesReceived++;
                 }
 
-                FlushBufferToSerializer(actualBytesReceived, false);
+                FlushBufferToDeserializer(actualBytesReceived, false);
             }
             catch (Exception ex)
             {
@@ -518,7 +503,7 @@ namespace Adan.Client.Common.Conveyor
             }
         }
 
-        private void FlushBufferToSerializer(int actualBytesReceived, bool isComplete)
+        private void FlushBufferToDeserializer(int actualBytesReceived, bool isComplete)
         {
             if (actualBytesReceived <= 0)
             {

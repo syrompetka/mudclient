@@ -60,5 +60,14 @@ namespace Adan.Client.Model.ActionParameters
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string GetParameterValue()
+        {
+            return "%" + ParameterNumber;
+        }
     }
 }

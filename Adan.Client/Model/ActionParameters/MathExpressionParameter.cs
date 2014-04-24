@@ -11,17 +11,16 @@ namespace Adan.Client.Model.ActionParameters
 {
     using System;
     using System.Globalization;
+    using System.Text;
     using System.Xml.Serialization;
-
     using Common.Model;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
     /// A parameter value of which is a result of evaluating some math expression.
     /// </summary>
-   [Serializable]
+    [Serializable]
     public class MathExpressionParameter : ActionParameterBase
     {
         /// <summary>
@@ -124,5 +123,33 @@ namespace Adan.Client.Model.ActionParameters
         }
 
         #endregion
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        public override string GetParameterValue()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(FirstOperand.GetParameterValue());
+            switch(Operation)
+            {
+                case MathOperation.Division:
+                    sb.Append("/");
+                    break;
+                case MathOperation.Minus:
+                    sb.Append("-");
+                    break;
+                case MathOperation.Multiplication:
+                    sb.Append("*");
+                    break;
+                case MathOperation.Plus:
+                    sb.Append("+");
+                    break;
+            }
+            sb.Append(SecondOperand.GetParameterValue());
+
+            return sb.ToString();
+        }
     }
 }
