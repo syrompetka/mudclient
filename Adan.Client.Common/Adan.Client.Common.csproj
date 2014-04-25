@@ -82,7 +82,6 @@
     </Compile>
     <Compile Include="Controls\TextBoxNative.cs" />
     <Compile Include="Model\IUndo.cs" />
-    <Compile Include="Networking\MccpClientEx.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
       <DependentUpon>ActionEditorControl.xaml</DependentUpon>

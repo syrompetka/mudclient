@@ -358,7 +358,7 @@ namespace Adan.Client
         /// </summary>
         /// <param name="actionsToExecute">The actions to execute.</param>
         /// <param name="actionExecutionContext">The action execution context.</param>
-        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext )
+        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
         {
             foreach (var outputWindow in _outputWindows)
             {
@@ -826,8 +826,16 @@ namespace Adan.Client
                 WindowState = System.Windows.WindowState.Normal;
                 WindowStyle = WindowStyle.None;
                 ResizeMode = System.Windows.ResizeMode.NoResize;
-                mainMenu.Visibility=Visibility.Collapsed;
+                mainMenu.Visibility = Visibility.Collapsed;
             }
+        }
+
+        private void HandleAbout([NotNull]object sender, [NotNull]RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var aboutDialog = new AboutDialog() { Owner = this, }.ShowDialog();
         }
     }
 }

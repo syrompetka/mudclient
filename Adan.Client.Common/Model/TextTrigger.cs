@@ -145,7 +145,10 @@ namespace Adan.Client.Common.Model
 
                 for (int i = 0; i < 10; i++)
                 {
-                    Context.Parameters[i] = _matchingResults[i];
+                    if (i < _matchingResults.Count)
+                        Context.Parameters[i] = _matchingResults[i];
+                    else
+                        Context.Parameters[i] = string.Empty;
                 }
             }
 
