@@ -44,7 +44,9 @@
                 <Separator Visibility="Collapsed" Name="windowSeparator" />
                 <MenuItem Header="Add new window" Click="HandleAddNewWindow" />
             </MenuItem>
-            <MenuItem Header="Help"/>
+            <MenuItem Header="Help">
+                <MenuItem Header="About" Click="HandleAbout"/>
+            </MenuItem>
         </Menu>
         <AvalonDock:DockingManager Grid.Row="1" Name="dockManager" Loaded="HandleDockManagerLoaded">
             <AvalonDock:DocumentPane />

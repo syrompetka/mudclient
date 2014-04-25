@@ -49,7 +49,8 @@ namespace Adan.Client
         {
             Name = name;
 
-            var conveyor = new MessageConveyor(new MccpClientEx());
+            //var conveyor = new MessageConveyor(new MccpClientEx());
+            var conveyor = new MessageConveyor(new MccpClient());
 
             RootModel = new RootModel(conveyor, SettingsHolder.Instance.GetProfile(name));
             conveyor.RootModel = RootModel;

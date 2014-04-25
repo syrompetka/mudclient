@@ -138,6 +138,9 @@
     <Compile Include="ConveyorUnits\ToggleFullScreenModeUnit.cs" />
     <Compile Include="ConveyorUnits\TriggerUnit.cs" />
     <Compile Include="ConveyorUnits\VariableReplaceUnit.cs" />
+    <Compile Include="Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Dialogs\AliasEditDialog.xaml.cs">
       <DependentUpon>AliasEditDialog.xaml</DependentUpon>
     </Compile>
@@ -302,6 +305,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\MainOutputWindowNative.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AboutDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

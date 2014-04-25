@@ -115,7 +115,6 @@ namespace Adan.Client.Common.Model
             }
 
             return ReplaceVariables(res, model);
-            //return res;
         }
 
         /// <summary>

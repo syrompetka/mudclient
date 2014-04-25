@@ -74,7 +74,11 @@ namespace Adan.Client.ConveyorUnits
                 Match m = _regexShowOutputWindow.Match(textCommand.CommandText);
                 if (m.Success)
                 {
-                    _mainWindow.ShowOutputWindow(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]);
+                    if (m.Groups[1].Length > 0)
+                        _mainWindow.ShowOutputWindow(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]);
+                    else
+                        _mainWindow.ShowOutputWindow(string.Empty);
+
                     command.Handled = true;
                 }
 

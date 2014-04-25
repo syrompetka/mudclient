@@ -51,7 +51,7 @@ namespace Adan.Client.Model.ActionParameters
             Assert.ArgumentNotNull(rootModel, "rootModel");
             Assert.ArgumentNotNull(context, "context");
 
-            if (ParameterNumber >= 0 && ParameterNumber < 10)
+            if (ParameterNumber >= 0 && ParameterNumber < 10 && ParameterNumber < context.Parameters.Count)
             {
                 return context.Parameters[ParameterNumber];
             }
