@@ -200,10 +200,10 @@ namespace Adan.Client.Model.Actions
                     sb.Append(">=");
                     break;
                 case ActionCondition.IsEmpty:
-                    sb.Append("= null");
+                    sb.Append("=null");
                     break;
                 case ActionCondition.IsNotEmpty:
-                    sb.Append("!= null");
+                    sb.Append("!=null");
                     break;
                 case ActionCondition.Less:
                     sb.Append("<");

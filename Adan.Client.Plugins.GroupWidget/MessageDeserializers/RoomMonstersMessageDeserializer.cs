@@ -25,6 +25,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using Adan.Client.Plugins.GroupWidget.Messages;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="RoomMonstersMessage"/> messages.
@@ -66,6 +67,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
             {
                 string str = _builder.ToString();
                 _builder.Clear();
+
                 Task.Factory.StartNew(() =>
                     {
                         try
@@ -78,13 +80,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                         }
                         catch (Exception ex)
                         {
-                            //var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
-                            //string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
-                            //byte[] buf = _encoding.GetBytes(str);
-                            //deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
-                            //PushMessageToConveyor(new OutputToMainWindowMessage(str));
-                            _builder.Clear();
-                            //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                            ErrorLogger.Instance.Write(string.Format("Error deserialize mosters message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
                             PushMessageToConveyor(new ErrorMessage(ex.Message));
                         }
                     });

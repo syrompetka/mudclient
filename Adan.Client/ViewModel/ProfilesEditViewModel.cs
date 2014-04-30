@@ -174,13 +174,13 @@ namespace Adan.Client.ViewModel
 
             var profile = SettingsHolder.Instance.GetProfile(SelectedProfile.NameProfile);
 
-            var profileOptionDialog = new ProfileOptionsEditDialog()
+            var profileOptionDialog = new ProfileOptionsEditDialog(SelectedProfile.NameProfile)
             {
                 DataContext = new ProfileOptionsViewModel(profile),
                 Owner = owner,
             };
 
-            var result = profileOptionDialog.ShowDialog();
+            profileOptionDialog.Show();
             SettingsHolder.Instance.SetProfile(profile, true);
         }
 

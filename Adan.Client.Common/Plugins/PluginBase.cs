@@ -130,17 +130,6 @@ namespace Adan.Client.Common.Plugins
         }
 
         /// <summary>
-        /// Gets the required protocol version.
-        /// </summary>
-        public virtual int RequiredProtocolVersion
-        {
-            get
-            {
-                return -1;
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether this plugin has options dialog.
         /// </summary>
         /// <value>

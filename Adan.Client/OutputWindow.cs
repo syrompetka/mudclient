@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Diagnostics;
 using System.Timers;
 using System.Windows.Forms.Integration;
+using System.Threading;
 
 namespace Adan.Client
 {
@@ -179,7 +180,9 @@ namespace Adan.Client
                 var directoryPath = Path.GetDirectoryName(fullLogPath);
 
                 if (!Directory.Exists(directoryPath))
+                {
                     Directory.CreateDirectory(directoryPath);
+                }
 
                 var fileStream = new FileStream(fullLogPath, FileMode.Append, FileAccess.Write);
 
@@ -191,7 +194,7 @@ namespace Adan.Client
             }
             catch (IOException ex)
             {
-                RootModel.PushMessageToConveyor(new ErrorMessage(ex.Message));
+                RootModel.PushMessageToConveyor(new ErrorMessage(string.Format("# {0}", ex.Message)));
                 IsLogging = false;
                 _streamWriter = null;
             }
@@ -209,7 +212,12 @@ namespace Adan.Client
                 {
                     lock (_loggingLockObject)
                     {
-                        _streamWriter.Close();
+                        try
+                        {
+                            _streamWriter.Close();
+                        }
+                        catch (Exception)
+                        { }
                         _streamWriter = null;
                     }
                 }
@@ -240,7 +248,12 @@ namespace Adan.Client
                 {
                     lock (_loggingLockObject)
                     {
-                        _streamWriter.Close();
+                        try
+                        {
+                            _streamWriter.Close();
+                        }
+                        catch (Exception)
+                        { }
                         _streamWriter = null;
                     }
                 }
@@ -281,7 +294,11 @@ namespace Adan.Client
                             {
                                 if (_streamWriter != null)
                                 {
-                                    _streamWriter.WriteLine(message.InnerText);
+                                    try
+                                    {
+                                        _streamWriter.WriteLine(message.InnerText);
+                                    }
+                                    catch (Exception) { }
                                 }
                             }
                         }
@@ -311,7 +328,16 @@ namespace Adan.Client
             var path = Path.Combine(SettingsHolder.Instance.Folder, "Logs");
 
             if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            {
+                try
+                {
+                    Directory.CreateDirectory(path);
+                }
+                catch (Exception)
+                {
+                    return string.Empty;
+                }
+            }
 
             return path;
         }

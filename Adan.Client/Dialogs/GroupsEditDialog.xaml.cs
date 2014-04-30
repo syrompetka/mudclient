@@ -39,5 +39,10 @@ namespace Adan.Client.Dialogs
 
             ((ListBoxItem)lstGroups.SelectedItem).Content.ToString();
         }
+
+        private void HandleCloseClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

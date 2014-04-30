@@ -28,9 +28,9 @@ namespace Adan.Client.MessageDeserializers
     /// </summary>
     public class ProtocolVersionMessageDeserializer : MessageDeserializer
     {
-        private readonly XmlSerializer _serializer = new XmlSerializer(typeof(ProtocolVersionMessage));
+        private static readonly Encoding _encoding = Encoding.GetEncoding(1251);
+
         private readonly StringBuilder _builder = new StringBuilder();
-        private readonly Encoding _encoding = Encoding.GetEncoding(1251);
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -56,6 +56,8 @@ namespace Adan.Client.MessageDeserializers
         public override void DeserializeDataFromServer(int offset, int bytesReceived, byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
+        
+            XmlSerializer serializer = new XmlSerializer(typeof(ProtocolVersionMessage));
 
             var messageXml = _encoding.GetString(data, offset, bytesReceived);
             _builder.Append(messageXml);
@@ -63,8 +65,13 @@ namespace Adan.Client.MessageDeserializers
             {
                 using (var stringReader = new StringReader(_builder.ToString()))
                 {
-                    var message = (ProtocolVersionMessage)_serializer.Deserialize(stringReader);
-                    PushMessageToConveyor(message);
+                    try
+                    {
+                        var message = (ProtocolVersionMessage)serializer.Deserialize(stringReader);
+                        PushMessageToConveyor(message);
+                    }
+                    catch (Exception) 
+                    { }
                 }
 
                 _builder.Clear();

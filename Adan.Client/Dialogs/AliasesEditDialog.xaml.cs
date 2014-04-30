@@ -40,5 +40,10 @@ namespace Adan.Client.Dialogs
                 aliasesViewModel.EditAliasCommand.Execute(this);
             }
         }
+
+        private void HandleCloseClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

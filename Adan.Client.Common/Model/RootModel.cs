@@ -104,6 +104,15 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
+        public int ServerVersion
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public List<CommandAlias> AliasList
         {
             get
@@ -548,8 +557,7 @@ namespace Adan.Client.Common.Model
             var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
             if (group != null && !group.IsBuildIn)
             {
-                if (!Groups.Remove(group))
-                    PushMessageToConveyor(new ErrorMessage("#Ошибка удаления группы"));
+                Groups.Remove(group);
             }
         }
 

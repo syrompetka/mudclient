@@ -80,22 +80,12 @@ namespace Adan.Client.Map
         }
 
         /// <summary>
-        /// Gets the required protocol version.
-        /// </summary>
-        public override int RequiredProtocolVersion
-        {
-            get
-            {
-                return 1;
-            }
-        }
-
-        /// <summary>
         /// 
         /// </summary>
         public override void Dispose()
         {
-            _zoneManager.Dispose();
+            if(_zoneManager != null)
+                _zoneManager.Dispose();
 
             base.Dispose();
         }

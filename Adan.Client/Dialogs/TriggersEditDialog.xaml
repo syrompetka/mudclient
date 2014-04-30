@@ -60,6 +60,6 @@
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=EditTriggerCommand}"  CommandParameter="{Binding ElementName=TriggersEditorWindow, Path=.}">Edit</Button>
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=DeleteTriggerCommand}">Delete</Button>
         </StackPanel>
-        <Button IsCancel="True" IsDefault="True" HorizontalAlignment="Right" Grid.Row="1" MinWidth="50">Close</Button>
+        <Button IsCancel="True" Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="1" MinWidth="50">Close</Button>
     </Grid>
 </Window>

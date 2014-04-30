@@ -40,9 +40,9 @@ namespace Adan.Client.Dialogs
             ((ProfilesEditViewModel)DataContext).EditProfileCommand.Execute(this);
         }
 
-        private void HandleOkClick(object sender, RoutedEventArgs e)
+        private void HandleCloseClick(object sender, RoutedEventArgs e)
         {
-            ((ProfilesEditViewModel)DataContext).EditProfileCommand.Execute(this);
+            Close();
         }
     }
 }

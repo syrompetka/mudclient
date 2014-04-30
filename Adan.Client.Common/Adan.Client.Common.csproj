@@ -66,6 +66,7 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorAndHighlightVisualLineElement.cs" />
     <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorVisualLineElement.cs" />
     <Compile Include="Controls\AvalonEdit\AdanElementGenerator.cs" />
     <Compile Include="Controls\AvalonEdit\AdanLineTransformer.cs" />
@@ -140,6 +141,7 @@
     <Compile Include="Settings\SettingsSerializer.cs" />
     <Compile Include="Utils\AnsiColor.cs" />
     <Compile Include="Utils\ColorsQueue.cs" />
+    <Compile Include="Utils\ErrorLogger.cs" />
     <Compile Include="ViewModel\InitializationStatusModel.cs" />
     <Compile Include="Model\MonsterStatus.cs" />
     <Compile Include="Model\PetStatus.cs" />

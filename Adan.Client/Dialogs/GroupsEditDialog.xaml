@@ -41,6 +41,6 @@
             <Button HorizontalAlignment="Left" Command="{Binding Path=AddGroupCommand}" CommandParameter="{Binding ElementName=txtNewGroupName, Path=Text}" MinWidth="50">Add</Button>
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" Command="{Binding Path=DeleteGroupCommand}" CommandParameter="{Binding ElementName=lstGroups, Path=SelectedItem}" MinWidth="50">Delete</Button>
         </StackPanel>
-        <Button HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+        <Button Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="2" IsCancel="True" MinWidth="50">Close</Button>
     </Grid>
 </Window>

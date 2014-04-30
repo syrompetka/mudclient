@@ -25,6 +25,7 @@ namespace Adan.Client.Plugins.OutputWindow
     using Adan.Client.Plugins.OutputWindow.Model.Actions;
     using Adan.Client.Plugins.OutputWindow.Model;
     using Adan.Client.Common.ViewModel;
+    using Adan.Client.Common.ConveyorUnits;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.
@@ -48,7 +49,7 @@ namespace Adan.Client.Plugins.OutputWindow
         /// <summary>
         /// Gets the conveyor units that this plugin exposes.
         /// </summary>
-        public override IEnumerable<Common.ConveyorUnits.ConveyorUnit> ConveyorUnits
+        public override IEnumerable<ConveyorUnit> ConveyorUnits
         {
             get
             {

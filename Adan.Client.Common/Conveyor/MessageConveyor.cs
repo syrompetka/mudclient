@@ -16,6 +16,7 @@ namespace Adan.Client.Common.Conveyor
     using System.Linq;
     using System.Threading.Tasks;
     using Adan.Client.Common.Model;
+    using Adan.Client.Common.Utils;
     using Commands;
     using CommandSerializers;
     using ConveyorUnits;
@@ -295,10 +296,17 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNullOrWhiteSpace(host, "host");
 
-            _mccpClient.Connect(host, port);
+            try
+            {
+                _mccpClient.Connect(host, port);
 
-            LastConnectHost = host;
-            LastConnectPort = port;
+                LastConnectHost = host;
+                LastConnectPort = port;
+            }
+            catch (Exception)
+            {
+                this.PushMessage(new ErrorMessage("#Error connect to host {0}: {1}"));
+            }
         }
 
         /// <summary>
@@ -306,7 +314,12 @@ namespace Adan.Client.Common.Conveyor
         /// </summary>
         public void Disconnect()
         {
-            _mccpClient.Disconnect();
+            try
+            {
+                _mccpClient.Disconnect();
+            }
+            catch (Exception)
+            { }
 
             if (OnDisconnected != null)
             {
@@ -322,29 +335,34 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(command, "command");
 
-            if (ConveyorUnitsByCommandType.ContainsKey(command.CommandType))
+            try
             {
-                foreach (var conveyorUnit in ConveyorUnitsByCommandType[command.CommandType])
+                if (ConveyorUnitsByCommandType.ContainsKey(command.CommandType))
                 {
-                    conveyorUnit.HandleCommand(command, _rootModel);
-                    if (command.Handled)
+                    foreach (var conveyorUnit in ConveyorUnitsByCommandType[command.CommandType])
                     {
-                        break;
+                        conveyorUnit.HandleCommand(command, _rootModel);
+                        if (command.Handled)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (!command.Handled)
-            {
-                foreach (var commandSerializer in _currentCommandSerializers)
+                if (!command.Handled)
                 {
-                    commandSerializer.SerializeAndSendCommand(command);
-                    if (command.Handled)
+                    foreach (var commandSerializer in _currentCommandSerializers)
                     {
-                        break;
+                        commandSerializer.SerializeAndSendCommand(command);
+                        if (command.Handled)
+                        {
+                            break;
+                        }
                     }
                 }
             }
+            catch (Exception)
+            { }
         }
 
         /// <summary>
@@ -355,27 +373,32 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(message, "message");
 
-            if (ConveyorUnitsByMessageType.ContainsKey(message.MessageType))
+            try
             {
-                foreach (var conveyorUnit in ConveyorUnitsByMessageType[message.MessageType])
+                if (ConveyorUnitsByMessageType.ContainsKey(message.MessageType))
                 {
-                    conveyorUnit.HandleMessage(message, _rootModel);
-                    if (message.Handled)
+                    foreach (var conveyorUnit in ConveyorUnitsByMessageType[message.MessageType])
                     {
-                        break;
+                        conveyorUnit.HandleMessage(message, _rootModel);
+                        if (message.Handled)
+                        {
+                            break;
+                        }
                     }
                 }
-            }
 
-            if (message.Handled)
-            {
-                return;
-            }
+                if (message.Handled)
+                {
+                    return;
+                }
 
-            if (MessageReceived != null)
-            {
-                MessageReceived(this, new MessageReceivedEventArgs(message));
+                if (MessageReceived != null)
+                {
+                    MessageReceived(this, new MessageReceivedEventArgs(message));
+                }
             }
+            catch (Exception)
+            { }
         }
 
         /// <summary>
@@ -388,7 +411,14 @@ namespace Adan.Client.Common.Conveyor
         {
             Assert.ArgumentNotNull(data, "data");
 
-            _mccpClient.Send(data, offset, bytesToSend);
+            try
+            {
+                _mccpClient.Send(data, offset, bytesToSend);
+            }
+            catch (Exception)
+            {
+                this.PushMessage(new ErrorMessage("#Error send text to server"));
+            }
         }
 
         /// <summary>
@@ -499,7 +529,8 @@ namespace Adan.Client.Common.Conveyor
             }
             catch (Exception ex)
             {
-                PushMessage(new ErrorMessage(ex.ToString()));
+                ErrorLogger.Instance.Write(string.Format("Error handle data received: {0}\r\n{1}", ex.Message, ex.StackTrace));
+                PushMessage(new ErrorMessage(ex.Message));
             }
         }
 

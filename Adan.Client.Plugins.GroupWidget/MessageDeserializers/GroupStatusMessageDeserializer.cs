@@ -23,6 +23,8 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using Adan.Client.Plugins.GroupWidget.Messages;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using System.Threading;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="GroupStatusMessage"/> messages.
@@ -76,8 +78,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                         }
                         catch (Exception ex)
                         {
-                            _builder.Clear();
-                            //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                            ErrorLogger.Instance.Write(string.Format("Error deserialize group message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
                             PushMessageToConveyor(new ErrorMessage(ex.Message));
                         }
                     });

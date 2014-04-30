@@ -34,10 +34,15 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                 {
                     escapeElement = null;
                 }
+                else if (element is AdanColorAndHighlightVisualLineElement)
+                {
+                    _savedElement.Push((IAdanVisualLineElement)((AdanColorAndHighlightVisualLineElement)element).ColorElement);
+                    escapeElement = (IAdanVisualLineElement)element;
+                }
                 else if (element is AdanStartHighlightVisualElement)
                 {
                     _savedElement.Push(escapeElement);
-                    escapeElement = (IAdanVisualLineElement) element;
+                    escapeElement = (IAdanVisualLineElement)element;
                 }
                 else if (element is AdanStopHighlightVisualElement)
                 {
