@@ -26,18 +26,6 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class ProtocolVersionUnit : ConveyorUnit
     {
-        private readonly int _clientProtocolVersion;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ProtocolVersionUnit"/> class.
-        /// </summary>
-        /// <param name="clientProtocolVersion">The client protocol version.</param>
-        public ProtocolVersionUnit(int clientProtocolVersion)
-            : base()
-        {
-            _clientProtocolVersion = clientProtocolVersion;
-        }
-
         /// <summary>
         /// Gets a set of message types that this unit can handle.
         /// </summary>
@@ -68,15 +56,15 @@ namespace Adan.Client.ConveyorUnits
         public override void HandleMessage(Message message, RootModel rootModel)
         {
             Assert.ArgumentNotNull(message, "message");
+
             var protocolVersionMessage = message as ProtocolVersionMessage;
-            if (protocolVersionMessage == null || protocolVersionMessage.Version == _clientProtocolVersion)
+            if (protocolVersionMessage != null)
             {
+                rootModel.ServerVersion = protocolVersionMessage.Version;
+
+                message.Handled = true;
                 return;
             }
-
-            message.Handled = true;
-            PushMessageToConveyor(new ErrorMessage(Resources.ProtocolVersionMismatch), rootModel);
-            PushCommandToConveyor(new DisconnectCommand(), rootModel);
         }
     }
 }

@@ -23,6 +23,7 @@ namespace Adan.Client.Map.MessageDeserializers
     using Adan.Client.Map.Messages;
     using System.Diagnostics;
     using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> implementation to handle "current room" messages.
@@ -70,7 +71,7 @@ namespace Adan.Client.Map.MessageDeserializers
                 {
                     try
                     {
-                        using (var stringReader = new StringReader(str.ToString()))
+                        using (var stringReader = new StringReader(str))
                         {
                             var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
                             PushMessageToConveyor(message);
@@ -78,13 +79,7 @@ namespace Adan.Client.Map.MessageDeserializers
                     }
                     catch (Exception ex)
                     {
-                        //var deseirilizer = MessageConveyor.MessageDeserializers.FirstOrDefault(x => x.DeserializedMessageType == BuiltInMessageTypes.TextMessage);
-                        //string str = FakeXmlParser.Parse(_builder.ToString().Replace("**OVERFLOW**", ""));
-                        //byte[] buf = _encoding.GetBytes(str);
-                        //deseirilizer.DeserializeDataFromServer(0, buf.Length, buf, true);
-                        //PushMessageToConveyor(new OutputToMainWindowMessage(str));
-                        _builder.Clear();
-                        //PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                        ErrorLogger.Instance.Write(string.Format("Error deserialize room message: {0}\r\nException: {1}\r\n{2}", str, ex.Message, ex.StackTrace));
                         PushMessageToConveyor(new ErrorMessage(ex.Message));
                     }
                 });

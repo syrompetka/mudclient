@@ -32,9 +32,10 @@ namespace Adan.Client.MessageDeserializers
     public class TextMessageDeserializerEx : MessageDeserializer
     {
         #region Constants and Fields
-        private readonly char[] _charBuffer = new char[32767];
 
-        private readonly Encoding _encoding = Encoding.GetEncoding(1251);
+        private static readonly Encoding _encoding = Encoding.GetEncoding(1251);
+
+        private readonly char[] _charBuffer = new char[32767];
         private readonly StringBuilder _stringBuilder = new StringBuilder();
 
         #endregion
@@ -70,11 +71,6 @@ namespace Adan.Client.MessageDeserializers
         {
             Assert.ArgumentNotNull(data, "data");
 
-#if DEBUG
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
-
             int currentDataBufferPosition = 0;
 
             var incomingCharsCount = _encoding.GetChars(data, offset, bytesReceived, _charBuffer, 0);
@@ -94,11 +90,6 @@ namespace Adan.Client.MessageDeserializers
 
                 currentDataBufferPosition++;
             }
-
-#if DEBUG
-            sw.Stop();
-            //PushMessageToConveyor(new InfoMessage(string.Format("TextMessageDeserializer = {0} ms", sw.ElapsedMilliseconds)));
-#endif
         }
 
         /// <summary>

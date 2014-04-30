@@ -86,7 +86,7 @@ namespace Adan.Client
                                 //typeof(ToggleFullScreenModeAction),
                             };
 
-            foreach (var plugin in PluginHost.Instance.Plugins)
+            foreach (var plugin in PluginHost.Instance.AllPlugins)
             {
                 foreach (var customType in plugin.CustomSerializationTypes)
                 {
@@ -182,15 +182,9 @@ namespace Adan.Client
                 }
             }
 
-            int maxProtocolVersion = PluginHost.Instance.Plugins.Count > 0 ? PluginHost.Instance.Plugins.Max(plugin => plugin.RequiredProtocolVersion) : 1;
-            MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit(maxProtocolVersion));
-
+            MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit());
             MessageConveyor.AddConveyorUnit(new CommandRepeaterUnit());
-
-            //Заглушка для нераспознанных комманд
             MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
-
-            //Проверка коннекта к серверу для команд
             MessageConveyor.AddConveyorUnit(new ConnectionUnit());
 
             foreach (var uid in SettingsHolder.Instance.Settings.MainOutputs)
@@ -349,7 +343,12 @@ namespace Adan.Client
 
             foreach (var action in actionsToExecute)
             {
-                action.Execute(outputWindow.RootModel, actionExecutionContext);
+                try
+                {
+                    action.Execute(outputWindow.RootModel, actionExecutionContext);
+                }
+                catch (Exception)
+                { }
             }
         }
 
@@ -364,7 +363,12 @@ namespace Adan.Client
             {
                 foreach (var action in actionsToExecute)
                 {
-                    action.Execute(outputWindow.RootModel, actionExecutionContext);
+                    try
+                    {
+                        action.Execute(outputWindow.RootModel, actionExecutionContext);
+                    }
+                    catch (Exception)
+                    { }
                 }
             }
         }
@@ -405,10 +409,16 @@ namespace Adan.Client
                 {
                     foreach (var action in hotkey.Actions)
                     {
-                        if (action.IsGlobal)
-                            action.Execute(null, null);
-                        else if (outputWindow.RootModel != null)
-                            action.Execute(outputWindow.RootModel, ActionExecutionContext.Empty);
+                        try
+                        {
+                            if (action.IsGlobal)
+                                action.Execute(null, null);
+                            else if (outputWindow.RootModel != null)
+                                action.Execute(outputWindow.RootModel, ActionExecutionContext.Empty);
+                        }
+                        catch (Exception)
+                        { }
+
                     }
                 }
 
@@ -466,7 +476,8 @@ namespace Adan.Client
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error save settings");
+                //MessageBox.Show(ex.ToString(), "Error save settings");
+                ErrorLogger.Instance.Write(string.Format("Error save settings:{0}\r\n{1}", ex.Message, ex.StackTrace));
             }
         }
 
@@ -688,7 +699,7 @@ namespace Adan.Client
             var profilesViewModel = new ProfilesEditViewModel(models, models[0].NameProfile);
             var profileDialog = new ProfilesEditDialog() { DataContext = profilesViewModel, Owner = this };
 
-            var resultDialog = profileDialog.ShowDialog();
+            profileDialog.Show();
         }
 
         private void HandleEditOptions([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -795,7 +806,8 @@ namespace Adan.Client
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(this, ex.ToString(), "Error");
+                    //MessageBox.Show(this, ex.ToString(), "Error");
+                    ErrorLogger.Instance.Write(string.Format("Error add new window: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }

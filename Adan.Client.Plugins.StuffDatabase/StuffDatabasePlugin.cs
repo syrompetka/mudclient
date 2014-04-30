@@ -58,17 +58,6 @@ namespace Adan.Client.Plugins.StuffDatabase
         }
 
         /// <summary>
-        /// Gets the required protocol version.
-        /// </summary>
-        public override int RequiredProtocolVersion
-        {
-            get
-            {
-                return 1;
-            }
-        }
-
-        /// <summary>
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>

@@ -275,10 +275,8 @@ namespace Adan.Client.Common.Settings
                 {
                     Directory.Delete(dir, true);
                 }
-                catch (Exception e)
-                {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
-                }
+                catch (Exception)
+                { }
             }
 
             lock (_profiles)

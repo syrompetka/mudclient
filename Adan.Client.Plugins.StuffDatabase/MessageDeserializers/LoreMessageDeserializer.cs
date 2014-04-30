@@ -22,6 +22,7 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Plugins.StuffDatabase.Messages;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> implementation to handle lore messages.
@@ -54,26 +55,28 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
         public override void DeserializeDataFromServer(int offset, int bytesReceived, byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
-            try
+
+            var messageXml = Encoding.GetEncoding(1251).GetString(data, offset, bytesReceived);
+            _builder.Append(messageXml);
+            if (isComplete)
             {
-                var messageXml = Encoding.GetEncoding(1251).GetString(data, offset, bytesReceived);
-                _builder.Append(messageXml);
-                if (isComplete)
+                string str = _builder.ToString();
+                _builder.Clear();
+
+                try
                 {
-                    using (var stringReader = new StringReader(_builder.ToString()))
+                    using (var stringReader = new StringReader(str))
                     {
                         var serializer = new XmlSerializer(typeof(LoreMessage));
                         var message = (LoreMessage)serializer.Deserialize(stringReader);
                         PushMessageToConveyor(message);
                     }
-
-                    _builder.Clear();
                 }
-            }
-            catch (Exception ex)
-            {
-                _builder.Clear();
-                PushMessageToConveyor(new ErrorMessage(ex.ToString()));
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error deserialize lore message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
+                    PushMessageToConveyor(new ErrorMessage(ex.Message));
+                }
             }
         }
 

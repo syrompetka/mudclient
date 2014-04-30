@@ -11,6 +11,7 @@ using Adan.Client.Common.Commands;
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.Model;
+using Adan.Client.Common.Utils;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
@@ -235,9 +236,10 @@ namespace Adan.Client.Common.Settings
 
                     CommonSettings = (CommonProfileSettings)serializer.Deserialize(stream);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error read common settings: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -259,9 +261,10 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(CommonProfileSettings));
                     serializer.Serialize(streamWriter, CommonSettings);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error save common settings: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -289,11 +292,12 @@ namespace Adan.Client.Common.Settings
                         Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
                     }
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     Groups = new List<Group>();
                     Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error read groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -315,9 +319,10 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(List<Group>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
                     serializer.Serialize(streamWriter, Groups);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.ToString(), "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.ToString(), "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error save groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -338,10 +343,11 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(List<Variable>));
                     Variables = (IList<Variable>)serializer.Deserialize(stream);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     Variables = new List<Variable>();
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error read variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -363,9 +369,10 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(List<Variable>));
                     serializer.Serialize(streamWriter, Variables);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error save variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -387,10 +394,11 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(List<string>));
                     CommandsHistory = (List<string>) serializer.Deserialize(stream);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
                     CommandsHistory = new List<string>();
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error read command history: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -412,9 +420,10 @@ namespace Adan.Client.Common.Settings
                     var serializer = new XmlSerializer(typeof(List<string>));
                     serializer.Serialize(streamWriter, CommandsHistory);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error save command history: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }

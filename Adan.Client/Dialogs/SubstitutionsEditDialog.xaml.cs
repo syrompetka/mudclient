@@ -39,5 +39,10 @@ namespace Adan.Client.Dialogs
                 substitutionsViewModel.EditSubstitutionCommand.Execute(this);
             }
         }
+
+        private void HandleCloseClick(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }

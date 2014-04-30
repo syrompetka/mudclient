@@ -41,7 +41,9 @@ namespace Adan.Client
         /// </summary>
         private PluginHost()
         {
+            AllPlugins = new List<PluginBase>();
             Plugins = new List<PluginBase>();
+
             try
             {
                 _catalog = new AggregateCatalog();
@@ -50,7 +52,8 @@ namespace Adan.Client
                 _container = new CompositionContainer(_catalog);
                 _container.ComposeParts(this);
             }
-            catch { }
+            catch (Exception)
+            { }
         }
 
         /// <summary>
@@ -70,6 +73,16 @@ namespace Adan.Client
         /// </summary>
         [NotNull]
         [ImportMany(typeof(PluginBase))]
+        public IList<PluginBase> AllPlugins
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the all loaded plugins.
+        /// </summary>
+        [NotNull]
         public IList<PluginBase> Plugins
         {
             get;
@@ -95,7 +108,14 @@ namespace Adan.Client
         public void OutputWindowCreated(OutputWindow outputWindow)
         {
             foreach (var plugin in Plugins)
-                plugin.OnCreatedOutputWindow(outputWindow.RootModel);
+            {
+                try
+                {
+                    plugin.OnCreatedOutputWindow(outputWindow.RootModel);
+                }
+                catch (Exception)
+                { }
+            }
         }
 
         /// <summary>
@@ -107,7 +127,14 @@ namespace Adan.Client
             if (outputWindow.Uid != currentOutputWindow)
             {
                 foreach (var plugin in Plugins)
-                    plugin.OnChangedOutputWindow(outputWindow.RootModel);
+                {
+                    try
+                    {
+                        plugin.OnChangedOutputWindow(outputWindow.RootModel);
+                    }
+                    catch (Exception)
+                    { }
+                }
 
                 currentOutputWindow = outputWindow.Uid;
             }
@@ -120,22 +147,13 @@ namespace Adan.Client
         public void OutputWindowClose(OutputWindow outputWindow)
         {
             foreach (var plugin in Plugins)
-                plugin.OnClosedOutputWindow(outputWindow.RootModel);
-        }
-
-        /// <summary>
-        /// Loads all avalable plugins.
-        /// </summary>
-        public void LoadPlugins()
-        {
-            using (var catalog = new AggregateCatalog())
             {
-                catalog.Catalogs.Add(new DirectoryCatalog("Plugins"));
-
-                using (var container = new CompositionContainer(catalog))
+                try
                 {
-                    container.ComposeParts(this);
+                    plugin.OnClosedOutputWindow(outputWindow.RootModel);
                 }
+                catch (Exception)
+                { }
             }
         }
 
@@ -163,34 +181,40 @@ namespace Adan.Client
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
             Assert.ArgumentNotNull(mainWindow, "mainWindow");
 
-            foreach (var plugin in Plugins)
+            foreach (var plugin in AllPlugins)
             {
-                plugin.Initialize(initializationStatusModel, mainWindow);
-
-                foreach (var actionDescription in plugin.CustomActions)
+                try
                 {
-                    RootModel.AllActionDescriptions.Add(actionDescription);
-                }
+                    plugin.Initialize(initializationStatusModel, mainWindow);
+                    Plugins.Add(plugin);
 
-                foreach (var actionParameter in plugin.CustomActionParameters)
-                {
-                    RootModel.AllParameterDescriptions.Add(actionParameter);
-                }
+                    foreach (var actionDescription in plugin.CustomActions)
+                    {
+                        RootModel.AllActionDescriptions.Add(actionDescription);
+                    }
 
-                foreach (var conveyorUnit in plugin.ConveyorUnits)
-                {
-                    MessageConveyor.AddConveyorUnit(conveyorUnit);
-                }
+                    foreach (var actionParameter in plugin.CustomActionParameters)
+                    {
+                        RootModel.AllParameterDescriptions.Add(actionParameter);
+                    }
 
-                foreach (var commandSerializer in plugin.CommandSerializers)
-                {
-                    MessageConveyor.AddCommandSerializer(commandSerializer);
-                }
+                    foreach (var conveyorUnit in plugin.ConveyorUnits)
+                    {
+                        MessageConveyor.AddConveyorUnit(conveyorUnit);
+                    }
 
-                foreach (var messageDeserializer in plugin.MessageDeserializers)
-                {
-                    MessageConveyor.AddMessageDeserializer(messageDeserializer);
+                    foreach (var commandSerializer in plugin.CommandSerializers)
+                    {
+                        MessageConveyor.AddCommandSerializer(commandSerializer);
+                    }
+
+                    foreach (var messageDeserializer in plugin.MessageDeserializers)
+                    {
+                        MessageConveyor.AddMessageDeserializer(messageDeserializer);
+                    }
                 }
+                catch (Exception)
+                { }
             }
 
             ApplyAdditionalPluginMergeDictionaries();
@@ -201,18 +225,23 @@ namespace Adan.Client
         /// </summary>
         public void Dispose()
         {
-            foreach (var plugin in Plugins)
-                plugin.Dispose();
-
-            if (_container != null)
+            try
             {
-                _container.Dispose();
-            }
+                foreach (var plugin in Plugins)
+                    plugin.Dispose();
 
-            if (_catalog != null)
-            {
-                _catalog.Dispose();
+                if (_container != null)
+                {
+                    _container.Dispose();
+                }
+
+                if (_catalog != null)
+                {
+                    _catalog.Dispose();
+                }
             }
+            catch (Exception)
+            { }
 
             GC.SuppressFinalize(this);
         }

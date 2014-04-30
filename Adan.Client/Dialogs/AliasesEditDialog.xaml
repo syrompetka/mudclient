@@ -62,6 +62,6 @@
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=EditAliasCommand}"  CommandParameter="{Binding ElementName=AliasesEditorWindow, Path=.}">Edit</Button>
             <Button HorizontalAlignment="Left" Margin="5,0,0,0" MinWidth="50"  Command="{Binding Path=DeleteAliasCommand}">Delete</Button>
         </StackPanel>
-        <Button IsCancel="True" IsDefault="True" HorizontalAlignment="Right" Grid.Row="1" MinWidth="50">Close</Button>
+        <Button Click="HandleCloseClick" IsCancel="True" HorizontalAlignment="Right" Grid.Row="1" MinWidth="50">Close</Button>
     </Grid>
 </Window>

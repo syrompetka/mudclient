@@ -96,28 +96,52 @@ namespace Adan.Client.ViewModel
             switch (name)
             {
                 case "Aliases":
-                    var aliasesEditDialog = new AliasesEditDialog { DataContext = new AliasesViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions), Owner = owner };
-                    aliasesEditDialog.ShowDialog();
+                    var aliasesEditDialog = new AliasesEditDialog
+                    {
+                        DataContext = new AliasesViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
+                        Owner = owner
+                    };
+                    aliasesEditDialog.Show();
                     break;
                 case "Groups":
-                    var groupEditDialog = new GroupsEditDialog { DataContext = new GroupsViewModel(_groupsViewModel.AllGroup, "Default", RootModel.AllActionDescriptions), Owner = owner };
-                    groupEditDialog.ShowDialog();
+                    var groupEditDialog = new GroupsEditDialog
+                    {
+                        DataContext = new GroupsViewModel(_groupsViewModel.AllGroup, "Default", RootModel.AllActionDescriptions),
+                        Owner = owner
+                    };
+                    groupEditDialog.Show();
                     break;
                 case "Highlights":
-                    var highlightsEditDialog = new HighlightsEditDialog { DataContext = new HighlightsViewModel(_groupsViewModel.Groups), Owner = owner };
-                    highlightsEditDialog.ShowDialog();
+                    var highlightsEditDialog = new HighlightsEditDialog
+                    {
+                        DataContext = new HighlightsViewModel(_groupsViewModel.Groups),
+                        Owner = owner
+                    };
+                    highlightsEditDialog.Show();
                     break;
                 case "Hotkeys":
-                    var hotKeysEditDialog = new HotkeysEditDialog { DataContext = new HotkeysViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions), Owner = owner };
-                    hotKeysEditDialog.ShowDialog();
+                    var hotKeysEditDialog = new HotkeysEditDialog
+                    {
+                        DataContext = new HotkeysViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
+                        Owner = owner
+                    };
+                    hotKeysEditDialog.Show();
                     break;
                 case "Substitutions":
-                    var substitutionsEditDialog = new SubstitutionsEditDialog { DataContext = new SubstitutionsViewModel(_groupsViewModel.Groups), Owner = owner };
-                    substitutionsEditDialog.ShowDialog();
+                    var substitutionsEditDialog = new SubstitutionsEditDialog
+                    {
+                        DataContext = new SubstitutionsViewModel(_groupsViewModel.Groups),
+                        Owner = owner
+                    };
+                    substitutionsEditDialog.Show();
                     break;
                 case "Triggers":
-                    var triggerEditDialog = new TriggersEditDialog { DataContext = new TriggersViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions), Owner = owner };
-                    triggerEditDialog.ShowDialog();
+                    var triggerEditDialog = new TriggersEditDialog
+                    {
+                        DataContext = new TriggersViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
+                        Owner = owner
+                    };
+                    triggerEditDialog.Show();
                     break;
             }
         }

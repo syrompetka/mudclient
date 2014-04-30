@@ -24,9 +24,11 @@ namespace Adan.Client.Dialogs
         /// <summary>
         /// 
         /// </summary>
-        public ProfileOptionsEditDialog()
+        public ProfileOptionsEditDialog(string profileName)
         {
             InitializeComponent();
+
+            this.Title += profileName;
         }
 
         private void HandleItemDoubleClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -36,7 +38,7 @@ namespace Adan.Client.Dialogs
 
         private void HandleCloseClick([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
-            DialogResult = true;
+            //DialogResult = true;
             this.Close();
         }
     }

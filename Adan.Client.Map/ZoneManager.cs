@@ -24,6 +24,7 @@ namespace Adan.Client.Map
     using Adan.Client.Common;
     using Adan.Client.Common.Messages;
     using Adan.Client.Common.Settings;
+    using Adan.Client.Common.Utils;
     using Common.Model;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
@@ -138,7 +139,8 @@ namespace Adan.Client.Map
         /// </summary>
         public void Dispose()
         {
-            _timer.Dispose();
+            if(_timer != null)
+                _timer.Dispose();
 
             foreach (var zoneViewModel in _loadedZones.Values.ToArray())
             {
@@ -445,9 +447,10 @@ namespace Adan.Client.Map
                 {
                     AdditionalRoomParametersSerializer.Serialize(streamWriter, tmp);
                 }
-                catch (Exception e)
+                catch (Exception ex)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    //MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
+                    ErrorLogger.Instance.Write(string.Format("Error save additional room parameters: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
         }
