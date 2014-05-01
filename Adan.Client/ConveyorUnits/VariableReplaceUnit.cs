@@ -17,7 +17,7 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class VariableReplaceUnit : ConveyorUnit
     {
-        private Regex VariableRegex = new Regex(@"\$([\w\d]+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private Regex VariableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         /// <summary>
         /// 
