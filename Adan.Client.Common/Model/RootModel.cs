@@ -468,7 +468,15 @@ namespace Adan.Client.Common.Model
 
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
             if (v != null)
+            {
+                if (v.Value == ("$"+variableName))
+                {
+                    this.PushMessageToConveyor(new ErrorMessage(string.Format("#Cyclical variable: ${0}", variableName)));
+                    throw new Exception();
+                }
+
                 return v.Value;
+            }
 
             if (variableName.Equals("DATE", StringComparison.InvariantCultureIgnoreCase))
             {

@@ -24,7 +24,7 @@ namespace Adan.Client.Common.Model
     public abstract class ActionWithParameters : ActionBase
     {
         private StringBuilder _parametersStringBuilder;
-        private Regex _variableSearchRegex;
+       // private Regex _variableSearchRegex;
         private List<ActionParameterBase> _parameters;
 
         /// <summary>
@@ -58,14 +58,14 @@ namespace Adan.Client.Common.Model
             }
         }
 
-        [NotNull]
-        private Regex VariableSearchRegex
-        {
-            get
-            {
-                return _variableSearchRegex ?? (_variableSearchRegex = new Regex(@"\$(\w+)"));
-            }
-        }
+        //[NotNull]
+        //private Regex VariableSearchRegex
+        //{
+        //    get
+        //    {
+        //        return _variableSearchRegex ?? (_variableSearchRegex = new Regex(@"\$(\w+)"));
+        //    }
+        //}
 
         /// <summary>
         /// Gets the parameters string.
@@ -109,24 +109,109 @@ namespace Adan.Client.Common.Model
             for (int i = 0; i < 10; i++)
             {
                 if (context.Parameters.ContainsKey(i))
-                {
-                    res = res.Replace("%" + i, context.Parameters[i]);
-                }
+                    res = ReplaceParameters(res, i.ToString()[0], context.Parameters[i]);
+                else
+                    res = ReplaceParameters(res, i.ToString()[0], string.Empty);
             }
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (context.Parameters.ContainsKey(i))
+            //        res = res.Replace("%" + i, context.Parameters[i]);
+            //    else
+            //        res = res.Replace("%" + i, string.Empty);
+            //}
 
             return ReplaceVariables(res, model);
         }
 
         /// <summary>
-        /// Replace all variables.
+        /// 
         /// </summary>
-        /// <param name="res">Input string</param>
-        /// <param name="model">The model.</param>
+        /// <param name="input"></param>
+        /// <param name="rootModel"></param>
         /// <returns></returns>
         [NotNull]
-        protected string ReplaceVariables([NotNull] string res, [NotNull] RootModel model)
+        protected string ReplaceVariables([NotNull] string input, [NotNull] RootModel rootModel)
         {
-            return VariableSearchRegex.Replace(res, m => model.GetVariableValue(m.Groups[1].Value));
+            StringBuilder sb = new StringBuilder();
+
+            int nest = 0;
+            int lastPos = 0;
+            int i = 0;
+            while (i < input.Length)
+            {
+                if (input[i] == '$')
+                {
+                    if (nest == 0)
+                    {
+                        if (i - lastPos > 0)
+                            sb.Append(input, lastPos, i - lastPos);
+
+                        i++;
+                        int startPos = i;
+
+                        while (i < input.Length && char.IsLetterOrDigit(input[i]))
+                            i++;
+
+                        sb.Append(rootModel.GetVariableValue(input.Substring(startPos, i - startPos)));
+                        lastPos = i;
+                    }
+                }
+                else if (input[i] == '{')
+                {
+                    nest++;
+                }
+                else if (input[i] == '}')
+                {
+                    nest--;
+                }
+
+                i++;
+            }
+
+            if (lastPos < input.Length)
+                sb.Append(input, lastPos, input.Length - lastPos);
+
+            return sb.ToString();
+        }
+
+        private string ReplaceParameters(string input, char number, string replacement)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            int nest = 0;
+            int lastPos = 0;
+            int i = 0;
+            while (i < input.Length - 1)
+            {
+                if (input[i] == '%')
+                {
+                    if (input[i + 1] == number && nest == 0)
+                    {
+                        if (i - lastPos > 0)
+                            sb.Append(input, lastPos, i - lastPos);
+
+                        sb.Append(replacement);
+                        lastPos = i + 2;
+                        i++;
+                    }
+                }
+                else if (input[i] == '{')
+                {
+                    nest++;
+                }
+                else if (input[i] == '}')
+                {
+                    nest--;
+                }
+
+                i++;
+            }
+
+            if (lastPos < input.Length)
+                sb.Append(input, lastPos, input.Length - lastPos);
+
+            return sb.ToString();
         }
     }
 }
