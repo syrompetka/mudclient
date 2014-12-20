@@ -20,13 +20,14 @@ namespace Adan.Client.ViewModel
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// View model for groups.
     /// </summary>
     public class GroupsViewModel : ViewModelBase
     {
-        private readonly IList<Group> _allGroups;
+        private readonly ConcurrentBag<Group> _allGroups;
         private readonly IEnumerable<ActionDescription> _actionDescriptions;
         private readonly ObservableCollection<GroupViewModel> _groups;
         private GroupViewModel _selectedGroup;
@@ -38,7 +39,7 @@ namespace Adan.Client.ViewModel
         /// <param name="allGroups"></param>
         /// <param name="name"></param>
         /// <param name="actionDescriptions"></param>
-        public GroupsViewModel([NotNull] IList<Group> allGroups, string name, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
+        public GroupsViewModel([NotNull] ConcurrentBag<Group> allGroups, string name, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
         {
             Assert.ArgumentNotNull(allGroups, "allGroups");
             Assert.ArgumentNotNull(actionDescriptions, "actionDescriptions");
@@ -69,7 +70,7 @@ namespace Adan.Client.ViewModel
         /// <summary>
         /// 
         /// </summary>
-        public IList<Group> AllGroup
+        public ConcurrentBag<Group> AllGroup
         {
             get
             {
@@ -175,7 +176,8 @@ namespace Adan.Client.ViewModel
             var castedGroup = group as GroupViewModel;
             if (castedGroup != null)
             {
-                _allGroups.Remove(castedGroup.Group);
+                var gr = castedGroup.Group;
+                _allGroups.TryTake(out gr);
                 _groups.Remove(castedGroup);
             }
 

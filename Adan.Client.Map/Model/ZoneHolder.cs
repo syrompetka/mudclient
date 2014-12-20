@@ -89,6 +89,7 @@ namespace Adan.Client.Map.Model
                     RoomId = mapMessage.RoomId;
                     ZoneId = mapMessage.ZoneId;
 
+                    _zoneManager.ExecuteRoomAction(this);
                     _zoneManager.UpdateControl(this);
                 }
             }

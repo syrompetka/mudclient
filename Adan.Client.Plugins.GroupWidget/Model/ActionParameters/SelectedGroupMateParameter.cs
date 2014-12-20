@@ -34,7 +34,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
             Assert.ArgumentNotNull(rootModel, "rootModel");
             Assert.ArgumentNotNull(context, "context");
 
-            return rootModel.SelectedGroupMate != null ? rootModel.SelectedGroupMate.TargetName : string.Empty;
+            return rootModel.SelectedGroupMate != null ? rootModel.SelectedGroupMate.TargetName.Replace(' ', '.') : string.Empty;
         }
 
         /// <summary>

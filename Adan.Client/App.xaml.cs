@@ -48,7 +48,7 @@ namespace Adan.Client
             {
                 try
                 {
-                    SettingsHolder.Instance.SaveAllSettings();
+                    ((MainWindow)this.MainWindow).SaveAllSettings();
                 }
                 catch (Exception)
                 { }

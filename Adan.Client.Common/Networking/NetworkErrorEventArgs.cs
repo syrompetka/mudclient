@@ -24,16 +24,16 @@ namespace Adan.Client.Common.Networking
         /// Initializes a new instance of the <see cref="NetworkErrorEventArgs"/> class.
         /// </summary>
         /// <param name="socketException">The socket exception.</param>
-        public NetworkErrorEventArgs([NotNull] SocketException socketException)
+        public NetworkErrorEventArgs([NotNull] Exception socketException)
         {
-            SocketException = socketException;
+            Exception = socketException;
             Assert.ArgumentNotNull(socketException, "socketException");
         }
 
         /// <summary>
         /// Gets the socket exception.
         /// </summary>
-        public SocketException SocketException
+        public Exception Exception
         {
             get;
             private set;

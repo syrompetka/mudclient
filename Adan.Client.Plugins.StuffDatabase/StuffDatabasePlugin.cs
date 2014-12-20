@@ -34,6 +34,17 @@ namespace Adan.Client.Plugins.StuffDatabase
     {
         private MessageDeserializer _deserializer;
         private ConveyorUnit _conveyorUnit;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public override string Name
+        {
+            get 
+            {
+                return "StuffDatabase";
+            }
+        }
 
         /// <summary>
         /// Gets the message deserializers that this plugin exposes.
@@ -61,8 +72,8 @@ namespace Adan.Client.Plugins.StuffDatabase
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(InitializationStatusModel initializationStatusModel, Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public override void Initialize(InitializationStatusModel initializationStatusModel, Window MainWindowEx)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 

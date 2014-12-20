@@ -29,6 +29,7 @@ namespace Adan.Client.MessageDeserializers
     /// <summary>
     /// Plain text message processor.
     /// </summary>
+    /// TODO: Проверить работу
     public class TextMessageDeserializer : MessageDeserializer
     {
         #region Constants and Fields
@@ -88,11 +89,6 @@ namespace Adan.Client.MessageDeserializers
         public override void DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data, bool isComplete)
         {
             Assert.ArgumentNotNull(data, "data");
-
-#if DEBUG
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
 
             int currentDataBufferPosition = 0;
 
@@ -168,11 +164,6 @@ namespace Adan.Client.MessageDeserializers
 
                 currentDataBufferPosition++;
             }
-
-#if DEBUG
-            sw.Stop();
-            //PushMessageToConveyor(new InfoMessage(string.Format("TextMessageDeserializer = {0} ms", sw.ElapsedMilliseconds)));
-#endif
         }
 
         /// <summary>
@@ -200,7 +191,7 @@ namespace Adan.Client.MessageDeserializers
 
         private void FlushCurrentLineToConveyor()
         {
-            //PushMessageToConveyor(new OutputToMainWindowMessage(new List<TextMessageBlock>(_messageBlocks)));
+            PushMessageToConveyor(new OutputToMainWindowMessage(new List<TextMessageBlock>(_messageBlocks)));
             _messageBlocks.Clear();
         }
 

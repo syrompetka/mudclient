@@ -7,18 +7,21 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+
+using Adan.Client.Common.Messages;
+using Adan.Client.Common.Themes;
+using Adan.Client.Common.Utils.PatternMatching;
+using CSLib.Net.Annotations;
+using CSLib.Net.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Xml.Serialization;
+
 namespace Adan.Client.Common.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Xml.Serialization;
-    using CSLib.Net.Annotations;
-    using CSLib.Net.Diagnostics;
-    using Messages;
-    using Themes;
-    using Utils.PatternMatching;
 
     /// <summary>
     /// A highlight of all incoming strings that match certain pattern with a specific color and background.
@@ -29,8 +32,11 @@ namespace Adan.Client.Common.Model
         [NonSerialized]
         private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
         private string _textToHighlight;
+
         [NonSerialized]
         private PatternToken _rootPatternToken;
+
+        private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Highlight"/> class.
@@ -43,6 +49,17 @@ namespace Adan.Client.Common.Model
 
             Group = null;
             Operation = UndoOperation.None;
+        }
+
+        /// <summary>
+        /// Is Regular Expression
+        /// </summary>
+        [NotNull]
+        [XmlAttribute]
+        public bool IsRegExp
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -90,13 +107,25 @@ namespace Adan.Client.Common.Model
             {
                 Assert.ArgumentNotNull(value, "value");
 
-                _textToHighlight = value;
+                if (value.Length > 2 && value[0] == '/' && value[value.Length - 1] == '/')
+                {
+                    _textToHighlight = value.Substring(1, value.Length - 2);
+                    IsRegExp = true;
+                }
+                else
+                {
+                    _textToHighlight = value;
+                    IsRegExp = false;
+                }
+
+                _rootPatternToken = null;
             }
         }
 
         /// <summary>
         /// 
         /// </summary>
+        [XmlIgnore]
         public UndoOperation Operation
         {
             get;
@@ -106,7 +135,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-                [XmlIgnore]
+        [XmlIgnore]
         public Group Group
         {
             get;
@@ -123,76 +152,54 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(textMessage, "textMessage");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            //var messageBlocks = textMessage.MessageBlocks;
-            //bool matchSuccess = false;
-            int position = 0;
-            ClearMatchingResults();
+            var messageBlocks = textMessage.MessageBlocks;
+            //int position = 0;
+            //ClearMatchingResults();
             string text = textMessage.InnerText;
-            var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
 
-            while (res.IsSuccess)
+            if (string.IsNullOrEmpty(textMessage.InnerText))
+                return;
+
+            if (IsRegExp)
             {
-                textMessage.HighlightInnerText(ForegroundColor, BackgroundColor, res.StartPosition, res.EndPosition - res.StartPosition);
-                position = res.EndPosition;
-                ClearMatchingResults();
-                res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+                var varReplace = rootModel.ReplaceVariables(TextToHighlight);
+                if (!varReplace.IsAllVariables)
+                    return;
 
-                //matchSuccess = true;
-                //var newBlocks = new List<TextMessageBlock>();
-                //var matchIndex = res.StartPosition;
-                //var matchLength = res.EndPosition - res.StartPosition;
-                //position = res.EndPosition;
-                //bool matchTextAdded = false;
-                //foreach (var block in messageBlocks)
-                //{
-                //    if (matchLength <= 0)
-                //    {
-                //        newBlocks.Add(block);
-                //    }
-                //    else if (matchIndex < block.Text.Length)
-                //    {
-                //        var charsToRemove = Math.Min(block.Text.Length - matchIndex, matchLength);
-                //        newBlocks.Add(
-                //            new TextMessageBlock(block.Text.Remove(matchIndex), block.Foreground, block.Background));
-                //        if (!matchTextAdded)
-                //        {
-                //            newBlocks.Add(new TextMessageBlock(textMessage.InnerText.Substring(res.StartPosition, res.EndPosition - res.StartPosition), TextColor, BackgroundColor));
-                //            matchTextAdded = true;
-                //        }
+                Regex rExp = new Regex(varReplace.Value);
 
-                //        if (matchLength + matchIndex < block.Text.Length)
-                //        {
-                //            newBlocks.Add(
-                //                new TextMessageBlock(
-                //                    block.Text.Substring(
-                //                        matchLength + matchIndex, block.Text.Length - matchLength - matchIndex),
-                //                    block.Foreground,
-                //                    block.Background));
-                //        }
+                Match match = rExp.Match(textMessage.InnerText);
 
-                //        matchLength -= charsToRemove;
-                //        matchIndex = 0;
-                //    }
-                //    else
-                //    {
-                //        newBlocks.Add(block);
-                //        matchIndex -= block.Text.Length;
-                //    }
+                while (match.Success)
+                {
+                    textMessage.HighlightText(match.Index, match.Length, ForegroundColor, BackgroundColor);
+                    match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
+                }
+            }
+            else
+            {
+                var varReplace = rootModel.ReplaceVariables(TextToHighlight);
+                if (!varReplace.IsAllVariables)
+                    return;
 
-                //    if (matchIndex < 0)
-                //    {
-                //        matchIndex = 0;
-                //    }
-                //}
+                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value), ".*"));
 
-                //messageBlocks = newBlocks;
-                //ClearMatchingResults();
-                //res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, position, _matchingResults);
+                var match = rExp.Match(textMessage.InnerText);
+                while (match.Success)
+                {
+                    textMessage.HighlightText(match.Index, match.Length, ForegroundColor, BackgroundColor);
+                    match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
+                }
             }
 
-            //if (matchSuccess)
+            //var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+
+            //while (res.IsSuccess)
             //{
-            //    textMessage.UpdateMessageBlocks(messageBlocks);
+            //    textMessage.HighlightText(res.StartPosition, res.EndPosition - res.StartPosition, ForegroundColor, BackgroundColor);
+            //    position = res.EndPosition;
+            //    ClearMatchingResults();
+            //    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
             //}
         }
 
@@ -221,7 +228,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public void Undo()
+        public void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)
             {
@@ -231,7 +238,8 @@ namespace Adan.Client.Common.Model
                         Group.Highlights.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Group.Highlights.Remove(this);
+                        Highlight th = this;
+                        Group.Highlights.TryTake(out th);
                         break;
                 }
             }
@@ -241,7 +249,7 @@ namespace Adan.Client.Common.Model
         {
             for (int i = 0; i < _matchingResults.Count; i++)
             {
-                _matchingResults[i] = null;
+                _matchingResults[i] = string.Empty;
             }
         }
 

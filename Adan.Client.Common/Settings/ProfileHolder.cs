@@ -1,19 +1,15 @@
-﻿using System;
+﻿using Adan.Client.Common.Conveyor;
+using Adan.Client.Common.Model;
+using Adan.Client.Common.Utils;
+using CSLib.Net.Annotations;
+using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
-using Adan.Client.Common.Commands;
-using Adan.Client.Common.Controls;
-using Adan.Client.Common.Conveyor;
-using Adan.Client.Common.Model;
-using Adan.Client.Common.Utils;
-using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
 
 namespace Adan.Client.Common.Settings
 {
@@ -24,8 +20,8 @@ namespace Adan.Client.Common.Settings
     {
         #region Constants and Fields
 
-        private IList<Group> _groups;
-        private IList<Variable> _variables;
+        private ConcurrentBag<Group> _groups;
+        private ConcurrentBag<Variable> _variables;
         private string _name;
         private List<string> _commandsHistory;
 
@@ -41,8 +37,6 @@ namespace Adan.Client.Common.Settings
         {
             Name = name;
         }
-
-        private ProfileHolder() { }
 
         #endregion
 
@@ -70,7 +64,7 @@ namespace Adan.Client.Common.Settings
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public IList<Group> Groups
+        public ConcurrentBag<Group> Groups
         {
             get
             {
@@ -94,7 +88,7 @@ namespace Adan.Client.Common.Settings
         /// The variables.
         /// </value>
         [NotNull]
-        public IList<Variable> Variables
+        public ConcurrentBag<Variable> Variables
         {
             get
             {
@@ -154,8 +148,8 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public void ReloadProfile()
         {
-            ReadVariables();
             ReadGroups();
+            ReadVariables();
             ReadCommonSettings();
             ReadCommandsHistory();
         }
@@ -205,11 +199,10 @@ namespace Adan.Client.Common.Settings
         /// <returns></returns>
         public ProfileHolder Clone()
         {
-            return new ProfileHolder()
+            return new ProfileHolder(this.Name)
                 {
-                    _name = this.Name,
-                    _groups = new List<Group>(this.Groups),
-                    _variables = new List<Variable>(this.Variables),
+                    _groups = new ConcurrentBag<Group>(this.Groups),
+                    _variables = new ConcurrentBag<Variable>(this.Variables),
                     CommonSettings = this.CommonSettings,
                     CommandsHistory = new List<string>(this.CommandsHistory),
                 };
@@ -238,7 +231,6 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error read common settings: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
@@ -263,7 +255,6 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error save common settings: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
@@ -275,7 +266,7 @@ namespace Adan.Client.Common.Settings
 
             if (!File.Exists(settingsFileFullPath))
             {
-                Groups = new List<Group>();
+                Groups = new ConcurrentBag<Group>();
                 Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
                 return;
             }
@@ -284,8 +275,8 @@ namespace Adan.Client.Common.Settings
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(List<Group>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
-                    Groups = (IList<Group>)serializer.Deserialize(stream);
+                    var serializer = new XmlSerializer(typeof(ConcurrentBag<Group>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
+                    Groups = (ConcurrentBag<Group>)serializer.Deserialize(stream);
                     var defGroup = Groups.FirstOrDefault(group => group.Name == "Default");
                     if (defGroup == null)
                     {
@@ -294,10 +285,10 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    Groups = new List<Group>();
-                    Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error read groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
+
+                    Groups = new ConcurrentBag<Group>();
+                    Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
                 }
             }
         }
@@ -321,7 +312,6 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.ToString(), "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error save groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
@@ -332,7 +322,7 @@ namespace Adan.Client.Common.Settings
             var variablesFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Variables.xml");
             if (!File.Exists(variablesFileFullPath))
             {
-                Variables = new List<Variable>();
+                Variables = new ConcurrentBag<Variable>();
                 return;
             }
 
@@ -340,14 +330,14 @@ namespace Adan.Client.Common.Settings
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(List<Variable>));
-                    Variables = (IList<Variable>)serializer.Deserialize(stream);
+                    var serializer = new XmlSerializer(typeof(ConcurrentBag<Variable>));
+                    Variables = (ConcurrentBag<Variable>)serializer.Deserialize(stream);
                 }
                 catch (Exception ex)
                 {
-                    Variables = new List<Variable>();
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error read variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
+
+                    Variables = new ConcurrentBag<Variable>();
                 }
             }
         }
@@ -371,7 +361,6 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error save variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
@@ -396,9 +385,9 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    CommandsHistory = new List<string>();
-                    //MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error read command history: {0}\r\n{1}", ex.Message, ex.StackTrace));
+
+                    CommandsHistory = new List<string>();
                 }
             }
         }
@@ -422,7 +411,6 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex)
                 {
-                    //MessageBox.Show(ex.Message, "Ошибка", MessageBoxButton.OK);
                     ErrorLogger.Instance.Write(string.Format("Error save command history: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
@@ -445,12 +433,14 @@ namespace Adan.Client.Common.Settings
                 {
                     Directory.CreateDirectory(dir);
                 }
-                catch (Exception) { }
+                catch (Exception ex) 
+                { 
+                    ErrorLogger.Instance.Write(string.Format("Error create settings directory: {0}\r\n{1]", ex.Message, ex.StackTrace));
+                }
             }
             return dir;
         }
 
         #endregion
-
     }
 }

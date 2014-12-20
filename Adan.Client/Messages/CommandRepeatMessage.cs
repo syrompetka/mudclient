@@ -21,9 +21,9 @@ namespace Adan.Client.Messages
     public class CommandRepeatMessage : OutputToMainWindowMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandRepeatMessage"/> class.
+        /// 
         /// </summary>
-        /// <param name="commandText">The command text to display.</param>
+        /// <param name="commandText"></param>
         public CommandRepeatMessage([NotNull] string commandText)
             : base(commandText, TextColor.RepeatCommandTextColor)
         {

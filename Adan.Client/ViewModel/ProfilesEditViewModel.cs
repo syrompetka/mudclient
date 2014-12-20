@@ -172,7 +172,7 @@ namespace Adan.Client.ViewModel
             if (SelectedProfile == null)
                 return;
 
-            var profile = SettingsHolder.Instance.GetProfile(SelectedProfile.NameProfile);
+            var profile = SettingsHolder.Instance.GetProfile(SelectedProfile.NameProfile).Clone();
 
             var profileOptionDialog = new ProfileOptionsEditDialog(SelectedProfile.NameProfile)
             {
@@ -181,7 +181,7 @@ namespace Adan.Client.ViewModel
             };
 
             profileOptionDialog.Show();
-            SettingsHolder.Instance.SetProfile(profile, true);
+            SettingsHolder.Instance.SetProfile(profile);
         }
 
         private void UpdateAddProfileCommandCanExecute()

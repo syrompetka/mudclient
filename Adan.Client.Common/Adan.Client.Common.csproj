@@ -66,22 +66,12 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorAndHighlightVisualLineElement.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorVisualLineElement.cs" />
-    <Compile Include="Controls\AvalonEdit\AdanElementGenerator.cs" />
-    <Compile Include="Controls\AvalonEdit\AdanLineTransformer.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanResetVisualLineElement.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStartHighlightVisualElement.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStopHighlightVisualElement.cs" />
-    <Compile Include="Controls\AvalonEdit\DocumentColorizer.cs" />
-    <Compile Include="Controls\AvalonEdit\VisualLineElements\IAdanVisualLineElement.cs" />
-    <Compile Include="Controls\AvalonEdit\SelectionColorizer.cs" />
-    <Compile Include="Controls\AvalonEdit\TextColorHolder.cs" />
-    <Compile Include="Controls\ContorlBoxNative\MyText.cs" />
+    <Compile Include="Controls\ContorlBoxNative\MouseWheelRedirector.cs" />
+    <Compile Include="Controls\ContorlBoxNative\SafeLogFont.cs" />
     <Compile Include="Controls\ContorlBoxNative\TextView.cs">
-      <SubType>Component</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\TextBoxNative.cs" />
+    <Compile Include="Controls\ContorlBoxNative\TextBoxNative.cs" />
     <Compile Include="Model\IUndo.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
@@ -99,13 +89,8 @@
     </Compile>
     <Compile Include="Controls\CursorPositionHistory.cs" />
     <Compile Include="Controls\GenericTemplateSelector.cs" />
-    <Compile Include="Controls\ScrollableFlowTextControl.cs" />
     <Compile Include="Settings\SettingsChangedEventArgs.cs" />
     <Compile Include="Settings\SettingsFolder.cs" />
-    <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
-    <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />
-    <Compile Include="Controls\TextFormatting\MessageTextSource.cs" />
-    <Compile Include="Controls\TextFormatting\TextSelectionSettings.cs" />
     <Compile Include="ConveyorUnits\ConveyorUnit.cs" />
     <Compile Include="Conveyor\MessageConveyor.cs" />
     <Compile Include="Conveyor\MessageReceivedEventArgs.cs" />

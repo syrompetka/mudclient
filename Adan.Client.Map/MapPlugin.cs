@@ -25,6 +25,8 @@ namespace Adan.Client.Map
     using Adan.Client.Map.MessageDeserializers;
     using Adan.Client.Map.ConveyorUnits;
     using Adan.Client.Common.ViewModel;
+    using System.Threading.Tasks;
+    using System.Windows.Forms;
 
     /// <summary>
     /// A plugin to display zone map.
@@ -47,13 +49,31 @@ namespace Adan.Client.Map
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override string Name
+        {
+            get
+            {
+                return "Map";
+            }
+        }
+
+        /// <summary>
         /// Gets the widgets of this plugin.
         /// </summary>
         public override IEnumerable<WidgetDescription> Widgets
         {
             get
             {
-                return Enumerable.Repeat(new WidgetDescription("Map", "Map", _mapControl, false), 1);
+
+                return Enumerable.Repeat(new WidgetDescription("Map", "Map", _mapControl) 
+                {
+                    Left = (int)SystemParameters.PrimaryScreenWidth - 400,
+                    Top = (int)SystemParameters.PrimaryScreenHeight - 400,
+                    Height = 400, 
+                    Width = 400,
+                }, 1);
             }
         }
 
@@ -94,26 +114,32 @@ namespace Adan.Client.Map
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(InitializationStatusModel initializationStatusModel, Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public override void Initialize(InitializationStatusModel initializationStatusModel, Window MainWindowEx)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
+            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
 
             initializationStatusModel.CurrentPluginName = "Map";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
 
             _messageDeserializer = new CurrentRoomMessageDeserializer();
 
-            _routeManager = new RouteManager(mainWindow);
+            _routeManager = new RouteManager(MainWindowEx);
             _mapControl.RouteManager = _routeManager;
             _routeUnit = new RouteUnit(_routeManager);
-            _zoneManager = new ZoneManager(_mapControl, mainWindow, _routeManager);
-
-            MapDownloader.DownloadMaps(initializationStatusModel);
-
+            _zoneManager = new ZoneManager(_mapControl, MainWindowEx, _routeManager);
             initializationStatusModel.PluginInitializationStatus = "Routes loading";
             _routeManager.LoadRoutes();
+
+            Task.Factory.StartNew(() => 
+                {
+                    try
+                    {
+                        MapDownloader.DownloadMaps();
+                    }
+                    catch(Exception) { }
+                });
         }
 
         /// <summary>

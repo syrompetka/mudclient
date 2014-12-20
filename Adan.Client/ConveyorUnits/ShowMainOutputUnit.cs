@@ -24,10 +24,10 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mainWindow"></param>
-        public ShowMainOutputUnit(MainWindow mainWindow)
+        /// <param name="MainWindowEx"></param>
+        public ShowMainOutputUnit(MainWindow MainWindowEx)
         {
-            _mainWindow = mainWindow;
+            _mainWindow = MainWindowEx;
         }
 
         /// <summary>

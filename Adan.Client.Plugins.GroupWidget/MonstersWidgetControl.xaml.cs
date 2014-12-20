@@ -10,6 +10,7 @@
 namespace Adan.Client.Plugins.GroupWidget
 {
     using System;
+    using System.Linq;
     using System.Windows.Controls;
     using System.Windows.Input;
 
@@ -43,6 +44,54 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void NextMonster()
+        {
+            Action executeToAct = () =>
+            {
+                if (this.DataContext != null)
+                {
+                    RoomMonstersViewModel _roomMonstersViewModel = (RoomMonstersViewModel)this.DataContext;
+                    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == _roomMonstersViewModel.Monsters.Count - 1)
+                    {
+                        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.FirstOrDefault();
+                        return;
+                    }
+
+                    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
+                    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index + 1];
+                }
+            };
+
+            Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void PreviousMonster()
+        {
+            Action executeToAct = () =>
+            {
+                if (this.DataContext != null)
+                {
+                    RoomMonstersViewModel _roomMonstersViewModel = (RoomMonstersViewModel)this.DataContext;
+                    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == 0)
+                    {
+                        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.LastOrDefault();
+                        return;
+                    }
+
+                    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
+                    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index - 1];
+                }
+            };
+
+            Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
         }
 
         /// <summary>

@@ -10,6 +10,7 @@
 namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
 {
     using System;
+    using System.Collections.Generic;
 
     using Common.Model;
 
@@ -38,27 +39,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
                 return string.Empty;
             }
 
-            int i = 0;
-            foreach (var roomMonstersStatus in rootModel.RoomMonstersStatus)
-            {
-                if (roomMonstersStatus.TargetName == rootModel.SelectedRoomMonster.TargetName)
-                {
-                    i++;
-                }
-
-                if (roomMonstersStatus == rootModel.SelectedRoomMonster)
-                {
-                    break;
-                }
-            }
-
-            var result = rootModel.SelectedRoomMonster.TargetName.Replace(' ', '.');
-            if (i > 1)
-            {
-                result = i + "." + result;
-            }
-
-            return result;
+            return rootModel.SelectedRoomMonster.TargetName.Replace(' ', '.');
         }
 
         /// <summary>

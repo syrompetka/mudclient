@@ -148,7 +148,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public void Undo()
+        public void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)
             {
@@ -158,7 +158,8 @@ namespace Adan.Client.Common.Model
                         Group.Hotkeys.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Group.Hotkeys.Remove(this);
+                        Hotkey th = this;
+                        Group.Hotkeys.TryTake(out th);
                         break;
                 }
             }

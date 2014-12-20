@@ -142,12 +142,13 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            var networkErrorMessage = message as NetworkErrorMessage;
+            var networkErrorMessage = message as NetworkErrorMessageEx;
             if (networkErrorMessage != null)
             {
-                PushMessageToConveyor(new ErrorMessage(networkErrorMessage.SocketException.Message), rootModel);
                 rootModel.Connected = false;
                 rootModel.ConnectionInProgress = false;
+                PushMessageToConveyor(new ErrorMessage(string.Format("#{0}", networkErrorMessage.Exception.Message)), rootModel);
+                PushMessageToConveyor(new ErrorMessage("#Disconnect"), rootModel);
 
                 //Автореконнект
                 if (SettingsHolder.Instance.Settings.AutoReconnect)

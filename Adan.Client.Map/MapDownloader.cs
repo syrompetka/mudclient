@@ -21,6 +21,7 @@ namespace Adan.Client.Map
     using System.Threading;
     using Adan.Client.Common.ViewModel;
     using Adan.Client.Common.Settings;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// Class to download maps from server.
@@ -28,21 +29,32 @@ namespace Adan.Client.Map
     public static class MapDownloader
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public static event EventHandler UpgradeComplete;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static bool IsUpgrading
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Downloads the maps.
         /// </summary>
-        /// <param name="initializationStatusModel">The initialization status model.</param>
-        public static void DownloadMaps([NotNull]InitializationStatusModel initializationStatusModel)
+        public static void DownloadMaps()
         {
-            Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
-
             try
             {
-                initializationStatusModel.PluginInitializationStatus = "Checking for map updates";
+                var mapFolder = GetMapsFolder();
 
                 var request = (HttpWebRequest)WebRequest.Create(Settings.Default.MapsUrl);
 
                 //Обновляет, только если файл существует.
-                if (File.Exists(Path.Combine(GetMapsFolder(), "Maps.zip")))
+                if (File.Exists(Path.Combine(mapFolder, "Maps.zip")))
                     request.IfModifiedSince = Settings.Default.LastMapsUpdateDate;
 
                 CreateDirectories();
@@ -50,46 +62,54 @@ namespace Adan.Client.Map
                 using (var response = GetHttpResponse(request))
                 {
                     if (response.StatusCode == HttpStatusCode.NotModified)
-                        return;
+                       return;
 
-                    initializationStatusModel.PluginInitializationStatus = "Downloading maps";
-                    
                     using (var responceStream = response.GetResponseStream())
                     {
                         if (responceStream == null)
                             return;
 
-                        using (var stream = File.Open(Path.Combine(GetMapsFolder(), "Maps.zip"), FileMode.Create, FileAccess.Write))
+                        File.Delete(Path.Combine(mapFolder, "Maps.zip"));
+                        using (var stream = File.Open(Path.Combine(mapFolder, "Maps.zip"), FileMode.Create, FileAccess.Write))
                         {
                             responceStream.CopyTo(stream);
                             Settings.Default.LastMapsUpdateDate = response.LastModified;
                         }
                     }
 
-                    initializationStatusModel.PluginInitializationStatus = "Unpacking maps";
-
-                    using (var zip = ZipFile.Read(Path.Combine(GetMapsFolder(), "Maps.zip")))
+                    try
                     {
-                        foreach (var zipEntry in zip.Entries)
+                        IsUpgrading = true;
+                        using (var zip = ZipFile.Read(Path.Combine(mapFolder, "Maps.zip")))
                         {
-                            if (zipEntry.IsDirectory)
-                                continue;
+                            foreach (var zipEntry in zip.Entries)
+                            {
+                                if (zipEntry.IsDirectory)
+                                    continue;
 
-                            var fileName = Path.GetFileName(zipEntry.FileName) ?? string.Empty;
-                            initializationStatusModel.PluginInitializationStatus = string.Format("Unpacking maps: {0}", fileName);
-                            zipEntry.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
-                            zipEntry.Extract(GetMapsFolder());
+                                zipEntry.ExtractExistingFile = ExtractExistingFileAction.OverwriteSilently;
+                                try
+                                {
+                                    zipEntry.Extract(mapFolder);
+                                }
+                                catch (Exception ex)
+                                {
+                                    ErrorLogger.Instance.Write(string.Format("Error extract file Maps.zip: {0}", ex.Message));
+                                }
+                            }
                         }
+                    }
+                    finally
+                    {
+                        IsUpgrading = false;
+                        UpgradeComplete(null, EventArgs.Empty);
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                initializationStatusModel.PluginInitializationStatus = "Error connecting to server";
-                Thread.Sleep(1000);
+                ErrorLogger.Instance.Write(string.Format("Error download maps: {0}", ex.Message));
             }
-
-            initializationStatusModel.PluginInitializationStatus = string.Empty;
 
             Settings.Default.Save();
         }

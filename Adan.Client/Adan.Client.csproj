@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -27,7 +28,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -37,7 +37,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\Bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;NATIVE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
@@ -109,12 +109,6 @@
     <Compile Include="Commands\SendToWindowCommand.cs" />
     <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
-    <Compile Include="Controls\MainOutputWindowEx.xaml.cs">
-      <DependentUpon>MainOutputWindowEx.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\MainOutputWindowExx.xaml.cs">
-      <DependentUpon>MainOutputWindowExx.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
       <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
     </Compile>
@@ -208,17 +202,12 @@
     <Compile Include="Controls\Fonts\FontSizeListItem.cs" />
     <Compile Include="Controls\Fonts\NameDictionaryHelper.cs" />
     <Compile Include="Controls\Fonts\TypeFaceListItem.cs" />
-    <Compile Include="Utils\DockableContentStateToBoolConverter.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
-    <Compile Include="MessageDeserializers\TextMessageDeserializerEx.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
-    <Compile Include="Controls\MainOutputWindow.xaml.cs">
-      <DependentUpon>MainOutputWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Model\ActionDescriptions\ClearVariableValueActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\ConditionalActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\DisableGroupActionDescription.cs" />
@@ -252,6 +241,7 @@
     <Compile Include="Model\Actions\StartLogAction.cs" />
     <Compile Include="Model\Actions\StopLogAction.cs" />
     <Compile Include="Model\Actions\ToggleFullScreenModeAction.cs" />
+    <Compile Include="Model\LayoutContainerStyleSelector.cs" />
     <Compile Include="Model\ParameterDescriptions\ConstantStringParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\MathExpressionParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\TriggerOrCommandParameterDescription.cs" />
@@ -298,14 +288,6 @@
     <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
-    <Page Include="Controls\MainOutputWindowEx.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\MainOutputWindowExx.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\MainOutputWindowNative.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -406,10 +388,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="Controls\MainOutputWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Resources\AvalonDockExpressionDark.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -461,12 +439,12 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
-      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <ProductName>Клиентский профиль Microsoft .NET Framework 4 %28x86 и x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
@@ -482,16 +460,19 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="icon.ico" />
-    <Resource Include="Resources\Images\DockBottom.png" />
-    <Resource Include="Resources\Images\DockLeft.png" />
-    <Resource Include="Resources\Images\DockPane.png" />
-    <Resource Include="Resources\Images\DockRight.png" />
-    <Resource Include="Resources\Images\DockTop.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">
       <Project>{B9D6E795-44B4-4998-AAE5-EA3CB547563D}</Project>
       <Name>Adan.Client.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock.Themes.Expression\Xceed.Wpf.AvalonDock.Themes.Expression.csproj">
+      <Project>{488DD8F7-9D3C-4F53-BD1F-84A095D9BC10}</Project>
+      <Name>Xceed.Wpf.AvalonDock.Themes.Expression</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock\Xceed.Wpf.AvalonDock.csproj">
+      <Project>{DB81988F-E0F2-45A0-A1FD-8C37F3D35244}</Project>
+      <Name>Xceed.Wpf.AvalonDock</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

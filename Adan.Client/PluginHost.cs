@@ -23,6 +23,7 @@ namespace Adan.Client
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Adan.Client.Common.ViewModel;
+    using Adan.Client.Common.Utils;
 
     /// <summary>
     /// Class to host plugins.
@@ -76,7 +77,7 @@ namespace Adan.Client
         public IList<PluginBase> AllPlugins
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -89,15 +90,32 @@ namespace Adan.Client
             private set;
         }
 
+        private List<WidgetDescription> _widgets;
         /// <summary>
         /// Gets all widgets.
         /// </summary>
         [NotNull]
-        public IEnumerable<WidgetDescription> AllWidgets
+        public IEnumerable<WidgetDescription> Widgets
         {
             get
             {
-                return Plugins.SelectMany(plugin => plugin.Widgets);
+                if (_widgets == null)
+                {
+                    _widgets = new List<WidgetDescription>();
+                    foreach (var plugin in Plugins)
+                    {
+                        try
+                        {
+                            _widgets.AddRange(plugin.Widgets);
+                        }
+                        catch (Exception ex)
+                        {
+                            ErrorLogger.Instance.Write(string.Format("Error initialize widgets for plugin {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
+                        }
+                    }
+                }
+
+                return _widgets;
             }
         }
 
@@ -113,8 +131,10 @@ namespace Adan.Client
                 {
                     plugin.OnCreatedOutputWindow(outputWindow.RootModel);
                 }
-                catch (Exception)
-                { }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Plugin error {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
+                }
             }
         }
 
@@ -132,8 +152,10 @@ namespace Adan.Client
                     {
                         plugin.OnChangedOutputWindow(outputWindow.RootModel);
                     }
-                    catch (Exception)
-                    { }
+                    catch (Exception ex)
+                    {
+                        ErrorLogger.Instance.Write(string.Format("Plugin error {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
+                    }
                 }
 
                 currentOutputWindow = outputWindow.Uid;
@@ -152,8 +174,10 @@ namespace Adan.Client
                 {
                     plugin.OnClosedOutputWindow(outputWindow.RootModel);
                 }
-                catch (Exception)
-                { }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Plugin error {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
+                }
             }
         }
 
@@ -164,9 +188,16 @@ namespace Adan.Client
         {
             foreach (var plugin in Plugins)
             {
-                foreach (var resourceUrl in plugin.PluginXamlResourcesToMerge)
+                try
                 {
-                    Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(resourceUrl, UriKind.Relative) });
+                    foreach (var resourceUrl in plugin.PluginXamlResourcesToMerge)
+                    {
+                        Application.Current.Resources.MergedDictionaries.Add(new ResourceDictionary { Source = new Uri(resourceUrl, UriKind.Relative) });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Plugin error {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
                 }
             }
         }
@@ -175,17 +206,17 @@ namespace Adan.Client
         /// Initializes the plugins.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public void InitializePlugins([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public void InitializePlugins([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window MainWindowEx)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
+            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
 
             foreach (var plugin in AllPlugins)
             {
                 try
                 {
-                    plugin.Initialize(initializationStatusModel, mainWindow);
+                    plugin.Initialize(initializationStatusModel, MainWindowEx);
                     Plugins.Add(plugin);
 
                     foreach (var actionDescription in plugin.CustomActions)
@@ -213,8 +244,10 @@ namespace Adan.Client
                         MessageConveyor.AddMessageDeserializer(messageDeserializer);
                     }
                 }
-                catch (Exception)
-                { }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Plugin initialize error {0}: {1}\r\n{2}", plugin.Name, ex.Message, ex.StackTrace));
+                }
             }
 
             ApplyAdditionalPluginMergeDictionaries();
@@ -242,8 +275,6 @@ namespace Adan.Client
             }
             catch (Exception)
             { }
-
-            GC.SuppressFinalize(this);
         }
     }
 }

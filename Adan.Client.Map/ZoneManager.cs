@@ -57,16 +57,16 @@ namespace Adan.Client.Map
         /// Initializes a new instance of the <see cref="ZoneManager"/> class.
         /// </summary>
         /// <param name="mapControl">The map control.</param>
-        /// <param name="mainWindow">The main window.</param>
+        /// <param name="MainWindowEx">The main window.</param>
         /// <param name="routeManger">The route manger.</param>
-        public ZoneManager([NotNull] MapControl mapControl, [NotNull] Window mainWindow, [NotNull] RouteManager routeManger)
+        public ZoneManager([NotNull] MapControl mapControl, [NotNull] Window MainWindowEx, [NotNull] RouteManager routeManger)
         {
             Assert.ArgumentNotNull(mapControl, "mapControl");
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
+            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
             Assert.ArgumentNotNull(routeManger, "routeManger");
 
             _mapControl = mapControl;
-            _mainWindow = mainWindow;
+            _mainWindow = MainWindowEx;
             _routeManger = routeManger;
             _emptyZone = new ZoneViewModel(new Zone { Id = -1000 }, Enumerable.Empty<AdditionalRoomParameters>()) { ZoomLevel = Settings.Default.MapZoomLevel };
             _timer = new System.Timers.Timer(5000) { AutoReset = false };
@@ -77,6 +77,19 @@ namespace Adan.Client.Map
             _mapControl.RoomEditDialogRequired += ShowRoomEditDialog;
             _mapControl.NavigateToRoomRequired += NavigateToRoom;
             _mapControl.RoutesDialogShowRequired += (o, e) => _routeManger.ShowRoutesDialog();
+
+            MapDownloader.UpgradeComplete += MapDownloader_UpgradeComplete;
+        }
+
+        private void MapDownloader_UpgradeComplete(object sender, EventArgs e)
+        {
+            if(_mapControl.ViewModel != null)
+            {
+                if (_zoneHolders.ContainsKey(_mapControl.ViewModelUid))
+                {
+                    UpdateControl(_zoneHolders[_mapControl.ViewModelUid]);
+                }
+            }
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -264,8 +277,6 @@ namespace Adan.Client.Map
         /// <param name="zoneHolder"></param>
         public void UpdateControl(ZoneHolder zoneHolder)
         {
-            ExecuteRoomAction(zoneHolder);
-
             if (_mapControl.ViewModel != null && _mapControl.ViewModelUid == zoneHolder.Uid)
             {
                 if (_mapControl.ViewModel.Id != zoneHolder.ZoneId)
@@ -333,7 +344,11 @@ namespace Adan.Client.Map
                         return result;
                     }
 
+                    if (MapDownloader.IsUpgrading)
+                        return null;
+
                     loadedZone = LoadZoneFromFile(zoneId.ToString(CultureInfo.InvariantCulture) + ".xml");
+                    
                     if (loadedZone == null)
                         return null;
                 }

@@ -24,6 +24,7 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
     using ViewModel;
     using Adan.Client.Plugins.GroupWidget.Messages;
     using Adan.Client.Common.Model;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// <see cref="ConveyorUnit"/> implementation to handle <see cref="RoomMonstersMessage"/> messages.
@@ -51,7 +52,6 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         {
             get
             {
-                //return Enumerable.Repeat(Constants.RoomMonstersMessage, 1);
                 return Enumerable.Empty<int>();
             }
         }
@@ -63,9 +63,7 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         {
             get
             {
-                //Временное включение буквы ё
-                //return Enumerable.Repeat(BuiltInCommandTypes.HotkeyCommand, 1);
-                return Enumerable.Empty<int>();
+                return Enumerable.Repeat(BuiltInCommandTypes.TextCommand, 1);
             }
         }
 
@@ -80,39 +78,22 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
             Assert.ArgumentNotNull(command, "command");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            //var hotKeyCommand = command as HotkeyCommand;
-            //if (hotKeyCommand == null)
-            //{
-            //    return;
-            //}
+            var textCommand = command as TextCommand;
+            if (textCommand == null)
+                return;
 
-            //if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.None)
-            //{
-            //    hotKeyCommand.Handled = true;
-            //    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == _roomMonstersViewModel.Monsters.Count - 1)
-            //    {
-            //        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.FirstOrDefault();
-            //        return;
-            //    }
+           if (textCommand.CommandText.StartsWith("#nextmonster", System.StringComparison.InvariantCulture))
+           {
+                textCommand.Handled = true;
 
-            //    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
-            //    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index + 1];
-            //    return;
-            //}
+                _monstersWidgetControl.NextMonster();
+            }
+            else if (textCommand.CommandText.StartsWith("#previousmonster", System.StringComparison.InvariantCulture))
+            {
+                textCommand.Handled = true;
 
-            //if (hotKeyCommand.Key == Key.OemTilde && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
-            //{
-            //    hotKeyCommand.Handled = true;
-            //    if (_roomMonstersViewModel.SelectedMonster == null || _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster) == 0)
-            //    {
-            //        _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters.LastOrDefault();
-            //        return;
-            //    }
-
-            //    var index = _roomMonstersViewModel.Monsters.IndexOf(_roomMonstersViewModel.SelectedMonster);
-            //    _roomMonstersViewModel.SelectedMonster = _roomMonstersViewModel.Monsters[index - 1];
-            //    return;
-            //}
+                _monstersWidgetControl.PreviousMonster();
+            }
         }
     }
 }

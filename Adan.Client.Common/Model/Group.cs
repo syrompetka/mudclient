@@ -14,6 +14,7 @@ namespace Adan.Client.Common.Model
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
+    using System.Collections.Concurrent;
 
     /// <summary>
     /// A group of triggers, aliases etc.
@@ -26,11 +27,11 @@ namespace Adan.Client.Common.Model
         /// </summary>
         public Group()
         {
-            Triggers = new List<TriggerBase>();
-            Aliases = new List<CommandAlias>();
-            Hotkeys = new List<Hotkey>();
-            Highlights = new List<Highlight>();
-            Substitutions = new List<Substitution>();
+            Triggers = new ConcurrentBag<TriggerBase>();
+            Aliases = new ConcurrentBag<CommandAlias>();
+            Hotkeys = new ConcurrentBag<Hotkey>();
+            Highlights = new ConcurrentBag<Highlight>();
+            Substitutions = new ConcurrentBag<Substitution>();
         }
 
         /// <summary>
@@ -81,7 +82,7 @@ namespace Adan.Client.Common.Model
         /// The triggers.
         /// </value>
         [NotNull]
-        public List<TriggerBase> Triggers
+        public ConcurrentBag<TriggerBase> Triggers
         {
             get;
             set;
@@ -94,7 +95,7 @@ namespace Adan.Client.Common.Model
         /// The aliases.
         /// </value>
         [NotNull]
-        public List<CommandAlias> Aliases
+        public ConcurrentBag<CommandAlias> Aliases
         {
             get;
             set;
@@ -107,7 +108,7 @@ namespace Adan.Client.Common.Model
         /// The hotkeys.
         /// </value>
         [NotNull]
-        public List<Hotkey> Hotkeys
+        public ConcurrentBag<Hotkey> Hotkeys
         {
             get;
             set;
@@ -120,7 +121,7 @@ namespace Adan.Client.Common.Model
         /// The highlights.
         /// </value>
         [NotNull]
-        public List<Highlight> Highlights
+        public ConcurrentBag<Highlight> Highlights
         {
             get;
             set;
@@ -133,7 +134,7 @@ namespace Adan.Client.Common.Model
         /// The substitutions.
         /// </value>
         [NotNull]
-        public List<Substitution> Substitutions
+        public ConcurrentBag<Substitution> Substitutions
         {
             get;
             set;

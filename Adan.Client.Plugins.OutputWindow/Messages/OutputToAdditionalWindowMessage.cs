@@ -38,7 +38,7 @@ namespace Adan.Client.Plugins.OutputWindow.Messages
         /// </summary>
         /// <param name="text"></param>
         public OutputToAdditionalWindowMessage(string text)
-            : base(text, true)
+            : base(text)
         {
             this.SkipSubstitution = true;
             this.SkipTriggers = true;

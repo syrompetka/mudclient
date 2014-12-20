@@ -9,12 +9,6 @@
 
 namespace Adan.Client.Common.Model
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Adan.Client.Common.Settings;
     using Commands;
     using Conveyor;
@@ -23,6 +17,12 @@ namespace Adan.Client.Common.Model
     using Messages;
     using Plugins;
     using Properties;
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// A root object for all model objects.
@@ -45,7 +45,12 @@ namespace Adan.Client.Common.Model
         private readonly List<Hotkey> _hotkeyList;
         private readonly List<Variable> _variableList;
 
+        private List<CharacterStatus> _groupStatus;
+        private List<MonsterStatus> _monsterStatus;
+
         private readonly Stack<IUndo> _undoStack;
+
+        private Regex _variableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         #endregion
 
@@ -56,7 +61,7 @@ namespace Adan.Client.Common.Model
         /// </summary>
         /// <param name="conveyor"></param>
         /// <param name="profile"></param>
-        public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile) : this(profile)
+        public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
 
@@ -71,6 +76,9 @@ namespace Adan.Client.Common.Model
 
             _profile = profile;
             MessageConveyor = conveyor;
+
+            GroupStatus = new List<CharacterStatus>();
+            RoomMonstersStatus = new List<MonsterStatus>();
 
             SettingsHolder.Instance.ProfilesChanged += OnProfileChanged;
         }
@@ -92,9 +100,8 @@ namespace Adan.Client.Common.Model
 
             _profile = profile;
 
-            //TODO: Разобраться с кол-вом монстров, персонажей в группе
-            GroupStatus = new List<CharacterStatus>(10);
-            RoomMonstersStatus = new List<MonsterStatus>(20);
+            GroupStatus = new List<CharacterStatus>();
+            RoomMonstersStatus = new List<MonsterStatus>();
         }
 
         #endregion
@@ -111,7 +118,7 @@ namespace Adan.Client.Common.Model
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         public List<CommandAlias> AliasList
         {
@@ -200,26 +207,6 @@ namespace Adan.Client.Common.Model
         /// 
         /// </summary>
         public static IList<ActionDescription> AllActionDescriptions
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Get char delimiter
-        /// </summary>
-        [NotNull]
-        public static char CommandDelimiter
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Get char commands
-        /// </summary>
-        [NotNull]
-        public static char CommandChar
         {
             get;
             set;
@@ -320,11 +307,11 @@ namespace Adan.Client.Common.Model
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public IList<Group> Groups
+        public ConcurrentBag<Group> Groups
         {
             get
             {
-                lock (_profileLockObject)
+                //lock (_profileLockObject)
                 {
                     return Profile.Groups;
                 }
@@ -335,13 +322,13 @@ namespace Adan.Client.Common.Model
         /// Gets variables
         /// </summary>
         [NotNull]
-        public IList<Variable> Variables
+        public ConcurrentBag<Variable> Variables
         {
             get
             {
-                lock (_profileLockObject)
+                //lock (_profileLockObject)
                 {
-                    return Profile.Variables;
+                    return (ConcurrentBag<Variable>)Profile.Variables;
                 }
             }
         }
@@ -350,10 +337,19 @@ namespace Adan.Client.Common.Model
         /// Gets the group status.
         /// </summary>
         [NotNull]
-        public IList<CharacterStatus> GroupStatus
+        public List<CharacterStatus> GroupStatus
         {
-            get;
-            set;
+            get
+            {
+                if (_groupStatus == null)
+                    _groupStatus = new List<CharacterStatus>();
+
+                return _groupStatus;
+            }
+            set
+            {
+                _groupStatus = value;
+            }
         }
 
         /// <summary>
@@ -373,10 +369,20 @@ namespace Adan.Client.Common.Model
         /// Gets the room monsters status.
         /// </summary>
         [NotNull]
-        public IList<MonsterStatus> RoomMonstersStatus
+        public List<MonsterStatus> RoomMonstersStatus
         {
-            get;
-            set;
+            get
+            {
+                if (_monsterStatus == null)
+                    _monsterStatus = new List<MonsterStatus>();
+
+                return _monsterStatus;
+            }
+
+            set
+            {
+                _monsterStatus = value;
+            }
         }
 
         /// <summary>
@@ -451,7 +457,7 @@ namespace Adan.Client.Common.Model
                 Variables.Add(new Variable() { Name = variableName, Value = value });
 
             if(!isSilent)
-                _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
+                this.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
         }
 
         /// <summary>
@@ -466,18 +472,6 @@ namespace Adan.Client.Common.Model
         {
             Assert.ArgumentNotNullOrEmpty(variableName, "variableName");
 
-            var v = Variables.FirstOrDefault(var => var.Name == variableName);
-            if (v != null)
-            {
-                if (v.Value == ("$"+variableName))
-                {
-                    this.PushMessageToConveyor(new ErrorMessage(string.Format("#Cyclical variable: ${0}", variableName)));
-                    throw new Exception();
-                }
-
-                return v.Value;
-            }
-
             if (variableName.Equals("DATE", StringComparison.InvariantCultureIgnoreCase))
             {
                 return DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -487,7 +481,26 @@ namespace Adan.Client.Common.Model
                 return DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
             }
 
-            return string.Empty;
+            var variablesList = new List<Variable>();
+            var v = Variables.FirstOrDefault(x => x.Name == variableName);
+            while (v != null)
+            {
+                variablesList.Add(v);
+
+                if (!v.Value.StartsWith("$"))
+                    break;
+
+                if (variablesList.Contains(v))
+                {
+                    this.PushMessageToConveyor(new ErrorMessage(string.Format("#Cyclical variable: ${0}", variableName)));
+                    throw new Exception();
+                }
+
+                var searchValue = v.Value.Substring(1, v.Value.Length - 1);
+                v = Variables.FirstOrDefault(x => x.Name == searchValue);
+            }
+
+            return variablesList.Count > 0 ? variablesList[variablesList.Count - 1].Value : string.Empty;
         }
 
         /// <summary>
@@ -501,10 +514,44 @@ namespace Adan.Client.Common.Model
 
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
             if (v != null)
-                Variables.Remove(v);
+            {
+                if (!Variables.TryTake(out v))
+                {
+                    this.PushMessageToConveyor(new ErrorMessage(string.Format("#Error delete variable: ${0}", v)));
+                    return;
+                }
+            }
 
             if(!isSilent)
-                _conveyor.PushMessage(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
+                this.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <returns></returns>
+        public VarReplaceReply ReplaceVariables(string str)
+        {
+            bool ret;
+            bool allVariables = true;
+
+            do
+            {
+                ret = false;
+                str = _variableRegex.Replace(str,
+                    m =>
+                    {
+                        ret = true;
+                        var variable = GetVariableValue(m.Groups[1].Value);
+                        if (string.IsNullOrEmpty(variable))
+                            allVariables = false;
+
+                        return variable;
+                    });
+            } while (ret);
+
+            return new VarReplaceReply(str, allVariables);
         }
 
         /// <summary>
@@ -565,7 +612,7 @@ namespace Adan.Client.Common.Model
             var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
             if (group != null && !group.IsBuildIn)
             {
-                Groups.Remove(group);
+                Groups.TryTake(out group);
             }
         }
 
@@ -578,19 +625,45 @@ namespace Adan.Client.Common.Model
         {
             return _enabledTriggersOrderedByPriority = Groups.Where(g => g.IsEnabled).SelectMany(g => g.Triggers).OrderBy(trg => trg.Priority).ToList();
         }
-
-
+        
         #endregion
 
         private void OnProfileChanged(object sender, SettingsChangedEventArgs e)
         {
             if (e.Name == Profile.Name)
             {
-                var profile = SettingsHolder.Instance.GetProfile(e.Name);
-                profile.Variables = Profile.Variables;
-                Profile = profile;
+                //var profile = SettingsHolder.Instance.GetProfile(e.Name);
+                //profile.Variables = Profile.Variables;
+                Profile = SettingsHolder.Instance.GetProfile(e.Name);
                 RecalculatedEnabledTriggersPriorities();
             }
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct VarReplaceReply
+    {
+        /// <summary>
+        /// 
+        /// </summary>
+        public string Value;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsAllVariables;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="str"></param>
+        /// <param name="isAllVariables"></param>
+        public VarReplaceReply(string str, bool isAllVariables)
+        {
+            Value = str;
+            IsAllVariables = isAllVariables;
         }
     }
 }

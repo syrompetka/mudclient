@@ -305,7 +305,7 @@ namespace Adan.Client.Common.Conveyor
             }
             catch (Exception)
             {
-                this.PushMessage(new ErrorMessage("#Error connect to host {0}: {1}"));
+                this.PushMessage(new ErrorMessage("Error connect to host {0}: {1}"));
             }
         }
 
@@ -361,8 +361,10 @@ namespace Adan.Client.Common.Conveyor
                     }
                 }
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                ErrorLogger.Instance.Write(string.Format("Error push command: {0}\r\n{1}", ex.Message, ex.StackTrace));
+            }
         }
 
         /// <summary>
@@ -397,8 +399,10 @@ namespace Adan.Client.Common.Conveyor
                     MessageReceived(this, new MessageReceivedEventArgs(message));
                 }
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                ErrorLogger.Instance.Write(string.Format("Error push message: {0}\r\n{1}", ex.Message, ex.StackTrace));
+            }
         }
 
         /// <summary>
@@ -417,7 +421,7 @@ namespace Adan.Client.Common.Conveyor
             }
             catch (Exception)
             {
-                this.PushMessage(new ErrorMessage("#Error send text to server"));
+                this.PushMessage(new ErrorMessage("Error send text to server"));
             }
         }
 
@@ -575,7 +579,7 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            PushMessage(new NetworkErrorMessage(e.SocketException));
+            PushMessage(new NetworkErrorMessageEx(e.Exception));
         }
 
         #endregion

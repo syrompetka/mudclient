@@ -131,6 +131,25 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        public bool IsRegExp
+        {
+            get
+            {
+                return Substitution.IsRegExp;
+            }
+            set
+            {
+                Assert.ArgumentNotNull(value, "value");
+
+                Substitution.IsRegExp = value;
+                OnPropertyChanged("IsRegExp");
+            }
+        }
+
+        /// <summary>
         /// Clones this instance.
         /// </summary>
         /// <returns>A deep copy of this instance.</returns>

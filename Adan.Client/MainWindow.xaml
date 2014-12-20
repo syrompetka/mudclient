@@ -1,11 +1,10 @@
 ﻿<Window x:Class="Adan.Client.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Controls="clr-namespace:Adan.Client.Controls"
-        xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock"
+        xmlns:AvalonDock="http://schemas.xceed.com/wpf/xaml/avalondock"
         xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
-        Name="mainWindow"
-        WindowState="Maximized"
+        xmlns:Client="clr-namespace:Adan.Client"
+        Name="_mainWindowEx"
         Title="Adamant mud client"
         Icon="icon.ico"
         WindowStyle="SingleBorderWindow">
@@ -13,11 +12,15 @@
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="31*"/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Focusable="False" IsMainMenu="False" IsTabStop="False" Name="mainMenu">
+        <Menu Grid.Row="0" Focusable="False" IsMainMenu="False" IsTabStop="False" Name="_mainMenu" Grid.ColumnSpan="2">
             <MenuItem Header="File">
                 <MenuItem Header="Connect" Click="HandleConnect"/>
                 <MenuItem Header="Connect all" Click="HandleConnectAll" />
@@ -28,28 +31,43 @@
                 <Separator />
                 <MenuItem Header="Exit" Click="HandleExit" />
             </MenuItem>
-            <MenuItem Header="Options" Name="optionsMenuItem">
-                <Separator Visibility="Collapsed" Name="optionsSeparator"/>
+            <MenuItem Header="Options" Name="_optionsMenuItem">
+                <Separator Visibility="Collapsed" Name="_optionsSeparator"/>
                 <MenuItem Header="Profiles" Click="HandleEditProfiles"/>
                 <Separator />
                 <MenuItem Header="Global hotkeys" Click="HandleGlobalHotkeys"/>
                 <Separator />
                 <MenuItem Header="Options" Click="HandleEditOptions"/>
                 <Separator Visibility="Collapsed" />
-                <MenuItem Header="Theme" Name="themesMenuItem" Visibility="Collapsed" />
+                <MenuItem Header="Theme" Name="_themesMenuItem" Visibility="Collapsed" />
                 <Separator Visibility="Collapsed" />
             </MenuItem>
-            <MenuItem Header="View" Name="viewMenuItem" />
-            <MenuItem Header="Window" Name="windowMenuItem">
-                <Separator Visibility="Collapsed" Name="windowSeparator" />
+            <MenuItem Header="View" Name="_viewMenuItem" />
+            <MenuItem Header="Window" Name="_windowMenuItem">
+                <Separator Visibility="Collapsed" Name="_windowSeparator" />
                 <MenuItem Header="Add new window" Click="HandleAddNewWindow" />
             </MenuItem>
             <MenuItem Header="Help">
                 <MenuItem Header="About" Click="HandleAbout"/>
             </MenuItem>
         </Menu>
-        <AvalonDock:DockingManager Grid.Row="1" Name="dockManager" Loaded="HandleDockManagerLoaded">
-            <AvalonDock:DocumentPane />
+        <AvalonDock:DockingManager Grid.Row="1" x:Name="_dockManager" Loaded="HandleDockManagerLoaded" Grid.ColumnSpan="2">
+            <AvalonDock:DockingManager.LayoutItemContainerStyleSelector>
+                <Client:LayoutContainerStyleSelector>
+                    <Client:LayoutContainerStyleSelector.WidgetStyle>
+                        <Style TargetType="{x:Type AvalonDock:LayoutItem}">
+                            <Setter Property="CloseCommand" Value="{Binding Path=HideCommand}" />
+                        </Style>
+                    </Client:LayoutContainerStyleSelector.WidgetStyle>
+                </Client:LayoutContainerStyleSelector>
+            </AvalonDock:DockingManager.LayoutItemContainerStyleSelector>
+            <AvalonDock:LayoutRoot>
+                <AvalonDock:LayoutPanel>
+                    <AvalonDock:LayoutDocumentPane>
+                        
+                    </AvalonDock:LayoutDocumentPane>
+                </AvalonDock:LayoutPanel>
+            </AvalonDock:LayoutRoot>
         </AvalonDock:DockingManager>
     </Grid>
 </Window>

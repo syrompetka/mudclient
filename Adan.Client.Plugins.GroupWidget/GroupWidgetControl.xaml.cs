@@ -53,17 +53,20 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             Action executeToAct = () =>
             {
-                var groupWidgetControl = (GroupStatusViewModel)DataContext;
-
-                if (groupWidgetControl.SelectedGroupMate == null
-                    || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == groupWidgetControl.GroupMates.Count - 1)
+                if (DataContext != null)
                 {
-                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.FirstOrDefault();
-                    return;
-                }
+                    var groupWidgetControl = (GroupStatusViewModel)DataContext;
 
-                var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
-                groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index + 1];
+                    if (groupWidgetControl.SelectedGroupMate == null
+                        || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == groupWidgetControl.GroupMates.Count - 1)
+                    {
+                        groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.FirstOrDefault();
+                        return;
+                    }
+
+                    var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
+                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index + 1];
+                }
             };
 
             Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
@@ -76,17 +79,20 @@ namespace Adan.Client.Plugins.GroupWidget
         {
             Action executeToAct = () =>
             {
-                var groupWidgetControl = (GroupStatusViewModel)DataContext;
-
-                if (groupWidgetControl.SelectedGroupMate == null
-                    || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == 0)
+                if (DataContext != null)
                 {
-                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.LastOrDefault();
-                    return;
-                }
+                    var groupWidgetControl = (GroupStatusViewModel)DataContext;
 
-                var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
-                groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index - 1];
+                    if (groupWidgetControl.SelectedGroupMate == null
+                        || groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate) == 0)
+                    {
+                        groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates.LastOrDefault();
+                        return;
+                    }
+
+                    var index = groupWidgetControl.GroupMates.IndexOf(groupWidgetControl.SelectedGroupMate);
+                    groupWidgetControl.SelectedGroupMate = groupWidgetControl.GroupMates[index - 1];
+                }
             };
 
             Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);

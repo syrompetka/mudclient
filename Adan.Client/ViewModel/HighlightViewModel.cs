@@ -78,6 +78,25 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        public bool IsRegExp
+        {
+            get
+            {
+                return Highlight.IsRegExp;
+            }
+            set
+            {
+                Assert.ArgumentNotNull(value, "value");
+
+                Highlight.IsRegExp = value;
+                OnPropertyChanged("IsRegExp");
+            }
+        }
+
+        /// <summary>
         /// Gets the highlight.
         /// </summary>
         /// <value>

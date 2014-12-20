@@ -126,6 +126,6 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public abstract void Undo();
+        public abstract void Undo(RootModel rootModel);
     }
 }

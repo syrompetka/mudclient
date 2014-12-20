@@ -30,7 +30,8 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        void Undo();     
+        /// <param name="rootModel"></param>
+        void Undo(RootModel rootModel);     
     }
 
     /// <summary>

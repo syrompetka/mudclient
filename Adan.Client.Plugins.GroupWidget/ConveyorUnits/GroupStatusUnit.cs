@@ -62,7 +62,7 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
         {
             get
             {
-                return Enumerable.Repeat(BuiltInCommandTypes.HotkeyCommand, 1);
+                return Enumerable.Repeat(BuiltInCommandTypes.TextCommand, 1);
             }
         }
 
@@ -77,25 +77,20 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
             Assert.ArgumentNotNull(command, "command");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            //var hotKeyCommand = command as HotkeyCommand;
-            //if (hotKeyCommand == null)
-            //{
-            //    return;
-            //}
+            var textCommand = command as TextCommand;
+            if (textCommand == null)
+                return;
 
-            //if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.None)
-            //{
-            //    hotKeyCommand.Handled = true;
-            //    _groupWidget.NextGroupMate();
-            //    return;
-            //}
-
-            //if (hotKeyCommand.Key == Key.Tab && hotKeyCommand.ModifierKeys == ModifierKeys.Shift)
-            //{
-            //    hotKeyCommand.Handled = true;
-            //    _groupWidget.PreviousGroupMate();
-            //    return;
-            //}
+            if (textCommand.CommandText.StartsWith("#nextgroupmate", System.StringComparison.InvariantCulture))
+            {
+                textCommand.Handled = true;
+                _groupWidget.NextGroupMate();
+            }
+            else if (textCommand.CommandText.StartsWith("#previousgroupmate", System.StringComparison.InvariantCulture))
+            {
+                textCommand.Handled = true;
+                _groupWidget.PreviousGroupMate();
+            }
         }
     }
 }
