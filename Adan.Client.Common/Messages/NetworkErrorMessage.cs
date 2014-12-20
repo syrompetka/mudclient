@@ -9,30 +9,30 @@
 
 namespace Adan.Client.Common.Messages
 {
+    using System;
     using System.Net.Sockets;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
     /// Message that appears when some network occurs.
     /// </summary>
-    public class NetworkErrorMessage : Message
+    public class NetworkErrorMessageEx : Message
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NetworkErrorMessage"/> class.
+        /// Initializes a new instance of the <see cref="NetworkErrorMessageEx"/> class.
         /// </summary>
         /// <param name="socketException">The socket exception.</param>
-        public NetworkErrorMessage([NotNull] SocketException socketException)
+        public NetworkErrorMessageEx([NotNull] Exception socketException)
         {
             Assert.ArgumentNotNull(socketException, "socketException");
-            SocketException = socketException;
+            Exception = socketException;
         }
 
         /// <summary>
         /// Gets the socket exception.
         /// </summary>
-        public SocketException SocketException
+        public Exception Exception
         {
             get;
             private set;

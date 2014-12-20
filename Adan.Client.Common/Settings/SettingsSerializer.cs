@@ -9,6 +9,7 @@ using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using CSLib.Net.Annotations;
 using System.Xml.Serialization;
+using System.Windows.Media;
 
 namespace Adan.Client.Common.Settings
 {
@@ -18,18 +19,26 @@ namespace Adan.Client.Common.Settings
     [Serializable]
     public class SettingsSerializer
     {
-        private StringCollection _mainOutputs;
+        //private StringCollection _mainOutputs;
         private List<Hotkey> _globalHotkeys;
         private char _commandChar;
         private char _commandDelimiter;
         private int _commandsHistorySize;
         private int _connectPort;
         private string _connectHostName;
+        private bool _autoConnect;
+        private bool _isLogCommands;
+        private int _scrollBuffer;
+        private CursorPositionHistory _cursorPosition;
+        private int _mainOutputWindowSecondaryScrollHeight;
+        private bool _autoClearInput;
+        private bool _autoReconnect;
+        private int _minLengthHistory;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+        public event EventHandler<SettingsChangedEventArgs> OnSettingsChanged;
 
         /// <summary>
         /// Gets or sets the connect port.
@@ -47,8 +56,7 @@ namespace Adan.Client.Common.Settings
             set
             {
                 _connectPort = value;
-                if(SettingsChanged != null)
-                    SettingsChanged(this, new SettingsChangedEventArgs("ConnectPort", value));
+                SettingsChanged("ConnectPort", value);
             }
         }
 
@@ -68,8 +76,7 @@ namespace Adan.Client.Common.Settings
             set
             {
                 _connectHostName = value;
-                if (SettingsChanged != null)
-                    SettingsChanged(this, new SettingsChangedEventArgs("ConnectHostName", value));
+                SettingsChanged("ConnectHostName", value);
             }
         }
 
@@ -88,28 +95,35 @@ namespace Adan.Client.Common.Settings
             }
         }
 
-        /// <summary>
-        /// Get MainOutput windows
-        /// </summary>
-        [NotNull]
-        public StringCollection MainOutputs
-        {
-            get
-            {
-                if (_mainOutputs == null)
-                    _mainOutputs = new StringCollection();
+        ///// <summary>
+        ///// Get MainOutput windows
+        ///// </summary>
+        //[NotNull]
+        //public StringCollection MainOutputs
+        //{
+        //    get
+        //    {
+        //        if (_mainOutputs == null)
+        //            _mainOutputs = new StringCollection();
 
-                return _mainOutputs;
-            }
-        }
+        //        return _mainOutputs;
+        //    }
+        //}
 
         /// <summary>
         /// 
         /// </summary>
         public bool AutoConnect
         {
-            get;
-            set;
+            get
+            {
+                return _autoConnect;
+            }
+            set
+            {
+                _autoConnect = value;
+                SettingsChanged("AutoConnect", value);
+            }
         }
 
         /// <summary>
@@ -118,8 +132,15 @@ namespace Adan.Client.Common.Settings
         [NotNull]
         public bool IsLogCommands
         {
-            get;
-            set;
+            get
+            {
+                return _isLogCommands;
+            }
+            set
+            {
+                _isLogCommands = value;
+                SettingsChanged("IsLogCommands", value);
+            }
         }
 
         /// <summary>
@@ -127,8 +148,15 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public int ScrollBuffer
         {
-            get;
-            set;
+            get
+            {
+                return _scrollBuffer;
+            }
+            set
+            {
+                _scrollBuffer = value;
+                SettingsChanged("ScrollBuffer", value);
+            }
         }
 
         /// <summary>
@@ -136,8 +164,15 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public CursorPositionHistory CursorPosition
         {
-            get;
-            set;
+            get
+            {
+                return _cursorPosition;
+            }
+            set
+            {
+                _cursorPosition = value;
+                SettingsChanged("CursorPosition", value);
+            }
         }
 
         /// <summary>
@@ -148,8 +183,15 @@ namespace Adan.Client.Common.Settings
         /// </value>
         public int MainOutputWindowSecondaryScrollHeight
         {
-            get;
-            set;
+            get
+            {
+                return _mainOutputWindowSecondaryScrollHeight;
+            }
+            set
+            {
+                _mainOutputWindowSecondaryScrollHeight = value;
+                SettingsChanged("MainOutputWindowSecondaryScrollHeight", value);
+            }
         }
 
         /// <summary>
@@ -164,7 +206,7 @@ namespace Adan.Client.Common.Settings
             set
             {
                 _commandChar = value;
-                RootModel.CommandChar = value;
+                SettingsChanged("CommandChar", value);
             }
         }
 
@@ -180,7 +222,7 @@ namespace Adan.Client.Common.Settings
             set
             {
                 _commandDelimiter = value;
-                RootModel.CommandDelimiter = value;
+                SettingsChanged("CommandDelimiter", value);
             }
         }
 
@@ -189,8 +231,15 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public bool AutoClearInput
         {
-            get;
-            set;
+            get
+            {
+                return _autoClearInput;
+            }
+            set
+            {
+                _autoClearInput = value;
+                SettingsChanged("AutoClearInput", value);
+            }
         }
 
         /// <summary>
@@ -198,8 +247,15 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public bool AutoReconnect
         {
-            get;
-            set;
+            get
+            {
+                return _autoReconnect;
+            }
+            set
+            {
+                _autoReconnect = value;
+                SettingsChanged("AutoReconnect", value);
+            }
         }
 
         /// <summary>
@@ -207,8 +263,15 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public int MinLengthHistory
         {
-            get;
-            set;
+            get
+            {
+                return _minLengthHistory;
+            }
+            set
+            {
+                _minLengthHistory = value;
+                SettingsChanged("MinLengthHistory", value);
+            }
         }
 
         /// <summary>
@@ -223,8 +286,7 @@ namespace Adan.Client.Common.Settings
             set
             {
                 _commandsHistorySize = value;
-                if (SettingsChanged != null)
-                    SettingsChanged(this, new SettingsChangedEventArgs("CommandsHistorySize", value));
+                SettingsChanged("CommandsHistorySize", value);
             }
         }
 
@@ -269,6 +331,12 @@ namespace Adan.Client.Common.Settings
         {
             get;
             set;
+        }
+
+        private void SettingsChanged(string name, object value)
+        {
+            if(OnSettingsChanged != null)
+                OnSettingsChanged(this, new SettingsChangedEventArgs(name, value));
         }
     }
 }

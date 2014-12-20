@@ -231,6 +231,35 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="aliasToAdd"></param>
+        public void InsertAlias(int index, [NotNull] AliasViewModel aliasToAdd)
+        {
+            Assert.ArgumentNotNull(aliasToAdd, "aliasToAdd");
+            CommandAlias alias;
+            Group.Aliases.TryTake(out alias);
+            Group.Aliases.Add(aliasToAdd.CommandAlias);
+            //_aliases.Add(aliasToAdd);
+            //Group.Aliases.Insert(index, aliasToAdd.CommandAlias);
+            _aliases.Insert(index, aliasToAdd);
+        }
+
+        /// <summary>
+        /// Removes the alias.
+        /// </summary>
+        /// <param name="aliasToRemove">The alias to remove.</param>
+        public void RemoveAlias([NotNull] AliasViewModel aliasToRemove)
+        {
+            Assert.ArgumentNotNull(aliasToRemove, "aliasToRemove");
+
+            CommandAlias alias;
+            Group.Aliases.TryTake(out alias);
+            _aliases.Remove(aliasToRemove);
+        }
+
+        /// <summary>
         /// Adds the trigger.
         /// </summary>
         /// <param name="triggerToAdd">The trigger to add.</param>
@@ -242,41 +271,22 @@ namespace Adan.Client.ViewModel
             _triggers.Add(triggerToAdd);
         }
 
-        /// <summary>
-        /// Inserts the alias.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="aliasToAdd">The alias to add.</param>
-        public void InsertAlias(int index, [NotNull] AliasViewModel aliasToAdd)
-        {
-            Assert.ArgumentNotNull(aliasToAdd, "aliasToAdd");
-            Group.Aliases.Insert(index, aliasToAdd.CommandAlias);
-            _aliases.Insert(index, aliasToAdd);
-        }
 
         /// <summary>
-        /// Inserts the trigger.
+        /// 
         /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="triggerToAdd">The trigger to add.</param>
+        /// <param name="index"></param>
+        /// <param name="triggerToAdd"></param>
         public void InsertTrigger(int index, [NotNull] TriggerViewModel triggerToAdd)
         {
             Assert.ArgumentNotNull(triggerToAdd, "triggerToAdd");
 
-            Group.Triggers.Insert(index, triggerToAdd.Trigger);
+            TriggerBase trigger;
+            Group.Triggers.TryTake(out trigger);
+            Group.Triggers.Add(triggerToAdd.Trigger);
+
+            //Group.Triggers.Insert(index, triggerToAdd.Trigger);
             _triggers.Insert(index, triggerToAdd);
-        }
-
-        /// <summary>
-        /// Removes the alias.
-        /// </summary>
-        /// <param name="aliasToRemove">The alias to remove.</param>
-        public void RemoveAlias([NotNull] AliasViewModel aliasToRemove)
-        {
-            Assert.ArgumentNotNull(aliasToRemove, "aliasToRemove");
-
-            Group.Aliases.Remove(aliasToRemove.CommandAlias);
-            _aliases.Remove(aliasToRemove);
         }
 
         /// <summary>
@@ -287,20 +297,10 @@ namespace Adan.Client.ViewModel
         {
             Assert.ArgumentNotNull(triggerToRemove, "triggerToRemove");
 
-            Group.Triggers.Remove(triggerToRemove.Trigger);
+            TriggerBase trigger;
+            Group.Triggers.TryTake(out trigger);
+            //Group.Triggers.Remove(triggerToRemove.Trigger);
             _triggers.Remove(triggerToRemove);
-        }
-
-        /// <summary>
-        /// Inserts the hot key.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="hotkeyToAdd">The hotkey to add.</param>
-        public void InsertHotkey(int index, [NotNull] HotkeyViewModel hotkeyToAdd)
-        {
-            Assert.ArgumentNotNull(hotkeyToAdd, "hotkeyToAdd");
-            Group.Hotkeys.Insert(index, hotkeyToAdd.Hotkey);
-            _hotkeys.Insert(index, hotkeyToAdd);
         }
 
         /// <summary>
@@ -315,26 +315,32 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="hotkeyToAdd"></param>
+        public void InsertHotkey(int index, [NotNull] HotkeyViewModel hotkeyToAdd)
+        {
+            Assert.ArgumentNotNull(hotkeyToAdd, "hotkeyToAdd");
+
+            Hotkey hotkey;
+            Group.Hotkeys.TryTake(out hotkey);
+            Group.Hotkeys.Add(hotkeyToAdd.Hotkey);
+            //Group.Hotkeys.Insert(index, hotkeyToAdd.Hotkey);
+            _hotkeys.Insert(index, hotkeyToAdd);
+        }
+
+        /// <summary>
         /// Removes the hot key.
         /// </summary>
         /// <param name="hotkeyToRemove">The hot key to remove.</param>
         public void RemoveHotkey([NotNull] HotkeyViewModel hotkeyToRemove)
         {
             Assert.ArgumentNotNull(hotkeyToRemove, "hotkeyToRemove");
-            Group.Hotkeys.Remove(hotkeyToRemove.Hotkey);
+            Hotkey hotkey;
+            Group.Hotkeys.TryTake(out hotkey);
+            //Group.Hotkeys.Remove(hotkeyToRemove.Hotkey);
             _hotkeys.Remove(hotkeyToRemove);
-        }
-
-        /// <summary>
-        /// Inserts the highlight.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="highlightToAdd">The highlight to add.</param>
-        public void InsertHighlight(int index, [NotNull] HighlightViewModel highlightToAdd)
-        {
-            Assert.ArgumentNotNull(highlightToAdd, "highlightToAdd");
-            Group.Highlights.Insert(index, highlightToAdd.Highlight);
-            _highlights.Insert(index, highlightToAdd);
         }
 
         /// <summary>
@@ -349,26 +355,32 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="highlightToAdd"></param>
+        public void InsertHighlight(int index, [NotNull] HighlightViewModel highlightToAdd)
+        {
+            Assert.ArgumentNotNull(highlightToAdd, "highlightToAdd");
+            Highlight highlight;
+            Group.Highlights.TryTake(out highlight);
+            Group.Highlights.Add(highlightToAdd.Highlight);
+
+            //Group.Highlights.Insert(index, highlightToAdd.Highlight);
+            _highlights.Insert(index, highlightToAdd);
+        }
+
+        /// <summary>
         /// Removes the highlight.
         /// </summary>
         /// <param name="highlightToRemove">The highlight to remove.</param>
         public void RemoveHighlight([NotNull] HighlightViewModel highlightToRemove)
         {
             Assert.ArgumentNotNull(highlightToRemove, "highlightToRemove");
-            Group.Highlights.Remove(highlightToRemove.Highlight);
+            Highlight highlight;
+            Group.Highlights.TryTake(out highlight);
+            //Group.Highlights.Remove(highlightToRemove.Highlight);
             _highlights.Remove(highlightToRemove);
-        }
-
-        /// <summary>
-        /// Inserts the substitution.
-        /// </summary>
-        /// <param name="index">The index.</param>
-        /// <param name="substitutionToAdd">The substitution to add.</param>
-        public void InsertSubstitution(int index, [NotNull] SubstitutionViewModel substitutionToAdd)
-        {
-            Assert.ArgumentNotNull(substitutionToAdd, "substitutionToAdd");
-            Group.Substitutions.Insert(index, substitutionToAdd.Substitution);
-            _substitutions.Insert(index, substitutionToAdd);
         }
 
         /// <summary>
@@ -383,13 +395,32 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="index"></param>
+        /// <param name="substitutionToAdd"></param>
+        public void InsertSubstitution(int index, [NotNull] SubstitutionViewModel substitutionToAdd)
+        {
+            Assert.ArgumentNotNull(substitutionToAdd, "substitutionToAdd");
+
+            Substitution sub;
+            Group.Substitutions.TryTake(out sub);
+            Group.Substitutions.Add(substitutionToAdd.Substitution);
+            //Group.Substitutions.Insert(index, substitutionToAdd.Substitution);
+            _substitutions.Insert(index, substitutionToAdd);
+        }
+
+        /// <summary>
         /// Removes the substitution.
         /// </summary>
         /// <param name="substitutionToRemove">The substitution to remove.</param>
         public void RemoveSubstitution([NotNull] SubstitutionViewModel substitutionToRemove)
         {
             Assert.ArgumentNotNull(substitutionToRemove, "substitutionToRemove");
-            Group.Substitutions.Remove(substitutionToRemove.Substitution);
+
+            Substitution sub;
+            Group.Substitutions.TryTake(out sub);
+            //Group.Substitutions.Remove(substitutionToRemove.Substitution);
             _substitutions.Remove(substitutionToRemove);
         }
 

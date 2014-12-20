@@ -34,6 +34,14 @@ namespace Adan.Client.Common.Plugins
     public abstract class PluginBase : IDisposable
     {
         /// <summary>
+        /// 
+        /// </summary>
+        public abstract string Name
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the conveyor units that this plugin exposes.
         /// </summary>
         [NotNull]
@@ -188,8 +196,8 @@ namespace Adan.Client.Common.Plugins
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public abstract void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow);
+        /// <param name="MainWindowEx">The main window.</param>
+        public abstract void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window MainWindowEx);
 
         /// <summary>
         /// Shows the options dialog.

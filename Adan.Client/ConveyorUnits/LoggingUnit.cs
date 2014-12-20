@@ -40,10 +40,10 @@ using Properties;
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mainWindow"></param>
-        public LoggingUnit(MainWindow mainWindow)
+        /// <param name="MainWindowEx"></param>
+        public LoggingUnit(MainWindow MainWindowEx)
         {
-            _mainWindow = mainWindow;
+            _mainWindow = MainWindowEx;
         }
 
         /// <summary>

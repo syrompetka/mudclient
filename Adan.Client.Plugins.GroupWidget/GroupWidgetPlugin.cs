@@ -55,13 +55,29 @@ namespace Adan.Client.Plugins.GroupWidget
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public override string Name
+        {
+            get
+            {
+                return "Group";
+            }
+        }
+
+        /// <summary>
         /// Gets the widgets of this plugin.
         /// </summary>
         public override IEnumerable<WidgetDescription> Widgets
         {
             get
             {
-                return Enumerable.Repeat(new WidgetDescription("GroupWidget", Resources.Group, _groupWidgetControl, true), 1);
+                return Enumerable.Repeat(new WidgetDescription("GroupWidget", Resources.Group, _groupWidgetControl)
+                {
+                    Left = 400,
+                    Height = 450,
+                    Width = 300,
+                }, 1);
             }
         }
 
@@ -149,11 +165,11 @@ namespace Adan.Client.Plugins.GroupWidget
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public override void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public override void Initialize([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window MainWindowEx)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
+            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
 
             initializationStatusModel.CurrentPluginName = Resources.Group;
             initializationStatusModel.PluginInitializationStatus = "Initializing";

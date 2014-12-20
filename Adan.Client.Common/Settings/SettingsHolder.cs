@@ -9,15 +9,15 @@
 
 namespace Adan.Client.Common.Settings
 {
-    using System;
-    using System.Linq;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Xml.Serialization;
     using Adan.Client.Common.Controls;
     using Common.Themes;
     using CSLib.Net.Annotations;
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using System.Windows;
+    using System.Xml.Serialization;
 
     /// <summary>
     /// Class whos hold settings like colors, windows sizes etc.
@@ -311,7 +311,8 @@ namespace Adan.Client.Common.Settings
                         _allProfiles.Add(name);
                 }
 
-                return retVal.Clone();
+                //return retVal.Clone();
+                return retVal;
             }
         }
 
@@ -319,8 +320,7 @@ namespace Adan.Client.Common.Settings
         /// 
         /// </summary>
         /// <param name="profile"></param>
-        /// <param name="changeAllCurrentSettings"></param>
-        public void SetProfile(ProfileHolder profile, bool changeAllCurrentSettings)
+        public void SetProfile(ProfileHolder profile)
         {
             lock (_profiles)
             {
@@ -332,8 +332,8 @@ namespace Adan.Client.Common.Settings
                 _profiles.Add(profile);
             }
 
-            if (changeAllCurrentSettings && ProfilesChanged != null)
-                ProfilesChanged(this, new SettingsChangedEventArgs(profile.Name, null));
+            if (ProfilesChanged != null)
+                ProfilesChanged(this, new SettingsChangedEventArgs(profile.Name, profile));
 
             lock (_profiles)
             {

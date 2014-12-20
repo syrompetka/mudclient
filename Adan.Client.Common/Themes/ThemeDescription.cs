@@ -66,7 +66,7 @@ namespace Adan.Client.Common.Themes
         /// <summary>
         /// Default text color
         /// </summary>
-        public SolidColorBrush DefaultTextColor
+        public SolidColorBrush DefaultTextBrush
         {
             get;
             protected set;
@@ -75,7 +75,25 @@ namespace Adan.Client.Common.Themes
         /// <summary>
         /// Default background color
         /// </summary>
-        public SolidColorBrush DefaultBackGroundColor
+        public SolidColorBrush DefaultBackGroundBrush
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Default text color
+        /// </summary>
+        public Color DefaultTextColor
+        {
+            get;
+            protected set;
+        }
+
+        /// <summary>
+        /// Default background color
+        /// </summary>
+        public Color DefaultBackGroundColor
         {
             get;
             protected set;
@@ -102,9 +120,26 @@ namespace Adan.Client.Common.Themes
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="isBackGround"></param>
+        /// <param name="isBackground"></param>
         /// <returns></returns>
         [NotNull]
-        public abstract SolidColorBrush GetSelectionBrushByTextColor(bool isBackGround);
+        public abstract SolidColorBrush GetSelectionBrushByTextColor(bool isBackground);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="color"></param>
+        /// <param name="isBackground"></param>
+        /// <returns></returns>
+        [NotNull]
+        public abstract Color GetColorByTextColor(TextColor color, bool isBackground);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isBackground"></param>
+        /// <returns></returns>
+        [NotNull]
+        public abstract Color GetSelectionColorByTextColor(bool isBackground);
     }
 }

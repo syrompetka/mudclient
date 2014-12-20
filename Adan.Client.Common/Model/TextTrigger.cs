@@ -22,6 +22,7 @@ namespace Adan.Client.Common.Model
 
     using Utils.PatternMatching;
     using Adan.Client.Common.Settings;
+    using System.Diagnostics;
 
     /// <summary>
     /// Trigger that handles text messages from server.
@@ -30,15 +31,18 @@ namespace Adan.Client.Common.Model
     public class TextTrigger : TriggerBase
     {
         [NonSerialized]
-        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
+        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(string.Empty, 10));
 
         [NonSerialized]
         private PatternToken _rootPatternToken;
 
         [NonSerialized]
         private ActionExecutionContext _context;
+
         [NonSerialized]
         private string _matchingPattern;
+
+        private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextTrigger"/> class.
@@ -81,13 +85,16 @@ namespace Adan.Client.Common.Model
             {
                 Assert.ArgumentNotNull(value, "value");
 
-                if (!string.IsNullOrEmpty(value) && value[0] == '/' && value[value.Length - 1] == '/')
+                if (value.Length > 2 && value[0] == '/' && value[value.Length - 1] == '/')
                 {
                     _matchingPattern = value.Substring(1, value.Length - 2);
                     IsRegExp = true;
                 }
                 else
+                {
                     _matchingPattern = value;
+                    IsRegExp = false;
+                }
                 
                 _rootPatternToken = null;
             }
@@ -113,43 +120,63 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var textMessage = message as TextMessage;
-            if (textMessage == null || string.IsNullOrEmpty(MatchingPattern))
+            if (textMessage == null || string.IsNullOrEmpty(MatchingPattern) || string.IsNullOrEmpty(textMessage.InnerText))
             {
                 return;
             }
 
+            ClearMatchingResults();
+
             if (IsRegExp)
             {
-                Regex rExp = new Regex(MatchingPattern);
-                Match m = rExp.Match(textMessage.InnerText);
-
-                if (!m.Success)
+                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
+                if (!varReplace.IsAllVariables)
                     return;
 
-                for(int i = 0; i < 10; i++)
+                Regex rExp = new Regex(varReplace.Value);
+                Match match = rExp.Match(textMessage.InnerText);
+
+                if (!match.Success)
+                    return;
+
+                for (int i = 0; i < 10; i++)
                 {
-                    if (i + 1< m.Groups.Count)
-                        Context.Parameters[i] = m.Groups[i + 1].ToString();
-                    else
-                        Context.Parameters[i] = String.Empty;
+                    if (i + 1 < match.Groups.Count)
+                        Context.Parameters[i] = match.Groups[i + 1].ToString();
                 }
             }
             else
             {
-                ClearMatchingResults();
-                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-                if (!res.IsSuccess)
-                {
+                //var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+                //if (!res.IsSuccess)
+                //{
+                //    return;
+                //}
+
+                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
+                if (!varReplace.IsAllVariables)
                     return;
+
+                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value),
+                    m =>
+                    {
+                        return string.Format("(?<{0}>.*)", int.Parse(m.Value[1].ToString()) + 1);
+                    }));
+
+                Match match = rExp.Match(textMessage.InnerText);
+                if (!match.Success)
+                    return;
+
+                for (int i = 0; i <= 10; i++)
+                {
+                    Context.Parameters[i] = match.Groups[(i + 1).ToString()].Value;
                 }
 
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i < _matchingResults.Count)
-                        Context.Parameters[i] = _matchingResults[i];
-                    else
-                        Context.Parameters[i] = string.Empty;
-                }
+                //for (int i = 0; i < 10; i++)
+                //{
+                //    if (i < _matchingResults.Count)
+                //        Context.Parameters[i] = _matchingResults[i];
+                //}
             }
 
             Context.CurrentMessage = message;
@@ -203,7 +230,8 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public override void Undo()
+        /// <param name="rootModel"></param>
+        public override void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)
             {
@@ -213,9 +241,12 @@ namespace Adan.Client.Common.Model
                         Group.Triggers.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Group.Triggers.Remove(this);
+                        TriggerBase th = this;
+                        Group.Triggers.TryTake(out th);
                         break;
                 }
+
+                rootModel.RecalculatedEnabledTriggersPriorities();
             }
         }
 
@@ -223,7 +254,7 @@ namespace Adan.Client.Common.Model
         {
             for (int i = 0; i < _matchingResults.Count; i++)
             {
-                _matchingResults[i] = null;
+                _matchingResults[i] = string.Empty;
             }
         }
 

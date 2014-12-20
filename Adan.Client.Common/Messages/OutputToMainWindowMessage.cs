@@ -21,12 +21,13 @@ namespace Adan.Client.Common.Messages
     public class OutputToMainWindowMessage : TextMessage
     {
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="OutputToMainWindowMessage"/> class.
         /// </summary>
-        /// <param name="originalMessage"></param>
-        public OutputToMainWindowMessage(OutputToMainWindowMessage originalMessage)
-            : base(originalMessage)
+        /// <param name="messageBlocks">The message blocks.</param>
+        public OutputToMainWindowMessage([NotNull] IEnumerable<TextMessageBlock> messageBlocks)
+            : base(messageBlocks)
         {
+            Assert.ArgumentNotNull(messageBlocks, "messageBlocks");
         }
 
         /// <summary>
@@ -41,12 +42,11 @@ namespace Adan.Client.Common.Messages
         }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="OutputToMainWindowMessage"/> class.
         /// </summary>
-        /// <param name="text"></param>
-        /// <param name="isColored"></param>
-        public OutputToMainWindowMessage([NotNull] string text, bool isColored)
-            : base(text, isColored)
+        /// <param name="text">The text to display.</param>
+        public OutputToMainWindowMessage([NotNull] string text)
+            : base(text)
         {
             Assert.ArgumentNotNull(text, "text");
         }
@@ -61,6 +61,16 @@ namespace Adan.Client.Common.Messages
             : base(text, foregroundColor, backgroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="message"></param>
+        public OutputToMainWindowMessage([NotNull] OutputToMainWindowMessage message)
+            : base(message)
+        {
+            Assert.ArgumentNotNull(message, "message");
         }
 
         /// <summary>

@@ -15,6 +15,8 @@ namespace Adan.Client.Common.Utils
 
         private StreamWriter _writer;
 
+        private object _lockWriteObject = new object();
+
         /// <summary>
         /// 
         /// </summary>
@@ -50,7 +52,11 @@ namespace Adan.Client.Common.Utils
             {
                 try
                 {
-                    _writer.WriteLine(message);
+                    lock (_lockWriteObject)
+                    {
+                        var curTime = DateTime.Now;
+                        _writer.WriteLine(string.Format("[{0:g}] {1}", curTime, message));
+                    }
                 }
                 catch (Exception)
                 { }

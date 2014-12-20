@@ -25,6 +25,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using System.Threading.Tasks;
     using System.Threading;
     using Adan.Client.Common.Utils;
+    using System.Collections.Generic;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="GroupStatusMessage"/> messages.
@@ -73,6 +74,21 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                             using (var stringReader = new StringReader(str))
                             {
                                 var message = (GroupStatusMessage)_serializer.Deserialize(stringReader);
+                                var monstersCount = new Dictionary<string, int>();
+
+                                foreach (var mate in message.GroupMates)
+                                {
+                                    if (monstersCount.ContainsKey(mate.Name))
+                                    {
+                                        monstersCount[mate.Name]++;
+                                        mate.TargetName = string.Format("{0}.{1}", monstersCount[mate.Name], mate.TargetName);
+                                    }
+                                    else
+                                    {
+                                        monstersCount.Add(mate.Name, 1);
+                                    }
+                                }
+
                                 PushMessageToConveyor(message);
                             }
                         }

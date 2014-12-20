@@ -11,12 +11,12 @@ namespace Adan.Client.Common.Messages
 {
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using ICSharpCode.AvalonEdit.Rendering;
     using Themes;
 
     /// <summary>
     /// Plain text message block that defines string and color.
     /// </summary>
+    /// TODO: 
     public class TextMessageBlock
     {
         /// <summary>
@@ -92,6 +92,7 @@ namespace Adan.Client.Common.Messages
         public void ChangeInnerText([NotNull]string newInnerText)
         {
             Assert.ArgumentNotNull(newInnerText, "newInnerText");
+
             Text = newInnerText;
         }
     }

@@ -189,8 +189,7 @@ namespace Adan.Client.ViewModel
             if (originalTrigger.TriggersGroup == changedTrigger.TriggersGroup)
             {
                 var originalIndex = originalTrigger.TriggersGroup.Triggers.IndexOf(originalTrigger);
-                originalTrigger.TriggersGroup.InsertTrigger(
-                    originalIndex, (TriggerViewModel)trigerEditDialog.DataContext);
+                originalTrigger.TriggersGroup.InsertTrigger(originalIndex, (TriggerViewModel)trigerEditDialog.DataContext);
             }
             else
             {

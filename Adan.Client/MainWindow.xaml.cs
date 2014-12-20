@@ -1,63 +1,65 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindow.xaml.cs" company="">
-//   
-// </copyright>
-// <summary>
-//   Interaction logic for MainWindow.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using Adan.Client.Commands;
+using Adan.Client.CommandSerializers;
+using Adan.Client.Common.Commands;
+using Adan.Client.Common.Controls;
+using Adan.Client.Common.Conveyor;
+using Adan.Client.Common.Model;
+using Adan.Client.Common.Plugins;
+using Adan.Client.Common.Settings;
+using Adan.Client.Common.Themes;
+using Adan.Client.Common.Utils;
+using Adan.Client.Common.ViewModel;
+using Adan.Client.Controls;
+using Adan.Client.ConveyorUnits;
+using Adan.Client.Dialogs;
+using Adan.Client.MessageDeserializers;
+using Adan.Client.Model.ActionDescriptions;
+using Adan.Client.Model.ActionParameters;
+using Adan.Client.Model.Actions;
+using Adan.Client.Model.ParameterDescriptions;
+using Adan.Client.Properties;
+using Adan.Client.ViewModel;
+using CSLib.Net.Annotations;
+using CSLib.Net.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Xceed.Wpf.AvalonDock.Controls;
+using Xceed.Wpf.AvalonDock.Layout;
+using Xceed.Wpf.AvalonDock.Layout.Serialization;
+using Xceed.Wpf.AvalonDock.Themes;
 
 namespace Adan.Client
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.ComponentModel;
-    using System.IO;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Data;
-    using System.Windows.Input;
-    using System.Windows.Media;
-    using Adan.Client.Common.Controls;
-    using AvalonDock;
-    using Commands;
-    using CommandSerializers;
-    using Common.Commands;
-    using Common.Conveyor;
-    using Common.Model;
-    using Common.Plugins;
-    using Common.Themes;
-    using ConveyorUnits;
-    using CSLib.Net.Annotations;
-    using CSLib.Net.Diagnostics;
-    using Dialogs;
-    using MessageDeserializers;
-    using Model.ActionDescriptions;
-    using Model.ActionParameters;
-    using Model.Actions;
-    using Model.ParameterDescriptions;
-    using ViewModel;
-    using Adan.Client.Common.ViewModel;
-    using Adan.Client.Common.Settings;
-    using Adan.Client.Properties;
-    using Adan.Client.Common.Utils;
-    using Adan.Client.Utils;
-
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Логика взаимодействия для MainWindowEx.xaml
     /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : Window
     {
+        #region Constants and Fields
+
         private WindowState nonFullScreenWindowState;
-        private IList<DockableContent> _allWidgets = new List<DockableContent>();
+        private IList<LayoutContent> _allWidgets = new List<LayoutContent>();
         private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
         private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
         private double nonFullScreenWindowWidth;
         private double nonFullScreenWindowHeight;
 
+        #endregion
+
+        #region Constructors
         /// <summary>
         /// Initializes a new instance of the <see cref="MainWindow"/> class.
         /// </summary>
@@ -128,8 +130,7 @@ namespace Adan.Client
 
             MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
-            // MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
-            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializerEx());
+            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
             MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
@@ -155,7 +156,7 @@ namespace Adan.Client
                     IsChecked = themeDescription == ThemeManager.Instance.ActiveTheme
                 };
                 menuItem.Click += HandleThemeChange;
-                themesMenuItem.Items.Add(menuItem);
+                _themesMenuItem.Items.Add(menuItem);
             }
 
             var initializationDalog = new PluginInitializationStatusDialog
@@ -175,10 +176,10 @@ namespace Adan.Client
 
                     var pluginClosure = plugin;
                     menuItem.Click += (o, e) => pluginClosure.ShowOptionsDialog(this);
-                    optionsMenuItem.Items.Insert(0, menuItem);
+                    _optionsMenuItem.Items.Insert(0, menuItem);
 
-                    if (optionsSeparator.Visibility != Visibility.Visible)
-                        optionsSeparator.Visibility = Visibility.Visible;
+                    if (_optionsSeparator.Visibility != Visibility.Visible)
+                        _optionsSeparator.Visibility = Visibility.Visible;
                 }
             }
 
@@ -187,34 +188,218 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
             MessageConveyor.AddConveyorUnit(new ConnectionUnit());
 
-            foreach (var uid in SettingsHolder.Instance.Settings.MainOutputs)
-            {
-                CreateNewOutputWindow(uid.Substring(0, uid.Length - 32), uid);
-            }
-
             Top = SettingsHolder.Instance.Settings.MainWindowTop;
             Left = SettingsHolder.Instance.Settings.MainWindowLeft;
             Width = SettingsHolder.Instance.Settings.MainWindowWidth;
             Height = SettingsHolder.Instance.Settings.MainWindowHeight;
             WindowState = SettingsHolder.Instance.Settings.MainWindowState;
+
+            _dockManager.ActiveContentChanged += _dockManager_ActiveContentChanged;
+            _dockManager.Theme = new ExpressionDarkTheme();
         }
 
-        private void CreateNewOutputWindow(string name, string uid)
+        #endregion
+
+        #region Layouts
+
+        private void HandleThemeChange([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            var newTheme = (ThemeDescription)((MenuItem)sender).Tag;
+            ThemeManager.Instance.SwitchToTheme(newTheme);
+            PluginHost.Instance.ApplyAdditionalPluginMergeDictionaries();
+
+            foreach (MenuItem item in _themesMenuItem.Items)
+            {
+                item.IsChecked = item.Tag == ThemeManager.Instance.ActiveTheme;
+            }
+        }
+
+        private void HandleDockManagerLoaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
+
+            LoadLayout();
+
+            foreach (var widget in PluginHost.Instance.Widgets)
+            {
+                if (!_allWidgets.Any(x => x.ContentId == widget.Name))
+                {
+                    CreateWidget(widget);
+                }
+            }
+
+            if (_outputWindows.Count == 0)
+            {
+                CreateOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
+            }
+
+            _dockManager.ActiveContent = _outputWindows.FirstOrDefault().VisibleControl;
+        }
+
+        private void LoadLayout()
+        {
+            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "Layout.xml");
+            if (File.Exists(layoutFullPath))
+            {
+                try
+                {
+                    var serializer = new XmlLayoutSerializer(_dockManager);
+                    serializer.LayoutSerializationCallback += LayoutSerializationCallback;
+                    serializer.Deserialize(layoutFullPath);
+                }
+                catch (Exception ex) 
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex.ToString()));
+                }
+            }
+        }
+
+        private void LayoutSerializationCallback(object sender, LayoutSerializationCallbackEventArgs args)
+        {
+            if (args.Model.ContentId.StartsWith("Plugin"))
+            {
+                var widgetDescription = PluginHost.Instance.Widgets.FirstOrDefault(x => x.Name == args.Model.ContentId);
+                if (widgetDescription != null)
+                {
+                    args.Content = widgetDescription.Control;
+                    _allWidgets.Add(args.Model);
+
+                    var menuItem = new MenuItem()
+                    {
+                        Header = widgetDescription.Description,
+                        Tag = args.Model,
+                    };
+
+                    var visibleBinding = new Binding("IsVisible")
+                    {
+                        Source = args.Model,
+                        Mode = BindingMode.OneWay,
+                    };
+
+                    menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
+                    menuItem.Click += HandleHideShowWidget;
+                    _viewMenuItem.Items.Add(menuItem);
+                }
+                else
+                {
+                    args.Cancel = true;
+                }
+            }
+            else
+            {
+                var outputWindow = new OutputWindow(this, args.Model.Title);
+                outputWindow.Uid = args.Model.ContentId;
+                outputWindow.DockContent = args.Model;
+
+                _outputWindows.Add(outputWindow);
+                args.Content = outputWindow.VisibleControl;
+
+                args.Model.Closed += OnOutputWindowClosed;
+
+                var menuItem = new MenuItem()
+                {
+                    Header = outputWindow.Name,
+                    Name = outputWindow.Uid,
+                };
+
+                menuItem.Click += (s, e) => { ShowOutputWindow((string)((MenuItem)s).Header); };
+
+                if (_windowMenuItem.Items.Count > 0)
+                    _windowMenuItem.Items.Insert(0, menuItem);
+                else
+                    _windowMenuItem.Items.Add(menuItem);
+
+                if (_windowSeparator.Visibility != Visibility.Visible)
+                    _windowSeparator.Visibility = Visibility.Visible;
+
+                PluginHost.Instance.OutputWindowCreated(outputWindow);
+
+                if (SettingsHolder.Instance.Settings.AutoConnect)
+                {
+                    outputWindow.RootModel.PushCommandToConveyor(
+                        new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+                }
+            }
+        }
+
+        private void CreateWidget(WidgetDescription widgetDescription)
+        {
+            var anchorable = new LayoutAnchorable()
+            {
+                CanAutoHide = false,
+                CanFloat = true,
+                CanHide = true,
+                Title = widgetDescription.Description,
+                Content = widgetDescription.Control,
+                ContentId = widgetDescription.Name,
+                FloatingHeight = widgetDescription.Height,
+                FloatingWidth = widgetDescription.Width,
+                FloatingLeft = widgetDescription.Left,
+                FloatingTop = widgetDescription.Top,                
+            };
+
+            if (!string.IsNullOrEmpty(widgetDescription.Icon))
+            {
+                try
+                {
+                    anchorable.IconSource = (ImageSource)FindResource(widgetDescription.Icon);
+                }
+                catch (Exception)
+                { }
+            }
+
+            var menuItem = new MenuItem()
+            {
+                Header = widgetDescription.Description,
+                Tag = anchorable,
+            };
+
+            var visibleBinding = new Binding("IsVisible")
+            {
+                Source = anchorable,
+                Mode = BindingMode.OneWay,
+            };
+
+            menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
+            menuItem.Click += HandleHideShowWidget;
+            _viewMenuItem.Items.Add(menuItem);
+
+            _allWidgets.Add(anchorable);
+
+            anchorable.AddToLayout(_dockManager, AnchorableShowStrategy.Most);
+            ((LayoutAnchorablePane)anchorable.Parent).FloatingHeight = widgetDescription.Height;
+            ((LayoutAnchorablePane)anchorable.Parent).FloatingWidth = widgetDescription.Width;
+            ((LayoutAnchorablePane)anchorable.Parent).FloatingLeft = widgetDescription.Left;
+            ((LayoutAnchorablePane)anchorable.Parent).FloatingTop = widgetDescription.Top;
+            anchorable.Float();
+        }
+
+        private void CreateOutputWindow(string name, string uid)
         {
             OutputWindow outputWindow = new OutputWindow(this, name);
             _outputWindows.Add(outputWindow);
             outputWindow.Uid = uid;
 
-            DockableContent dockable = new DockableContent()
+            LayoutAnchorable anchorable = new LayoutAnchorable()
             {
-                Name = uid,
+                CanAutoHide = false,
+                CanClose = true,
+                CanFloat = true,
+                CanHide = false,
                 Title = name,
                 Content = outputWindow.VisibleControl,
-                HideOnClose = false,
+                ContentId = uid,
+                FloatingHeight = 600,
+                FloatingWidth = 800,
             };
 
-            outputWindow.DockContent = dockable;
-            dockable.Closed += OnOutputWindowClosed;
+            outputWindow.DockContent = anchorable;
+
+            anchorable.Closed += OnOutputWindowClosed;
 
             var menuItem = new MenuItem()
             {
@@ -222,20 +407,23 @@ namespace Adan.Client
                 Name = outputWindow.Uid,
             };
 
-            if (windowMenuItem.Items.Count > 0)
-                windowMenuItem.Items.Insert(0, menuItem);
-            else
-                windowMenuItem.Items.Add(menuItem);
+            menuItem.Click += (s, e) => { ShowOutputWindow((string)((MenuItem)s).Header); };
 
-            if (windowSeparator.Visibility != Visibility.Visible)
-                windowSeparator.Visibility = Visibility.Visible;
+            if (_windowMenuItem.Items.Count > 0)
+                _windowMenuItem.Items.Insert(0, menuItem);
+            else
+                _windowMenuItem.Items.Add(menuItem);
+
+            if (_windowSeparator.Visibility != Visibility.Visible)
+                _windowSeparator.Visibility = Visibility.Visible;
 
             PluginHost.Instance.OutputWindowCreated(outputWindow);
 
-            if (dockManager.MainDocumentPane != null)
-                dockManager.MainDocumentPane.Items.Add(dockable);
-            else
-                dockable.Show(dockManager);
+            var firstDocumentPane = _dockManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
+            if (firstDocumentPane != null)
+            {
+                firstDocumentPane.Children.Add(anchorable);
+            }
 
             if (SettingsHolder.Instance.Settings.AutoConnect)
             {
@@ -244,44 +432,9 @@ namespace Adan.Client
             }
         }
 
-        private void OnOutputWindowClosed(object sender, EventArgs e)
-        {
-            var dockable = (DockableContent)sender;
-            var outputWindow = _outputWindows.FirstOrDefault(output => output.Uid == dockable.Name);
+        #endregion
 
-            if (outputWindow != null)
-            {
-                outputWindow.Save();
-                PluginHost.Instance.OutputWindowClose(outputWindow);
-                outputWindow.Dispose();
-                _outputWindows.Remove(outputWindow);
-
-                foreach (var floatingWindow in dockManager.FloatingWindows)
-                {
-                    if (!floatingWindow.HostedPane.HasItems)
-                    {
-                        try
-                        {
-                            floatingWindow.Close();
-                        }
-                        catch { }
-                    }
-                }
-
-                foreach (var item in windowMenuItem.Items)
-                {
-                    var menuItem = item as MenuItem;
-                    if (menuItem != null && menuItem.Name == outputWindow.Uid)
-                    {
-                        windowMenuItem.Items.Remove(menuItem);
-                        break;
-                    }
-                }
-
-                if (windowMenuItem.Items.Count <= 2)
-                    windowSeparator.Visibility = Visibility.Collapsed;
-            }
-        }
+        #region Windows interaction
 
         /// <summary>
         /// 
@@ -289,41 +442,48 @@ namespace Adan.Client
         /// <param name="name"></param>
         public void ShowOutputWindow(string name)
         {
-            OutputWindow outputWindowToSelect;
+            OutputWindow outputWindowToSelect = null;
             if (string.IsNullOrEmpty(name))
             {
-                var currentWindow = _outputWindows.FirstOrDefault(w => w.DockContent.IsKeyboardFocusWithin);
-                if (currentWindow == null)
+                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                if (activeContent != null)
                 {
-                    return;
-                }
+                    var currentWindow = _outputWindows.FirstOrDefault(x => x.Uid == activeContent.RootModel.Uid);
+                    if (currentWindow == null)
+                    {
+                        return;
+                    }
 
-                var currentWindowIndex = _outputWindows.IndexOf(currentWindow);
-                if (currentWindowIndex < 0)
-                {
-                    return;
-                }
+                    var currentWindowIndex = _outputWindows.IndexOf(currentWindow);
+                    if (currentWindowIndex < 0)
+                    {
+                        return;
+                    }
 
-                if (currentWindowIndex == _outputWindows.Count - 1)
-                {
-                    currentWindowIndex = 0;
-                }
-                else
-                {
-                    currentWindowIndex++;
-                }
+                    if (currentWindowIndex == _outputWindows.Count - 1)
+                    {
+                        currentWindowIndex = 0;
+                    }
+                    else
+                    {
+                        currentWindowIndex++;
+                    }
 
-                outputWindowToSelect = _outputWindows[currentWindowIndex];
+                    outputWindowToSelect = _outputWindows[currentWindowIndex];
+                }
+                else if(_outputWindows.Count > 0)
+                {
+                    outputWindowToSelect = _outputWindows[0];
+                }
             }
             else
             {
-                outputWindowToSelect = _outputWindows.FirstOrDefault(output => output.Name == name);
+                outputWindowToSelect = _outputWindows.FirstOrDefault(x => x.Name == name);
             }
 
             if (outputWindowToSelect != null)
             {
-                dockManager.ActiveContent = outputWindowToSelect.DockContent;
-                outputWindowToSelect.Focus();
+                _dockManager.ActiveContent = outputWindowToSelect.VisibleControl;
             }
         }
 
@@ -371,7 +531,90 @@ namespace Adan.Client
                     { }
                 }
             }
+        }        
+
+        private void OnOutputWindowClosed(object sender, EventArgs e)
+        {
+            var dockable = (LayoutAnchorable)sender;
+            var outputWindow = _outputWindows.FirstOrDefault(output => output.Uid == dockable.ContentId);
+
+            if (outputWindow != null)
+            {
+                outputWindow.Save();
+                PluginHost.Instance.OutputWindowClose(outputWindow);
+                outputWindow.Dispose();
+                _outputWindows.Remove(outputWindow);
+
+                foreach (var item in _windowMenuItem.Items)
+                {
+                    var menuItem = item as MenuItem;
+                    if (menuItem != null && menuItem.Name == outputWindow.Uid)
+                    {
+                        _windowMenuItem.Items.Remove(menuItem);
+                        break;
+                    }
+                }
+
+                if (_windowMenuItem.Items.Count <= 2)
+                    _windowSeparator.Visibility = Visibility.Collapsed;
+            }
         }
+
+        private void HandleAddNewWindow([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        {
+            var profiles = new ObservableCollection<ProfileViewModel>();
+
+            foreach (string str in SettingsHolder.Instance.AllProfiles)
+            {
+                profiles.Add(new ProfileViewModel(str, str == "Default" ? true : false));
+            }
+
+            if (profiles.Count == 0)
+            {
+                MessageBox.Show(this, "Create profile first", "Error");
+                return;
+            }
+
+            var chooseViewModel = new ProfileChooseViewModel(profiles, profiles[0].NameProfile);
+
+            var chooseDialog = new ProfilesChooseDialog()
+            {
+                DataContext = chooseViewModel,
+                Owner = this,
+            };
+
+            var result = chooseDialog.ShowDialog();
+            if (result.HasValue && result.Value)
+            {
+                try
+                {
+                    var name = chooseViewModel.SelectedProfile.NameProfile;
+
+                    CreateOutputWindow(name, name + Guid.NewGuid().ToString("N"));
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error add new window: {0}\r\n{1}", ex.Message, ex.StackTrace));
+                }
+            }
+        }
+
+        private void _dockManager_ActiveContentChanged(object sender, EventArgs e)
+        {
+            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            if (activeContent != null)
+            {
+                var dockContent = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                if (dockContent != null)
+                {
+                    dockContent.Focus();
+                }
+            }
+        }
+
+        #endregion
+
+        #region Hotkeys
 
         /// <summary>
         /// Invoked when an unhandled <see cref="UIElement.PreviewKeyDown"/> attached event reaches an element in its route that is derived from this class. Implement this method to add class handling for this event.
@@ -403,22 +646,26 @@ namespace Adan.Client
             var hotkey = _globalHotkeys.FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
             if (hotkey != null)
             {
-                var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
-
-                if (outputWindow != null)
+                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                if (activeContent != null)
                 {
-                    foreach (var action in hotkey.Actions)
-                    {
-                        try
-                        {
-                            if (action.IsGlobal)
-                                action.Execute(null, null);
-                            else if (outputWindow.RootModel != null)
-                                action.Execute(outputWindow.RootModel, ActionExecutionContext.Empty);
-                        }
-                        catch (Exception)
-                        { }
+                    var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
 
+                    if (outputWindow != null)
+                    {
+                        foreach (var action in hotkey.Actions)
+                        {
+                            try
+                            {
+                                if (action.IsGlobal)
+                                    action.Execute(null, null);
+                                else if (outputWindow.RootModel != null)
+                                    action.Execute(outputWindow.RootModel, ActionExecutionContext.Empty);
+                            }
+                            catch (Exception)
+                            { }
+
+                        }
                     }
                 }
 
@@ -426,88 +673,31 @@ namespace Adan.Client
             }
         }
 
-        /// <summary>
-        /// Raises the <see cref="E:System.Windows.Window.Closing"/> event.
-        /// </summary>
-        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
-        protected override void OnClosing([NotNull] CancelEventArgs e)
+        private void HandleGlobalHotkeys([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
+            Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            base.OnClosing(e);
-
-            try
+            var globalHotkeysDialog = new GlobalHotkeysEditDialog()
             {
-                //if (WindowStyle == WindowStyle.None)
-                //{
-                //    ToggleFullScreenMode();
-                //}
+                DataContext = new GlobalHotkeysViewModel(_globalHotkeys, RootModel.AllActionDescriptions),
+                Owner = this,
+            };
 
-                var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
-                if (!Directory.Exists(layoutFullPath))
-                {
-                    Directory.CreateDirectory(layoutFullPath);
-                }
-
-                layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
-                if (File.Exists(layoutFullPath))
-                    File.Delete(layoutFullPath);
-
-                dockManager.SaveLayout(layoutFullPath);
-
-                SettingsHolder.Instance.Settings.MainOutputs.Clear();
-
-                foreach (var outputWindow in _outputWindows)
-                {
-                    SettingsHolder.Instance.Settings.MainOutputs.Add(outputWindow.Uid);
-                    outputWindow.Save();
-                    outputWindow.Dispose();
-                }
-
-                SettingsHolder.Instance.Settings.MainWindowTop = (int)Top;
-                SettingsHolder.Instance.Settings.MainWindowLeft = (int)Left;
-                SettingsHolder.Instance.Settings.MainWindowWidth = (int)Width;
-                SettingsHolder.Instance.Settings.MainWindowHeight = (int)Height;
-                SettingsHolder.Instance.Settings.MainWindowState = WindowState;
-
-                SettingsHolder.Instance.SaveAllSettings();
-
-                PluginHost.Instance.Dispose();
-            }
-            catch (Exception ex)
-            {
-                //MessageBox.Show(ex.ToString(), "Error save settings");
-                ErrorLogger.Instance.Write(string.Format("Error save settings:{0}\r\n{1}", ex.Message, ex.StackTrace));
-            }
+            globalHotkeysDialog.ShowDialog();
+            SettingsHolder.Instance.SaveCommonSettings();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logName"></param>
-        /// <param name="rootModel"></param>
-        public void StartLogging(string logName, RootModel rootModel)
+        #endregion
+
+        #region Buttons
+
+        private void HandleAbout([NotNull]object sender, [NotNull]RoutedEventArgs e)
         {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
+            Assert.ArgumentNotNull(sender, "sender");
+            Assert.ArgumentNotNull(e, "e");
 
-            if (outputWindow != null)
-            {
-                outputWindow.StartLogging(logName);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
-        public void StopLogging(RootModel rootModel)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
-
-            if (outputWindow != null)
-            {
-                outputWindow.StopLogging();
-            }
+            var aboutDialog = new AboutDialog() { Owner = this, }.ShowDialog();
         }
 
         private void HandleConnect([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -515,14 +705,18 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
-            if (outputWindow == null)
+            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            if (activeContent != null)
             {
-                CreateNewOutputWindow("Default", Guid.NewGuid().ToString("N"));
-            }
+                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                if (outputWindow == null)
+                {
+                    CreateOutputWindow("Default", Guid.NewGuid().ToString("N"));
+                }
 
-            outputWindow.RootModel.PushCommandToConveyor(
-                    new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+                outputWindow.RootModel.PushCommandToConveyor(
+                        new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
+            }
         }
 
         private void HandleConnectAll([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -531,7 +725,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             if (_outputWindows.Count == 0)
-                CreateNewOutputWindow("Default", Guid.NewGuid().ToString("N"));
+                CreateOutputWindow("Default", Guid.NewGuid().ToString("N"));
 
             foreach (OutputWindow window in _outputWindows)
                 window.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
@@ -541,11 +735,14 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            if (activeContent != null)
+            {
+                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
 
-            var outputWindow = _outputWindows.FirstOrDefault(output => output.DockContent.IsKeyboardFocusWithin);
-
-            if (outputWindow != null)
-                outputWindow.RootModel.PushCommandToConveyor(new DisconnectCommand());
+                if (outputWindow != null)
+                    outputWindow.RootModel.PushCommandToConveyor(new DisconnectCommand());
+            }
         }
 
         private void HandleDisconnectAll([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -584,103 +781,21 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             Close();
-        }
-
-        private void HandleThemeChange([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            var newTheme = (ThemeDescription)((MenuItem)sender).Tag;
-            ThemeManager.Instance.SwitchToTheme(newTheme);
-            PluginHost.Instance.ApplyAdditionalPluginMergeDictionaries();
-
-            foreach (MenuItem item in themesMenuItem.Items)
-            {
-                item.IsChecked = item.Tag == ThemeManager.Instance.ActiveTheme;
-            }
-        }
-
-        private void HandleDockManagerLoaded([NotNull] object sender, [NotNull] RoutedEventArgs e)
-        {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
-
-            foreach (var widgetDescription in PluginHost.Instance.AllWidgets)
-            {
-                var dockContent = new DockableContent
-                {
-                    Title = widgetDescription.Description,
-                    Name = widgetDescription.Name,
-                    Content = widgetDescription.Control,
-                    HideOnClose = true,
-                };
-
-                dockContent.FloatingWindowSizeToContent = widgetDescription.ResizeToContent
-                                                              ? SizeToContent.WidthAndHeight
-                                                              : SizeToContent.Manual;
-
-                if (!string.IsNullOrEmpty(widgetDescription.Icon))
-                {
-                    dockContent.Icon = (ImageSource)FindResource(widgetDescription.Icon);
-                }
-
-                _allWidgets.Add(dockContent);
-
-                var menuItem = new MenuItem()
-                {
-                    Header = widgetDescription.Description,
-                    Tag = dockContent
-                };
-
-                var visibleBinding = new Binding("State")
-                {
-                    Source = dockContent,
-                    Mode = BindingMode.OneWay,
-                    Converter = new DockableContentStateToBoolConverter(),
-                };
-
-                menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
-                menuItem.Click += HandleHideShowWidget;
-                viewMenuItem.Items.Add(menuItem);
-
-                dockContent.Show(dockManager);
-            }
-
-            LoadLayout();
-
-            if (SettingsHolder.Instance.Settings.MainOutputs.Count == 0)
-            {
-                CreateNewOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
-            }
-        }
-
-        private void LoadLayout()
-        {
-            var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "Layout.xml");
-            if (File.Exists(layoutFullPath))
-            {
-                try
-                {
-                    dockManager.RestoreLayout(layoutFullPath);
-                }
-                catch (Exception) { }
-            }
-        }
+        }        
 
         private void HandleHideShowWidget([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var dockContent = (DockableContent)((MenuItem)sender).Tag;
-            if (dockContent.State != DockableContentState.Hidden)
+            var dockContent = (LayoutAnchorable)((MenuItem)sender).Tag;
+            if (!dockContent.IsHidden)
             {
                 dockContent.Hide();
             }
             else
             {
-                dockContent.Show(dockManager);
+                dockContent.Show();
             }
         }
 
@@ -757,60 +872,40 @@ namespace Adan.Client
             }
         }
 
-        private void HandleGlobalHotkeys([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        #endregion
+
+        #region Logging
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="logName"></param>
+        /// <param name="rootModel"></param>
+        public void StartLogging(string logName, RootModel rootModel)
         {
-            Assert.ArgumentNotNull(sender, "sender");
-            Assert.ArgumentNotNull(e, "e");
+            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
 
-            var globalHotkeysDialog = new GlobalHotkeysEditDialog()
+            if (outputWindow != null)
             {
-                DataContext = new GlobalHotkeysViewModel(_globalHotkeys, RootModel.AllActionDescriptions),
-                Owner = this,
-            };
-
-            globalHotkeysDialog.ShowDialog();
-            SettingsHolder.Instance.SaveCommonSettings();
+                outputWindow.StartLogging(logName);
+            }
         }
 
-        private void HandleAddNewWindow([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="rootModel"></param>
+        public void StopLogging(RootModel rootModel)
         {
-            var profiles = new ObservableCollection<ProfileViewModel>();
+            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
 
-            foreach (string str in SettingsHolder.Instance.AllProfiles)
+            if (outputWindow != null)
             {
-                profiles.Add(new ProfileViewModel(str, str == "Default" ? true : false));
-            }
-
-            if (profiles.Count == 0)
-            {
-                MessageBox.Show(this, "Create profile first", "Error");
-                return;
-            }
-
-            var chooseViewModel = new ProfileChooseViewModel(profiles, profiles[0].NameProfile);
-
-            var chooseDialog = new ProfilesChooseDialog()
-            {
-                DataContext = chooseViewModel,
-                Owner = this,
-            };
-
-            var result = chooseDialog.ShowDialog();
-            if (result.HasValue && result.Value)
-            {
-                try
-                {
-                    var name = chooseViewModel.SelectedProfile.NameProfile;
-
-                    CreateNewOutputWindow(name, name + Guid.NewGuid().ToString("N"));
-                }
-                catch (Exception ex)
-                {
-                    //MessageBox.Show(this, ex.ToString(), "Error");
-                    ErrorLogger.Instance.Write(string.Format("Error add new window: {0}\r\n{1}", ex.Message, ex.StackTrace));
-                }
+                outputWindow.StopLogging();
             }
         }
+
+        #endregion
 
         /// <summary>
         /// Toggles the full screen mode.
@@ -824,7 +919,7 @@ namespace Adan.Client
                 ResizeMode = ResizeMode.CanResizeWithGrip;
                 Width = nonFullScreenWindowWidth;
                 Height = nonFullScreenWindowHeight;
-                mainMenu.Visibility = Visibility.Visible;
+                _mainMenu.Visibility = Visibility.Visible;
             }
             else
             {
@@ -838,16 +933,71 @@ namespace Adan.Client
                 WindowState = System.Windows.WindowState.Normal;
                 WindowStyle = WindowStyle.None;
                 ResizeMode = System.Windows.ResizeMode.NoResize;
-                mainMenu.Visibility = Visibility.Collapsed;
+                _mainMenu.Visibility = Visibility.Collapsed;
             }
-        }
+        }        
 
-        private void HandleAbout([NotNull]object sender, [NotNull]RoutedEventArgs e)
+        /// <summary>
+        /// Raises the <see cref="E:System.Windows.Window.Closing"/> event.
+        /// </summary>
+        /// <param name="e">A <see cref="T:System.ComponentModel.CancelEventArgs"/> that contains the event data.</param>
+        protected override void OnClosing([NotNull] CancelEventArgs e)
         {
-            Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var aboutDialog = new AboutDialog() { Owner = this, }.ShowDialog();
+            SaveAllSettings();
+
+            base.OnClosing(e);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void SaveAllSettings()
+        {
+            try
+            {
+                //if (WindowStyle == WindowStyle.None)
+                //{
+                //    ToggleFullScreenMode();
+                //}
+
+                var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
+                if (!Directory.Exists(layoutFullPath))
+                {
+                    Directory.CreateDirectory(layoutFullPath);
+                }
+
+                layoutFullPath = Path.Combine(layoutFullPath, "Layout.xml");
+                if (!File.Exists(layoutFullPath))
+                    File.Delete(layoutFullPath);
+
+                new XmlLayoutSerializer(_dockManager).Serialize(layoutFullPath);
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Instance.Write(string.Format("Error save layout:{0}\r\n{1}", ex.Message, ex.StackTrace));
+            }
+
+            try
+            {
+                foreach (var outputWindow in _outputWindows)
+                {
+                    outputWindow.Save();
+                }
+
+                SettingsHolder.Instance.Settings.MainWindowTop = (int)Top;
+                SettingsHolder.Instance.Settings.MainWindowLeft = (int)Left;
+                SettingsHolder.Instance.Settings.MainWindowWidth = (int)Width;
+                SettingsHolder.Instance.Settings.MainWindowHeight = (int)Height;
+                SettingsHolder.Instance.Settings.MainWindowState = WindowState;
+
+                SettingsHolder.Instance.SaveAllSettings();
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Instance.Write(string.Format("Error save settings:{0}\r\n{1}", ex.Message, ex.StackTrace));
+            }
         }
     }
 }

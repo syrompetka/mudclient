@@ -38,6 +38,8 @@ namespace Adan.Client.Common.Model
         [NonSerialized]
         private string _substituteWith = string.Empty;
 
+        private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Substitution"/> class.
         /// </summary>
@@ -80,7 +82,7 @@ namespace Adan.Client.Common.Model
             {
                 Assert.ArgumentNotNull(value, "value");
 
-                if (!string.IsNullOrEmpty(value) && value[0] == '/' && value[value.Length - 1] == '/')
+                if (value.Length > 2 && value[0] == '/' && value[value.Length - 1] == '/')
                 {
                     _pattern = value.Substring(1, value.Length - 2);
                     IsRegExp = true;
@@ -122,6 +124,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
+        [XmlIgnore]
         public UndoOperation Operation
         {
             get;
@@ -131,7 +134,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-                [XmlIgnore]
+        [XmlIgnore]
         public Group Group
         {
             get;
@@ -148,138 +151,162 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(textMessage, "message");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            ClearMatchingResults();
+            //ClearMatchingResults();
             string text = textMessage.InnerText;
+
+            if (string.IsNullOrEmpty(textMessage.InnerText))
+                return;
+
             if (IsRegExp)
             {
-                Regex rExp = new Regex(_pattern);
-                var matches = rExp.Matches(text);
-
-                if (matches.Count == 0)
+                var varReplace = rootModel.ReplaceVariables(_pattern);
+                if (!varReplace.IsAllVariables)
                     return;
+
+                Regex rExp = new Regex(varReplace.Value);
+                //var matches = rExp.Matches(text);
+
+                //if (matches.Count == 1)
+                    //return;
 
                 StringBuilder sb = new StringBuilder(text.Length);
                 int offset = 0;
-                for (int i = 0; i < matches.Count; ++i)
+                Match match = rExp.Match(textMessage.InnerText);
+                if (match.Success)
                 {
-                    if (offset < matches[i].Index)
-                        sb.Append(text, offset, matches[i].Index - offset);
-
-                    offset = matches[i].Index + matches[i].Length;
-
-                    StringBuilder value = new StringBuilder(SubstituteWith);
-                    for (int k = 1; k < matches[i].Groups.Count; ++k)
-                        value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
-
-                    sb.Append(value);
-                }
-
-                textMessage.Clear();
-                textMessage.AppendText(sb.ToString());
-            }
-            else
-            {
-                var res = GetRootPatternToken(rootModel).Match(text, 0, _matchingResults);
-                if (res.IsSuccess)
-                {
-                    int position = 0;
-                    int coloredPosition = 0;
-                    int coloredStartPosition = 0;
-                    int lastPosition = res.StartPosition - position;
-                    string coloredText = textMessage.ColoredText;
-                    StringBuilder sb = new StringBuilder(coloredText.Length);
                     do
                     {
-                        int count = 0;
-                        if (lastPosition == 0)
-                        {
-                            while (coloredText[coloredStartPosition] == '\x1B')
+                        if (offset < match.Index)
+                            sb.Append(text, offset, match.Index - offset);
+
+                        offset = match.Index + match.Length;
+
+                        sb.Append(_wildRegex.Replace(SubstituteWith,
+                            m =>
                             {
-                                coloredStartPosition += 2;
-                                var tt = coloredText[coloredStartPosition];
+                                return match.Groups[int.Parse(m.Value.Substring(1))].Value;
+                            }));
 
-                                while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
-                                    coloredStartPosition++;
+                        //StringBuilder value = new StringBuilder(SubstituteWith);
+                        //for (int k = 1; k < match.Groups.Count; ++k)
+                        //    value.Replace("%" + (k - 1), match.Groups[k].Value);
 
-                                if (coloredStartPosition == coloredText.Length)
-                                {
-                                    coloredStartPosition = 0;
-                                }
-                                else
-                                {
-                                    coloredStartPosition++;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            while (count < lastPosition)
-                            {
-                                if (coloredText[coloredStartPosition] == '\x1B')
-                                {
-                                    coloredStartPosition += 2;
-                                    var tt = coloredText[coloredStartPosition];
+                        //sb.Append(value);
 
-                                    while (coloredStartPosition < coloredText.Length && coloredText[coloredStartPosition] != 'm')
-                                        coloredStartPosition++;
+                        match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
+                    } while (match.Success);
 
-                                    if (coloredStartPosition == coloredText.Length)
-                                        break;
+                    if (offset < textMessage.InnerText.Length)
+                        sb.Append(text, offset, textMessage.InnerText.Length - offset);
 
-                                    coloredStartPosition++;
-                                }
-                                else
-                                {
-                                    count++;
-                                    coloredStartPosition++;
-                                }
-                            }
-                        }
+                    //for (int i = 0; i < matches.Count; ++i)
+                    //{
+                    //    if (offset < matches[i].Index)
+                    //        sb.Append(text, offset, matches[i].Index - offset);
 
-                        sb.Append(coloredText, coloredPosition, coloredStartPosition - coloredPosition);
-                        sb.Append(GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults));
+                    //    offset = matches[i].Index + matches[i].Length;
 
-                        lastPosition = res.EndPosition - position;
-                        count = 0;
-                        while (count < lastPosition)
-                        {
-                            if (coloredText[coloredPosition] == '\x1B')
-                            {
-                                coloredPosition += 2;
-                                var tt = coloredText[coloredPosition];
+                    //    //StringBuilder value = new StringBuilder(SubstituteWith);
+                    //    //for (int k = 1; k < matches[i].Groups.Count; ++k)
+                    //    //    value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
+                    //    sb.Append(_wildRegex.Replace(SubstituteWith,
+                    //        m =>
+                    //        {
+                    //            return matches[i].Groups[m.Value[1]].Value;
+                    //        }));
 
-                                while (coloredPosition < coloredText.Length && coloredText[coloredPosition] != 'm')
-                                    coloredPosition++;
-
-                                if (coloredPosition == coloredText.Length)
-                                    break;
-
-                                coloredPosition++;
-                            }
-                            else
-                            {
-                                count++;
-                                coloredPosition++;
-                            }
-                        }
-
-                        position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
-                        ClearMatchingResults();
-                        if (position >= text.Length)
-                        {
-                            break;
-                        }
-
-                        res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-                    } while (res.IsSuccess);
-
-                    if (coloredPosition < coloredText.Length)
-                        sb.Append(coloredText, coloredPosition, coloredText.Length - coloredPosition);
+                    //    //sb.Append(value);
+                    //}
 
                     textMessage.Clear();
                     textMessage.AppendText(sb.ToString());
-                    //rootModel.PushMessageToConveyor(textMessage.NewInstance());
-                    //textMessage.Handled = true;
+                }
+            }
+            else
+            {
+                var varReplace = rootModel.ReplaceVariables(_pattern);
+                if (!varReplace.IsAllVariables)
+                    return;
+
+                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value),
+                    m =>
+                    {
+                        return string.Format("(?<{0}>.*)", int.Parse(m.Value[1].ToString()) + 1);
+                    }));
+                //var matches = rExp.Matches(text);
+
+                //if (matches.Count == 0)
+                //    return;
+
+                StringBuilder sb = new StringBuilder(text.Length);
+                int offset = 0;
+
+                Match match = rExp.Match(textMessage.InnerText);
+                if (match.Success)
+                {
+                    do
+                    {
+                        if (offset < match.Index)
+                            sb.Append(text, offset, match.Index - offset);
+
+                        offset = match.Index + match.Length;
+
+                        sb.Append(_wildRegex.Replace(SubstituteWith,
+                            m =>
+                            {
+                                return match.Groups[(int.Parse(m.Value[1].ToString()) + 1).ToString()].Value;
+                            }));
+
+                        //StringBuilder value = new StringBuilder(SubstituteWith);
+                        //for (int k = 1; k < match.Groups.Count; ++k)
+                        //    value.Replace("%" + (k - 1), match.Groups[k].Value);
+
+                        //sb.Append(value);
+
+                        match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
+                    } while (match.Success);
+                    //for (int i = 0; i < matches.Count; ++i)
+                    //{
+                    //    if (offset < matches[i].Index)
+                    //        sb.Append(text, offset, matches[i].Index - offset);
+
+                    //    offset = matches[i].Index + matches[i].Length;
+
+                    //    sb.Append(_wildRegex.Replace(SubstituteWith,
+                    //        m =>
+                    //        {
+                    //            return matches[i].Groups[m.Value[1]].Value;
+                    //        }));
+
+                    //    //StringBuilder value = new StringBuilder(SubstituteWith);
+                    //    //for (int k = 1; k < matches[i].Groups.Count; ++k)
+                    //    //    value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
+
+                    //    //sb.Append(value);
+                    //}
+
+                    if (offset < textMessage.InnerText.Length)
+                        sb.Append(text, offset, textMessage.InnerText.Length - offset);
+
+                    textMessage.Clear();
+                    textMessage.AppendText(sb.ToString());
+
+                    //ClearMatchingResults();
+                    //int position = 0;
+                    //var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+                    //while (res.IsSuccess)
+                    //{
+                    //    textMessage.Substitution(res.StartPosition, res.EndPosition - res.StartPosition, SubstituteWith);
+
+                    //    //TODO: Что это за говно?
+                    //    position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
+                    //    ClearMatchingResults();
+
+                    //    if (position > text.Length)
+                    //        break;
+
+                    //    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
+                    //}
                 }
             }
         }
@@ -314,7 +341,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public void Undo()
+        public void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)
             {
@@ -323,8 +350,9 @@ namespace Adan.Client.Common.Model
                     case UndoOperation.Add:
                         Group.Substitutions.Add(this);
                         break;
-                    case UndoOperation.Remove:
-                        Group.Substitutions.Remove(this);
+                    case UndoOperation.Remove:                        
+                        Substitution th = this;
+                        Group.Substitutions.TryTake(out th);
                         break;
                 }
             }

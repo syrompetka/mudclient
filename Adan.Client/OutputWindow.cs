@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Adan.Client.Common.Conveyor;
+using Adan.Client.Common.Messages;
+using Adan.Client.Common.Model;
 using Adan.Client.Common.Networking;
+using Adan.Client.Common.Settings;
+using Adan.Client.Controls;
+using Adan.Client.Properties;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
-using System.Windows.Threading;
-using Adan.Client.Common.Messages;
-using Adan.Client.Controls;
-using Adan.Client.Common.Model;
-using Adan.Client.Common.Settings;
-using System.Windows.Controls;
-using System.Windows;
-using AvalonDock;
-using System.IO;
-using System.Threading.Tasks;
-using Adan.Client.Properties;
-using System.Globalization;
-using System.Diagnostics;
-using System.Timers;
-using System.Windows.Forms.Integration;
-using System.Threading;
+using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Adan.Client
 {
@@ -33,20 +28,15 @@ namespace Adan.Client
         private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
-#if NATIVE
         private MainOutputWindowNative _window;
-#else
-        private MainOutputWindowExx _window;
-#endif
         private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
         private bool _isLogging;
-
         
         /// <summary>
         /// 
         /// </summary>
-        public OutputWindow(MainWindow mainWindow, string name)
+        public OutputWindow(MainWindow MainWindowEx, string name)
         {
             Name = name;
 
@@ -58,17 +48,13 @@ namespace Adan.Client
 
             conveyor.MessageReceived += HandleMessage;
 
-#if NATIVE
-            _window = new MainOutputWindowNative(mainWindow, _rootModel);
-#else
-            _window = new MainOutputWindowExx(mainWindow, RootModel);
-#endif
+            _window = new MainOutputWindowNative(MainWindowEx, _rootModel);
             VisibleControl = _window;
             
-            _window.txtCommandInput.RootModel = RootModel;
-            _window.txtCommandInput.LoadHistory(RootModel.Profile);
-            _window.txtCommandInput.GotFocus += txtCommandInput_GotFocus;
-            _window.txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
+            _window._txtCommandInput.RootModel = RootModel;
+            _window._txtCommandInput.LoadHistory(RootModel.Profile);
+            _window._txtCommandInput.GotFocus += txtCommandInput_GotFocus;
+            _window._txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
 
             IsLogging = false;
         }
@@ -81,7 +67,7 @@ namespace Adan.Client
         /// <summary>
         /// 
         /// </summary>
-        public DockableContent DockContent
+        public LayoutContent DockContent
         {
             get;
             set;
@@ -156,7 +142,7 @@ namespace Adan.Client
         /// </summary>
         public void Focus()
         {
-            _window.txtCommandInput.Focus();
+            _window._txtCommandInput.Focus();
         }
 
         /// <summary>
@@ -164,8 +150,7 @@ namespace Adan.Client
         /// </summary>
         public void Save()
         {
-            _window.txtCommandInput.SaveCurrentHistory(RootModel.Profile);
-            SettingsHolder.Instance.SetProfile(RootModel.Profile, false);
+            _window._txtCommandInput.SaveCurrentHistory(RootModel.Profile);
         }
 
         /// <summary>
@@ -207,7 +192,6 @@ namespace Adan.Client
         {
             if (IsLogging)
             {
-
                 if (_streamWriter != null)
                 {
                     lock (_loggingLockObject)
@@ -258,8 +242,6 @@ namespace Adan.Client
                     }
                 }
             }
-
-            GC.SuppressFinalize(this);
         }
 
         private void HandleMessage([NotNull] object sender, [NotNull] MessageReceivedEventArgs e)

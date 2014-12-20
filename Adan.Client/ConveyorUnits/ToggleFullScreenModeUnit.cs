@@ -20,11 +20,11 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="ToggleFullScreenModeUnit"/> class.
         /// </summary>
-        /// <param name="mainWindow">The main window.</param>
-        public ToggleFullScreenModeUnit([NotNull] MainWindow mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public ToggleFullScreenModeUnit([NotNull] MainWindow MainWindowEx)
         {
-            Assert.ArgumentNotNull(mainWindow, "mainWindow");
-            _mainWindow = mainWindow;
+            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
+            _mainWindow = MainWindowEx;
         }
 
         /// <summary>

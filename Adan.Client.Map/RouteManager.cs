@@ -55,11 +55,11 @@ namespace Adan.Client.Map
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteManager"/> class.
         /// </summary>
-        /// <param name="mainWindow">The main window.</param>
-        public RouteManager(Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public RouteManager(Window MainWindowEx)
         {
             _rootModel = null;
-            _mainWindow = mainWindow;
+            _mainWindow = MainWindowEx;
 
             SelectedRouteDestination = string.Empty;
         }

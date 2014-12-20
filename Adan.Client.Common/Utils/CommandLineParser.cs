@@ -7,6 +7,7 @@ using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
 using Adan.Client.Common.Model;
+using Adan.Client.Common.Settings;
 
 namespace Adan.Client.Common.Utils
 {
@@ -32,7 +33,7 @@ namespace Adan.Client.Common.Utils
             int i = 0;
             int startIndex = 0;
 
-            while (i < input.Length && i != -1 && input[i] != RootModel.CommandDelimiter)
+            while (i < input.Length && i != -1 && input[i] != SettingsHolder.Instance.Settings.CommandDelimiter)
             {
                 if (input[i] != '{')
                 {

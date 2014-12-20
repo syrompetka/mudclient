@@ -100,7 +100,7 @@ namespace Adan.Client.Common.Model
         /// <summary>
         /// 
         /// </summary>
-        public void Undo()
+        public void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)
             {
@@ -110,7 +110,8 @@ namespace Adan.Client.Common.Model
                         Group.Aliases.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Group.Aliases.Remove(this);
+                        CommandAlias th = this;
+                        Group.Aliases.TryTake(out th);
                         break;
                 }
             }

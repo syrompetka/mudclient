@@ -5,13 +5,14 @@
         WindowStartupLocation="CenterOwner" 
         WindowStyle="ToolWindow" 
         Width="485"
-        Height="170"        
+        Height="200"        
         Title="Substitution editor"
         Style="{StaticResource DefaultWindowStyle}">
     <Grid Margin="3">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0">
             <Label>Pattern:</Label>
@@ -21,7 +22,10 @@
             <Label  Padding="5">Group name:</Label>
             <ComboBox Padding="5" Width="150" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SubstitutionGroup}" HorizontalAlignment="Left" />
         </StackPanel>
-        <StackPanel HorizontalAlignment="Right" Grid.Row="1" Orientation="Horizontal" Margin="0,5,0,0">
+        <CheckBox Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="5,0,0,0" IsChecked="{Binding Path=IsRegExp}">
+            IsRegExp
+        </CheckBox>
+        <StackPanel HorizontalAlignment="Right" Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
             <Button HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Click="HandleOkClicked">Ok</Button>
             <Button HorizontalAlignment="Right" IsCancel="True" Margin="5,0,0,0" MinWidth="50">Cancel</Button>
         </StackPanel>

@@ -21,44 +21,37 @@ namespace Adan.Client.Common.Plugins
     public class WidgetDescription
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WidgetDescription"/> class.
+        /// 
         /// </summary>
-        /// <param name="name">The name of the widget.</param>
-        /// <param name="description">The description of the widget.</param>
-        /// <param name="control">The control that displays data.</param>
-        /// <param name="resizeToContent">if set to <c>true</c> then flyout window will be resized to content.</param>
-        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] FrameworkElement control, bool resizeToContent)
-        {
-            Assert.ArgumentNotNullOrWhiteSpace(name, "name");
-            Assert.ArgumentNotNullOrWhiteSpace(description, "description");
-            Assert.ArgumentNotNull(control, "control");
-
-            Name = name;
-            Description = description;
-            Control = control;
-            ResizeToContent = resizeToContent;
-            Icon = string.Empty;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="WidgetDescription"/> class.
-        /// </summary>
-        /// <param name="name">The name of the widget.</param>
-        /// <param name="description">The description of the widget.</param>
-        /// <param name="control">The control that displays data.</param>
-        /// <param name="icon">The icon of this widget.</param>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="control"></param>
+        /// <param name="icon"></param>
         public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] FrameworkElement control, [NotNull] string icon)
         {
             Assert.ArgumentNotNullOrWhiteSpace(name, "name");
             Assert.ArgumentNotNullOrWhiteSpace(description, "description");
             Assert.ArgumentNotNull(control, "control");
-            Assert.ArgumentNotNullOrWhiteSpace(icon, "icon");
+            Assert.ArgumentNotNull(icon, "icon");
 
-            Name = name;
+            Name = string.Format("Plugin{0}", name);
             Description = description;
             Control = control;
             Icon = icon;
+            Height = 300;
+            Width = 300;
+            Left = 50;
+            Top = 50;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="description"></param>
+        /// <param name="control"></param>
+        public WidgetDescription([NotNull] string name, [NotNull] string description, [NotNull] FrameworkElement control)
+            : this(name, description, control, string.Empty) { }
 
         /// <summary>
         /// Gets the name of this widget.
@@ -93,18 +86,6 @@ namespace Adan.Client.Common.Plugins
         }
 
         /// <summary>
-        /// Gets a value indicating whether the flyout window should be resized to content.
-        /// </summary>
-        /// <value>
-        ///   <c>true</c> if flyout window should be resized to content; otherwise, <c>false</c>.
-        /// </value>
-        public bool ResizeToContent
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
         /// Gets the icon of this widge.
         /// </summary>
         [NotNull]
@@ -112,6 +93,42 @@ namespace Adan.Client.Common.Plugins
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Height
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Width
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Left
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int Top
+        {
+            get;
+            set;
         }
     }
 }

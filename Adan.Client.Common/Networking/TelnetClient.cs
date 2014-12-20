@@ -276,9 +276,18 @@ namespace Adan.Client.Common.Networking
         {
             Assert.ArgumentNotNull(exception, "exception");
             Dispose(true);
+            HandleException(new NetworkErrorEventArgs(exception));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="exception"></param>
+        protected void HandleException(NetworkErrorEventArgs exception)
+        {
             if (NetworkError != null)
             {
-                NetworkError(this, new NetworkErrorEventArgs(exception));
+                NetworkError(this, exception);
             }
         }
 

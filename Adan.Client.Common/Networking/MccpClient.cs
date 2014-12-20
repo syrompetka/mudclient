@@ -10,7 +10,9 @@ namespace Adan.Client.Common.Networking
     using System.Diagnostics;
     using System.IO;
     using System.Text;
+    using System.Threading;
     using Adan.Client.Common.Conveyor;
+    using Adan.Client.Common.Utils;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Ionic.Zlib;
@@ -140,17 +142,29 @@ namespace Adan.Client.Common.Networking
                 _compressedDataStream.SetLength(e.BytesReceived);
                 _compressedDataStream.Seek(0, SeekOrigin.Begin);
 
-                int bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
-                if (bytesDecompresed < 0)
+                try
                 {
-                    _compressionInProgress = false;
-                    _zlibDecompressionStream.Dispose();
-                    _zlibDecompressionStream = null;
+                    int bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
+
+                    if (bytesDecompresed < 0)
+                    {
+                        _compressionInProgress = false;
+                        _zlibDecompressionStream.Dispose();
+                        _zlibDecompressionStream = null;
+                    }
+                    else
+                    {
+                        BytesDecompressed += (uint)bytesDecompresed;
+                        ProcessData(_unpackBuffer, 0, bytesDecompresed);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    BytesDecompressed += (uint)bytesDecompresed;
-                    ProcessData(_unpackBuffer,0, bytesDecompresed);
+                    ErrorLogger.Instance.Write(string.Format("Error data decompressed: offset = {0}, bytesCount = {1}, data = {2}\r\n\r\n{3}\r\n{4}",
+                        e.Offset, e.BytesReceived, Encoding.Default.GetString(data), ex.Message, ex.StackTrace));
+                    Dispose(true);
+                    HandleException(new NetworkErrorEventArgs(ex));
+                    return;
                 }
             }
         }

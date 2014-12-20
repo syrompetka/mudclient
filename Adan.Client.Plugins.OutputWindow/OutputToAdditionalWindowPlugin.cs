@@ -37,6 +37,17 @@ namespace Adan.Client.Plugins.OutputWindow
         private AdditionalOutputWindow _additionalOutputWindowControl;
         private WidgetDescription _widget;
         private OutputToAdditionalWindowConveyorUnit _conveyorUnit;
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public override string Name
+        {
+            get 
+            {
+                return "OutputAdditionalWindow";
+            }
+        }
 
         /// <summary>
         /// 
@@ -105,8 +116,8 @@ namespace Adan.Client.Plugins.OutputWindow
         /// Initializes this plugins with a specified <see cref="MessageConveyor"/> and <see cref="RootModel"/>.
         /// </summary>
         /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="mainWindow">The main window.</param>
-        public override void Initialize(InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
+        /// <param name="MainWindowEx">The main window.</param>
+        public override void Initialize(InitializationStatusModel initializationStatusModel, [NotNull] Window MainWindowEx)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
 
@@ -115,7 +126,13 @@ namespace Adan.Client.Plugins.OutputWindow
             
             _manager = new AdditionalOutputWindowManager(_additionalOutputWindowControl);
 
-            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl, false);
+            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl)
+            {
+                Left = (int)SystemParameters.PrimaryScreenWidth - 400,
+                Height = 300,
+                Width = 400,
+            };
+            
             _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(_manager);
         }
 

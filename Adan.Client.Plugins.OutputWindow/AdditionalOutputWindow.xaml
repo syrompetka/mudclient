@@ -3,7 +3,6 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:AvalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:Controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
              mc:Ignorable="d" 
              d:DesignHeight="300"
@@ -13,10 +12,9 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
-            <AvalonEdit:TextEditor Background="Black" IsReadOnly="True" FontSize="14"
-                                   x:Name="additionalOutputWindow" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
-                                   Focusable="False" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            </AvalonEdit:TextEditor>
+            <ScrollViewer Name="scroll" CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Black" FontSize="14">
+                <Controls:TextBoxNative  Name="_textBoxNative" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
+            </ScrollViewer>
         </Grid>
     </Grid>
 </UserControl>

@@ -6,6 +6,7 @@ using Adan.Client.Common.Commands;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.ConveyorUnits;
 using Adan.Client.Common.Model;
+using Adan.Client.Common.Settings;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
@@ -62,7 +63,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            if (textCommand.CommandText.StartsWith(RootModel.CommandChar.ToString()))
+            if (textCommand.CommandText.StartsWith(SettingsHolder.Instance.Settings.CommandChar.ToString()))
                 command.Handled = true;
         }
     }

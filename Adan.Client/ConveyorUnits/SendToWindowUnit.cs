@@ -17,18 +17,17 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class SendToWindowUnit : ConveyorUnit
     {
-        private readonly MainWindow _mainWindow;
+        private MainWindow _mainWindow;
         private readonly Regex _regexSendToWindow = new Regex(@"^\#send\s+(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexSendToAllWindow = new Regex(@"^\#sendal?l?\s+(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-
+        
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="mainWindow"></param>
-        public SendToWindowUnit(MainWindow mainWindow)
+        /// <param name="MainWindowEx"></param>
+        public SendToWindowUnit(MainWindow MainWindowEx)
         {
-            _mainWindow = mainWindow;
+            _mainWindow = MainWindowEx;
         }
 
         /// <summary>

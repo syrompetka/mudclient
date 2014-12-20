@@ -11,12 +11,11 @@ namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-
     using Adan.Client.Common.Commands;
     using Adan.Client.Common.Conveyor;
     using Adan.Client.Common.ConveyorUnits;
     using Adan.Client.Common.Model;
-
+    using Adan.Client.Common.Settings;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -83,7 +82,7 @@ namespace Adan.Client.ConveyorUnits
             int startIndex = 0;
             while (i < commandText.Length)
             {
-                while (i < commandText.Length && !(commandText[i] == RootModel.CommandDelimiter && nest == 0))
+                while (i < commandText.Length && !(commandText[i] == SettingsHolder.Instance.Settings.CommandDelimiter && nest == 0))
                 {
                     if (commandText[i] == '{')
                     {

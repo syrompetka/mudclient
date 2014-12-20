@@ -26,6 +26,7 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
     using System.Diagnostics;
     using System.Threading.Tasks;
     using System.Threading;
+    using System.Collections.Generic;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="RoomMonstersMessage"/> messages.
@@ -75,6 +76,21 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                             using (var stringReader = new StringReader(str.ToString()))
                             {
                                 var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
+                                var monstersCount = new Dictionary<string, int>();
+
+                                foreach (var monster in message.Monsters)
+                                {
+                                    if (monstersCount.ContainsKey(monster.Name))
+                                    {
+                                        monstersCount[monster.Name]++;
+                                        monster.TargetName = string.Format("{0}.{1}", monstersCount[monster.Name], monster.TargetName);
+                                    }
+                                    else
+                                    {
+                                        monstersCount.Add(monster.Name, 1);
+                                    }
+                                }
+
                                 PushMessageToConveyor(message);
                             }
                         }
