@@ -20,7 +20,7 @@ namespace Adan.Client.Common.Settings
     {
         #region Constants and Fields
 
-        private ConcurrentBag<Group> _groups;
+        private List<Group> _groups;
         private ConcurrentBag<Variable> _variables;
         private string _name;
         private List<string> _commandsHistory;
@@ -64,7 +64,7 @@ namespace Adan.Client.Common.Settings
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public ConcurrentBag<Group> Groups
+        public List<Group> Groups
         {
             get
             {
@@ -201,7 +201,7 @@ namespace Adan.Client.Common.Settings
         {
             return new ProfileHolder(this.Name)
                 {
-                    _groups = new ConcurrentBag<Group>(this.Groups),
+                    _groups = new List<Group>(this.Groups),
                     _variables = new ConcurrentBag<Variable>(this.Variables),
                     CommonSettings = this.CommonSettings,
                     CommandsHistory = new List<string>(this.CommandsHistory),
@@ -266,7 +266,7 @@ namespace Adan.Client.Common.Settings
 
             if (!File.Exists(settingsFileFullPath))
             {
-                Groups = new ConcurrentBag<Group>();
+                Groups = new List<Group>();
                 Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
                 return;
             }
@@ -275,8 +275,8 @@ namespace Adan.Client.Common.Settings
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(ConcurrentBag<Group>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
-                    Groups = (ConcurrentBag<Group>)serializer.Deserialize(stream);
+                    var serializer = new XmlSerializer(typeof(List<Group>), SettingsHolder.Instance.AllSerializationTypes.ToArray());
+                    Groups = (List<Group>)serializer.Deserialize(stream);
                     var defGroup = Groups.FirstOrDefault(group => group.Name == "Default");
                     if (defGroup == null)
                     {
@@ -287,7 +287,7 @@ namespace Adan.Client.Common.Settings
                 {
                     ErrorLogger.Instance.Write(string.Format("Error read groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
 
-                    Groups = new ConcurrentBag<Group>();
+                    Groups = new List<Group>();
                     Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
                 }
             }

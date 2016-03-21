@@ -221,8 +221,7 @@ namespace Adan.Client.Common.Model
                         Group.Highlights.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Highlight th = this;
-                        Group.Highlights.TryTake(out th);
+                        Group.Highlights.Remove(this);
                         break;
                 }
             }

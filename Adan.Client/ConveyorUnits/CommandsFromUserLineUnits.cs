@@ -225,7 +225,7 @@ namespace Adan.Client.ConveyorUnits
                     var alias = group.Aliases.FirstOrDefault(all => all.Command == args[0]);
                     while (alias != null)
                     {
-                        group.Aliases.TryTake(out alias);
+                        group.Aliases.Remove(alias);
 
                         alias.Group = group;
                         alias.Operation = UndoOperation.Add;
@@ -277,8 +277,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (num > 0 && num <= aliasList.Count)
                     {
-                        CommandAlias alias;
-                        if(rootModel.Groups.FirstOrDefault(x => x.Aliases.Contains(aliasList[num - 1])).Aliases.TryTake(out alias))
+                        CommandAlias alias = aliasList[num - 1];
+                        if(rootModel.Groups.FirstOrDefault(x => x.Aliases.Contains(alias)).Aliases.Remove(alias))
                         {
                             aliasList[num - 1].Group = alias.Group;
                             aliasList[num - 1].Operation = UndoOperation.Add;
@@ -325,7 +325,7 @@ namespace Adan.Client.ConveyorUnits
                         var alias = group.Aliases.FirstOrDefault(x => x.Command == args[0]);
                         if (alias != null)
                         {
-                            group.Aliases.TryTake(out alias);
+                            group.Aliases.Remove(alias);
 
                             alias.Group = group;
                             alias.Operation = UndoOperation.Add;
@@ -347,7 +347,7 @@ namespace Adan.Client.ConveyorUnits
                         var alias = group.Aliases.FirstOrDefault(all => all.Command == args[0]);
                         while (alias != null)
                         {
-                            group.Aliases.TryTake(out alias);
+                            group.Aliases.Remove(alias);
 
                             alias.Group = group;
                             alias.Operation = UndoOperation.Add;
@@ -473,8 +473,7 @@ namespace Adan.Client.ConveyorUnits
                     var trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
                     while (trig != null)
                     {
-                        //group.Triggers.Remove(trig);
-                        group.Triggers.TryTake(out trig);
+                        group.Triggers.Remove(trig);
 
                         trig.Group = group;
                         trig.Operation = UndoOperation.Add;
@@ -527,8 +526,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (num > 0 && num <= triggersList.Count)
                     {
-                        TriggerBase trigger;
-                        if(rootModel.Groups.FirstOrDefault(x => x.Triggers.Contains(triggersList[num - 1])).Triggers.TryTake(out trigger))
+                        TriggerBase trigger = triggersList[num - 1];
+                        if(rootModel.Groups.FirstOrDefault(x => x.Triggers.Contains(trigger)).Triggers.Remove(trigger))
                         {
                             triggersList[num - 1].Group = trigger.Group;
                             triggersList[num - 1].Operation = UndoOperation.Add;
@@ -577,7 +576,7 @@ namespace Adan.Client.ConveyorUnits
                         var trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
                         if (trig != null)
                         {
-                            group.Triggers.TryTake(out trig);
+                            group.Triggers.Remove(trig);
 
                             trig.Group = group;
                             trig.Operation = UndoOperation.Add;
@@ -599,7 +598,7 @@ namespace Adan.Client.ConveyorUnits
                         var trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
                         while (trig != null)
                         {
-                            group.Triggers.TryTake(out trig);
+                            group.Triggers.Remove(trig);
 
                             trig.Group = group;
                             trig.Operation = UndoOperation.Add;
@@ -735,7 +734,7 @@ namespace Adan.Client.ConveyorUnits
                     var high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
                     while (high != null)
                     {
-                        group.Highlights.TryTake(out high);
+                        group.Highlights.Remove(high);
 
                         high.Group = group;
                         high.Operation = UndoOperation.Add;
@@ -786,8 +785,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (num > 0 && num <= highlightList.Count)
                     {
-                        Highlight highlight;
-                        if(rootModel.Groups.FirstOrDefault(x => x.Highlights.Contains(highlightList[num-1])).Highlights.TryTake(out highlight))
+                        Highlight highlight = highlightList[num - 1];
+                        if (rootModel.Groups.FirstOrDefault(x => x.Highlights.Contains(highlight)).Highlights.Remove(highlight))
                         {
                             highlightList[num - 1].Group = highlight.Group;
                             highlightList[num - 1].Operation = UndoOperation.Add;
@@ -836,7 +835,7 @@ namespace Adan.Client.ConveyorUnits
                         var high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
                         if (high != null)
                         {
-                            group.Highlights.TryTake(out high);
+                            group.Highlights.Remove(high);
 
                             high.Group = group;
                             high.Operation = UndoOperation.Add;
@@ -858,7 +857,7 @@ namespace Adan.Client.ConveyorUnits
                         var high = group.Highlights.FirstOrDefault(x => x.TextToHighlight == args[0]);
                         while (high != null)
                         {
-                            group.Highlights.TryTake(out high);
+                            group.Highlights.Remove(high);
 
                             high.Group = group;
                             high.Operation = UndoOperation.Add;
@@ -960,7 +959,7 @@ namespace Adan.Client.ConveyorUnits
                     var sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
                     while (sub != null)
                     {
-                        group.Substitutions.TryTake(out sub);
+                        group.Substitutions.Remove(sub);
 
                         sub.Group = group;
                         sub.Operation = UndoOperation.Add;
@@ -1020,9 +1019,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (num > 0 && num <= substitutionList.Count)
                     {
-                        Substitution sub;
-
-                        if (rootModel.Groups.FirstOrDefault(x => x.Substitutions.Contains(substitutionList[num - 1])).Substitutions.TryPeek(out sub))
+                        Substitution sub = substitutionList[num - 1];
+                        if (rootModel.Groups.FirstOrDefault(x => x.Substitutions.Contains(sub)).Substitutions.Remove(sub))
                         {
                             substitutionList[num - 1].Group = sub.Group;
                             substitutionList[num - 1].Operation = UndoOperation.Add;
@@ -1071,7 +1069,7 @@ namespace Adan.Client.ConveyorUnits
                         var sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
                         if (sub != null)
                         {
-                            group.Substitutions.TryTake(out sub);
+                            group.Substitutions.Remove(sub);
 
                             sub.Group = group;
                             sub.Operation = UndoOperation.Add;
@@ -1093,7 +1091,7 @@ namespace Adan.Client.ConveyorUnits
                         var sub = group.Substitutions.FirstOrDefault(x => x.Pattern == args[0]);
                         while (sub != null)
                         {
-                            group.Substitutions.TryTake(out sub);
+                            group.Substitutions.Remove(sub);
 
                             sub.Group = group;
                             sub.Operation = UndoOperation.Add;
@@ -1226,7 +1224,7 @@ namespace Adan.Client.ConveyorUnits
                     var hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
                     while (hotkey != null)
                     {
-                        group.Hotkeys.TryTake(out hotkey);
+                        group.Hotkeys.Remove(hotkey);
 
                         hotkey.Group = group;
                         hotkey.Operation = UndoOperation.Add;
@@ -1289,8 +1287,8 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (num > 0 && num <= hotkeyList.Count)
                     {
-                        Hotkey hotkey;
-                        if(rootModel.Groups.FirstOrDefault(x => x.Hotkeys.Contains(hotkeyList[num - 1])).Hotkeys.TryTake(out hotkey))
+                        Hotkey hotkey = hotkeyList[num - 1];
+                        if (rootModel.Groups.FirstOrDefault(x => x.Hotkeys.Contains(hotkey)).Hotkeys.Remove(hotkey))
                         {
                             hotkeyList[num - 1].Group = hotkey.Group;
                                 hotkeyList[num - 1].Operation = UndoOperation.Add;
@@ -1361,7 +1359,7 @@ namespace Adan.Client.ConveyorUnits
                         var hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
                         if (hotkey != null)
                         {
-                            group.Hotkeys.TryTake(out hotkey);
+                            group.Hotkeys.Remove(hotkey);
 
                             hotkey.Group = group;
                             hotkey.Operation = UndoOperation.Add;
@@ -1383,7 +1381,7 @@ namespace Adan.Client.ConveyorUnits
                         var hotkey = group.Hotkeys.FirstOrDefault(x => x.GetKeyToString() == args[0]);
                         while (hotkey != null)
                         {
-                            group.Hotkeys.TryTake(out hotkey);
+                            group.Hotkeys.Remove(hotkey);
 
                             hotkey.Group = group;
                             hotkey.Operation = UndoOperation.Add;

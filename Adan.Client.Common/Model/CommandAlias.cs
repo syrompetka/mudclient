@@ -110,8 +110,7 @@ namespace Adan.Client.Common.Model
                         Group.Aliases.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        CommandAlias th = this;
-                        Group.Aliases.TryTake(out th);
+                        Group.Aliases.Remove(this);
                         break;
                 }
             }
