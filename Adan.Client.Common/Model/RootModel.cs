@@ -307,14 +307,11 @@ namespace Adan.Client.Common.Model
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public List<Group> Groups
+        public IEnumerable<Group> Groups
         {
             get
             {
-                //lock (_profileLockObject)
-                {
-                    return Profile.Groups;
-                }
+                return SettingsHolder.Instance.Settings.GlobalGroups.Concat(Profile.Groups);
             }
         }
 
@@ -598,7 +595,7 @@ namespace Adan.Client.Common.Model
             var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
             if (group == null)
             {
-                Groups.Add(new Group() { Name = groupName, IsEnabled = true, IsBuildIn = false });
+                Profile.Groups.Add(new Group() { Name = groupName, IsEnabled = true, IsBuildIn = false });
             }
         }
 
@@ -609,10 +606,18 @@ namespace Adan.Client.Common.Model
         public void DeleteGroup([NotNull]string groupName)
         {
             Assert.ArgumentNotNull(groupName, "groupName");
-            var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
+            var group = Profile.Groups.FirstOrDefault(gr => gr.Name == groupName);
             if (group != null && !group.IsBuildIn)
             {
-                Groups.Remove(group);
+                Profile.Groups.Remove(group);
+            }
+            else
+            {
+                group = SettingsHolder.Instance.Settings.GlobalGroups.FirstOrDefault(gr => gr.Name == groupName);
+                if (group != null && !group.IsBuildIn)
+                {
+                    Profile.Groups.Remove(group);
+                }
             }
         }
 
@@ -628,15 +633,13 @@ namespace Adan.Client.Common.Model
         
         #endregion
 
-        private void OnProfileChanged(object sender, SettingsChangedEventArgs e)
+        private void OnProfileChanged(object sender, ProfileChangedEventArgs e)
         {
             if (e.Name == Profile.Name)
-            {
-                //var profile = SettingsHolder.Instance.GetProfile(e.Name);
-                //profile.Variables = Profile.Variables;
                 Profile = SettingsHolder.Instance.GetProfile(e.Name);
+
+            if (e.Name == Profile.Name || e.Global)
                 RecalculatedEnabledTriggersPriorities();
-            }
         }
     }
 
