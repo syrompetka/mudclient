@@ -27,28 +27,46 @@
                     <EventSetter Event="MouseDoubleClick" Handler="HandleItemDoubleClick"/>
                 </Style>
             </ListBox.Resources>
-            <ListBoxItem>
-                Aliases
+            <ListBoxItem Tag="Aliases">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Aliases</TextBlock>
+                    <TextBlock Text="{Binding Path=AliasesCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
-            <ListBoxItem>
-                Groups
+            <ListBoxItem Tag="Groups">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Groups</TextBlock>
+                    <TextBlock Text="{Binding Path=GroupsCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
-            <ListBoxItem>
-                Highlights
+            <ListBoxItem Tag="Highlights">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Highlights</TextBlock>
+                    <TextBlock Text="{Binding Path=HighlightsCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
-            <ListBoxItem>
-                Hotkeys
+            <ListBoxItem Tag="Hotkeys">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Hotkeys</TextBlock>
+                    <TextBlock Text="{Binding Path=HotkeysCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
-            <ListBoxItem>
-                Substitutions
+            <ListBoxItem Tag="Substitutions">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Substitutions</TextBlock>
+                    <TextBlock Text="{Binding Path=SubstitutionsCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
-            <ListBoxItem>
-                Triggers
+            <ListBoxItem Tag="Triggers">
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock>Triggers</TextBlock>
+                    <TextBlock Text="{Binding Path=TriggersCount, StringFormat=' ({0})'}" />
+                </StackPanel>
             </ListBoxItem>
         </ListBox>
         <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,0,0,5">
-            <Button Command="{Binding Path=EditOptionsCommand}" CommandParameter="{Binding ElementName=ProfileOptionsWindow, Path=.}" MinWidth="50">Edit</Button>
-            <Button Command="{Binding Path=ImportProfileCommand}" MinWidth="50">Import</Button>
+            <Button Padding="4" Command="{Binding Path=EditOptionsCommand}" CommandParameter="{Binding ElementName=ProfileOptionsWindow, Path=.}" IsEnabled="{Binding Path=CanImportProfile}" MinWidth="50">Edit</Button>
+            <Button Padding="4" Command="{Binding Path=ImportProfileCommand}" IsEnabled="{Binding Path=CanImportProfile}" MinWidth="50">Import</Button>
         </StackPanel>
         <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
             <Button Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="2" IsCancel="True"  MinWidth="50">Close</Button>
