@@ -16,5 +16,5 @@ DEBUG;TRACE
 13-740292298
 Controls\UserControl1.xaml;LightTheme.xaml;LightBrushes.xaml;DarkBrushes.xaml;Theme.xaml;DarkTheme.xaml;
 
-False
+True
 
