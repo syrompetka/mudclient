@@ -71,7 +71,8 @@ namespace Adan.Client.Model.ActionParameters
         /// <returns></returns>
         public override string GetParameterValue()
         {
-            return VariableName;
+            return "$" + VariableName;
         }
+
     }
 }

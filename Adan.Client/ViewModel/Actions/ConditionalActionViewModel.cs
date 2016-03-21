@@ -248,23 +248,7 @@ namespace Adan.Client.ViewModel.Actions
         {
             get
             {
-                if (Condition.IsBinaryOperator())
-                {
-                    return string.Format(
-                        CultureInfo.CurrentUICulture,
-                        @"#if ({0} {1} {2}){{{3}}}",
-                        LeftConditionParameter.ParameterDescription,
-                        Condition.ConvertToSign(),
-                        RightConditionParameter.ParameterDescription,
-                        ActionsToExecute.ActionsDescription);
-                }
-
-                return string.Format(
-                    CultureInfo.CurrentUICulture,
-                    @"#if ({0} {1}){{{2}}}",
-                    LeftConditionParameter.ParameterDescription,
-                    Condition.ConvertToSign(),
-                    ActionsToExecute.ActionsDescription);
+                return _action.ToString();
             }
         }
 
