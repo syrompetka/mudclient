@@ -54,8 +54,8 @@ namespace Adan.Client.Common.Conveyor
         private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType;
         private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType;
 
-        private IList<CommandSerializer> _currentCommandSerializers;
-        private IList<MessageDeserializer> _currentMessageDeserializers;
+        private readonly IList<CommandSerializer> _currentCommandSerializers;
+        private readonly IList<MessageDeserializer> _currentMessageDeserializers;
         private readonly MccpClient _mccpClient;
         private readonly byte[] _buffer = new byte[32767];
         private RootModel _rootModel;

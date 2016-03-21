@@ -1,29 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CurrentRoomMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the CurrentRoomMessageDeserializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Map.MessageDeserializers
+﻿namespace Adan.Client.Map.MessageDeserializers
 {
     using System;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using System.Xml.Serialization;
-    using Adan.Client.Common.Utils;
-    using Common.Conveyor;
+    using Common.Utils;
     using Common.MessageDeserializers;
     using Common.Messages;
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Map.Messages;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using System.Threading;
+    using Messages;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> implementation to handle "current room" messages.
@@ -67,22 +52,20 @@ namespace Adan.Client.Map.MessageDeserializers
             {
                 string str = _builder.ToString();
                 _builder.Clear();
-                Task.Factory.StartNew(() =>
+                try
                 {
-                    try
+                    using (var stringReader = new StringReader(str))
                     {
-                        using (var stringReader = new StringReader(str))
-                        {
-                            var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
-                            PushMessageToConveyor(message);
-                        }
+                        var message = (CurrentRoomMessage)_serializer.Deserialize(stringReader);
+                        PushMessageToConveyor(message);
                     }
-                    catch (Exception ex)
-                    {
-                        ErrorLogger.Instance.Write(string.Format("Error deserialize room message: {0}\r\nException: {1}\r\n{2}", str, ex.Message, ex.StackTrace));
-                        PushMessageToConveyor(new ErrorMessage(ex.Message));
-                    }
-                });
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error deserialize room message: {0}\r\nException: {1}\r\n{2}", str, ex.Message, ex.StackTrace));
+                    _builder.Clear();
+                    PushMessageToConveyor(new ErrorMessage(ex.Message));
+                }
             }
         }
 
