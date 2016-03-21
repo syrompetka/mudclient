@@ -217,8 +217,7 @@
                         Group.Triggers.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        TriggerBase th = this;
-                        Group.Triggers.TryTake(out th);
+                        Group.Triggers.Remove(this);
                         break;
                 }
 
