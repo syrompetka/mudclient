@@ -29,7 +29,6 @@ namespace Adan.Client.ViewModel
     {
         private readonly List<Group> _allGroups;
         private readonly IEnumerable<ActionDescription> _actionDescriptions;
-        private readonly ObservableCollection<GroupViewModel> _groups;
         private GroupViewModel _selectedGroup;
         private string _newGroupName;
 
@@ -49,13 +48,11 @@ namespace Adan.Client.ViewModel
             _actionDescriptions = actionDescriptions;
             DeleteGroupCommand = new DelegateCommand(DeleteGroup, false);
             AddGroupCommand = new DelegateCommand(AddGroup, false);
-            _groups = new ObservableCollection<GroupViewModel>();
+            Groups = new ObservableCollection<GroupViewModel>();
             foreach (var group in _allGroups)
             {
-                _groups.Add(new GroupViewModel(_groups, group, _actionDescriptions));
+                Groups.Add(new GroupViewModel(Groups, group, _actionDescriptions));
             }
-
-            Groups = new ObservableCollection<GroupViewModel>(_groups);
         }
 
         /// <summary>
@@ -178,7 +175,7 @@ namespace Adan.Client.ViewModel
             {
                 var gr = castedGroup.Group;
                 _allGroups.Remove(gr);
-                _groups.Remove(castedGroup);
+                Groups.Remove(castedGroup);
             }
 
             UpdateAddGroupCommandCanExecute();
@@ -192,7 +189,8 @@ namespace Adan.Client.ViewModel
             {
                 var group = new GroupViewModel(Groups, new Group(), _actionDescriptions) { Name = castedGroupName, IsEnabled = true };
                 _allGroups.Add(group.Group);
-                _groups.Add(group);
+                Groups.Add(group);
+                NewGroupName = "";
             }
 
             UpdateAddGroupCommandCanExecute();

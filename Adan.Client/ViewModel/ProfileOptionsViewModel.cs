@@ -111,7 +111,7 @@ namespace Adan.Client.ViewModel
         /// <summary>
         /// Amount of groups in the profile
         /// </summary>
-        public int GroupsCount { get { return _groupsViewModel.Groups.Count; } }
+        public int GroupsCount { get { return _groupsViewModel.AllGroup.Count; } }
         /// <summary>
         /// Amount of highlights in the profile
         /// </summary>
@@ -147,6 +147,7 @@ namespace Adan.Client.ViewModel
                         DataContext = new AliasesViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
                         Owner = owner
                     };
+                    aliasesEditDialog.Closed += (s, e) => OnPropertyChanged("AliasesCount");
                     aliasesEditDialog.Show();
                     break;
                 case "Groups":
@@ -155,6 +156,7 @@ namespace Adan.Client.ViewModel
                         DataContext = new GroupsViewModel(_groupsViewModel.AllGroup, "Default", RootModel.AllActionDescriptions),
                         Owner = owner
                     };
+                    groupEditDialog.Closed += (s, e) => OnPropertyChanged("GroupsCount");
                     groupEditDialog.Show();
                     break;
                 case "Highlights":
@@ -163,6 +165,7 @@ namespace Adan.Client.ViewModel
                         DataContext = new HighlightsViewModel(_groupsViewModel.Groups),
                         Owner = owner
                     };
+                    highlightsEditDialog.Closed += (s, e) => OnPropertyChanged("HighlightsCount");
                     highlightsEditDialog.Show();
                     break;
                 case "Hotkeys":
@@ -171,6 +174,7 @@ namespace Adan.Client.ViewModel
                         DataContext = new HotkeysViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
                         Owner = owner
                     };
+                    hotKeysEditDialog.Closed += (s, e) => OnPropertyChanged("HotkeysCount");
                     hotKeysEditDialog.Show();
                     break;
                 case "Substitutions":
@@ -187,6 +191,7 @@ namespace Adan.Client.ViewModel
                         DataContext = new TriggersViewModel(_groupsViewModel.Groups, RootModel.AllActionDescriptions),
                         Owner = owner
                     };
+                    triggerEditDialog.Closed += (s, e) => OnPropertyChanged("TriggersCount");
                     triggerEditDialog.Show();
                     break;
             }
