@@ -37,6 +37,22 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
+        /// This constructor is supposed for creating global profile.
+        /// Global profile cannot be imported for now
+        /// </summary>
+        /// <param name="name">Name of the profile (e.g. "Global")</param>
+        /// <param name="groups">List of profile groups</param>
+        public ProfileOptionsViewModel(string name, List<Group> groups)
+        {
+            _groupsViewModel = new GroupsViewModel(groups, name, RootModel.AllActionDescriptions);
+            Profile = null;
+
+            EditOptionsCommand = new DelegateCommand(EditProfile, true);
+            ImportProfileCommand = new DelegateCommand(ImportProfile, true);
+        }
+
+
+        /// <summary>
         /// 
         /// </summary>
         public ProfileHolder Profile
@@ -84,6 +100,36 @@ namespace Adan.Client.ViewModel
             private set;
         }
 
+        /// <summary>
+        /// Amount of aliases in the profile
+        /// </summary>
+        public int AliasesCount { get { return _groupsViewModel.Groups.Sum(g => g.Aliases.Count); } }
+        /// <summary>
+        /// Amount of hotkeys in the profile
+        /// </summary>
+        public int HotkeysCount { get { return _groupsViewModel.Groups.Sum(g => g.Hotkeys.Count); } }
+        /// <summary>
+        /// Amount of groups in the profile
+        /// </summary>
+        public int GroupsCount { get { return _groupsViewModel.Groups.Count; } }
+        /// <summary>
+        /// Amount of highlights in the profile
+        /// </summary>
+        public int HighlightsCount { get { return _groupsViewModel.Groups.Sum(g => g.Highlights.Count); } }
+        /// <summary>
+        /// Amount of triggers in the profile
+        /// </summary>
+        public int TriggersCount { get { return _groupsViewModel.Groups.Sum(g => g.Triggers.Count); } }
+        /// <summary>
+        /// Amount of triggers in the profile
+        /// </summary>
+        public int SubstitutionsCount { get { return _groupsViewModel.Groups.Sum(g => g.Substitutions.Count); } }
+
+        /// <summary>
+        /// Can profile be imported or not
+        /// </summary>
+        public bool CanImportProfile { get { return Profile != null;  } }
+
         private void EditProfile([NotNull] object obj)
         {
             Assert.ArgumentNotNull(obj, "obj");
@@ -92,7 +138,7 @@ namespace Adan.Client.ViewModel
             if (obj == null)
                 return;
 
-            var name = SelectedOption.Content.ToString();
+            var name = SelectedOption.Tag.ToString();
             switch (name)
             {
                 case "Aliases":
