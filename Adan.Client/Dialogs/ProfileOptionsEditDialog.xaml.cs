@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 using Adan.Client.ViewModel;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
+using Adan.Client.Common.Settings;
 
 namespace Adan.Client.Dialogs
 {
@@ -21,6 +22,8 @@ namespace Adan.Client.Dialogs
     /// </summary>
     public partial class ProfileOptionsEditDialog : Window
     {
+        private string profileName;
+
         /// <summary>
         /// 
         /// </summary>
@@ -28,7 +31,14 @@ namespace Adan.Client.Dialogs
         {
             InitializeComponent();
 
+            this.profileName = profileName;
             this.Title += profileName;
+            this.Closed += ProfileOptionsEditDialog_Closed;
+        }
+
+        private void ProfileOptionsEditDialog_Closed(object sender, EventArgs e)
+        {
+            SettingsHolder.Instance.SetProfile(profileName);
         }
 
         private void HandleItemDoubleClick([NotNull] object sender, [NotNull] RoutedEventArgs e)

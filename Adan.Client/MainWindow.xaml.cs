@@ -53,7 +53,6 @@ namespace Adan.Client
         private WindowState nonFullScreenWindowState;
         private IList<LayoutContent> _allWidgets = new List<LayoutContent>();
         private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
-        private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
         private double nonFullScreenWindowWidth;
         private double nonFullScreenWindowHeight;
 
@@ -101,8 +100,6 @@ namespace Adan.Client
             settings.Reload();
 
             SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
-
-            _globalHotkeys = SettingsHolder.Instance.Settings.GlobalHotkeys;
 
             var actionDescriptions = new List<ActionDescription>();
             var parameterDescriptions = new List<ParameterDescription>();
@@ -643,7 +640,7 @@ namespace Adan.Client
                 Handled = false,
             };
 
-            var hotkey = _globalHotkeys.FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
+            var hotkey = SettingsHolder.Instance.Settings.GlobalGroups.Where(g => g.IsEnabled).SelectMany(g => g.Hotkeys).FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
             if (hotkey != null)
             {
                 var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
@@ -673,18 +670,18 @@ namespace Adan.Client
             }
         }
 
-        private void HandleGlobalHotkeys([NotNull] object sender, [NotNull] RoutedEventArgs e)
+        private void HandleGlobalProfile([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var globalHotkeysDialog = new GlobalHotkeysEditDialog()
+            var globalProfileDialog = new ProfileOptionsEditDialog("Global")
             {
-                DataContext = new GlobalHotkeysViewModel(_globalHotkeys, RootModel.AllActionDescriptions),
+                DataContext = new ProfileOptionsViewModel("Global", SettingsHolder.Instance.Settings.GlobalGroups),
                 Owner = this,
             };
 
-            globalHotkeysDialog.ShowDialog();
+            globalProfileDialog.ShowDialog();
             SettingsHolder.Instance.SaveCommonSettings();
         }
 
