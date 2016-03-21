@@ -158,8 +158,7 @@ namespace Adan.Client.Common.Model
                         Group.Hotkeys.Add(this);
                         break;
                     case UndoOperation.Remove:
-                        Hotkey th = this;
-                        Group.Hotkeys.TryTake(out th);
+                        Group.Hotkeys.Remove(this);
                         break;
                 }
             }

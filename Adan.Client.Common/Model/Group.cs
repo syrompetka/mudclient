@@ -27,11 +27,11 @@ namespace Adan.Client.Common.Model
         /// </summary>
         public Group()
         {
-            Triggers = new ConcurrentBag<TriggerBase>();
-            Aliases = new ConcurrentBag<CommandAlias>();
-            Hotkeys = new ConcurrentBag<Hotkey>();
-            Highlights = new ConcurrentBag<Highlight>();
-            Substitutions = new ConcurrentBag<Substitution>();
+            Triggers = new List<TriggerBase>();
+            Aliases = new List<CommandAlias>();
+            Hotkeys = new List<Hotkey>();
+            Highlights = new List<Highlight>();
+            Substitutions = new List<Substitution>();
         }
 
         /// <summary>
@@ -82,7 +82,7 @@ namespace Adan.Client.Common.Model
         /// The triggers.
         /// </value>
         [NotNull]
-        public ConcurrentBag<TriggerBase> Triggers
+        public List<TriggerBase> Triggers
         {
             get;
             set;
@@ -95,7 +95,7 @@ namespace Adan.Client.Common.Model
         /// The aliases.
         /// </value>
         [NotNull]
-        public ConcurrentBag<CommandAlias> Aliases
+        public List<CommandAlias> Aliases
         {
             get;
             set;
@@ -108,7 +108,7 @@ namespace Adan.Client.Common.Model
         /// The hotkeys.
         /// </value>
         [NotNull]
-        public ConcurrentBag<Hotkey> Hotkeys
+        public List<Hotkey> Hotkeys
         {
             get;
             set;
@@ -121,7 +121,7 @@ namespace Adan.Client.Common.Model
         /// The highlights.
         /// </value>
         [NotNull]
-        public ConcurrentBag<Highlight> Highlights
+        public List<Highlight> Highlights
         {
             get;
             set;
@@ -134,7 +134,7 @@ namespace Adan.Client.Common.Model
         /// The substitutions.
         /// </value>
         [NotNull]
-        public ConcurrentBag<Substitution> Substitutions
+        public List<Substitution> Substitutions
         {
             get;
             set;
