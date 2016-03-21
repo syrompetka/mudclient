@@ -307,7 +307,7 @@ namespace Adan.Client.Common.Model
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public ConcurrentBag<Group> Groups
+        public List<Group> Groups
         {
             get
             {
@@ -612,7 +612,7 @@ namespace Adan.Client.Common.Model
             var group = Groups.FirstOrDefault(gr => gr.Name == groupName);
             if (group != null && !group.IsBuildIn)
             {
-                Groups.TryTake(out group);
+                Groups.Remove(group);
             }
         }
 

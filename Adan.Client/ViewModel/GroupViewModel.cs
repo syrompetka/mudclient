@@ -238,11 +238,8 @@ namespace Adan.Client.ViewModel
         public void InsertAlias(int index, [NotNull] AliasViewModel aliasToAdd)
         {
             Assert.ArgumentNotNull(aliasToAdd, "aliasToAdd");
-            CommandAlias alias;
-            Group.Aliases.TryTake(out alias);
-            Group.Aliases.Add(aliasToAdd.CommandAlias);
-            //_aliases.Add(aliasToAdd);
-            //Group.Aliases.Insert(index, aliasToAdd.CommandAlias);
+            _aliases.Add(aliasToAdd);
+            Group.Aliases.Insert(index, aliasToAdd.CommandAlias);
             _aliases.Insert(index, aliasToAdd);
         }
 
@@ -253,9 +250,7 @@ namespace Adan.Client.ViewModel
         public void RemoveAlias([NotNull] AliasViewModel aliasToRemove)
         {
             Assert.ArgumentNotNull(aliasToRemove, "aliasToRemove");
-
-            CommandAlias alias;
-            Group.Aliases.TryTake(out alias);
+            Group.Aliases.Remove(aliasToRemove.CommandAlias);
             _aliases.Remove(aliasToRemove);
         }
 
@@ -280,12 +275,7 @@ namespace Adan.Client.ViewModel
         public void InsertTrigger(int index, [NotNull] TriggerViewModel triggerToAdd)
         {
             Assert.ArgumentNotNull(triggerToAdd, "triggerToAdd");
-
-            TriggerBase trigger;
-            Group.Triggers.TryTake(out trigger);
-            Group.Triggers.Add(triggerToAdd.Trigger);
-
-            //Group.Triggers.Insert(index, triggerToAdd.Trigger);
+            Group.Triggers.Insert(index, triggerToAdd.Trigger);
             _triggers.Insert(index, triggerToAdd);
         }
 
@@ -296,10 +286,7 @@ namespace Adan.Client.ViewModel
         public void RemoveTrigger([NotNull] TriggerViewModel triggerToRemove)
         {
             Assert.ArgumentNotNull(triggerToRemove, "triggerToRemove");
-
-            TriggerBase trigger;
-            Group.Triggers.TryTake(out trigger);
-            //Group.Triggers.Remove(triggerToRemove.Trigger);
+            Group.Triggers.Remove(triggerToRemove.Trigger);
             _triggers.Remove(triggerToRemove);
         }
 
@@ -322,11 +309,7 @@ namespace Adan.Client.ViewModel
         public void InsertHotkey(int index, [NotNull] HotkeyViewModel hotkeyToAdd)
         {
             Assert.ArgumentNotNull(hotkeyToAdd, "hotkeyToAdd");
-
-            Hotkey hotkey;
-            Group.Hotkeys.TryTake(out hotkey);
-            Group.Hotkeys.Add(hotkeyToAdd.Hotkey);
-            //Group.Hotkeys.Insert(index, hotkeyToAdd.Hotkey);
+            Group.Hotkeys.Insert(index, hotkeyToAdd.Hotkey);
             _hotkeys.Insert(index, hotkeyToAdd);
         }
 
@@ -337,9 +320,7 @@ namespace Adan.Client.ViewModel
         public void RemoveHotkey([NotNull] HotkeyViewModel hotkeyToRemove)
         {
             Assert.ArgumentNotNull(hotkeyToRemove, "hotkeyToRemove");
-            Hotkey hotkey;
-            Group.Hotkeys.TryTake(out hotkey);
-            //Group.Hotkeys.Remove(hotkeyToRemove.Hotkey);
+            Group.Hotkeys.Remove(hotkeyToRemove.Hotkey);
             _hotkeys.Remove(hotkeyToRemove);
         }
 
@@ -362,11 +343,7 @@ namespace Adan.Client.ViewModel
         public void InsertHighlight(int index, [NotNull] HighlightViewModel highlightToAdd)
         {
             Assert.ArgumentNotNull(highlightToAdd, "highlightToAdd");
-            Highlight highlight;
-            Group.Highlights.TryTake(out highlight);
-            Group.Highlights.Add(highlightToAdd.Highlight);
-
-            //Group.Highlights.Insert(index, highlightToAdd.Highlight);
+            Group.Highlights.Insert(index, highlightToAdd.Highlight);
             _highlights.Insert(index, highlightToAdd);
         }
 
@@ -377,9 +354,7 @@ namespace Adan.Client.ViewModel
         public void RemoveHighlight([NotNull] HighlightViewModel highlightToRemove)
         {
             Assert.ArgumentNotNull(highlightToRemove, "highlightToRemove");
-            Highlight highlight;
-            Group.Highlights.TryTake(out highlight);
-            //Group.Highlights.Remove(highlightToRemove.Highlight);
+            Group.Highlights.Remove(highlightToRemove.Highlight);
             _highlights.Remove(highlightToRemove);
         }
 
@@ -402,11 +377,7 @@ namespace Adan.Client.ViewModel
         public void InsertSubstitution(int index, [NotNull] SubstitutionViewModel substitutionToAdd)
         {
             Assert.ArgumentNotNull(substitutionToAdd, "substitutionToAdd");
-
-            Substitution sub;
-            Group.Substitutions.TryTake(out sub);
-            Group.Substitutions.Add(substitutionToAdd.Substitution);
-            //Group.Substitutions.Insert(index, substitutionToAdd.Substitution);
+            Group.Substitutions.Insert(index, substitutionToAdd.Substitution);
             _substitutions.Insert(index, substitutionToAdd);
         }
 
@@ -418,9 +389,7 @@ namespace Adan.Client.ViewModel
         {
             Assert.ArgumentNotNull(substitutionToRemove, "substitutionToRemove");
 
-            Substitution sub;
-            Group.Substitutions.TryTake(out sub);
-            //Group.Substitutions.Remove(substitutionToRemove.Substitution);
+            Group.Substitutions.Remove(substitutionToRemove.Substitution);
             _substitutions.Remove(substitutionToRemove);
         }
 

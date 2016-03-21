@@ -27,7 +27,7 @@ namespace Adan.Client.ViewModel
     /// </summary>
     public class GroupsViewModel : ViewModelBase
     {
-        private readonly ConcurrentBag<Group> _allGroups;
+        private readonly List<Group> _allGroups;
         private readonly IEnumerable<ActionDescription> _actionDescriptions;
         private readonly ObservableCollection<GroupViewModel> _groups;
         private GroupViewModel _selectedGroup;
@@ -39,7 +39,7 @@ namespace Adan.Client.ViewModel
         /// <param name="allGroups"></param>
         /// <param name="name"></param>
         /// <param name="actionDescriptions"></param>
-        public GroupsViewModel([NotNull] ConcurrentBag<Group> allGroups, string name, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
+        public GroupsViewModel([NotNull] List<Group> allGroups, string name, [NotNull] IEnumerable<ActionDescription> actionDescriptions)
         {
             Assert.ArgumentNotNull(allGroups, "allGroups");
             Assert.ArgumentNotNull(actionDescriptions, "actionDescriptions");
@@ -70,7 +70,7 @@ namespace Adan.Client.ViewModel
         /// <summary>
         /// 
         /// </summary>
-        public ConcurrentBag<Group> AllGroup
+        public List<Group> AllGroup
         {
             get
             {
@@ -177,7 +177,7 @@ namespace Adan.Client.ViewModel
             if (castedGroup != null)
             {
                 var gr = castedGroup.Group;
-                _allGroups.TryTake(out gr);
+                _allGroups.Remove(gr);
                 _groups.Remove(castedGroup);
             }
 

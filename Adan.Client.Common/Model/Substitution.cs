@@ -351,8 +351,7 @@ namespace Adan.Client.Common.Model
                         Group.Substitutions.Add(this);
                         break;
                     case UndoOperation.Remove:                        
-                        Substitution th = this;
-                        Group.Substitutions.TryTake(out th);
+                        Group.Substitutions.Remove(this);
                         break;
                 }
             }
