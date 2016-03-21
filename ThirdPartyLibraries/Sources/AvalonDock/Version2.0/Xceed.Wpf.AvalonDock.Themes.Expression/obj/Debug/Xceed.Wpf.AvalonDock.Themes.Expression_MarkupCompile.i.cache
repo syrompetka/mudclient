@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Mudclient\MudClient\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock.Themes.Expression\obj\Debug\
+C:\Projects\AdanClient\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock.Themes.Expression\obj\Debug\
 Xceed.Wpf.AvalonDock.Themes
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 6658133794
 
-8236033310
-13785167694
+8-1381492125
+13-740292298
 Controls\UserControl1.xaml;LightTheme.xaml;LightBrushes.xaml;DarkBrushes.xaml;Theme.xaml;DarkTheme.xaml;
 
 True

@@ -1,18 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MccpClient.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Networking
+﻿namespace Adan.Client.Common.Networking
 {
     using System;
-    using System.Diagnostics;
     using System.IO;
     using System.Text;
-    using System.Threading;
-    using Adan.Client.Common.Conveyor;
-    using Adan.Client.Common.Utils;
+    using Utils;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Ionic.Zlib;
@@ -111,14 +102,6 @@ namespace Adan.Client.Common.Networking
         }
 
         /// <summary>
-        /// 
-        /// </summary>
-        public override void Disconnect()
-        {
-            base.Disconnect();
-        }
-
-        /// <summary>
         /// This method is called each time when some data is received from server.
         /// </summary>
         /// <param name="sender">The source of event.</param>
@@ -164,7 +147,6 @@ namespace Adan.Client.Common.Networking
                         e.Offset, e.BytesReceived, Encoding.Default.GetString(data), ex.Message, ex.StackTrace));
                     Dispose(true);
                     HandleException(new NetworkErrorEventArgs(ex));
-                    return;
                 }
             }
         }
@@ -187,7 +169,7 @@ namespace Adan.Client.Common.Networking
                         }
 
                         if (lastOffset > offset + codeLength)
-                            this.OnDataReceived(this, new DataReceivedEventArgs(lastOffset - (offset + codeLength), offset + codeLength, data));
+                            OnDataReceived(this, new DataReceivedEventArgs(lastOffset - (offset + codeLength), offset + codeLength, data));
 
                         return;
                     }
@@ -227,7 +209,8 @@ namespace Adan.Client.Common.Networking
                 base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CompressCode }, 0, 3);
                 return 3;
             }
-            else if (!_customProtocolEnabled && bytesCount >= 3
+            
+            if (!_customProtocolEnabled && bytesCount >= 3
                 && data[offset] == TelnetConstants.InterpretAsCommandCode
                 && data[offset + 1] == TelnetConstants.WillCode
                 && data[offset + 2] == TelnetConstants.CustomProtocolCode)
@@ -236,12 +219,13 @@ namespace Adan.Client.Common.Networking
                 base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CustomProtocolCode }, 0, 3);
                 return 3;
             }
-            else if (_compressionEnabled && bytesCount >= 5
-                                && data[offset] == TelnetConstants.InterpretAsCommandCode
-                 && data[offset + 1] == TelnetConstants.SubNegotiationStartCode
-                 && data[offset + 2] == TelnetConstants.CompressCode
-                 && data[offset + 3] == TelnetConstants.WillCode
-                 && data[offset + 4] == TelnetConstants.SubNegotiationEndCode)
+            
+            if (_compressionEnabled && bytesCount >= 5
+                && data[offset] == TelnetConstants.InterpretAsCommandCode
+                && data[offset + 1] == TelnetConstants.SubNegotiationStartCode
+                && data[offset + 2] == TelnetConstants.CompressCode
+                && data[offset + 3] == TelnetConstants.WillCode
+                && data[offset + 4] == TelnetConstants.SubNegotiationEndCode)
             {
                 _compressionInProgress = true;
                 _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);

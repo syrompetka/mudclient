@@ -57,7 +57,7 @@ namespace Adan.Client.MessageDeserializers
         {
             Assert.ArgumentNotNull(data, "data");
         
-            XmlSerializer serializer = new XmlSerializer(typeof(ProtocolVersionMessage));
+            var serializer = new XmlSerializer(typeof(ProtocolVersionMessage));
 
             var messageXml = _encoding.GetString(data, offset, bytesReceived);
             _builder.Append(messageXml);
@@ -67,11 +67,12 @@ namespace Adan.Client.MessageDeserializers
                 {
                     try
                     {
-                        var message = (ProtocolVersionMessage)serializer.Deserialize(stringReader);
+                        var message = (ProtocolVersionMessage) serializer.Deserialize(stringReader);
                         PushMessageToConveyor(message);
                     }
-                    catch (Exception) 
-                    { }
+                    catch (Exception)
+                    {
+                    }
                 }
 
                 _builder.Clear();
