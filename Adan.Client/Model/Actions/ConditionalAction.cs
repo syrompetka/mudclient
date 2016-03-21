@@ -215,7 +215,7 @@ namespace Adan.Client.Model.Actions
                     sb.Append("!=");
                     break;
             }
-            sb.Append(LeftConditionParameter.GetParameterValue()).Append("} {");
+            sb.Append(RightConditionParameter.GetParameterValue()).Append("} {");
             sb.Append(String.Join(";", ActionsToExecute.Select(action => action.ToString()).ToArray())).Append("}");
 
             return sb.ToString();
