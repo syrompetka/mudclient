@@ -1,4 +1,5 @@
-﻿using Adan.Client.Commands;
+﻿using System.Globalization;
+using Adan.Client.Commands;
 using Adan.Client.CommandSerializers;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.Controls;
@@ -27,35 +28,28 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.AvalonDock.Themes;
 
 namespace Adan.Client
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindowEx.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         #region Constants and Fields
 
-        private WindowState nonFullScreenWindowState;
-        private IList<LayoutContent> _allWidgets = new List<LayoutContent>();
-        private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
-        private IList<Hotkey> _globalHotkeys = new List<Hotkey>();
-        private double nonFullScreenWindowWidth;
-        private double nonFullScreenWindowHeight;
+        private WindowState _nonFullScreenWindowState;
+        private readonly IList<LayoutContent> _allWidgets = new List<LayoutContent>();
+        private readonly IList<OutputWindow> _outputWindows = new List<OutputWindow>();
+        private readonly IList<Hotkey> _globalHotkeys = new List<Hotkey>();
+        private double _nonFullScreenWindowWidth;
+        private double _nonFullScreenWindowHeight;
 
         #endregion
 
@@ -85,7 +79,7 @@ namespace Adan.Client
                                 typeof(SendTextOneParameterAction),
                                 typeof(ShowOutputWindowAction),
                                 typeof(SendToWindowAction),
-                                //typeof(ToggleFullScreenModeAction),
+                                typeof(ToggleFullScreenModeAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.AllPlugins)
@@ -118,7 +112,7 @@ namespace Adan.Client
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
             actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
             actionDescriptions.Add(new SendToWindowActionDescription(actionDescriptions));
-            //actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
+            actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
@@ -145,7 +139,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
             MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
-            //MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
+            MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -164,7 +158,7 @@ namespace Adan.Client
                 ViewModel = new InitializationStatusModel()
             };
 
-            Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
+            Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
@@ -226,7 +220,7 @@ namespace Adan.Client
 
             foreach (var widget in PluginHost.Instance.Widgets)
             {
-                if (!_allWidgets.Any(x => x.ContentId == widget.Name))
+                if (_allWidgets.All(x => x.ContentId != widget.Name))
                 {
                     CreateWidget(widget);
                 }
@@ -253,7 +247,7 @@ namespace Adan.Client
                 }
                 catch (Exception ex) 
                 {
-                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex.ToString()));
+                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex));
                 }
             }
         }
@@ -268,7 +262,7 @@ namespace Adan.Client
                     args.Content = widgetDescription.Control;
                     _allWidgets.Add(args.Model);
 
-                    var menuItem = new MenuItem()
+                    var menuItem = new MenuItem
                     {
                         Header = widgetDescription.Description,
                         Tag = args.Model,
@@ -291,22 +285,24 @@ namespace Adan.Client
             }
             else
             {
-                var outputWindow = new OutputWindow(this, args.Model.Title);
-                outputWindow.Uid = args.Model.ContentId;
-                outputWindow.DockContent = args.Model;
+                var outputWindow = new OutputWindow(this, args.Model.Title)
+                {
+                    Uid = args.Model.ContentId,
+                    DockContent = args.Model
+                };
 
                 _outputWindows.Add(outputWindow);
                 args.Content = outputWindow.VisibleControl;
 
                 args.Model.Closed += OnOutputWindowClosed;
 
-                var menuItem = new MenuItem()
+                var menuItem = new MenuItem
                 {
                     Header = outputWindow.Name,
                     Name = outputWindow.Uid,
                 };
 
-                menuItem.Click += (s, e) => { ShowOutputWindow((string)((MenuItem)s).Header); };
+                menuItem.Click += (s, e) => ShowOutputWindow((string)((MenuItem)s).Header);
 
                 if (_windowMenuItem.Items.Count > 0)
                     _windowMenuItem.Items.Insert(0, menuItem);
@@ -328,7 +324,7 @@ namespace Adan.Client
 
         private void CreateWidget(WidgetDescription widgetDescription)
         {
-            var anchorable = new LayoutAnchorable()
+            var anchorable = new LayoutAnchorable
             {
                 CanAutoHide = false,
                 CanFloat = true,
@@ -352,7 +348,7 @@ namespace Adan.Client
                 { }
             }
 
-            var menuItem = new MenuItem()
+            var menuItem = new MenuItem
             {
                 Header = widgetDescription.Description,
                 Tag = anchorable,
@@ -380,11 +376,11 @@ namespace Adan.Client
 
         private void CreateOutputWindow(string name, string uid)
         {
-            OutputWindow outputWindow = new OutputWindow(this, name);
+            var outputWindow = new OutputWindow(this, name);
             _outputWindows.Add(outputWindow);
             outputWindow.Uid = uid;
 
-            LayoutAnchorable anchorable = new LayoutAnchorable()
+            var anchorable = new LayoutAnchorable
             {
                 CanAutoHide = false,
                 CanClose = true,
@@ -401,13 +397,13 @@ namespace Adan.Client
 
             anchorable.Closed += OnOutputWindowClosed;
 
-            var menuItem = new MenuItem()
+            var menuItem = new MenuItem
             {
                 Header = outputWindow.Name,
                 Name = outputWindow.Uid,
             };
 
-            menuItem.Click += (s, e) => { ShowOutputWindow((string)((MenuItem)s).Header); };
+            menuItem.Click += (s, e) => ShowOutputWindow((string)((MenuItem)s).Header);
 
             if (_windowMenuItem.Items.Count > 0)
                 _windowMenuItem.Items.Insert(0, menuItem);
@@ -445,10 +441,10 @@ namespace Adan.Client
             OutputWindow outputWindowToSelect = null;
             if (string.IsNullOrEmpty(name))
             {
-                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                var activeContent = _dockManager.ActiveContent as MainOutputWindow;
                 if (activeContent != null)
                 {
-                    var currentWindow = _outputWindows.FirstOrDefault(x => x.Uid == activeContent.RootModel.Uid);
+                    var currentWindow = _outputWindows.FirstOrDefault();
                     if (currentWindow == null)
                     {
                         return;
@@ -566,7 +562,7 @@ namespace Adan.Client
 
             foreach (string str in SettingsHolder.Instance.AllProfiles)
             {
-                profiles.Add(new ProfileViewModel(str, str == "Default" ? true : false));
+                profiles.Add(new ProfileViewModel(str, str == "Default"));
             }
 
             if (profiles.Count == 0)
@@ -577,7 +573,7 @@ namespace Adan.Client
 
             var chooseViewModel = new ProfileChooseViewModel(profiles, profiles[0].NameProfile);
 
-            var chooseDialog = new ProfilesChooseDialog()
+            var chooseDialog = new ProfilesChooseDialog
             {
                 DataContext = chooseViewModel,
                 Owner = this,
@@ -601,10 +597,10 @@ namespace Adan.Client
 
         private void _dockManager_ActiveContentChanged(object sender, EventArgs e)
         {
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
-                var dockContent = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                var dockContent = _outputWindows.FirstOrDefault();
                 if (dockContent != null)
                 {
                     dockContent.Focus();
@@ -636,7 +632,7 @@ namespace Adan.Client
         /// <param name="e"></param>
         public void CheckGlobalHotkeys(KeyEventArgs e)
         {
-            var hotkeyCommand = new HotkeyCommand()
+            var hotkeyCommand = new HotkeyCommand
             {
                 Key = e.Key == Key.System ? e.SystemKey : e.Key,
                 ModifierKeys = Keyboard.Modifiers,
@@ -646,10 +642,10 @@ namespace Adan.Client
             var hotkey = _globalHotkeys.FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
             if (hotkey != null)
             {
-                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                var activeContent = _dockManager.ActiveContent as MainOutputWindow;
                 if (activeContent != null)
                 {
-                    var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                    var outputWindow = _outputWindows.FirstOrDefault();
 
                     if (outputWindow != null)
                     {
@@ -678,7 +674,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var globalHotkeysDialog = new GlobalHotkeysEditDialog()
+            var globalHotkeysDialog = new GlobalHotkeysEditDialog
             {
                 DataContext = new GlobalHotkeysViewModel(_globalHotkeys, RootModel.AllActionDescriptions),
                 Owner = this,
@@ -697,7 +693,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var aboutDialog = new AboutDialog() { Owner = this, }.ShowDialog();
+            new AboutDialog { Owner = this, }.ShowDialog();
         }
 
         private void HandleConnect([NotNull] object sender, [NotNull] RoutedEventArgs e)
@@ -705,10 +701,10 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
-                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                var outputWindow = _outputWindows.FirstOrDefault();
                 if (outputWindow == null)
                 {
                     CreateOutputWindow("Default", Guid.NewGuid().ToString("N"));
@@ -735,10 +731,10 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
-                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+                var outputWindow = _outputWindows.FirstOrDefault();
 
                 if (outputWindow != null)
                     outputWindow.RootModel.PushCommandToConveyor(new DisconnectCommand());
@@ -808,11 +804,11 @@ namespace Adan.Client
 
             foreach (string str in SettingsHolder.Instance.AllProfiles)
             {
-                models.Add(new ProfileViewModel(str, str == "Default" ? true : false));
+                models.Add(new ProfileViewModel(str, str == "Default"));
             }
 
             var profilesViewModel = new ProfilesEditViewModel(models, models[0].NameProfile);
-            var profileDialog = new ProfilesEditDialog() { DataContext = profilesViewModel, Owner = this };
+            var profileDialog = new ProfilesEditDialog { DataContext = profilesViewModel, Owner = this };
 
             profileDialog.Show();
         }
@@ -822,7 +818,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var model = new OptionsViewModel()
+            var model = new OptionsViewModel
             {
                 AutoClearInput = SettingsHolder.Instance.Settings.AutoClearInput,
                 AutoReconnect = SettingsHolder.Instance.Settings.AutoReconnect,
@@ -830,14 +826,14 @@ namespace Adan.Client
                 CommandDelimiter = SettingsHolder.Instance.Settings.CommandDelimiter,
                 StartOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.StartOfLine,
                 EndOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.EndOfLine,
-                HistorySize = SettingsHolder.Instance.Settings.CommandsHistorySize.ToString(),
-                MinLengthHistory = SettingsHolder.Instance.Settings.MinLengthHistory.ToString(),
-                ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
+                HistorySize = SettingsHolder.Instance.Settings.CommandsHistorySize.ToString(CultureInfo.InvariantCulture),
+                MinLengthHistory = SettingsHolder.Instance.Settings.MinLengthHistory.ToString(CultureInfo.InvariantCulture),
+                ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(CultureInfo.InvariantCulture),
                 SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings,
                 AutoConnect = SettingsHolder.Instance.Settings.AutoConnect,
             };
 
-            var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
+            var optionsDialog = new OptionsDialog { DataContext = model, Owner = this };
             var dialogResult = optionsDialog.ShowDialog();
 
             if (dialogResult.HasValue && dialogResult.Value)
@@ -848,15 +844,9 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
                 SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
 
-                if (model.StartOfLine)
-                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
-                else
-                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.EndOfLine;
+                SettingsHolder.Instance.Settings.CursorPosition = model.StartOfLine ? CursorPositionHistory.StartOfLine : CursorPositionHistory.EndOfLine;
 
-                if (model.SettingsFolder)
-                    SettingsHolder.Instance.SettingsFolder = SettingsFolder.DocumentsAndSettings;
-                else
-                    SettingsHolder.Instance.SettingsFolder = SettingsFolder.ProgramFolder;
+                SettingsHolder.Instance.SettingsFolder = model.SettingsFolder ? SettingsFolder.DocumentsAndSettings : SettingsFolder.ProgramFolder;
 
                 int val;
                 if (int.TryParse(model.HistorySize, out val))
@@ -874,65 +864,26 @@ namespace Adan.Client
 
         #endregion
 
-        #region Logging
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logName"></param>
-        /// <param name="rootModel"></param>
-        public void StartLogging(string logName, RootModel rootModel)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
-
-            if (outputWindow != null)
-            {
-                outputWindow.StartLogging(logName);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
-        public void StopLogging(RootModel rootModel)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
-
-            if (outputWindow != null)
-            {
-                outputWindow.StopLogging();
-            }
-        }
-
-        #endregion
-
         /// <summary>
         /// Toggles the full screen mode.
         /// </summary>
         public void ToggleFullScreenMode()
         {
-            if (this.WindowStyle == WindowStyle.None)
+            if (WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
-                WindowState = nonFullScreenWindowState;
-                ResizeMode = ResizeMode.CanResizeWithGrip;
-                Width = nonFullScreenWindowWidth;
-                Height = nonFullScreenWindowHeight;
+                WindowState = _nonFullScreenWindowState;
+                Width = _nonFullScreenWindowWidth;
+                Height = _nonFullScreenWindowHeight;
                 _mainMenu.Visibility = Visibility.Visible;
             }
             else
             {
-                nonFullScreenWindowHeight = Height;
-                nonFullScreenWindowWidth = Width;
-                nonFullScreenWindowState = WindowState;
-                Width = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-                Height = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
-                Top = 0;
-                Left = 0;
-                WindowState = System.Windows.WindowState.Normal;
+                _nonFullScreenWindowHeight = Height;
+                _nonFullScreenWindowWidth = Width;
+                _nonFullScreenWindowState = WindowState;
                 WindowStyle = WindowStyle.None;
-                ResizeMode = System.Windows.ResizeMode.NoResize;
+                WindowState = WindowState.Maximized;
                 _mainMenu.Visibility = Visibility.Collapsed;
             }
         }        
@@ -957,10 +908,10 @@ namespace Adan.Client
         {
             try
             {
-                //if (WindowStyle == WindowStyle.None)
-                //{
-                //    ToggleFullScreenMode();
-                //}
+                if (WindowStyle == WindowStyle.None)
+                {
+                    ToggleFullScreenMode();
+                }
 
                 var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
                 if (!Directory.Exists(layoutFullPath))
