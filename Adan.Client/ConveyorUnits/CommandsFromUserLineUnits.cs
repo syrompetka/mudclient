@@ -644,7 +644,7 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage("#Список хайлайтов:"), rootModel);
                             for (int i = 0; i < highlightList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{2},{3}}} {{{1}}}",
                                     i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
                             }
                         }
@@ -672,7 +672,7 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage(string.Format("#Список хайлайтов, содержащих строку \"{0}\":", args[0])), rootModel);
                             for (int i = 0; i < highlightList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{2},{3}}} {{{1}}}",
                                     i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
                             }
                         }
@@ -704,14 +704,6 @@ namespace Adan.Client.ConveyorUnits
 
                 string[] colors = args[0].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (colors.Length < 2)
-                {
-                    if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-
-                    return true;
-                }
-
                 TextColor foregroundColor = TextColorParser.Parse(colors[0].Trim());
                 TextColor backgroundColor;
                 if (colors.Length == 2)
@@ -719,10 +711,13 @@ namespace Adan.Client.ConveyorUnits
                 else
                     backgroundColor = TextColor.Black;
 
-                if (foregroundColor == TextColor.None || backgroundColor == TextColor.None)
+                if (foregroundColor == TextColor.None && backgroundColor == TextColor.None)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Ошибка цвета"), rootModel);
+                    {
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка. Формат: #highlight {цвет текста,цвет фона} {текст который подсвечивать}"), rootModel);
+                        base.PushMessageToConveyor(new ErrorMessage("#Возможные варианты цвета: " + String.Join(", ", Enum.GetValues(typeof(TextColor)).OfType<TextColor>())), rootModel);
+                    }
 
                     return true;
                 }
@@ -758,7 +753,7 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!isImport)
                 {
-                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт добавлен: #highlight {{{0}}} {{{1}, {2}}}",
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт добавлен: #highlight {{{1}, {2}}} {{{0}}}",
                            highlight.TextToHighlight, highlight.ForegroundColor, highlight.BackgroundColor)), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                 }
@@ -794,30 +789,11 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1}, {2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1}, {2}}} {{{0}}}",
                                     highlightList[num - 1].TextToHighlight, highlightList[num - 1].ForegroundColor, highlightList[num - 1].BackgroundColor)), rootModel);
                                 base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
                         }
-
-                        //for (int i = 0; i < rootModel.Groups.Count; i++)
-                        //{
-                        //    if (rootModel.Groups[i].Highlights.Remove(highlightList[num - 1]))
-                        //    {
-                        //        highlightList[num - 1].Group = rootModel.Groups[i];
-                        //        highlightList[num - 1].Operation = UndoOperation.Add;
-                        //        rootModel.UndoStack.Push(highlightList[num - 1]);
-
-                        //        if (!isImport)
-                        //        {
-                        //            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1}, {2}}}",
-                        //                highlightList[num - 1].TextToHighlight, highlightList[num - 1].ForegroundColor, highlightList[num - 1].BackgroundColor)), rootModel);
-                        //            base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
-                        //        }
-
-                        //        break;
-                        //    }
-                        //}
                     }
                     else
                     {
@@ -843,7 +819,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1},{2}}} {{{0}}}",
                                     high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                                 base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
@@ -865,7 +841,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1},{2}}} {{{0}}}",
                                     high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                             }
 

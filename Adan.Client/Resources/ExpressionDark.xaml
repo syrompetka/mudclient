@@ -5865,6 +5865,8 @@
            TargetType="{x:Type Window}">
         <Setter Property="Background"
                 Value="{DynamicResource NormalBrush}" />
+        <Setter Property="FontSize"
+                Value="12" />
     </Style>
 </ResourceDictionary>
 
