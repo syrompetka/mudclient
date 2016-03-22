@@ -704,7 +704,7 @@ namespace Adan.Client.Common.Controls
 
             var fps = 1000.0/_fpsStopWatch.ElapsedMilliseconds;
             drawingContext.DrawText(new FormattedText(fps.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 22, Brushes.White), new Point(ActualWidth - 40, 5));
-            _fpsStopWatch.Reset();
+            _fpsStopWatch.Restart();
             _currentNumberOfLinesInView = renderedLines;
             if (_selectionSettings.NeedUpdate)
             {
