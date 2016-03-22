@@ -1,15 +1,6 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RootModel.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the RootModel type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Model
+﻿namespace Adan.Client.Common.Model
 {
-    using Adan.Client.Common.Settings;
+    using Settings;
     using Commands;
     using Conveyor;
     using CSLib.Net.Annotations;
@@ -29,14 +20,14 @@ namespace Adan.Client.Common.Model
     /// </summary>
     public class RootModel
     {
-        #region #Constants and Fields
+        #region Constants and Fields
 
         private static IList<Type> _customSerializationTypes;
 
         private MessageConveyor _conveyor;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
         private ProfileHolder _profile;
-        private object _profileLockObject = new object();
+        private readonly object _profileLockObject = new object();
 
         private readonly List<CommandAlias> _aliasList;
         private readonly List<TriggerBase> _triggersList;
@@ -50,17 +41,12 @@ namespace Adan.Client.Common.Model
 
         private readonly Stack<IUndo> _undoStack;
 
-        private Regex _variableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
+        private readonly Regex _variableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
 
         #endregion
 
         #region Constructors and Destructors
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="conveyor"></param>
-        /// <param name="profile"></param>
         public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
@@ -523,11 +509,6 @@ namespace Adan.Client.Common.Model
                 this.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="str"></param>
-        /// <returns></returns>
         public VarReplaceReply ReplaceVariables(string str)
         {
             bool ret;

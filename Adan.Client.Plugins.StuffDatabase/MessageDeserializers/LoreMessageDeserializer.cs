@@ -1,35 +1,23 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LoreMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the LoreMessageDeserializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
+﻿namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
 {
     using System;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
-    using System.Diagnostics;
-
-    using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.StuffDatabase.Messages;
-    using Adan.Client.Common.Utils;
+    using Messages;
+    using Common.Utils;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> implementation to handle lore messages.
     /// </summary>
     public class LoreMessageDeserializer : MessageDeserializer
     {
+        private readonly XmlSerializer _serializer=new XmlSerializer(typeof(LoreMessage));
         private readonly StringBuilder _builder = new StringBuilder();
+        private Encoding _encoding;
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -56,7 +44,8 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
         {
             Assert.ArgumentNotNull(data, "data");
 
-            var messageXml = Encoding.GetEncoding(1251).GetString(data, offset, bytesReceived);
+            _encoding = Encoding.GetEncoding(1251);
+            var messageXml = _encoding.GetString(data, offset, bytesReceived);
             _builder.Append(messageXml);
             if (isComplete)
             {
@@ -67,8 +56,7 @@ namespace Adan.Client.Plugins.StuffDatabase.MessageDeserializers
                 {
                     using (var stringReader = new StringReader(str))
                     {
-                        var serializer = new XmlSerializer(typeof(LoreMessage));
-                        var message = (LoreMessage)serializer.Deserialize(stringReader);
+                        var message = (LoreMessage)_serializer.Deserialize(stringReader);
                         PushMessageToConveyor(message);
                     }
                 }

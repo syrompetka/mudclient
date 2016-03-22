@@ -14,7 +14,6 @@ namespace Adan.Client.Common.Model
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
-    using System.Collections.Concurrent;
 
     /// <summary>
     /// A group of triggers, aliases etc.
