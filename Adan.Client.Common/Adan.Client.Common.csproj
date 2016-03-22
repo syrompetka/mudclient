@@ -98,6 +98,7 @@
     </Compile>
     <Compile Include="Controls\CursorPositionHistory.cs" />
     <Compile Include="Controls\GenericTemplateSelector.cs" />
+    <Compile Include="Settings\ProfileChangedEventArgs.cs" />
     <Compile Include="Settings\SettingsChangedEventArgs.cs" />
     <Compile Include="Settings\SettingsFolder.cs" />
     <Compile Include="ConveyorUnits\ConveyorUnit.cs" />

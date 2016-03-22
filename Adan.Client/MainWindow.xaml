@@ -33,9 +33,8 @@
             </MenuItem>
             <MenuItem Header="Options" Name="_optionsMenuItem">
                 <Separator Visibility="Collapsed" Name="_optionsSeparator"/>
+                <MenuItem Header="Global profile" Click="HandleGlobalProfile"/>
                 <MenuItem Header="Profiles" Click="HandleEditProfiles"/>
-                <Separator />
-                <MenuItem Header="Global hotkeys" Click="HandleGlobalHotkeys"/>
                 <Separator />
                 <MenuItem Header="Options" Click="HandleEditOptions"/>
                 <Separator Visibility="Collapsed" />

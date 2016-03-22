@@ -181,7 +181,6 @@ namespace Adan.Client.ViewModel
             };
 
             profileOptionDialog.Show();
-            SettingsHolder.Instance.SetProfile(profile);
         }
 
         private void UpdateAddProfileCommandCanExecute()
