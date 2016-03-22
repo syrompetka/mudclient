@@ -36,6 +36,7 @@ namespace Xceed.Wpf.AvalonDock.Layout.Serialization
             var serializer = new XmlSerializer(typeof(LayoutRoot));
             serializer.Serialize(writer, Manager.Layout);
         }
+
         public void Serialize(System.IO.TextWriter writer)
         {
             var serializer = new XmlSerializer(typeof(LayoutRoot));
