@@ -93,7 +93,6 @@ namespace Adan.Client.Common.Model
                 else
                 {
                     _matchingPattern = value;
-                    IsRegExp = false;
                 }
                 
                 _rootPatternToken = null;
@@ -276,10 +275,13 @@ namespace Adan.Client.Common.Model
         /// <returns>String representation of the trigger</returns>
         public override string ToString()
         {
+            var patternString = this.GetPatternString();
+            if (this.IsRegExp)
+                patternString = "/" + patternString + "/";
             if (this.Group == null)
-                return string.Format("#action {{{0}}} {{{1}}} {{{2}}}", this.GetPatternString(), this.Actions[0].ToString(), this.Priority);
+                return string.Format("#action {{{0}}} {{{1}}} {{{2}}}", patternString, this.Actions[0].ToString(), this.Priority);
             else
-                return string.Format("#action {{{0}}} {{{1}}} {{{2}}} {{{3}}}", this.GetPatternString(), this.Actions[0].ToString(), this.Priority, this.Group.Name);
+                return string.Format("#action {{{0}}} {{{1}}} {{{2}}} {{{3}}}", patternString, this.Actions[0].ToString(), this.Priority, this.Group.Name);
         }
     }
 }

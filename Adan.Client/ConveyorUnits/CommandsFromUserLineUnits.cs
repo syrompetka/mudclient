@@ -407,8 +407,8 @@ namespace Adan.Client.ConveyorUnits
                     base.PushMessageToConveyor(new InfoMessage("#Добавление триггера в указанную группу: #act {текст} {действия} {группа}"), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Добавление триггера с приоритетом и группой: #act {текст} {действия} {приоритет} {группа}"), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Приоритет обязательно должен быть числом. Триггеры с меньшим приоритетом выполняются первыми."), rootModel);
-                    base.PushMessageToConveyor(new InfoMessage("#По умолчанию, максимум один триггер будет выполнен для одной строки пришедшей из MUD'а."), rootModel);
-                    base.PushMessageToConveyor(new InfoMessage("#Это поведение можно изменить через интерфейс (убрать галочку 'Stop processing trigger for this message.')."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#По умолчанию, только один триггер может быть выполнен для одной строки пришедшей из MUD'а."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Это поведение можно изменить через интерфейс (убрать галочку 'Stop processing trigger for this message')."), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Если текст начинается с ^ и не содержит %0 %1 %2 и т.п., он будет автоматически считаться регулярным выражением."), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Пример: #action {^Вы полетели на землю от мощного удара} {вст}"), rootModel);
                     return true;
@@ -471,9 +471,6 @@ namespace Adan.Client.ConveyorUnits
                 {
                     CommandText = args[1]
                 });
-
-                if (!trigger.MatchingPattern.Contains("%0") && !trigger.MatchingPattern.Contains("%1") && trigger.MatchingPattern.StartsWith("^"))
-                    trigger.IsRegExp = true;
 
                 var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
