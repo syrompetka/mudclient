@@ -1,38 +1,51 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainOutputWindow.xaml.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Interaction logic for MainOutputWindow.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+﻿using Adan.Client.Common.Commands;
+using Adan.Client.Common.Controls.AvalonEdit;
+using Adan.Client.Common.Messages;
+using Adan.Client.Common.Model;
+using Adan.Client.Common.Settings;
+using Adan.Client.Common.Themes;
+using CSLib.Net.Annotations;
+using CSLib.Net.Diagnostics;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
+using ICSharpCode.AvalonEdit.Rendering;
+using System;
+using System.Collections.Generic;
+using System.Text;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Media;
 
 namespace Adan.Client.Controls
 {
-    using System.Collections.Generic;
-    using System.Windows;
-    using System.Windows.Controls;
-    using System.Windows.Controls.Primitives;
-    using System.Windows.Media;
-
-    using Common.Messages;
-
-    using CSLib.Net.Annotations;
-    using CSLib.Net.Diagnostics;
-
-    using Messages;
-    using System.Windows.Input;
-    using Adan.Client.Common.Settings;
-    using Adan.Client.Common.Model;
-    using Adan.Client.Common.Commands;
-
     /// <summary>
-    /// Control to contain all text and allow scrolling.
+    /// Логика взаимодействия для MainOutputWindow.xaml
     /// </summary>
-    public partial class MainOutputWindow : UserControl, IScrollInfo
+    public partial class MainOutputWindow : MainOutputWindowBase
     {
+        private static TextEditorOptions _options;
+
         private MainWindow _mainWindow;
         private RootModel _rootModel;
+
+        private bool _isMainOutputEndToScroll = true;
+        private bool _needMainOutputScrollToEnd = false;
+
+        static MainOutputWindow()
+        {
+            _options = new TextEditorOptions();
+
+            _options.AllowScrollBelowDocument = false;
+            _options.CutCopyWholeLine = false;
+            _options.EnableEmailHyperlinks = true;
+            _options.EnableHyperlinks = true;
+            _options.EnableImeSupport = false;
+            _options.EnableRectangularSelection = false;
+            _options.EnableTextDragDrop = false;
+            _options.EnableVirtualSpace = false;
+            _options.RequireControlModifierForHyperlinkClick = false;
+            _options.ShowBoxForControlCharacters = false;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainOutputWindow"/> class.
@@ -41,10 +54,139 @@ namespace Adan.Client.Controls
         {
             InitializeComponent();
 
+            mainScrollOutput.Options = _options;
+            secondScrollOutput.Options = _options;
+
             _mainWindow = mainWindow;
             _rootModel = rootModel;
-            
-            Loaded += (o, e) => txtCommandInput.Focus();
+
+            var mainSelectionColorizer = new SelectionColorizer(
+                ThemeManager.Instance.ActiveTheme.GetSelectionBrushByTextColor(false),
+                ThemeManager.Instance.ActiveTheme.GetSelectionBrushByTextColor(true),
+                mainScrollOutput.TextArea);
+
+            var secondSelectionColorizer = new SelectionColorizer(
+                ThemeManager.Instance.ActiveTheme.GetSelectionBrushByTextColor(false),
+                ThemeManager.Instance.ActiveTheme.GetSelectionBrushByTextColor(true), secondScrollOutput.TextArea);
+
+            var elementGenerator = new AdanElementGenerator();
+            var adanLineTransformer = new AdanLineTransformer();
+
+            mainScrollOutput.Foreground = new SolidColorBrush(ThemeManager.Instance.ActiveTheme.DefaultTextColor);
+            mainScrollOutput.Background = new SolidColorBrush(ThemeManager.Instance.ActiveTheme.DefaultBackGroundColor);
+            mainScrollOutput.TextArea.TextView.ElementGenerators.Add(elementGenerator);
+            mainScrollOutput.TextArea.TextView.LineTransformers.Clear();
+            mainScrollOutput.TextArea.TextView.LineTransformers.Add(adanLineTransformer);
+            mainScrollOutput.TextArea.TextView.LineTransformers.Add(mainSelectionColorizer);
+            mainScrollOutput.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+            mainScrollOutput.TextArea.Caret.Hide();
+            mainScrollOutput.TextArea.GotFocus += TextArea_GotFocus;
+            mainScrollOutput.TextArea.TextView.ScrollOffsetChanged += MainOutput_TextView_ScrollOffsetChanged;
+            mainScrollOutput.TextArea.LostMouseCapture += TextArea_LostMouseCapture;
+            mainScrollOutput.Document.UndoStack.SizeLimit = 0;
+
+            secondScrollOutput.Foreground = new SolidColorBrush(ThemeManager.Instance.ActiveTheme.DefaultTextColor);
+            secondScrollOutput.Background = new SolidColorBrush(ThemeManager.Instance.ActiveTheme.DefaultBackGroundColor);
+            secondScrollOutput.TextArea.Document = mainScrollOutput.TextArea.Document;
+            secondScrollOutput.TextArea.TextView.ElementGenerators.Add(elementGenerator);
+            secondScrollOutput.TextArea.TextView.LineTransformers.Clear();
+            secondScrollOutput.TextArea.TextView.LineTransformers.Add(adanLineTransformer);
+            secondScrollOutput.TextArea.TextView.LineTransformers.Add(secondSelectionColorizer);
+            secondScrollOutput.TextArea.Caret.PositionChanged += Caret_PositionChanged;
+            secondScrollOutput.TextArea.Caret.Hide();
+            secondScrollOutput.TextArea.GotFocus += TextArea_GotFocus;
+            secondScrollOutput.TextArea.LostMouseCapture += TextArea_LostMouseCapture;
+            secondScrollOutput.Document.UndoStack.SizeLimit = 0;
+            secondScrollOutput.TextArea.TextView.ScrollOffsetChanged += Second_Output_TextView_ScrollOffsetChanged;
+
+            Loaded += (o, e) => CommandInput.Focus();
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public override TextBoxWithHistory CommandInput
+        {
+            get
+            {
+                return _txtCommandInput;
+            }
+        }
+
+        private void TextArea_LostMouseCapture(object sender, MouseEventArgs e)
+        {
+            var textArea = sender as TextArea;
+            if (!textArea.Selection.IsEmpty)
+            {
+                string selectedText = textArea.Selection.GetText();
+                int offset = 0;
+                int startIndex = 0;
+                StringBuilder sb = new StringBuilder(selectedText.Length);
+
+                while (offset < selectedText.Length)
+                {
+                    if (selectedText[offset] == '\x1B')
+                    {
+                        if (offset > 0)
+                            sb.Append(selectedText.Substring(startIndex, offset - startIndex));
+
+                        offset += 2;
+
+                        while (offset < selectedText.Length && selectedText[offset] != 'm')
+                            ++offset;
+
+                        if (offset == selectedText.Length)
+                            break;
+
+                        startIndex = offset + 1;
+                    }
+
+                    ++offset;
+                }
+
+                if (startIndex != selectedText.Length)
+                    sb.Append(selectedText.Substring(startIndex, offset - startIndex));
+
+                Clipboard.SetText(sb.ToString());
+                textArea.ClearSelection();
+            }
+        }
+
+        private void MainOutput_TextView_ScrollOffsetChanged(object sender, EventArgs e)
+        {
+            var textView = sender as TextView;
+
+            if (textView.DocumentHeight - (mainScrollOutput.ViewportHeight + textView.VerticalOffset) < 0.01)
+                _isMainOutputEndToScroll = true;
+            else
+                _isMainOutputEndToScroll = false;
+        }
+
+        private void TextArea_GotFocus(object sender, RoutedEventArgs e)
+        {
+            CommandInput.Focus();
+        }
+
+        private void Caret_PositionChanged(object sender, EventArgs e)
+        {
+            ((Caret)sender).Hide();
+        }
+
+        private void Second_Output_TextView_ScrollOffsetChanged(object sender, EventArgs e)
+        {
+            var textView = sender as TextView;
+            if (scrollGridRow.Height.Value != 0 
+                && textView.DocumentHeight - (textView.VerticalOffset + secondScrollOutput.ViewportHeight + splitterGridRow.Height.Value) < 0.01)
+            {
+                if (_isMainOutputEndToScroll)
+                    _needMainOutputScrollToEnd = true;
+
+                if (!gridSplitter.IsDragging)
+                {
+                    scrollGridRow.Height = new GridLength(0);
+                    splitterGridRow.Height = new GridLength(0);
+                }
+            }
         }
 
         /// <summary>
@@ -75,46 +217,74 @@ namespace Adan.Client.Controls
                 return;
             }
 
-            if (e.Key == Key.Up && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            if (e.Key == Key.Up && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                txtCommandInput.ShowPreviousCommand();
+                CommandInput.ShowPreviousCommand();
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Down && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            if (e.Key == Key.Down && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                txtCommandInput.ShowNextCommand();
+                CommandInput.ShowNextCommand();
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Enter && txtCommandInput.IsFocused)
+            if (e.Key == Key.Enter && CommandInput.IsFocused)
             {
-                txtCommandInput.SendCurrentCommand();
+                CommandInput.SendCurrentCommand();
                 e.Handled = true;
             }
 
-            if (e.Key == Key.PageUp && Keyboard.Modifiers == 0)
+            if (e.Key == Key.PageUp)
             {
-                PageUp();
+                if (scrollGridRow.Height.Value == 0)
+                {
+                    bool scrollToEnd = mainScrollOutput.ExtentHeight - (mainScrollOutput.ViewportHeight + mainScrollOutput.VerticalOffset) < 0.01;
+                    scrollGridRow.Height = new GridLength(Math.Max(mainScrollOutput.ViewportHeight * 0.6, 1));
+                    splitterGridRow.Height = new GridLength(5);
+
+                    if (scrollToEnd)
+                        mainScrollOutput.ScrollToEnd();
+                }
+                else
+                {
+                    secondScrollOutput.PageUp();
+                }
+
                 e.Handled = true;
             }
 
-            if (e.Key == Key.PageDown && Keyboard.Modifiers == 0)
+            if (e.Key == Key.PageDown)
             {
-                PageDown();
+                if (scrollGridRow.Height.Value == 0)
+                {
+                    mainScrollOutput.PageDown();
+                }
+                else
+                {
+                    secondScrollOutput.PageDown();
+                }
                 e.Handled = true;
             }
 
-            if (e.Key == Key.End && (Keyboard.Modifiers & ModifierKeys.Control) == ModifierKeys.Control)
+            if (e.Key == Key.End && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                ScrollToEnd();
+                if (scrollGridRow.Height.Value == 0)
+                {
+                    mainScrollOutput.ScrollToEnd();
+                }
+                else
+                {
+                    mainScrollOutput.ScrollToLine(mainScrollOutput.LineCount);
+                }
+
                 e.Handled = true;
             }
 
             //Очищение коммандной строки клавишей escape
-            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && txtCommandInput.IsFocused)
+            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                txtCommandInput.Clear();
+                CommandInput.Clear();
                 e.Handled = true;
             }
 
@@ -124,333 +294,192 @@ namespace Adan.Client.Controls
             }
         }
 
-        #region Implementation of IScrollInfo properties
-
         /// <summary>
-        /// Gets or sets a value indicating whether scrolling on the vertical axis is possible. 
-        /// </summary>
-        /// <returns>
-        /// true if scrolling is possible; otherwise, false. This property has no default value.
-        /// </returns>
-        public bool CanVerticallyScroll
-        {
-            get
-            {
-                return true;
-            }
-
-            set
-            {
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether scrolling on the horizontal axis is possible.
-        /// </summary>
-        /// <returns>
-        /// true if scrolling is possible; otherwise, false. This property has no default value.
-        /// </returns>
-        public bool CanHorizontallyScroll
-        {
-            get
-            {
-                return false;
-            }
-
-            set
-            {
-            }
-        }
-
-        /// <summary>
-        /// Gets the horizontal size of the extent.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the horizontal size of the extent. This property has no default value.
-        /// </returns>
-        public double ExtentWidth
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets the vertical size of the extent.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the vertical size of the extent.This property has no default value.
-        /// </returns>
-        public double ExtentHeight
-        {
-            get
-            {
-                return secondaryScrollOutput.ExtentHeight;
-            }
-        }
-
-        /// <summary>
-        /// Gets the horizontal size of the viewport for this content.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the horizontal size of the viewport for this content. This property has no default value.
-        /// </returns>
-        public double ViewportWidth
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets the vertical size of the viewport for this content.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the vertical size of the viewport for this content. This property has no default value.
-        /// </returns>
-        public double ViewportHeight
-        {
-            get
-            {
-                return mainScrollOutput.ViewportHeight + secondaryScrollOutput.ViewportHeight;
-            }
-        }
-
-        /// <summary>
-        /// Gets the horizontal offset of the scrolled content.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the horizontal offset. This property has no default value.
-        /// </returns>
-        public double HorizontalOffset
-        {
-            get
-            {
-                return 0;
-            }
-        }
-
-        /// <summary>
-        /// Gets the vertical offset of the scrolled content.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Double"/> that represents, in device independent pixels, the vertical offset of the scrolled content. Valid values are between zero and the <see cref="P:System.Windows.Controls.Primitives.IScrollInfo.ExtentHeight"/> minus the <see cref="P:System.Windows.Controls.Primitives.IScrollInfo.ViewportHeight"/>. This property has no default value.
-        /// </returns>
-        public double VerticalOffset
-        {
-            get
-            {
-                return secondaryScrollOutput.VerticalOffset;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets a <see cref="T:System.Windows.Controls.ScrollViewer"/> element that controls scrolling behavior.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Windows.Controls.ScrollViewer"/> element that controls scrolling behavior. This property has no default value.
-        /// </returns>
-        [CanBeNull]
-        public ScrollViewer ScrollOwner
-        {
-            get
-            {
-                return secondaryScrollOutput.ScrollOwner;
-            }
-
-            set
-            {
-                secondaryScrollOutput.ScrollOwner = value;
-                secondaryScrollOutput.ParentScrollInfo = mainScrollOutput;
-            }
-        }
-
-        #endregion
-
-        #region Public methods
-
-        /// <summary>
-        /// Adds the messages.
+        /// 
         /// </summary>
         /// <param name="messages">The messages.</param>
-        public void AddMessages([NotNull] IEnumerable<TextMessage> messages)
+        public override void AddMessages(IList<TextMessage> messages)
         {
             Assert.ArgumentNotNull(messages, "messages");
 
-            mainScrollOutput.AddMessages(messages);
-
-            secondaryScrollOutput.AddMessages(messages);
-        }
-
-        /// <summary>
-        /// Scrolls to end.
-        /// </summary>
-        public void ScrollToEnd()
-        {
-            secondaryScrollOutput.ScrollToEnd();
-            CheckIsScrolling();
-        }
-
-        #endregion
-
-        #region Implementation of IScrollInfo methods
-
-        /// <summary>
-        /// Scrolls up within content by one logical unit. 
-        /// </summary>
-        public void LineUp()
-        {
-            secondaryScrollOutput.LineUp();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls down within content by one logical unit. 
-        /// </summary>
-        public void LineDown()
-        {
-            secondaryScrollOutput.LineDown();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls left within content by one logical unit.
-        /// </summary>
-        public void LineLeft()
-        {
-        }
-
-        /// <summary>
-        /// Scrolls right within content by one logical unit.
-        /// </summary>
-        public void LineRight()
-        {
-        }
-
-        /// <summary>
-        /// Scrolls up within content by one page.
-        /// </summary>
-        public void PageUp()
-        {
-            secondaryScrollOutput.PageUp();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls down within content by one page.
-        /// </summary>
-        public void PageDown()
-        {
-            secondaryScrollOutput.PageDown();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls left within content by one page.
-        /// </summary>
-        public void PageLeft()
-        {
-        }
-
-        /// <summary>
-        /// Scrolls right within content by one page.
-        /// </summary>
-        public void PageRight()
-        {
-        }
-
-        /// <summary>
-        /// Scrolls up within content after a user clicks the wheel button on a mouse.
-        /// </summary>
-        public void MouseWheelUp()
-        {
-            secondaryScrollOutput.MouseWheelUp();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls down within content after a user clicks the wheel button on a mouse.
-        /// </summary>
-        public void MouseWheelDown()
-        {
-            secondaryScrollOutput.MouseWheelDown();
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Scrolls left within content after a user clicks the wheel button on a mouse.
-        /// </summary>
-        public void MouseWheelLeft()
-        {
-        }
-
-        /// <summary>
-        /// Scrolls right within content after a user clicks the wheel button on a mouse.
-        /// </summary>
-        public void MouseWheelRight()
-        {
-        }
-
-        /// <summary>
-        /// Sets the amount of horizontal offset.
-        /// </summary>
-        /// <param name="offset">The degree to which content is horizontally offset from the containing viewport.</param>
-        public void SetHorizontalOffset(double offset)
-        {
-        }
-
-        /// <summary>
-        /// Sets the amount of vertical offset.
-        /// </summary>
-        /// <param name="offset">The degree to which content is vertically offset from the containing viewport.</param>
-        public void SetVerticalOffset(double offset)
-        {
-            secondaryScrollOutput.SetVerticalOffset(offset);
-            CheckIsScrolling();
-        }
-
-        /// <summary>
-        /// Forces content to scroll until the coordinate space of a <see cref="T:System.Windows.Media.Visual"/> object is visible. 
-        /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Windows.Rect"/> that is visible.
-        /// </returns>
-        /// <param name="visual">A <see cref="T:System.Windows.Media.Visual"/> that becomes visible.</param><param name="rectangle">A bounding rectangle that identifies the coordinate space to make visible.</param>
-        public Rect MakeVisible([NotNull] Visual visual, Rect rectangle)
-        {
-            Assert.ArgumentNotNull(visual, "visual");
-
-            return secondaryScrollOutput.MakeVisible(visual, rectangle);
-        }
-
-        #endregion
-
-        #region Methods
-
-        private void CheckIsScrolling()
-        {
-            if (secondaryScrollOutput.VerticalOffset < secondaryScrollOutput.ExtentHeight)
+            foreach (var message in messages)
             {
-                secondaryScrollOutput.AutoScroll = false;
-                if (scrollGridRow.Height.Value == 0)
-                {
-                    scrollGridRow.Height = new GridLength(SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight);
-                    splitterRow.Height = new GridLength(5);
-                }
+                mainScrollOutput.AppendText("\r\n");
+                mainScrollOutput.AppendText(GetANSIColoredText(message));
+            }
+
+            if (mainScrollOutput.ExtentHeight == 0 || _isMainOutputEndToScroll || _needMainOutputScrollToEnd)
+            {
+                _needMainOutputScrollToEnd = false;
+                mainScrollOutput.ScrollToLine(mainScrollOutput.LineCount);
             }
             else
             {
-                secondaryScrollOutput.AutoScroll = true;
-                if (scrollGridRow.Height.Value > 0)
-                {
-                    SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight = (int)scrollGridRow.Height.Value;
-                    scrollGridRow.Height = new GridLength(0);
-                    splitterRow.Height = new GridLength(0);
-                }
+                mainScrollOutput.TextArea.TextView.Redraw();
+            }
+
+            if (scrollGridRow.Height.Value == 0)
+            {
+                secondScrollOutput.ScrollToLine(mainScrollOutput.Document.LineCount - 2);
+            }
+            else
+            {
+                secondScrollOutput.TextArea.TextView.Redraw();
+            }
+
+            if (mainScrollOutput.LineCount > SettingsHolder.Instance.Settings.ScrollBuffer)
+            {
+                int offset = mainScrollOutput.Document.GetOffset(
+                    Math.Max(mainScrollOutput.LineCount - SettingsHolder.Instance.Settings.ScrollBuffer, 1), 0);
+
+                mainScrollOutput.Document.Remove(0, offset);
             }
         }
-        #endregion
+
+        /// <summary>
+        /// Actually now we have converted text twice.. At first from ansi text to blocks and then vice versa..
+        /// But that allow use 1 TextDeserializer class
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
+        private string GetANSIColoredText(TextMessage message)
+        {
+            var sb = new StringBuilder();
+
+            foreach (var block in message.MessageBlocks)
+            {
+                if (!String.IsNullOrEmpty(block.Text))
+                {
+                    sb.Append(ConvertTextColorToANSIString(block.Foreground, block.Background));
+                    sb.Append(block.Text);
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private string ConvertTextColorToANSIString(TextColor foreground, TextColor background)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append("\x1B[");
+            
+            switch(foreground)
+            {
+                case TextColor.Black:
+                    sb.Append("30");
+                    break;
+                case TextColor.BrightBlack:
+                    sb.Append("1;30");
+                    break;
+                case TextColor.Blue:
+                    sb.Append("34");
+                    break;
+                case TextColor.BrightBlue:
+                    sb.Append("1;34");
+                    break;
+                case TextColor.Cyan:
+                    sb.Append("36");
+                    break;
+                case TextColor.BrightCyan:
+                    sb.Append("1;36");
+                    break;
+                case TextColor.Green:
+                    sb.Append("32");
+                    break;
+                case TextColor.BrightGreen:
+                    sb.Append("1;32");
+                    break;
+                case TextColor.Magenta:
+                    sb.Append("35");
+                    break;
+                case TextColor.BrightMagenta:
+                    sb.Append("1;35");
+                    break;
+                case TextColor.Red:
+                    sb.Append("31");
+                    break;
+                case TextColor.BrightRed:
+                    sb.Append("1;31");
+                    break;
+                case TextColor.White:
+                    sb.Append("37");
+                    break;
+                case TextColor.BrightWhite:
+                    sb.Append("1;37");
+                    break;
+                case TextColor.Yellow:
+                    sb.Append("33");
+                    break;
+                case TextColor.BrightYellow:
+                    sb.Append("1;33");
+                    break;
+                case TextColor.RepeatCommandTextColor:
+                    sb.Append("4m");
+                    return sb.ToString();
+                case TextColor.None:
+                default:
+                    sb.Append("0");
+                    break;
+            }
+
+            switch (background)
+            {
+                case TextColor.Black:
+                    sb.Append(";0;40");
+                    break;
+                case TextColor.BrightBlack:
+                    sb.Append(";1;40");
+                    break;
+                case TextColor.Blue:
+                    sb.Append(";0;44");
+                    break;
+                case TextColor.BrightBlue:
+                    sb.Append(";1;44");
+                    break;
+                case TextColor.Cyan:
+                    sb.Append(";0;46");
+                    break;
+                case TextColor.BrightCyan:
+                    sb.Append(";1;46");
+                    break;
+                case TextColor.Green:
+                    sb.Append(";0;42");
+                    break;
+                case TextColor.BrightGreen:
+                    sb.Append(";1;42");
+                    break;
+                case TextColor.Magenta:
+                    sb.Append(";0;45");
+                    break;
+                case TextColor.BrightMagenta:
+                    sb.Append(";1;45");
+                    break;
+                case TextColor.Red:
+                    sb.Append(";0;41");
+                    break;
+                case TextColor.BrightRed:
+                    sb.Append(";1;41");
+                    break;
+                case TextColor.White:
+                    sb.Append(";0;47");
+                    break;
+                case TextColor.BrightWhite:
+                    sb.Append(";1;47");
+                    break;
+                case TextColor.Yellow:
+                    sb.Append(";0;43");
+                    break;
+                case TextColor.BrightYellow:
+                    sb.Append(";1;43");
+                    break;
+                case TextColor.None:
+                case TextColor.RepeatCommandTextColor:
+                default:
+                    break;
+            }
+
+            sb.Append('m');
+            return sb.ToString();
+        }
     }
 }

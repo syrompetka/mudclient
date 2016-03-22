@@ -435,7 +435,7 @@ namespace Adan.Client.Common.Settings
                 }
                 catch (Exception ex) 
                 { 
-                    ErrorLogger.Instance.Write(string.Format("Error create settings directory: {0}\r\n{1]", ex.Message, ex.StackTrace));
+                    ErrorLogger.Instance.Write(string.Format("Error create settings directory: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }
             return dir;

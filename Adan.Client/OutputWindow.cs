@@ -1,13 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Threading;
-using Adan.Client.Common.Conveyor;
+﻿using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.Messages;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.Networking;
@@ -16,6 +7,15 @@ using Adan.Client.Controls;
 using Adan.Client.Properties;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Threading;
 using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Adan.Client
@@ -28,7 +28,7 @@ namespace Adan.Client
         private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private object _messageQueueLockObject = new object();
         private RootModel _rootModel;
-        private MainOutputWindowNative _window;
+        private MainOutputWindowBase _window;
         private object _loggingLockObject = new object();
         private StreamWriter _streamWriter;
         private bool _isLogging;
@@ -36,7 +36,7 @@ namespace Adan.Client
         /// <summary>
         /// 
         /// </summary>
-        public OutputWindow(MainWindow MainWindowEx, string name)
+        public OutputWindow(MainWindow MainWindow, string name)
         {
             Name = name;
 
@@ -48,13 +48,23 @@ namespace Adan.Client
 
             conveyor.MessageReceived += HandleMessage;
 
-            _window = new MainOutputWindowNative(MainWindowEx, _rootModel);
+            switch(RootModel.CurrentOutputWindowForm)
+            {
+                case SettingsOutputWindowForm.Native:
+                    _window = new MainOutputWindowNative(MainWindow, _rootModel);
+                    break;
+                case SettingsOutputWindowForm.Default:
+                default:
+                    _window = new MainOutputWindow(MainWindow, _rootModel);
+                    break;
+            }
+
             VisibleControl = _window;
             
-            _window._txtCommandInput.RootModel = RootModel;
-            _window._txtCommandInput.LoadHistory(RootModel.Profile);
-            _window._txtCommandInput.GotFocus += txtCommandInput_GotFocus;
-            _window._txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
+            _window.CommandInput.RootModel = RootModel;
+            _window.CommandInput.LoadHistory(RootModel.Profile);
+            _window.CommandInput.GotFocus += txtCommandInput_GotFocus;
+            _window.CommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
 
             IsLogging = false;
         }
@@ -142,7 +152,7 @@ namespace Adan.Client
         /// </summary>
         public void Focus()
         {
-            _window._txtCommandInput.Focus();
+            _window.CommandInput.Focus();
         }
 
         /// <summary>
@@ -150,7 +160,7 @@ namespace Adan.Client
         /// </summary>
         public void Save()
         {
-            _window._txtCommandInput.SaveCurrentHistory(RootModel.Profile);
+            _window.CommandInput.SaveCurrentHistory(RootModel.Profile);
         }
 
         /// <summary>
@@ -249,7 +259,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var message = e.Message as OutputToMainWindowMessage;
+            var message = e.Message as TextMessage;
 
             if (message != null)
             {

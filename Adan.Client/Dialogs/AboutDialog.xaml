@@ -3,14 +3,18 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
-        Title="About" Height="100" Width="140"
+        Title="About" Height="111" Width="110"
         ShowInTaskbar="false"
         xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common" Style="{StaticResource DefaultWindowStyle}">
     <Window.Resources>
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
     <Grid>
-        <Label VerticalAlignment="Center" Content="Version 1.1.40"  Margin="10,5,5,10"/>
-        <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" MinWidth="50" Click="HandleOk" Content="OK"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="14*"/>
+            <ColumnDefinition Width="11*"/>
+        </Grid.ColumnDefinitions>
+        <Label VerticalAlignment="Center" Content="Version 1.1.41"  Margin="10,24,5,30" Grid.ColumnSpan="2"/>
+        <Button VerticalAlignment="Bottom" Margin="0,0,5,5" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" MinWidth="50" Click="HandleOk" Content="OK" Grid.ColumnSpan="2"/>
     </Grid>
 </Window>

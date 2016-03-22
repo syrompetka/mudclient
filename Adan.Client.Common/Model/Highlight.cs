@@ -33,9 +33,6 @@ namespace Adan.Client.Common.Model
         private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(null, 11));
         private string _textToHighlight;
 
-        [NonSerialized]
-        private PatternToken _rootPatternToken;
-
         private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
@@ -117,8 +114,6 @@ namespace Adan.Client.Common.Model
                     _textToHighlight = value;
                     IsRegExp = false;
                 }
-
-                _rootPatternToken = null;
             }
         }
 
@@ -153,13 +148,12 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var messageBlocks = textMessage.MessageBlocks;
-            //int position = 0;
-            //ClearMatchingResults();
             string text = textMessage.InnerText;
 
             if (string.IsNullOrEmpty(textMessage.InnerText))
                 return;
 
+            //TODO: Переделать на собственную реализацию Highlight, чтобы не пересчитывать заново блоки.
             if (IsRegExp)
             {
                 var varReplace = rootModel.ReplaceVariables(TextToHighlight);
@@ -167,7 +161,6 @@ namespace Adan.Client.Common.Model
                     return;
 
                 Regex rExp = new Regex(varReplace.Value);
-
                 Match match = rExp.Match(textMessage.InnerText);
 
                 while (match.Success)
@@ -191,16 +184,6 @@ namespace Adan.Client.Common.Model
                     match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
                 }
             }
-
-            //var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-
-            //while (res.IsSuccess)
-            //{
-            //    textMessage.HighlightText(res.StartPosition, res.EndPosition - res.StartPosition, ForegroundColor, BackgroundColor);
-            //    position = res.EndPosition;
-            //    ClearMatchingResults();
-            //    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-            //}
         }
 
         /// <summary>
@@ -243,27 +226,6 @@ namespace Adan.Client.Common.Model
                         break;
                 }
             }
-        }
-
-        private void ClearMatchingResults()
-        {
-            for (int i = 0; i < _matchingResults.Count; i++)
-            {
-                _matchingResults[i] = string.Empty;
-            }
-        }
-
-        [NotNull]
-        private PatternToken GetRootPatternToken([NotNull] RootModel rootModel)
-        {
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            if (_rootPatternToken == null)
-            {
-                _rootPatternToken = WildcardParser.ParseWildcardString(_textToHighlight, rootModel);
-            }
-
-            return _rootPatternToken;
         }
     }
 }

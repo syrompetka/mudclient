@@ -26,7 +26,7 @@ namespace Adan.Client.Common.Networking
         private readonly MemoryStream _compressedDataStream;
         private readonly byte[] _inputPostProcessingBuffer = new byte[32767];
         private readonly byte[] _unpackBuffer = new byte[32767];
-        private ZlibStream _zlibDecompressionStream;
+        private readonly ZlibStream _zlibDecompressionStream;
 
         private bool _compressionEnabled;
         private bool _customProtocolEnabled;
@@ -38,6 +38,7 @@ namespace Adan.Client.Common.Networking
         public MccpClient()
         {
             _compressedDataStream = new MemoryStream(_buffer);
+            _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);
         }
 
         /// <summary>
@@ -74,7 +75,6 @@ namespace Adan.Client.Common.Networking
             _compressionEnabled = false;
             _compressionInProgress = false;
             _customProtocolEnabled = false;
-            _zlibDecompressionStream = null;
             TotalBytesReceived = 0;
             BytesDecompressed = 0;
 
@@ -149,8 +149,6 @@ namespace Adan.Client.Common.Networking
                     if (bytesDecompresed < 0)
                     {
                         _compressionInProgress = false;
-                        _zlibDecompressionStream.Dispose();
-                        _zlibDecompressionStream = null;
                     }
                     else
                     {
@@ -244,7 +242,6 @@ namespace Adan.Client.Common.Networking
                  && data[offset + 4] == TelnetConstants.SubNegotiationEndCode)
             {
                 _compressionInProgress = true;
-                _zlibDecompressionStream = new ZlibStream(_compressedDataStream, CompressionMode.Decompress, true);
                 return 5;
             }
 

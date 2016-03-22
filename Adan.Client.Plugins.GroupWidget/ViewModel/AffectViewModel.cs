@@ -147,6 +147,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
 
             private set
             {
+                //TODO: Change to Math.Abs(A-B) < Epsilon
                 if (value != _secondsLeft)
                 {
                     _secondsLeft = value;

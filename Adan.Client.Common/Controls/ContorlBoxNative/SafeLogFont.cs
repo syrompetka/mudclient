@@ -1,4 +1,5 @@
-﻿using System;
+﻿ using Microsoft.Win32.SafeHandles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -11,22 +12,23 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
     /// <summary>
     /// 
     /// </summary>
-    /// TODO: Переделать на SafeHandle
-    public class SafeLogFont : IDisposable
+    public class SafeLogFontHandle : SafeHandleZeroOrMinusOneIsInvalid
     {
-        private IntPtr _logFont = IntPtr.Zero;
+        //private IntPtr _logFont = IntPtr.Zero;
+        private LOGFONT _logFont;
 
         /// <summary>
         /// 
         /// </summary>
-        public SafeLogFont(string faceName) 
+        public SafeLogFontHandle(string faceName)
+            : base(true)
         {
-            var logfont = new LOGFONT()
+            _logFont = new LOGFONT()
             {
                 lfFaceName = faceName,
-            };           
+            };
 
-            _logFont = CreateFontIndirect(ref logfont);
+            this.SetHandle(CreateFontIndirect(ref _logFont));
         }
 
         /// <summary>
@@ -34,112 +36,83 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         /// </summary>
         /// <param name="typeface"></param>
         /// <param name="size"></param>
-        public SafeLogFont(Typeface typeface, int size)
+        public SafeLogFontHandle(Typeface typeface, int size)
+            : base(true)
         {
-            var logfont = new LOGFONT()
+            _logFont = new LOGFONT()
             {
                 lfFaceName = typeface.FontFamily.Source,
-                lfHeight = - (int) (typeface.FontFamily.LineSpacing * 3/4 * size),
+                lfHeight = -(int)(typeface.FontFamily.LineSpacing * 3 / 4 * size),
                 lfPitchAndFamily = FontPitchAndFamily.FIXED_PITCH,
                 lfCharSet = FontCharSet.ANSI_CHARSET,
             };
 
             if (typeface.Weight == FontWeights.Thin)
-                logfont.lfWeight = FontWeight.FW_THIN;
+                _logFont.lfWeight = FontWeight.FW_THIN;
             else if (typeface.Weight == FontWeights.ExtraLight || typeface.Weight == FontWeights.UltraLight)
-                logfont.lfWeight = FontWeight.FW_EXTRALIGHT;
+                _logFont.lfWeight = FontWeight.FW_EXTRALIGHT;
             else if (typeface.Weight == FontWeights.Light)
-                logfont.lfWeight = FontWeight.FW_LIGHT;
+                _logFont.lfWeight = FontWeight.FW_LIGHT;
             else if (typeface.Weight == FontWeights.Normal || typeface.Weight == FontWeights.Regular)
-                logfont.lfWeight = FontWeight.FW_NORMAL;
+                _logFont.lfWeight = FontWeight.FW_NORMAL;
             else if (typeface.Weight == FontWeights.Medium)
-                logfont.lfWeight = FontWeight.FW_MEDIUM;
+                _logFont.lfWeight = FontWeight.FW_MEDIUM;
             else if (typeface.Weight == FontWeights.SemiBold || typeface.Weight == FontWeights.DemiBold)
-                logfont.lfWeight = FontWeight.FW_SEMIBOLD;
+                _logFont.lfWeight = FontWeight.FW_SEMIBOLD;
             else if (typeface.Weight == FontWeights.Bold)
-                logfont.lfWeight = FontWeight.FW_BOLD;
+                _logFont.lfWeight = FontWeight.FW_BOLD;
             else if (typeface.Weight == FontWeights.ExtraBold || typeface.Weight == FontWeights.UltraBold)
-                logfont.lfWeight = FontWeight.FW_EXTRABOLD;
+                _logFont.lfWeight = FontWeight.FW_EXTRABOLD;
             else if (typeface.Weight == FontWeights.Black || typeface.Weight == FontWeights.ExtraBlack
                 || typeface.Weight == FontWeights.UltraBlack || typeface.Weight == FontWeights.Heavy)
-                logfont.lfWeight = FontWeight.FW_HEAVY;
+                _logFont.lfWeight = FontWeight.FW_HEAVY;
 
             if (typeface.Style == FontStyles.Italic)
-                logfont.lfItalic = true;
+                _logFont.lfItalic = true;
 
             //TODO: Реализовать подчеркивание и зачеркивание
 
-            _logFont = CreateFontIndirect(ref logfont);
+            this.SetHandle(CreateFontIndirect(ref _logFont));
         }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="font"></param>
-        public SafeLogFont(System.Drawing.Font font)
+        public SafeLogFontHandle(System.Drawing.Font font)
+            : base(true)
         {
-            var logfont = new LOGFONT()
+            _logFont = new LOGFONT()
             {
                 lfFaceName = font.Name,
                 lfHeight = -font.Height,
                 lfPitchAndFamily = FontPitchAndFamily.FIXED_PITCH,
-                lfCharSet = (FontCharSet) font.GdiCharSet,
+                lfCharSet = (FontCharSet)font.GdiCharSet,
                 lfItalic = font.Italic,
                 lfWeight = font.Bold ? FontWeight.FW_BOLD : FontWeight.FW_NORMAL,
                 lfUnderline = font.Underline,
                 lfStrikeOut = font.Strikeout,
             };
 
-            _logFont = CreateFontIndirect(ref logfont);
+            this.SetHandle(CreateFontIndirect(ref _logFont));
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public IntPtr Source
+        /// <returns></returns>
+        protected override bool ReleaseHandle()
         {
-            get
-            {
-                if (_logFont == IntPtr.Zero)
-                {
-                    var logfont = new LOGFONT();
-                    _logFont = CreateFontIndirect(ref logfont);
-                }
-
-                return _logFont;
-            }
+            return DeleteObject(this.handle);
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public void Dispose()
+        /// <returns></returns>
+        public int GetWidth()
         {
-            this.ReleaseLogFont();
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        ~SafeLogFont()
-        {
-            this.ReleaseLogFont();
-        }
-
-        private void ReleaseLogFont()
-        {
-            if (_logFont != IntPtr.Zero)
-            {
-                try
-                {
-                    IntPtr logfont = _logFont;
-                    _logFont = IntPtr.Zero;
-                    DeleteObject(logfont);
-                }
-                catch (Exception)
-                { }
-            }
+            return _logFont.lfWidth;
         }
 
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]

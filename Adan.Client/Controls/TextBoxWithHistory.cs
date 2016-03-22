@@ -192,6 +192,7 @@ namespace Adan.Client.Controls
             {
                 lock (_enteredCommandsQueue)
                 {
+                    //TODO: Почему RemoveAll, а не Remove First, если мы уверены, что там всегда не более 1 уникальной команды?
                     _enteredCommandsQueue.RemoveAll(x => x == command);
 
                     _enteredCommandsQueue.Add(command);

@@ -743,7 +743,7 @@ namespace Adan.Client.ConveyorUnits
 
                         if (!isImport)
                         {
-                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{0}}} {{{1},{2}}}",
                                 high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                         }
 

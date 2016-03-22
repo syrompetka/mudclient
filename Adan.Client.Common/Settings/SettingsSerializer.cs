@@ -34,6 +34,7 @@ namespace Adan.Client.Common.Settings
         private bool _autoClearInput;
         private bool _autoReconnect;
         private int _minLengthHistory;
+        private SettingsOutputWindowForm _outputWindowOnRebootForm;
 
         /// <summary>
         /// 
@@ -291,11 +292,28 @@ namespace Adan.Client.Common.Settings
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        public SettingsOutputWindowForm OutputWindowOnRebootForm
+        {
+            get
+            {
+                return _outputWindowOnRebootForm;
+            }
+            set
+            {
+                _outputWindowOnRebootForm = value;
+                SettingsChanged("OutputWindowOnReboot", value);
+            }
+        }
+
+        /// <summary>
         /// Get the state of main window as it was before it was closed last time.
         /// </summary>
         public WindowState MainWindowState
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>
@@ -303,7 +321,8 @@ namespace Adan.Client.Common.Settings
         /// </summary>
         public int MainWindowTop
         {
-            get; set;
+            get;
+            set;
         }
 
         /// <summary>

@@ -16,7 +16,6 @@ namespace Adan.Client.Common.Messages
     /// <summary>
     /// Plain text message block that defines string and color.
     /// </summary>
-    /// TODO: 
     public class TextMessageBlock
     {
         /// <summary>

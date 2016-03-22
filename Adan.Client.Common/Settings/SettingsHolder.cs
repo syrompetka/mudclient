@@ -201,6 +201,7 @@ namespace Adan.Client.Common.Settings
                 MainWindowWidth = 800,
                 MainWindowHeight = 600,
                 MainWindowState = WindowState.Maximized,
+                OutputWindowOnRebootForm = SettingsOutputWindowForm.Default,
             };
         }
 

@@ -43,6 +43,7 @@
     <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -109,6 +110,10 @@
     <Compile Include="Commands\SendToWindowCommand.cs" />
     <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
+    <Compile Include="Controls\MainOutputWindow.xaml.cs">
+      <DependentUpon>MainOutputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainOutputWindowBase.cs" />
     <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
       <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
     </Compile>
@@ -288,6 +293,10 @@
     <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
+    <Page Include="Controls\MainOutputWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainOutputWindowNative.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -37,8 +37,7 @@ namespace Adan.Client.Plugins.OutputWindow
         {
             Assert.ArgumentNotNull(messages, "messages");
 
-            _textBoxNative.Messages = messages;
-            _textBoxNative.Refresh();
+            _textBoxNative.ChangeMessageList(messages);
         }
 
         /// <summary>

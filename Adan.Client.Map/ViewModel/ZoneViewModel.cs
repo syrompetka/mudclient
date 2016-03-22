@@ -92,6 +92,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                //TODO: Change to Math.Abs(A-B) < Epsilon
                 if (value == _zoomLevel)
                 {
                     return;
@@ -184,7 +185,6 @@ namespace Adan.Client.Map.ViewModel
                     return;
                 }
 
-                //TODO: Почему здесь Single вместо First/FirstOrDefault?
                 CurrentRoom = AllRooms.Single(r => r.RoomId == value.Value);
             }
         }

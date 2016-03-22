@@ -37,6 +37,7 @@ namespace Adan.Client.Common.Model
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
         private ProfileHolder _profile;
         private object _profileLockObject = new object();
+        private static SettingsOutputWindowForm _outputWindowForm;
 
         private readonly List<CommandAlias> _aliasList;
         private readonly List<TriggerBase> _triggersList;
@@ -107,6 +108,17 @@ namespace Adan.Client.Common.Model
         #endregion
 
         #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static SettingsOutputWindowForm CurrentOutputWindowForm
+        {
+            get
+            {
+                return _outputWindowForm;
+            }
+        }
 
         /// <summary>
         /// 
@@ -413,6 +425,14 @@ namespace Adan.Client.Common.Model
         #endregion
 
         #region Public Methods
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public static void Initialize()
+        {
+            _outputWindowForm = SettingsHolder.Instance.Settings.OutputWindowOnRebootForm;
+        }
 
         /// <summary>
         /// Pushes the command to conveyor.

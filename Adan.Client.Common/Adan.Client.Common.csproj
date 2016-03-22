@@ -23,6 +23,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,7 +43,8 @@
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zlib">
+    <Reference Include="Ionic.Zlib, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zlib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
@@ -66,6 +68,17 @@
     <Compile Include="Commands\Command.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="Controls\AvalonEdit\AdanElementGenerator.cs" />
+    <Compile Include="Controls\AvalonEdit\AdanLineTransformer.cs" />
+    <Compile Include="Controls\AvalonEdit\DocumentColorizer.cs" />
+    <Compile Include="Controls\AvalonEdit\SelectionColorizer.cs" />
+    <Compile Include="Controls\AvalonEdit\TextColorHolder.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorAndHighlightVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanColorVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanResetVisualLineElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStartHighlightVisualElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\AdanStopHighlightVisualElement.cs" />
+    <Compile Include="Controls\AvalonEdit\VisualLineElements\IAdanVisualLineElement.cs" />
     <Compile Include="Controls\ContorlBoxNative\MouseWheelRedirector.cs" />
     <Compile Include="Controls\ContorlBoxNative\SafeLogFont.cs" />
     <Compile Include="Controls\ContorlBoxNative\TextView.cs">
@@ -123,9 +136,11 @@
     <Compile Include="Model\Highlight.cs" />
     <Compile Include="Model\Hotkey.cs" />
     <Compile Include="Settings\SettingsHolder.cs" />
+    <Compile Include="Settings\SettingsOutputWindow.cs" />
     <Compile Include="Settings\SettingsSerializer.cs" />
     <Compile Include="Utils\AnsiColor.cs" />
     <Compile Include="Utils\ColorsQueue.cs" />
+    <Compile Include="Utils\EnumBooleanConverter.cs" />
     <Compile Include="Utils\ErrorLogger.cs" />
     <Compile Include="ViewModel\InitializationStatusModel.cs" />
     <Compile Include="Model\MonsterStatus.cs" />

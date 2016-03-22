@@ -1,14 +1,18 @@
-﻿<UserControl x:Class="Adan.Client.Controls.MainOutputWindowNative"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Controls="clr-namespace:Adan.Client.Controls"
-             xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
-             mc:Ignorable="d"
-             FocusManager.FocusedElement="{Binding Path=txtCommandInput}">
+﻿<Controls:MainOutputWindowBase
+    x:Class="Adan.Client.Controls.MainOutputWindowNative"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:Controls="clr-namespace:Adan.Client.Controls"
+    xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+    xmlns:local="clr-namespace:Adan.Client.Controls"
+    mc:Ignorable="d"
+    FocusManager.FocusedElement="{Binding Path=_txtCommandInput}">
     <Grid Focusable="False">
         <Grid.RowDefinitions>
+            <RowDefinition Height="0" Name="scrollGridRow"></RowDefinition>
+            <RowDefinition Height="0" Name="splitterGridRow"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
             <RowDefinition Height="auto"></RowDefinition>
         </Grid.RowDefinitions>
@@ -16,12 +20,18 @@
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Grid Grid.Row="0">
-            <ScrollViewer Name="scroll" CanContentScroll="True" VerticalScrollBarVisibility="Visible">
-                <Controls1:TextBoxNative  Name="_textBoxNative" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+            <ScrollViewer Name="mainScroll" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" Focusable="False">
+                <Controls1:TextBoxNative  Name="_secondTextBoxNative" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
             </ScrollViewer>
         </Grid>
-        <Grid Grid.Row="1">
+        <GridSplitter Name="gridSplitter" Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
+        <Grid Grid.Row="2">
+            <ScrollViewer Name="secondaryScroll" CanContentScroll="True" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Visible" Focusable="False">
+                <Controls1:TextBoxNative  Name="_mainTextBoxNative" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            </ScrollViewer>
+        </Grid>
+        <Grid Grid.Row="3">
             <Controls:TextBoxWithHistory x:Name="_txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True"/>
         </Grid>
     </Grid>
-</UserControl>
+</Controls:MainOutputWindowBase>

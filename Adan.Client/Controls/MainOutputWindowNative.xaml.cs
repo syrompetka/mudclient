@@ -2,8 +2,10 @@
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Messages;
 using Adan.Client.Common.Model;
+using Adan.Client.Common.Settings;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -14,7 +16,7 @@ namespace Adan.Client.Controls
     /// <summary>
     /// Логика взаимодействия для MainOutputWindowNative.xaml
     /// </summary>
-    public partial class MainOutputWindowNative : UserControl
+    public partial class MainOutputWindowNative : MainOutputWindowBase, IDisposable
     {
         private MainWindow _mainWindow;
         private RootModel _rootModel;
@@ -30,23 +32,53 @@ namespace Adan.Client.Controls
             _mainWindow = MainWindowEx;
             _rootModel = rootModel;
 
-            _textBoxNative.TextViewNative.GotFocus += TextViewNative_GotFocus;
-            MouseWheelRedirector.Attach(_textBoxNative.TextViewNative);
-            _textBoxNative.TextViewNative.MouseWheel += TextViewNative_MouseWheel;
-            //Loaded += (o, e) => _txtCommandInput.Focus();
+            _mainTextBoxNative.TextViewNative.GotFocus += TextViewNative_GotFocus;
+            MouseWheelRedirector.Attach(_mainTextBoxNative.TextViewNative);
+            _mainTextBoxNative.TextViewNative.MouseWheel += MainTextViewNative_MouseWheel;
+
+            _secondTextBoxNative.TextViewNative.GotFocus += TextViewNative_GotFocus;
+            MouseWheelRedirector.Attach(_secondTextBoxNative.TextViewNative);
+            _secondTextBoxNative.TextViewNative.MouseWheel += SecondTextViewNative_MouseWheel;
+
+            this.GotFocus += MainOutputWindowNative_GotFocus;
+            Loaded += (o, e) => CommandInput.Focus();
         }
 
-        private void TextViewNative_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        /// <summary>
+        /// 
+        /// </summary>
+        public override TextBoxWithHistory CommandInput
+        {
+            get
+            {
+                return _txtCommandInput;
+            }
+        }
+
+        private void MainOutputWindowNative_GotFocus(object sender, RoutedEventArgs e)
+        {
+            _txtCommandInput.Focus();
+        }
+
+        private void MainTextViewNative_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
         {
             if (e.Delta > 0)
-                _textBoxNative.MouseWheelUp();
+                _mainTextBoxNative.MouseWheelUp();
             else if(e.Delta < 0)
-                _textBoxNative.MouseWheelDown();
+                _mainTextBoxNative.MouseWheelDown();
+        }
+
+        private void SecondTextViewNative_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)
+        {
+            if (e.Delta > 0)
+                _mainTextBoxNative.MouseWheelUp();
+            else if (e.Delta < 0)
+                _mainTextBoxNative.MouseWheelDown();
         }
         
         private void TextViewNative_GotFocus(object sender, System.EventArgs e)
         {
-            _txtCommandInput.Focus();
+            CommandInput.Focus();
         }
 
         /// <summary>
@@ -88,75 +120,47 @@ namespace Adan.Client.Controls
                 return;
             }
 
-            if (e.Key == Key.Up && Keyboard.Modifiers == 0 && _txtCommandInput.IsFocused)
+            if (e.Key == Key.Up && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                _txtCommandInput.ShowPreviousCommand();
+                CommandInput.ShowPreviousCommand();
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Down && Keyboard.Modifiers == 0 && _txtCommandInput.IsFocused)
+            if (e.Key == Key.Down && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                _txtCommandInput.ShowNextCommand();
+                CommandInput.ShowNextCommand();
                 e.Handled = true;
             }
 
             if (e.Key == Key.PageUp)
             {
-                //if (scrollGridRow.Height.Value == 0)
-                //{
-                //    bool scrollToEnd = mainScrollOutput.ExtentHeight - (mainScrollOutput.ViewportHeight + mainScrollOutput.VerticalOffset) < 0.01;
-                //    scrollGridRow.Height = new GridLength(Math.Max(mainScrollOutput.ViewportHeight * 0.6, 1));
-                //    splitterGridRow.Height = new GridLength(5);
-
-                //    if (scrollToEnd)
-                //        mainScrollOutput.ScrollToEnd();
-                //}
-                //else
-                //{
-                //    secondScrollOutput.PageUp();
-                //}
-
+                _mainTextBoxNative.PageUp();
                 e.Handled = true;
             }
 
             if (e.Key == Key.PageDown)
             {
-            //    if (scrollGridRow.Height.Value == 0)
-            //    {
-            //        mainScrollOutput.PageDown();
-            //    }
-            //    else
-            //    {
-            //        secondScrollOutput.PageDown();
-            //    }
-
+                _mainTextBoxNative.PageDown();
                 e.Handled = true;
             }
 
             if (e.Key == Key.End && Keyboard.Modifiers == ModifierKeys.Control)
             {
-                //if (scrollGridRow.Height.Value == 0)
-                //{
-                //    mainScrollOutput.ScrollToEnd();
-                //}
-                //else
-                //{
-                //    mainScrollOutput.ScrollToLine(mainScrollOutput.LineCount);
-                //}
+                _mainTextBoxNative.ScrollToEnd();
 
                 e.Handled = true;
             }
 
-            if (e.Key == Key.Enter && _txtCommandInput.IsFocused)
+            if (e.Key == Key.Enter && CommandInput.IsFocused)
             {
-                _txtCommandInput.SendCurrentCommand();
+                CommandInput.SendCurrentCommand();
                 e.Handled = true;
             }
 
             //Очищение коммандной строки клавишей escape
-            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && _txtCommandInput.IsFocused)
+            if (e.Key == Key.Escape && Keyboard.Modifiers == 0 && CommandInput.IsFocused)
             {
-                _txtCommandInput.Clear();
+                CommandInput.Clear();
                 e.Handled = true;
             }
 
@@ -170,11 +174,32 @@ namespace Adan.Client.Controls
         /// 
         /// </summary>
         /// <param name="messages">The messages.</param>
-        public void AddMessages([NotNull] IList<TextMessage> messages)
+        public override void AddMessages(IList<TextMessage> messages)
         {
             Assert.ArgumentNotNull(messages, "messages");
 
-            _textBoxNative.AddMessage(messages);
+            _mainTextBoxNative.AddMessage(messages);
+
+            if (_mainTextBoxNative.ExtentHeight > SettingsHolder.Instance.Settings.CommandsHistorySize)
+            {
+                if (_mainTextBoxNative.ExtentHeight > 10)
+                    _mainTextBoxNative.RemoveMessage(0, 10);
+                else
+                    _mainTextBoxNative.RemoveMessage(0, 1);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public void Dispose()
+        {
+            try
+            {
+                MouseWheelRedirector.Detach(this._mainTextBoxNative.TextViewNative);
+                MouseWheelRedirector.Detach(this._secondTextBoxNative.TextViewNative);
+            }
+            catch { }
         }
     }
 }

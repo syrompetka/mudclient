@@ -13,10 +13,10 @@ namespace Adan.Client.Common.Controls
         /// <summary>
         /// Start Of Line
         /// </summary>
-        StartOfLine = 0,
+        StartOfLine,
         /// <summary>
         /// End Of Line
         /// </summary>
-        EndOfLine = 1,
+        EndOfLine,
     }
 }

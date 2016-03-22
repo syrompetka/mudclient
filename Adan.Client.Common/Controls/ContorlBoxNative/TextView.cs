@@ -1,7 +1,8 @@
-﻿using Adan.Client.Common.Themes;
+﻿using Adan.Client.Common.Messages;
+using Adan.Client.Common.Themes;
 using Adan.Client.Common.Utils;
-using Adan.Client.Messages;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
@@ -13,25 +14,78 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
     /// 
     /// </summary>
     public class TextView : UserControl
-    {      
-        private TextBoxNative _parent;
-        private SafeLogFont _logFont;
+    {
+        private SafeLogFontHandle _logFont;
 
         /// <summary>
         /// 
         /// </summary>
-        public TextView(TextBoxNative parent)
+        public TextView()
         {
-            _parent = parent;
+            this.Messages = new List<TextMessage>();
             this.BackColor = Color.Black;
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque | ControlStyles.UserPaint, true);
-            
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque | ControlStyles.UserPaint, true);
             this.FontChanged += TextView_FontChanged;
+            this.TextView_FontChanged(this, EventArgs.Empty);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public List<TextMessage> Messages
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsSelected
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int StartSelectedLine
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int StartSelectedIndex
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int EndSelectedLine
+        {
+            get;
+            set;
+        }
+        
+        /// <summary>
+        /// 
+        /// </summary>
+        public int EndSelectedIndex
+        {
+            get;
+            set;
         }
 
         private void TextView_FontChanged(object sender, EventArgs e)
         {
-            _logFont = new SafeLogFont(this.Font);
+            this._logFont = new SafeLogFontHandle(this.Font);
         }
 
         /// <summary>
@@ -40,7 +94,9 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         /// <param name="e"></param>
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (_parent.Messages.Count == 0 || _parent.ViewportHeight == 0)
+            List<TextMessage> messages = Messages;
+
+            if (messages.Count == 0)
                 return;
 
             IntPtr hdc = e.Graphics.GetHdc();
@@ -48,37 +104,75 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
 
             try
             {
-                pOldFont = SelectObject(hdc, _logFont.Source);
+                if (_logFont.IsInvalid)
+                    throw new Exception("LogFont is invalid");
+
+                pOldFont = SelectObject(hdc, _logFont.DangerousGetHandle());
                 SetBkMode(hdc, BK_OPAQUE);
 
-                int nCount = (int)_parent.VerticalOffset;
-                int nLine = Math.Min(_parent.Messages.Count, (int)_parent.ViewportHeight);
-                int nH = (int)_parent.ViewportHeight * this.FontHeight - this.FontHeight;
-
-                if (nCount < 0 || nLine < 0 || nCount + nLine > _parent.Messages.Count)
-                    return;
-
                 RECT rect = new RECT();
-                for (int i = nCount + nLine - 1; i >= nCount; i--)
+
+                if (IsSelected)
                 {
-                    int xShift = 0;
-                    var text = _parent.Messages[i];
-
-                    foreach (var block in text.MessageBlocks)
+                    for (int i = messages.Count - 1; i >= 0; --i)
                     {
-                        DrawText(hdc, block.Text, -1, ref rect, DTOptions.DT_LEFT | DTOptions.DT_SINGLELINE | DTOptions.DT_NOCLIP | DTOptions.DT_CALCRECT);
+                        int xShift = 0;
 
-                        var color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Foreground, false);
-                        SetTextColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+                        foreach (var block in messages[i].MessageBlocks)
+                        {
+                            System.Windows.Media.Color color;
 
-                        color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Background, true);
-                        SetBkColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+                            DrawText(hdc, block.Text, -1, ref rect, DTOptions.DT_LEFT | DTOptions.DT_SINGLELINE | DTOptions.DT_NOCLIP | DTOptions.DT_CALCRECT);
 
-                        ExtTextOut(hdc, xShift, nH, ETOOptions.ETO_OPAQUE, ref rect, block.Text, block.Text.Length, null);
-                        xShift += rect.Right;
+                            if (i > StartSelectedLine && i < EndSelectedLine)
+                            {
+                                color = ThemeManager.Instance.ActiveTheme.GetSelectionColorByTextColor(false);
+                                SetTextColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+
+                                color = ThemeManager.Instance.ActiveTheme.GetSelectionColorByTextColor(true);
+                                SetBkColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+                            }
+                            else if (i == StartSelectedLine)
+                            {
+                                if (StartSelectedIndex < xShift)
+                                {
+
+                                }
+                            }
+
+                            color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Foreground, false);
+                            SetTextColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+
+                            color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Background, true);
+                            SetBkColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+
+                            var yShift = this.Height - this.FontHeight * ((messages.Count) - i);
+                            ExtTextOut(hdc, xShift, yShift, ETOOptions.ETO_OPAQUE & ETOOptions.ETO_CLIPPED, ref rect, block.Text, block.Text.Length, null);
+                            xShift += rect.Right;
+                        }
                     }
+                }
+                else
+                {
+                    for (int i = messages.Count - 1; i >= 0; --i)
+                    {
+                        int xShift = 0;
 
-                    nH -= this.FontHeight;
+                        foreach (var block in messages[i].MessageBlocks)
+                        {
+                            DrawText(hdc, block.Text, -1, ref rect, DTOptions.DT_LEFT | DTOptions.DT_SINGLELINE | DTOptions.DT_NOCLIP | DTOptions.DT_CALCRECT);
+
+                            var color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Foreground, false);
+                            SetTextColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+
+                            color = ThemeManager.Instance.ActiveTheme.GetColorByTextColor(block.Background, true);
+                            SetBkColor(hdc, (int)color.R | (int)color.G << 8 | (int)color.B << 16);
+
+                            var yShift = this.Height - this.FontHeight * ((messages.Count) - i);
+                            ExtTextOut(hdc, xShift, yShift, ETOOptions.ETO_OPAQUE & ETOOptions.ETO_CLIPPED, ref rect, block.Text, block.Text.Length, null);
+                            xShift += rect.Right;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -97,13 +191,23 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
                 e.Graphics.ReleaseHdc();
             }
         }
+        
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected override void Dispose(bool disposing)
+        {
+            _logFont.Close();
+            base.Dispose(disposing);
+        }
 
         [DllImport("gdi32.dll")]
-        static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
+        private static extern IntPtr SelectObject(IntPtr hdc, IntPtr hgdiobj);
 
         [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ExtTextOut(
+        private static extern bool ExtTextOut(
             IntPtr hdc,
             int X,
             int Y,
@@ -117,7 +221,7 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
              
         [DllImport("gdi32.dll", CharSet = CharSet.Unicode)]
         [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool ExtTextOut(
+        private static extern bool ExtTextOut(
             IntPtr hdc,
             int X,
             int Y,
@@ -130,7 +234,7 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         );
 
         [Flags]
-        enum ETOOptions : uint
+        private enum ETOOptions : uint
         {
             ETO_CLIPPED = 0x4,
             ETO_GLYPH_INDEX = 0x10,
@@ -143,10 +247,10 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         }
 
         [DllImport("user32.dll")]
-        static extern int DrawText(IntPtr hDC, string lpString, int nCount, ref RECT lpRect, DTOptions uFormat);
+        private static extern int DrawText(IntPtr hDC, string lpString, int nCount, ref RECT lpRect, DTOptions uFormat);
 
         [Flags]
-        enum DTOptions : uint
+        private enum DTOptions : uint
         {
             DT_TOP = 0x00000000,
             DT_LEFT = 0x00000000,
@@ -165,7 +269,7 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
             DT_INTERNAL = 0x00001000,
         }
 
-        struct RECT
+        private struct RECT
         {
             /// <summary>
             /// 
@@ -201,15 +305,15 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         }
 
         [DllImport("gdi32.dll")]
-        static extern int SetBkMode(IntPtr hdc, int iBkMode);
+        private static extern int SetBkMode(IntPtr hdc, int iBkMode);
 
-        const int BK_TRANSPARENT = 1;
-        const int BK_OPAQUE = 2;
+        private const int BK_TRANSPARENT = 1;
+        private const int BK_OPAQUE = 2;
 
         [DllImport("gdi32.dll")]
-        static extern int SetTextColor(IntPtr hdc, int crColor);
+        private static extern int SetTextColor(IntPtr hdc, int crColor);
             
         [DllImport("gdi32.dll")]
-        static extern uint SetBkColor(IntPtr hdc, int crColor);
+        private static extern uint SetBkColor(IntPtr hdc, int crColor);
     }
 }

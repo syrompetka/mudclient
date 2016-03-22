@@ -82,7 +82,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Messages\CurrentRoomMessage.cs" />
-    <Compile Include="MessageDeserializers\CurrentRoomMessageDeserializer.cs" />
+    <Compile Include="Messages\CurrentRoomMessageDeserializer.cs" />
     <Compile Include="Dialogs\RouteDeleteDialog.xaml.cs">
       <DependentUpon>RouteDeleteDialog.xaml</DependentUpon>
     </Compile>
@@ -204,7 +204,9 @@
     <Content Include="DefaultMaps\20.xml" />
     <Content Include="DefaultMaps\30.xml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="MessageDeserializers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

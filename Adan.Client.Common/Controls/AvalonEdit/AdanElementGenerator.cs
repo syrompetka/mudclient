@@ -14,6 +14,7 @@ using Adan.Client.Common.Themes;
 using Adan.Client.Messages;
 using ICSharpCode.AvalonEdit.Rendering;
 using ICSharpCode.AvalonEdit.Utils;
+using Adan.Client.Common.Utils;
 
 namespace Adan.Client.Common.Controls.AvalonEdit
 {
@@ -35,7 +36,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             int curOffset = offset;
             int endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
             var document = CurrentContext.Document;
-            bool isHighlight = false;
+            //bool isHighlight = false;
 
             if (document.TextLength == 0)
                 return null;
@@ -74,16 +75,16 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                         {
                             isBright = true;
                         }
-                        //Недокументированный код для хайлайта
-                        else if (value == 2)
-                        {
-                            isHighlight = true;
-                        }
-                        //Недокументированный код, обозначающий конец хайлайта
-                        else if (value == 3)
-                        {
-                            return new AdanStopHighlightVisualElement(4);
-                        }
+                        ////Недокументированный код для хайлайта
+                        //else if (value == 2)
+                        //{
+                        //    isHighlight = true;
+                        //}
+                        ////Недокументированный код, обозначающий конец хайлайта
+                        //else if (value == 3)
+                        //{
+                        //    return new AdanStopHighlightVisualElement(4);
+                        //}
                         //Недокументированный код для TextColor.RepeatCommand
                         else if (value == 4)
                         {
@@ -113,21 +114,21 @@ namespace Adan.Client.Common.Controls.AvalonEdit
                 if (curOffset < endOffset)
                     curOffset++;
 
-                if (isHighlight)
-                {
-                    if (offset == CurrentContext.VisualLine.StartOffset)
-                    {
-                        var previousColor = GetPreviousColor(offset - 1);
-                        if (previousColor != null)
-                            return new AdanColorAndHighlightVisualLineElement(currentForeColor, currentBackColor, curOffset - offset, previousColor);
-                        else
-                            return new AdanColorAndHighlightVisualLineElement(currentForeColor, currentBackColor, curOffset - offset, new AdanResetVisualLineElement(0));
-                    }
-                    else
-                    {
-                        return new AdanStartHighlightVisualElement(currentForeColor, currentBackColor, curOffset - offset);
-                    }
-                }
+                //if (isHighlight)
+                //{
+                //    if (offset == CurrentContext.VisualLine.StartOffset)
+                //    {
+                //        var previousColor = GetPreviousColor(offset - 1);
+                //        if (previousColor != null)
+                //            return new AdanColorAndHighlightVisualLineElement(currentForeColor, currentBackColor, curOffset - offset, previousColor);
+                //        else
+                //            return new AdanColorAndHighlightVisualLineElement(currentForeColor, currentBackColor, curOffset - offset, new AdanResetVisualLineElement(0));
+                //    }
+                //    else
+                //    {
+                //        return new AdanStartHighlightVisualElement(currentForeColor, currentBackColor, curOffset - offset);
+                //    }
+                //}
 
                 if (currentBackColor == TextColor.None && currentForeColor == TextColor.None)
                     return new AdanResetVisualLineElement(curOffset - offset);
@@ -136,7 +137,9 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             }
             else
             {
-                return GetPreviousColor(offset - 1);
+                ErrorLogger.Instance.Write("Error process visual element: Interested element != \x1B");
+                throw new SystemException();
+                //return GetPreviousColor(offset - 1);
             }
         }
 
@@ -163,93 +166,93 @@ namespace Adan.Client.Common.Controls.AvalonEdit
             return curOffset == endOffset ? -1 : curOffset;
         }
 
-        private VisualLineElement GetPreviousColor(int offset)
-        {
-            int curOffset = offset;
-            int endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
-            var document = CurrentContext.Document; 
+        //private VisualLineElement GetPreviousColor(int offset)
+        //{
+        //    int curOffset = offset;
+        //    int endOffset = CurrentContext.VisualLine.LastDocumentLine.EndOffset;
+        //    var document = CurrentContext.Document; 
             
-            TextColor currentBackColor = TextColor.None;
-            TextColor currentForeColor = TextColor.None;
-            bool isBright = false;
+        //    TextColor currentBackColor = TextColor.None;
+        //    TextColor currentForeColor = TextColor.None;
+        //    bool isBright = false;
 
-            while (curOffset >= 0 && offset - curOffset < 1000)
-            {
-                if (document.GetCharAt(curOffset) == '\x1B')
-                {
-                    var newOffset = curOffset;
-                    newOffset += 2;
+        //    while (curOffset >= 0 && offset - curOffset < 1000)
+        //    {
+        //        if (document.GetCharAt(curOffset) == '\x1B')
+        //        {
+        //            var newOffset = curOffset;
+        //            newOffset += 2;
 
-                    while (newOffset < endOffset && document.GetCharAt(newOffset) != 'm')
-                    {
-                        int startOffset = newOffset;
-                        while (char.IsDigit(document.GetCharAt(newOffset)))
-                            newOffset++;
+        //            while (newOffset < endOffset && document.GetCharAt(newOffset) != 'm')
+        //            {
+        //                int startOffset = newOffset;
+        //                while (char.IsDigit(document.GetCharAt(newOffset)))
+        //                    newOffset++;
 
-                        if (newOffset == startOffset)
-                        {
-                            newOffset++;
-                            currentBackColor = TextColor.None;
-                            currentForeColor = TextColor.None;
-                        }
-                        else
-                        {
-                            int value = int.Parse(document.GetText(startOffset, newOffset - startOffset));
-                            if (value == 0)
-                            {
-                                isBright = false;
-                            }
-                            else if (value == 1)
-                            {
-                                isBright = true;
-                            }
-                            //Недокументированный код для хайлайта
-                            else if (value == 2)
-                            {
-                                goto label;
-                            }
-                            //Недокументированный код обозначающий конец хайлайта
-                            else if (value == 3)
-                            {
-                                goto label;
-                            }
-                            //Недокументированный код для TextColor.RepeatCommand
-                            else if (value == 4)
-                            {
-                                goto label;
-                            }
-                            else if (value >= _asciBackGroundCodeBase
-                                     && value <= _asciBackGroundCodeBase + (int)AnsiColor.White)
-                            {
-                                currentBackColor = ConvertAnsiColorToTextColor((AnsiColor)(value - _asciBackGroundCodeBase), isBright);
-                            }
-                            else if (value >= _asciForeGroundCodeBase
-                                     && value <= _asciForeGroundCodeBase + (int)AnsiColor.White)
-                            {
-                                currentForeColor = ConvertAnsiColorToTextColor((AnsiColor)(value - _asciForeGroundCodeBase), isBright);
-                            }
-                            else
-                            {
-                                return null;
-                            }
+        //                if (newOffset == startOffset)
+        //                {
+        //                    newOffset++;
+        //                    currentBackColor = TextColor.None;
+        //                    currentForeColor = TextColor.None;
+        //                }
+        //                else
+        //                {
+        //                    int value = int.Parse(document.GetText(startOffset, newOffset - startOffset));
+        //                    if (value == 0)
+        //                    {
+        //                        isBright = false;
+        //                    }
+        //                    else if (value == 1)
+        //                    {
+        //                        isBright = true;
+        //                    }
+        //                    //Недокументированный код для хайлайта
+        //                    else if (value == 2)
+        //                    {
+        //                        goto label;
+        //                    }
+        //                    //Недокументированный код обозначающий конец хайлайта
+        //                    else if (value == 3)
+        //                    {
+        //                        goto label;
+        //                    }
+        //                    //Недокументированный код для TextColor.RepeatCommand
+        //                    else if (value == 4)
+        //                    {
+        //                        goto label;
+        //                    }
+        //                    else if (value >= _asciBackGroundCodeBase
+        //                             && value <= _asciBackGroundCodeBase + (int)AnsiColor.White)
+        //                    {
+        //                        currentBackColor = ConvertAnsiColorToTextColor((AnsiColor)(value - _asciBackGroundCodeBase), isBright);
+        //                    }
+        //                    else if (value >= _asciForeGroundCodeBase
+        //                             && value <= _asciForeGroundCodeBase + (int)AnsiColor.White)
+        //                    {
+        //                        currentForeColor = ConvertAnsiColorToTextColor((AnsiColor)(value - _asciForeGroundCodeBase), isBright);
+        //                    }
+        //                    else
+        //                    {
+        //                        return null;
+        //                    }
 
-                            if (document.GetCharAt(newOffset) == ';')
-                                newOffset++;
-                        }
-                    }
+        //                    if (document.GetCharAt(newOffset) == ';')
+        //                        newOffset++;
+        //                }
+        //            }
 
-                    if (currentBackColor == TextColor.None && currentForeColor == TextColor.None)
-                        return new AdanResetVisualLineElement(0);
-                    else
-                        return new AdanColorVisualLineElement(currentForeColor, currentBackColor, 0);
-                }
+        //            if (currentBackColor == TextColor.None && currentForeColor == TextColor.None)
+        //                return new AdanResetVisualLineElement(0);
+        //            else
+        //                return new AdanColorVisualLineElement(currentForeColor, currentBackColor, 0);
+        //        }
 
-            label:
-                curOffset--;
-            }
+        //    label:
+        //        curOffset--;
+        //    }
 
-            return null;
-        }
+        //    return null;
+        //}
 
         private static TextColor ConvertAnsiColorToTextColor(AnsiColor ansiColor, bool isBright)
         {

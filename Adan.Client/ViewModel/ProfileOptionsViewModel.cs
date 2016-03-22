@@ -89,7 +89,7 @@ namespace Adan.Client.ViewModel
             Assert.ArgumentNotNull(obj, "obj");
 
             var owner = obj as Window;
-            if (obj == null)
+            if (owner == null)
                 return;
 
             var name = SelectedOption.Content.ToString();

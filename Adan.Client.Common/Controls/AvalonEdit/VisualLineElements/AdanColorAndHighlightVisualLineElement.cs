@@ -33,7 +33,7 @@ namespace Adan.Client.Common.Controls.AvalonEdit.VisualLineElements
         public AdanColorAndHighlightVisualLineElement(TextColor foreground, TextColor background, int length, VisualLineElement colorElement)
             : base(foreground, background, length)
         {
-            ColorElement = ColorElement;
+            //ColorElement = ColorElement;
         }
     }
 }

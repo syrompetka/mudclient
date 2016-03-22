@@ -67,6 +67,7 @@ namespace Adan.Client
         {
             InitializeComponent();
 
+            //Load all types for deserialization
             var types = new List<Type>
                             {
                                 typeof(SendTextAction),
@@ -88,6 +89,7 @@ namespace Adan.Client
                                 //typeof(ToggleFullScreenModeAction),
                             };
 
+            //Load plugins
             foreach (var plugin in PluginHost.Instance.AllPlugins)
             {
                 foreach (var customType in plugin.CustomSerializationTypes)
@@ -97,13 +99,16 @@ namespace Adan.Client
                 }
             }
 
+            //Load settings
             Settings settings = Settings.Default;
             settings.Reload();
-
             SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
+
+            RootModel.Initialize();
 
             _globalHotkeys = SettingsHolder.Instance.Settings.GlobalHotkeys;
 
+            //Initialize action and parameter descriptions
             var actionDescriptions = new List<ActionDescription>();
             var parameterDescriptions = new List<ParameterDescription>();
 
@@ -128,11 +133,14 @@ namespace Adan.Client
             RootModel.AllActionDescriptions = actionDescriptions;
             RootModel.AllParameterDescriptions = parameterDescriptions;
 
+            //Initialize conveyor with all serializations
             MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
+            //Initialize conveyor with all deserializations
             MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
+            //Initialize conveyor with message handlers. Handlers added in order processing.
             MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
             MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
             MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
@@ -147,6 +155,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
             //MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
+            //Initialize themes and add their to menu
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
                 var menuItem = new MenuItem
@@ -159,15 +168,18 @@ namespace Adan.Client
                 _themesMenuItem.Items.Add(menuItem);
             }
 
+            //Load and display "Loading Dialog"
             var initializationDalog = new PluginInitializationStatusDialog
             {
                 ViewModel = new InitializationStatusModel()
             };
 
+            //Initialize plugins
             Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
+            //Add plugins and their options to menu
             foreach (var plugin in PluginHost.Instance.Plugins)
             {
                 if (plugin.HasOptions)
@@ -183,11 +195,13 @@ namespace Adan.Client
                 }
             }
 
+            //Add remaining message handlers that should to process message last
             MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit());
             MessageConveyor.AddConveyorUnit(new CommandRepeaterUnit());
             MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
             MessageConveyor.AddConveyorUnit(new ConnectionUnit());
 
+            //Initialize window's position
             Top = SettingsHolder.Instance.Settings.MainWindowTop;
             Left = SettingsHolder.Instance.Settings.MainWindowLeft;
             Width = SettingsHolder.Instance.Settings.MainWindowWidth;
@@ -221,20 +235,20 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
-
-            LoadLayout();
+                        
+            this.LoadLayout();
 
             foreach (var widget in PluginHost.Instance.Widgets)
             {
                 if (!_allWidgets.Any(x => x.ContentId == widget.Name))
                 {
-                    CreateWidget(widget);
+                    this.CreateWidget(widget);
                 }
             }
 
             if (_outputWindows.Count == 0)
             {
-                CreateOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
+                this.CreateOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
             }
 
             _dockManager.ActiveContent = _outputWindows.FirstOrDefault().VisibleControl;
@@ -624,7 +638,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            CheckGlobalHotkeys(e);
+            this.CheckGlobalHotkeys(e);
 
             if (!e.Handled)
                 base.OnPreviewKeyDown(e);
@@ -828,13 +842,15 @@ namespace Adan.Client
                 AutoReconnect = SettingsHolder.Instance.Settings.AutoReconnect,
                 CommandChar = SettingsHolder.Instance.Settings.CommandChar,
                 CommandDelimiter = SettingsHolder.Instance.Settings.CommandDelimiter,
-                StartOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.StartOfLine,
-                EndOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.EndOfLine,
+                SelectedCursorPosition = SettingsHolder.Instance.Settings.CursorPosition,
+                //StartOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.StartOfLine,
+                //EndOfLine = SettingsHolder.Instance.Settings.CursorPosition == CursorPositionHistory.EndOfLine,
                 HistorySize = SettingsHolder.Instance.Settings.CommandsHistorySize.ToString(),
                 MinLengthHistory = SettingsHolder.Instance.Settings.MinLengthHistory.ToString(),
                 ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
                 SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings,
                 AutoConnect = SettingsHolder.Instance.Settings.AutoConnect,
+                SelectedOutputWindowForm = SettingsHolder.Instance.Settings.OutputWindowOnRebootForm,
             };
 
             var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
@@ -847,11 +863,13 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.CommandChar = model.CommandChar;
                 SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
                 SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
+                SettingsHolder.Instance.Settings.OutputWindowOnRebootForm = model.SelectedOutputWindowForm;
 
-                if (model.StartOfLine)
-                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
-                else
-                    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.EndOfLine;
+                //if (model.StartOfLine)
+                //    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
+                //else
+                //    SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.EndOfLine;
+                SettingsHolder.Instance.Settings.CursorPosition = model.SelectedCursorPosition;
 
                 if (model.SettingsFolder)
                     SettingsHolder.Instance.SettingsFolder = SettingsFolder.DocumentsAndSettings;
@@ -945,7 +963,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(e, "e");
 
-            SaveAllSettings();
+            this.SaveAllSettings();
 
             base.OnClosing(e);
         }

@@ -5,6 +5,7 @@ using System.Text;
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.ViewModel;
+using Adan.Client.Common.Settings;
 
 namespace Adan.Client.ViewModel
 {
@@ -19,11 +20,13 @@ namespace Adan.Client.ViewModel
         private bool _autoClearInput;
         private string _minLengthHistory;
         private string _historySize;
-        private bool _startOfLine;
-        private bool _endOfLine;
         private string _scrollBuffer;
         private bool _settingsFolder;
         private bool _autoConnect;
+        //private bool _startOfLine;
+        //private bool _endOfLine;
+        private CursorPositionHistory _selectedCursorPosition;
+        private SettingsOutputWindowForm _selectedOutputWindowForms;
 
         /// <summary>
         /// 
@@ -58,36 +61,69 @@ namespace Adan.Client.ViewModel
         }
 
         /// <summary>
-        /// Gets cursor history
+        /// Gets cursor history position
         /// </summary>
-        public bool StartOfLine
+        public CursorPositionHistory SelectedCursorPosition
         {
             get
             {
-                return _startOfLine;
+                return _selectedCursorPosition;
             }
             set
             {
-                _startOfLine = value;
-                OnPropertyChanged("StartOfLine");
+                _selectedCursorPosition = value;
+                OnPropertyChanged("SelectedCursorPosition");
             }
         }
 
+        ///// <summary>
+        ///// Gets cursor history
+        ///// </summary>
+        //public bool StartOfLine
+        //{
+        //    get
+        //    {
+        //        return _startOfLine;
+        //    }
+        //    set
+        //    {
+        //        _startOfLine = value;
+        //        OnPropertyChanged("StartOfLine");
+        //    }
+        //}
+
+        ///// <summary>
+        ///// Gets cursor history
+        ///// </summary>
+        //public bool EndOfLine
+        //{
+        //    get
+        //    {
+        //        return _endOfLine;
+        //    }
+        //    set
+        //    {
+        //        _endOfLine = value;
+        //        OnPropertyChanged("EndOfLine");
+        //    }
+        //}
+
         /// <summary>
-        /// Gets cursor history
+        /// 
         /// </summary>
-        public bool EndOfLine
+        public SettingsOutputWindowForm SelectedOutputWindowForm
         {
             get
             {
-                return _endOfLine;
+                return _selectedOutputWindowForms;
             }
             set
             {
-                _endOfLine = value;
-                OnPropertyChanged("EndOfLine");
+                _selectedOutputWindowForms = value;
+                OnPropertyChanged("SelectedOutputWindowForm");
             }
         }
+
 
         /// <summary>
         /// 
