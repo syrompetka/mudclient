@@ -173,7 +173,7 @@ namespace Adan.Client.Common.Settings
                 {
                     Settings = (SettingsSerializer)serializer.Deserialize(stream);
                     if (Settings.GlobalGroups.Count == 0)
-                        Settings.GlobalGroups.Add(new Group() { IsBuildIn = true, Name = "Default", IsEnabled = true });
+                        Settings.GlobalGroups.Add(new Group() { IsBuildIn = true, Name = "GlobalDefault", IsEnabled = true });
 
                     if (Settings.GlobalHotkeys != null && Settings.GlobalHotkeys.Count > 0)
                     {

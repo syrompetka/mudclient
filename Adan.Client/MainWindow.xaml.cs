@@ -681,7 +681,7 @@ namespace Adan.Client
                 Owner = this,
             };
 
-            globalProfileDialog.ShowDialog();
+            globalProfileDialog.Show();
             SettingsHolder.Instance.SaveCommonSettings();
         }
 
