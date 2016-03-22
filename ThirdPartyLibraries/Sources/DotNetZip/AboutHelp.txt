@@ -1,0 +1,13 @@
+About the Help file
+--------------------------------
+
+The .chm file contains help generated from the code.
+
+In some cases, Upon opening the .chm file for DotNetZipLib, the help
+items tree loads, but the contents are empty. You may see an Error:
+"This program cannot display the webpage."  or, "Address is invalid."
+If this happens, it's probable that you encounter problem with Windows
+protection of files downloaded from less trusted location. Within
+Windows Explorer, right-click on the CHM file, select properties, and
+Unblock it (button in lower part of properties window).
+

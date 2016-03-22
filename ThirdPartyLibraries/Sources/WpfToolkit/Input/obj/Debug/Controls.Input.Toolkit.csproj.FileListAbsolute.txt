@@ -1,0 +1,16 @@
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\bin\Debug\System.Windows.Controls.Input.Toolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\bin\Debug\System.Windows.Controls.Input.Toolkit.pdb
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\bin\Debug\System.Windows.Controls.Input.Toolkit.XML
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\bin\Debug\WPFToolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\bin\Debug\WPFToolkit.pdb
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Input.Toolkit_MarkupCompile.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Input.Toolkit_MarkupCompile.lref
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\Themes\Generic.baml
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Input.Toolkit.g.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Properties.Resources.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\ResGen.read.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\ResGen.write.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Input.Toolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input\obj\Debug\System.Windows.Controls.Input.Toolkit.pdb

@@ -1,0 +1,45 @@
+﻿<Window x:Class="Adan.Client.Map.Dialogs.RouteDestinationSelectDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Properties="clr-namespace:Adan.Client.Map.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource DefaultWindowStyle}"
+        Title="{x:Static Properties:Resources.RouteDestinationSelectTitle}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        Height="300"
+        Width="299">
+
+    <StackPanel VerticalAlignment="Stretch">
+        <TextBlock TextTrimming="WordEllipsis"
+                   Foreground="{DynamicResource TextBrush}"
+                   FontSize="14"
+                   Text="{x:Static Properties:Resources.RouteDestinationSelect}"
+                   Margin="5" />
+        <ListBox Grid.Row="0"
+                 Margin="5,0,5,5"
+                 ItemsSource="{Binding Path=AvailableDestinations}"
+                 SelectedItem="{Binding Path=SelectedRouteDestination}"
+                 HorizontalAlignment="Stretch"
+                 Height="205">
+        </ListBox>
+
+        <StackPanel Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="5">
+            <Button IsDefault="True"
+                    MinWidth="50"
+                    Click="HandleOkClicked"
+                    Content="{x:Static Properties:Resources.Ok}" />
+            <Button IsCancel="True"
+                    Margin="5,0,0,0"
+                    MinWidth="50"
+                    Content="{x:Static Properties:Resources.Cancel}" />
+        </StackPanel>
+
+    </StackPanel>
+</Window>

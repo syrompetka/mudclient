@@ -1,0 +1,14 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">                        
+  <PropertyGroup>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>$(OutDir)$(TargetName).XML</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="$(SolutionDir)MSBuild\CommonAssemblyInfo.cs" >
+      <Link>Properties\CommonAssemblyInfo.cs</Link>
+    </Compile>
+  </ItemGroup>
+  <!--Import Project="$(SolutionDir)MSBuild\CodeAnalysis.targets" />
+  <Import Project="$(SolutionDir)MSBuild\StyleCop.targets" /-->
+</Project>

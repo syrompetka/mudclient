@@ -1,0 +1,11 @@
+Tue, 27 Oct 2009  08:11
+
+"Large # of Small Files" = the text formatting is wrong in phase 1 of the test
+  CreateZip_AddDirectory_LargeNumberOfSmallFiles
+
+ZipOutputStream_over_65534_Entries_PkZipEncryption_DefaultCompression_AsNecessary
+  there is no test title
+  no progress bar 
+  also the status line doesn't show a percentage complete
+  some of these are race conditions
+

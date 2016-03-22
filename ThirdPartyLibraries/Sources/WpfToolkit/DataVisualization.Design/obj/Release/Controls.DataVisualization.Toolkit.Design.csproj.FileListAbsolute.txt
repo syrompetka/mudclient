@@ -1,0 +1,7 @@
+H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.DataVisualization.Toolkit.Design.4.0.dll
+H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.DataVisualization.Toolkit.Design.4.0.pdb
+H:\ToolkitRelease\Toolkit-release\DataVisualization.Design\obj\Release\ResolveAssemblyReference.cache
+H:\ToolkitRelease\Toolkit-release\DataVisualization.Design\obj\Release\System.Windows.Controls.DataVisualization.Design.Properties.Resources.resources
+H:\ToolkitRelease\Toolkit-release\DataVisualization.Design\obj\Release\Controls.DataVisualization.Toolkit.Design.csproj.GenerateResource.Cache
+H:\ToolkitRelease\Toolkit-release\DataVisualization.Design\obj\Release\System.Windows.Controls.DataVisualization.Toolkit.Design.4.0.dll
+H:\ToolkitRelease\Toolkit-release\DataVisualization.Design\obj\Release\System.Windows.Controls.DataVisualization.Toolkit.Design.4.0.pdb
