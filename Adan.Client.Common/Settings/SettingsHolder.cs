@@ -10,6 +10,7 @@
 namespace Adan.Client.Common.Settings
 {
     using Adan.Client.Common.Controls;
+    using Model;
     using Common.Themes;
     using CSLib.Net.Annotations;
     using System;
@@ -35,7 +36,7 @@ namespace Adan.Client.Common.Settings
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<SettingsChangedEventArgs> ProfilesChanged;
+        public event EventHandler<ProfileChangedEventArgs> ProfilesChanged;
 
         #endregion
 
@@ -171,6 +172,18 @@ namespace Adan.Client.Common.Settings
                 using (var stream = File.OpenRead(Path.Combine(Folder, "Options.xml")))
                 {
                     Settings = (SettingsSerializer)serializer.Deserialize(stream);
+                    if (Settings.GlobalGroups.Count == 0)
+                        Settings.GlobalGroups.Add(new Group() { IsBuildIn = true, Name = "Default", IsEnabled = true });
+
+                    if (Settings.GlobalHotkeys != null && Settings.GlobalHotkeys.Count > 0)
+                    {
+                        var defaultGroup = Settings.GlobalGroups.FirstOrDefault(g => g.IsBuildIn);
+                        foreach (var hk in Settings.GlobalHotkeys)
+                            defaultGroup.Hotkeys.Add(hk);
+
+                        Settings.GlobalHotkeys.Clear();
+                    }
+
                 }
             }
             catch(Exception)
@@ -318,26 +331,19 @@ namespace Adan.Client.Common.Settings
         }
 
         /// <summary>
-        /// 
+        /// A profile has been changed
         /// </summary>
-        /// <param name="profile"></param>
-        public void SetProfile(ProfileHolder profile)
+        /// <param name="name">Name of the profile that has been changed</param>
+        public void SetProfile(string name)
         {
-            lock (_profiles)
-            {
-                var oldProfile = _profiles.FirstOrDefault(prof => prof.Name == profile.Name);
-
-                if (oldProfile != null)
-                    _profiles.Remove(oldProfile);
-
-                _profiles.Add(profile);
-            }
-
             if (ProfilesChanged != null)
-                ProfilesChanged(this, new SettingsChangedEventArgs(profile.Name, profile));
+                ProfilesChanged(this, new ProfileChangedEventArgs(name, name=="Global"));
 
-            lock (_profiles)
+            if (name == "Global")
+                SaveCommonSettings();
+            else
             {
+                var profile = _profiles.FirstOrDefault(p => p.Name == name);
                 profile.Save();
             }
         }

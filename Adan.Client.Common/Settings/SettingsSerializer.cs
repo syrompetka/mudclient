@@ -20,7 +20,7 @@ namespace Adan.Client.Common.Settings
     public class SettingsSerializer
     {
         //private StringCollection _mainOutputs;
-        private List<Hotkey> _globalHotkeys;
+        private List<Group> _globalGroups;
         private char _commandChar;
         private char _commandDelimiter;
         private int _commandsHistorySize;
@@ -85,16 +85,21 @@ namespace Adan.Client.Common.Settings
         /// 
         /// </summary>
         [NotNull]
-        public List<Hotkey> GlobalHotkeys
+        public List<Group> GlobalGroups
         {
             get
             {
-                if (_globalHotkeys == null)
-                    _globalHotkeys = new List<Hotkey>();
+                if (_globalGroups == null)
+                    _globalGroups = new List<Group>();
 
-                return _globalHotkeys;
+                return _globalGroups;
             }
         }
+
+        /// <summary>
+        /// For backwards compatibility
+        /// </summary>
+        public List<Hotkey> GlobalHotkeys { get; set; }
 
         ///// <summary>
         ///// Get MainOutput windows
