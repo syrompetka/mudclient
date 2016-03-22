@@ -4,7 +4,7 @@
 library
 C#
 .cs
-C:\Mudclient\MudClient\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock\obj\Debug\
+C:\Projects\AdanClient\ThirdPartyLibraries\Sources\AvalonDock\Version2.0\Xceed.Wpf.AvalonDock\obj\Debug\
 Xceed.Wpf.AvalonDock
 none
 false
@@ -12,7 +12,7 @@ DEBUG
 
 1692892633
 
-154-375886477
+154-2101602763
 12-1381780322
 Themes\generic.xaml;
 

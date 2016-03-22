@@ -176,5 +176,10 @@ namespace Adan.Client.Controls
 
             _textBoxNative.AddMessage(messages);
         }
+
+        private void _txtCommandInput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
+        }
     }
 }

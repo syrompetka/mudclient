@@ -27,16 +27,12 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using Xceed.Wpf.AvalonDock.Controls;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.AvalonDock.Themes;
@@ -84,7 +80,7 @@ namespace Adan.Client
                                 typeof(SendTextOneParameterAction),
                                 typeof(ShowOutputWindowAction),
                                 typeof(SendToWindowAction),
-                                //typeof(ToggleFullScreenModeAction),
+                                typeof(ToggleFullScreenModeAction),
                             };
 
             foreach (var plugin in PluginHost.Instance.AllPlugins)
@@ -115,7 +111,7 @@ namespace Adan.Client
             actionDescriptions.Add(new StopLogActionDescription(actionDescriptions));
             actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
             actionDescriptions.Add(new SendToWindowActionDescription(actionDescriptions));
-            //actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
+            actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
@@ -142,7 +138,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
             MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
-            //MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
+            MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -884,7 +880,8 @@ namespace Adan.Client
 
             if (outputWindow != null)
             {
-                outputWindow.StartLogging(logName);
+                //TODO:
+                //outputWindow.StartLogging(logName);
             }
         }
 
@@ -898,7 +895,8 @@ namespace Adan.Client
 
             if (outputWindow != null)
             {
-                outputWindow.StopLogging();
+                //TODO:
+                //outputWindow.StopLogging();
             }
         }
 
@@ -909,7 +907,7 @@ namespace Adan.Client
         /// </summary>
         public void ToggleFullScreenMode()
         {
-            if (this.WindowStyle == WindowStyle.None)
+            if (WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
                 WindowState = nonFullScreenWindowState;
@@ -923,13 +921,8 @@ namespace Adan.Client
                 nonFullScreenWindowHeight = Height;
                 nonFullScreenWindowWidth = Width;
                 nonFullScreenWindowState = WindowState;
-                Width = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width;
-                Height = System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height;
-                Top = 0;
-                Left = 0;
-                WindowState = System.Windows.WindowState.Normal;
                 WindowStyle = WindowStyle.None;
-                ResizeMode = System.Windows.ResizeMode.NoResize;
+                WindowState = WindowState.Maximized;
                 _mainMenu.Visibility = Visibility.Collapsed;
             }
         }        

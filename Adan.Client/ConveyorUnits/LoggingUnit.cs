@@ -9,41 +9,29 @@
 
 namespace Adan.Client.ConveyorUnits
 {
-    using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows;
-using Adan.Client.Common;
-using Adan.Client.Common.Model;
-using Adan.Client.Common.Settings;
-using Common.Conveyor;
-using Common.ConveyorUnits;
-using Common.Messages;
-using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
-using Messages;
-using Properties;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Common.Model;
+    using Common.ConveyorUnits;
+    using Common.Messages;
+    using CSLib.Net.Diagnostics;
+    using Messages;
+    using Properties;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementation repsponsible for logging.
     /// </summary>
     public class LoggingUnit : ConveyorUnit
     {
-        private MainWindow _mainWindow;
+        private readonly MainWindow _mainWindow;
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="MainWindowEx"></param>
-        public LoggingUnit(MainWindow MainWindowEx)
+        /// <param name="mainWindow"></param>
+        public LoggingUnit(MainWindow mainWindow)
         {
-            _mainWindow = MainWindowEx;
+            _mainWindow = mainWindow;
         }
 
         /// <summary>
@@ -87,7 +75,7 @@ using Properties;
                 }
                 else
                 {
-                    _mainWindow.StartLogging(startLogMessage.LogName, rootModel);
+                    //TODO:_mainWindow.StartLogging(startLogMessage.LogName, rootModel);
                 }
 
                 return;
@@ -96,7 +84,7 @@ using Properties;
             var stopLogMessage = message as StopLoggingMessage;
             if (stopLogMessage != null)
             {
-                _mainWindow.StopLogging(rootModel);
+                //TODO:_mainWindow.StopLogging(rootModel);
 
                 return;
             }
@@ -104,7 +92,7 @@ using Properties;
             var connectedMessage = message as ConnectedMessage;
             if (connectedMessage != null)
             {
-                _mainWindow.StopLogging(rootModel);
+                //TODO:_mainWindow.StopLogging(rootModel);
 
                 return;
             }
@@ -112,9 +100,7 @@ using Properties;
             var disconnectedMessage = message as DisconnectedMessage;
             if (disconnectedMessage != null)
             {
-                _mainWindow.StopLogging(rootModel);
-
-                return;
+                //TODO:_mainWindow.StopLogging(rootModel);
             }
         }
     }

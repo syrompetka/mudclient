@@ -2,7 +2,6 @@
   <PropertyGroup>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>$(OutDir)$(TargetName).XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(SolutionDir)MSBuild\CommonAssemblyInfo.cs" >
