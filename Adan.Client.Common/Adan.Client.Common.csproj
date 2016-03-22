@@ -76,6 +76,11 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ContorlBoxNative\TextBoxNative.cs" />
+    <Compile Include="Controls\ScrollableFlowTextControl.cs" />
+    <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
+    <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />
+    <Compile Include="Controls\TextFormatting\MessageTextSource.cs" />
+    <Compile Include="Controls\TextFormatting\TextSelectionSettings.cs" />
     <Compile Include="Model\IUndo.cs" />
     <Compile Include="Settings\CommonProfileSettings.cs" />
     <Compile Include="Controls\ActionEditorControl.xaml.cs">
