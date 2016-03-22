@@ -269,5 +269,17 @@ namespace Adan.Client.Common.Model
 
             return _rootPatternToken;
         }
+
+        /// <summary>
+        /// Represent trigger as string (similar to JMC)
+        /// </summary>
+        /// <returns>String representation of the trigger</returns>
+        public override string ToString()
+        {
+            if (this.Group == null)
+                return string.Format("#action {{{0}}} {{{1}}} {{{2}}}", this.GetPatternString(), this.Actions[0].ToString(), this.Priority);
+            else
+                return string.Format("#action {{{0}}} {{{1}}} {{{2}}} {{{3}}}", this.GetPatternString(), this.Actions[0].ToString(), this.Priority, this.Group.Name);
+        }
     }
 }
