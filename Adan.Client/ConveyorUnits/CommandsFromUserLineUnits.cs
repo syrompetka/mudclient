@@ -166,6 +166,7 @@ namespace Adan.Client.ConveyorUnits
                         {
                             base.PushMessageToConveyor(new InfoMessage("#Список алиасов пуст."), rootModel);
                         }
+                        base.PushMessageToConveyor(new InfoMessage("#Для отображения справки по алиасам, введите: #alias help"), rootModel);
                     }
 
                     return true;
@@ -173,10 +174,21 @@ namespace Adan.Client.ConveyorUnits
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
 
+                if (args.Length == 1 && args[0] == "help" && !isImport)
+                {
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление алиаса: #alias {алиас} {действия}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление алиаса в группу: #alias {алиас} {действия} {группа}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Действия можно разделять через ';', и внутри использовать %0 = все параметры, %1 = первый параметр, %2 второй параметр и т.п."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Пример: #alias {б} {сбить %0;вст}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Теперь если вы напишете 'б шаман', в мад будут отправлены команды сбить шаман;встать."), rootModel);
+                    return true;
+                }
+
                 if (args.Length < 2)
                 {
                     if (!isImport)
                     {
+
                         aliasList.Clear();
                         aliasList.AddRange(rootModel.Groups.SelectMany(gr => gr.Aliases
                             .Where(alias => Regex.IsMatch(alias.Command, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
@@ -291,23 +303,6 @@ namespace Adan.Client.ConveyorUnits
                             }
                         }
 
-                        //for (int i = 0; i < rootModel.Groups.Count; i++)
-                        //{
-                        //    if (rootModel.Groups[i].Aliases.Remove(aliasList[num - 1]))
-                        //    {
-                        //        aliasList[num - 1].Group = rootModel.Groups[i];
-                        //        aliasList[num - 1].Operation = UndoOperation.Add;
-                        //        rootModel.UndoStack.Push(aliasList[num - 1]);
-                        //        if (!isImport)
-                        //        {
-                        //            base.PushMessageToConveyor(new InfoMessage(string.Format("#Алиас удален: #alias {{{0}}} {{{1}}}",
-                        //                aliasList[num - 1].Command, String.Join(";", aliasList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
-                        //            base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
-                        //        }
-
-                        //        break;
-                        //    }
-                        //}
                     }
                     else
                     {
@@ -390,20 +385,34 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage("#Список триггеров:"), rootModel);
                             for (int i = 0; i < triggersList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #action {{{1}}} {{{2}}}",
-                                    i + 1, triggersList[i].GetPatternString(), String.Join(";", triggersList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. {1}", i + 1, triggersList[i].ToString())), rootModel);
                             }
                         }
                         else
                         {
                             base.PushMessageToConveyor(new InfoMessage("#Список триггеров пуст."), rootModel);
-                        }                        
+                        }
+                        base.PushMessageToConveyor(new InfoMessage("#Для отображения справки по триггерам, введите: #action help"), rootModel);
                     }
 
                     return true;
                 }
 
                 string[] args = CommandLineParser.GetArgs(match.Groups[1].ToString());
+
+                if (args.Length == 1 && args[0] == "help" && !isImport)
+                {
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление триггера: #act {текст} {действия}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление триггера с приоритетом: #act {текст} {действия} {приоритет}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление триггера в указанную группу: #act {текст} {действия} {группа}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Добавление триггера с приоритетом и группой: #act {текст} {действия} {приоритет} {группа}"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Приоритет обязательно должен быть числом. Триггеры с меньшим приоритетом выполняются первыми."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#По умолчанию, максимум один триггер будет выполнен для одной строки пришедшей из MUD'а."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Это поведение можно изменить через интерфейс (убрать галочку 'Stop processing trigger for this message.')."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Если текст начинается с ^ и не содержит %0 %1 %2 и т.п., он будет автоматически считаться регулярным выражением."), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Пример: #action {^Вы полетели на землю от мощного удара} {вст}"), rootModel);
+                    return true;
+                }
 
                 if (args.Length < 2)
                 {
@@ -418,8 +427,7 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage(string.Format("#Список триггеров, содержащих строку \"{0}\":", args[0])), rootModel);
                             for (int i = 0; i < triggersList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #action {{{1}}} {{{2}}}",
-                                    i + 1, triggersList[i].GetPatternString(), String.Join(";", triggersList[i].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. {1}", i + 1, triggersList[i].ToString())), rootModel);
                             }
                         }
                         else
@@ -434,19 +442,21 @@ namespace Adan.Client.ConveyorUnits
                 string groupName = "Default";
                 int priority = 5;
 
-                if (args.Length == 4)
+                if (args.Length >= 3)
                 {
-                    groupName = args[3];
                     if (!int.TryParse(args[2], out priority))
                     {
                         if (!isImport)
-                            base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
+                            base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка: приоритет (3й аргумент) должен быть числом."), rootModel);
                         return true;
                     }
+                    else if (args.Length == 3)
+                        groupName = args[3];
                 }
-                else if (args.Length == 3)
+
+                if (args.Length >= 4)
                 {
-                    groupName = args[2];
+                    groupName = args[3];
                 }
 
                 TextTrigger trigger = new TextTrigger()
@@ -461,6 +471,9 @@ namespace Adan.Client.ConveyorUnits
                 {
                     CommandText = args[1]
                 });
+
+                if (!trigger.MatchingPattern.Contains("%0") && !trigger.MatchingPattern.Contains("%1") && trigger.MatchingPattern.StartsWith("^"))
+                    trigger.IsRegExp = true;
 
                 var group = rootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
@@ -481,8 +494,7 @@ namespace Adan.Client.ConveyorUnits
 
                         if (!isImport)
                         {
-                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
-                                trig.GetPatternString(), String.Join(";", trig.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                            base.PushMessageToConveyor(new InfoMessage("#Триггер удален: " + trigger.ToString()), rootModel);
                         }
 
                         trig = group.Triggers.FirstOrDefault(x => x.GetPatternString() == args[0]);
@@ -498,8 +510,7 @@ namespace Adan.Client.ConveyorUnits
                     trigger.Group = group;
                     trigger.Operation = UndoOperation.Remove;
                     rootModel.UndoStack.Push(trigger);
-                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер добавлен: #action {{{0}}} {{{1}}}",
-                        trigger.GetPatternString(), trigger.Actions[0].ToString())), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен: " + trigger.ToString()), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                 }
 
@@ -535,30 +546,10 @@ namespace Adan.Client.ConveyorUnits
                             
                             if (!isImport)
                             {
-                                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
-                                        triggersList[num - 1].GetPatternString(), String.Join(";", triggersList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Триггер удален: " + trigger.ToString()), rootModel);
                                     base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
                         }
-
-                        //for (int i = 0; i < rootModel.Groups.Count; i++)
-                        //{
-                        //    if (rootModel.Groups[i].Triggers.Remove(triggersList[num - 1]))
-                        //    {
-                        //        triggersList[num - 1].Group = rootModel.Groups[i];
-                        //        triggersList[num - 1].Operation = UndoOperation.Add;
-                        //        rootModel.UndoStack.Push(triggersList[num - 1]);
-                        //        if (!isImport)
-                        //        {
-                        //            base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
-                        //                triggersList[num - 1].GetPatternString(), String.Join(";", triggersList[num - 1].Actions.Select(action => action.ToString()).ToArray()))), rootModel);
-                        //            base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
-                        //        }
-
-                        //        rootModel.RecalculatedEnabledTriggersPriorities();
-                        //        break;
-                        //    }
-                        //}
                     }
                     else
                     {
@@ -584,8 +575,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Триггер удален: #action {{{0}}} {{{1}}}",
-                                    trig.GetPatternString(), String.Join(";", trig.Actions.Select(action => action.ToString()).ToArray()))), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Триггер удален: " + trig.ToString()), rootModel);
                                 base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
                         }
@@ -644,7 +634,7 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage("#Список хайлайтов:"), rootModel);
                             for (int i = 0; i < highlightList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{2},{3}}} {{{1}}}",
                                     i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
                             }
                         }
@@ -672,7 +662,7 @@ namespace Adan.Client.ConveyorUnits
                             base.PushMessageToConveyor(new InfoMessage(string.Format("#Список хайлайтов, содержащих строку \"{0}\":", args[0])), rootModel);
                             for (int i = 0; i < highlightList.Count; i++)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{1}}} {{{2},{3}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("{0}. #highlight {{{2},{3}}} {{{1}}}",
                                     i + 1, highlightList[i].TextToHighlight, highlightList[i].ForegroundColor, highlightList[i].BackgroundColor)), rootModel);
                             }
                         }
@@ -704,14 +694,6 @@ namespace Adan.Client.ConveyorUnits
 
                 string[] colors = args[0].Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
-                if (colors.Length < 2)
-                {
-                    if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка"), rootModel);
-
-                    return true;
-                }
-
                 TextColor foregroundColor = TextColorParser.Parse(colors[0].Trim());
                 TextColor backgroundColor;
                 if (colors.Length == 2)
@@ -719,10 +701,13 @@ namespace Adan.Client.ConveyorUnits
                 else
                     backgroundColor = TextColor.Black;
 
-                if (foregroundColor == TextColor.None || backgroundColor == TextColor.None)
+                if (foregroundColor == TextColor.None && backgroundColor == TextColor.None)
                 {
                     if (!isImport)
-                        base.PushMessageToConveyor(new ErrorMessage("#Ошибка цвета"), rootModel);
+                    {
+                        base.PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка. Формат: #highlight {цвет текста,цвет фона} {текст который подсвечивать}"), rootModel);
+                        base.PushMessageToConveyor(new ErrorMessage("#Возможные варианты цвета: " + String.Join(", ", Enum.GetValues(typeof(TextColor)).OfType<TextColor>())), rootModel);
+                    }
 
                     return true;
                 }
@@ -742,7 +727,7 @@ namespace Adan.Client.ConveyorUnits
 
                         if (!isImport)
                         {
-                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1},{2}}} {{{0}}}",
                                 high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                         }
 
@@ -758,7 +743,7 @@ namespace Adan.Client.ConveyorUnits
 
                 if (!isImport)
                 {
-                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт добавлен: #highlight {{{0}}} {{{1}, {2}}}",
+                    base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт добавлен: #highlight {{{1}, {2}}} {{{0}}}",
                            highlight.TextToHighlight, highlight.ForegroundColor, highlight.BackgroundColor)), rootModel);
                     base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                 }
@@ -794,30 +779,11 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1}, {2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1}, {2}}} {{{0}}}",
                                     highlightList[num - 1].TextToHighlight, highlightList[num - 1].ForegroundColor, highlightList[num - 1].BackgroundColor)), rootModel);
                                 base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
                         }
-
-                        //for (int i = 0; i < rootModel.Groups.Count; i++)
-                        //{
-                        //    if (rootModel.Groups[i].Highlights.Remove(highlightList[num - 1]))
-                        //    {
-                        //        highlightList[num - 1].Group = rootModel.Groups[i];
-                        //        highlightList[num - 1].Operation = UndoOperation.Add;
-                        //        rootModel.UndoStack.Push(highlightList[num - 1]);
-
-                        //        if (!isImport)
-                        //        {
-                        //            base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1}, {2}}}",
-                        //                highlightList[num - 1].TextToHighlight, highlightList[num - 1].ForegroundColor, highlightList[num - 1].BackgroundColor)), rootModel);
-                        //            base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
-                        //        }
-
-                        //        break;
-                        //    }
-                        //}
                     }
                     else
                     {
@@ -843,7 +809,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1},{2}}} {{{0}}}",
                                     high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                                 base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
                             }
@@ -865,7 +831,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #action {{{0}}} {{{1},{2}}}",
+                                base.PushMessageToConveyor(new InfoMessage(string.Format("#Хайлайт удален: #highlight {{{1},{2}}} {{{0}}}",
                                     high.TextToHighlight, high.ForegroundColor, high.BackgroundColor)), rootModel);
                             }
 

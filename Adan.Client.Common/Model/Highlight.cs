@@ -210,8 +210,8 @@ namespace Adan.Client.Common.Model
         public string UndoInfo()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append("#Хайлайт {").Append(TextToHighlight).Append("} {").Append(ForegroundColor);
-            sb.Append(",").Append(BackgroundColor).Append("} ");
+            sb.Append("#Хайлайт {").Append(ForegroundColor);
+            sb.Append(",").Append(BackgroundColor).Append("} {").Append(TextToHighlight).Append("} ");
             switch (Operation)
             {
                 case UndoOperation.Add:
