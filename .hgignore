@@ -28,4 +28,5 @@ Adan.Client.Setup/Release/
 Adan.Client.Map/obj/
 Adan.Client.v12.suo
 Adan.Client.sln.DotSettings.user
-ThirdPartyLibraries/Binaries/DotNetZipLib-DevKit-v1.9/                                       
+ThirdPartyLibraries/Binaries/DotNetZipLib-DevKit-v1.9/
+ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock/bin/Debug/pt-BR/Xceed.Wpf.AvalonDock.resources.dll
