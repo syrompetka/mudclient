@@ -1,0 +1,62 @@
+﻿<Window x:Class="Adan.Client.Map.Dialogs.RoutesDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:Properties="clr-namespace:Adan.Client.Map.Properties"
+        mc:Ignorable="d"
+        Style="{StaticResource DefaultWindowStyle}"
+        Title="{x:Static Properties:Resources.Routes}"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ToolWindow"
+        SizeToContent="WidthAndHeight">
+    <StackPanel>
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesCreate}"
+                HorizontalAlignment="Stretch"
+                Click="HandleCreateClicked"
+                IsEnabled="{Binding CanCreateNewRoute, Mode=OneWay}"/>
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesStopRecording}"
+                HorizontalAlignment="Stretch"
+                Click="HandleStopRecordingClicked"
+                IsEnabled="{Binding CanStopCurrentRouteRecording, Mode=OneWay}"/>
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesCancelRecording}"
+                HorizontalAlignment="Stretch"
+                Click="HandleCancelRecordingClicked"
+                IsEnabled="{Binding CanCancelCurrentRouteRecording, Mode=OneWay}" />
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesDelete}"
+                HorizontalAlignment="Stretch"
+                Click="HandleDeleteRouteClicked"/>
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesChoose}"
+                HorizontalAlignment="Stretch"
+                IsEnabled="{Binding CanStartRoute, Mode=OneWay}"
+                Click="HandleChooseRouteClicked" />
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesStop}"
+                HorizontalAlignment="Stretch"
+                IsEnabled="{Binding CanStopCurrentRoute, Mode=OneWay}"
+                Click="HandleStopRouteClicked" />
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesHelp}"
+                HorizontalAlignment="Stretch"
+                Click="HandlePrintHelpClicked"/>
+        <Button Margin="5"
+                Padding="5"
+                Content="{x:Static Properties:Resources.RoutesCancel}"
+                HorizontalAlignment="Stretch"
+                IsCancel="True"/>
+    </StackPanel>
+</Window>

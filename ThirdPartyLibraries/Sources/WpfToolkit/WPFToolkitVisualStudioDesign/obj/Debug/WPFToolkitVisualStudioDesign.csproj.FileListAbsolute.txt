@@ -1,0 +1,13 @@
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\VisualStudio\AddDataGridColumnsUserInterface.baml
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\VisualStudio\AddDataGridColumnsUserInterface.g.cs
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\VisualStudio\EditDataGridColumnsUserInterface.g.cs
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\WPFToolkit.VisualStudio.Design_MarkupCompile.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\WPFToolkit.VisualStudio.Design_MarkupCompile.lref
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\WPFToolkit.VisualStudio.Design.g.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\StringTable.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\Microsoft.Windows.Controls.Design.VisualStudio.DesignerDialog.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\Microsoft.Windows.Controls.Design.Properties.Resources.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\ResGen.read.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\WPFToolkitVisualStudioDesign\obj\Debug\ResGen.write.1.tlog

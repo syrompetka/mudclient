@@ -1,0 +1,3 @@
+H:\ToolkitRelease\Toolkit-release\Layout.Design\obj\Release\ResolveAssemblyReference.cache
+H:\ToolkitRelease\Toolkit-release\Layout.Design\obj\Release\System.Windows.Controls.Layout.Design.Properties.Resources.resources
+H:\ToolkitRelease\Toolkit-release\Layout.Design\obj\Release\Controls.Layout.Toolkit.Design.csproj.GenerateResource.Cache

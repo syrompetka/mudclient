@@ -1,0 +1,16 @@
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\bin\Debug\System.Windows.Controls.Layout.Toolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\bin\Debug\System.Windows.Controls.Layout.Toolkit.pdb
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\bin\Debug\System.Windows.Controls.Layout.Toolkit.XML
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\bin\Debug\WPFToolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\bin\Debug\WPFToolkit.pdb
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\ResolveAssemblyReference.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\GeneratedInternalTypeHelper.g.cs
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Layout.Toolkit_MarkupCompile.cache
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Layout.Toolkit_MarkupCompile.lref
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\Themes\Generic.baml
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Layout.Toolkit.g.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Properties.Resources.resources
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\ResGen.read.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\ResGen.write.1.tlog
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Layout.Toolkit.dll
+C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Layout\obj\Debug\System.Windows.Controls.Layout.Toolkit.pdb
