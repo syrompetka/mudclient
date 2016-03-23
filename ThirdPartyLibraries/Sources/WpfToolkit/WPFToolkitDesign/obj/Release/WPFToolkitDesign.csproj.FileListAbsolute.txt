@@ -1,9 +1,0 @@
-H:\ToolkitRelease\Toolkit-release\bin\Release\WPFToolkit.Design.dll
-H:\ToolkitRelease\Toolkit-release\bin\Release\WPFToolkit.Design.pdb
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\ResolveAssemblyReference.cache
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\WPFToolkit.Design.g.resources
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\StringTable.resources
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\Microsoft.Windows.Controls.Design.Properties.Resources.resources
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\WPFToolkitDesign.csproj.GenerateResource.Cache
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\WPFToolkit.Design.dll
-H:\ToolkitRelease\Toolkit-release\WPFToolkitDesign\obj\Release\WPFToolkit.Design.pdb

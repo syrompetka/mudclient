@@ -1,7 +1,0 @@
-H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.Layout.Toolkit.VisualStudio.Design.dll
-H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.Layout.Toolkit.VisualStudio.Design.pdb
-H:\ToolkitRelease\Toolkit-release\Layout.VisualStudio.Design\obj\Release\ResolveAssemblyReference.cache
-H:\ToolkitRelease\Toolkit-release\Layout.VisualStudio.Design\obj\Release\System.Windows.Controls.Layout.Design.Properties.Resources.resources
-H:\ToolkitRelease\Toolkit-release\Layout.VisualStudio.Design\obj\Release\Controls.Layout.Toolkit.VisualStudio.Design.csproj.GenerateResource.Cache
-H:\ToolkitRelease\Toolkit-release\Layout.VisualStudio.Design\obj\Release\System.Windows.Controls.Layout.Toolkit.VisualStudio.Design.dll
-H:\ToolkitRelease\Toolkit-release\Layout.VisualStudio.Design\obj\Release\System.Windows.Controls.Layout.Toolkit.VisualStudio.Design.pdb

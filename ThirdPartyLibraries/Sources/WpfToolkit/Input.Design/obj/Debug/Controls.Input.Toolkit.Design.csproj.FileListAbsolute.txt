@@ -1,4 +1,0 @@
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input.Design\obj\Debug\ResolveAssemblyReference.cache
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input.Design\obj\Debug\System.Windows.Controls.Input.Design.Properties.Resources.resources
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input.Design\obj\Debug\ResGen.read.1.tlog
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\WpfToolkit\Input.Design\obj\Debug\ResGen.write.1.tlog

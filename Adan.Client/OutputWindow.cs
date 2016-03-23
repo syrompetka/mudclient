@@ -30,7 +30,6 @@ namespace Adan.Client
         {
             Name = name;
 
-            //var conveyor = new MessageConveyor(new MccpClientEx());
             var conveyor = new MessageConveyor(new MccpClient());
 
             RootModel = new RootModel(conveyor, SettingsHolder.Instance.GetProfile(name));
@@ -39,11 +38,6 @@ namespace Adan.Client
 
             _window = new MainOutputWindow(mainWindow, _rootModel);
             VisibleControl = _window;
-            
-//            _window._txtCommandInput.RootModel = RootModel;
-//            _window._txtCommandInput.LoadHistory(RootModel.Profile);
-//            _window._txtCommandInput.GotFocus += txtCommandInput_GotFocus;
-//            _window._txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
         }
 
         /// <summary>
@@ -116,7 +110,7 @@ namespace Adan.Client
         /// </summary>
         public void Save()
         {
-            //_window._txtCommandInput.SaveCurrentHistory(RootModel.Profile);
+            _window.SaveCurrentHistory(RootModel.Profile);
         }
 
         /// <summary>
@@ -124,7 +118,7 @@ namespace Adan.Client
         /// </summary>
         public void Dispose()
         {
-            this.Dispose(true);
+            Dispose(true);
         }
 
         /// <summary>

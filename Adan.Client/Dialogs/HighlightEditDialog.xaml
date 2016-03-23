@@ -5,7 +5,7 @@
         WindowStartupLocation="CenterOwner" 
         WindowStyle="ToolWindow" 
         Width="485"
-        Height="210"
+        Height="230"
         Title="Higlight editor"
         Style="{StaticResource DefaultWindowStyle}" xmlns:my="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common">
     <Window.Resources>

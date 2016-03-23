@@ -1,19 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PluginHost.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the PluginHost type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client
+﻿namespace Adan.Client
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.ComponentModel.Composition.Hosting;
-    using System.Linq;
     using System.Windows;
 
     using Common.Conveyor;
@@ -22,8 +12,8 @@ namespace Adan.Client
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Common.ViewModel;
-    using Adan.Client.Common.Utils;
+    using Common.ViewModel;
+    using Common.Utils;
 
     /// <summary>
     /// Class to host plugins.
@@ -35,7 +25,7 @@ namespace Adan.Client
         private readonly AggregateCatalog _catalog;
         private readonly CompositionContainer _container;
 
-        private string currentOutputWindow = string.Empty;
+        private string _currentOutputWindow = string.Empty;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="PluginHost"/> class from being created.
@@ -137,20 +127,16 @@ namespace Adan.Client
                 }
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="outputWindow"></param>
-        public void OutputWindowChanged(OutputWindow outputWindow)
+        
+        public void OutputWindowChanged(RootModel rootModel)
         {
-            if (outputWindow.Uid != currentOutputWindow)
+            if (rootModel.Uid != _currentOutputWindow)
             {
                 foreach (var plugin in Plugins)
                 {
                     try
                     {
-                        plugin.OnChangedOutputWindow(outputWindow.RootModel);
+                        plugin.OnChangedOutputWindow(rootModel);
                     }
                     catch (Exception ex)
                     {
@@ -158,7 +144,7 @@ namespace Adan.Client
                     }
                 }
 
-                currentOutputWindow = outputWindow.Uid;
+                _currentOutputWindow = rootModel.Uid;
             }
         }
 

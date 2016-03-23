@@ -1,28 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 using Adan.Client.ViewModel;
 using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
 using Adan.Client.Common.Settings;
 
 namespace Adan.Client.Dialogs
 {
-    /// <summary>
-    /// Логика взаимодействия для ProfilesOptionsEditDialog.xaml
-    /// </summary>
-    public partial class ProfileOptionsEditDialog : Window
+    public partial class ProfileOptionsEditDialog
     {
-        private string profileName;
+        private readonly string profileName;
 
         /// <summary>
         /// 
@@ -32,8 +18,8 @@ namespace Adan.Client.Dialogs
             InitializeComponent();
 
             this.profileName = profileName;
-            this.Title += profileName;
-            this.Closed += ProfileOptionsEditDialog_Closed;
+            Title += profileName;
+            Closed += ProfileOptionsEditDialog_Closed;
         }
 
         private void ProfileOptionsEditDialog_Closed(object sender, EventArgs e)

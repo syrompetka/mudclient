@@ -1,7 +1,0 @@
-H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.DataVisualization.Toolkit.Expression.Design.dll
-H:\ToolkitRelease\Toolkit-release\bin\Release\System.Windows.Controls.DataVisualization.Toolkit.Expression.Design.pdb
-H:\ToolkitRelease\Toolkit-release\DataVisualization.Expression.Design\obj\Release\ResolveAssemblyReference.cache
-H:\ToolkitRelease\Toolkit-release\DataVisualization.Expression.Design\obj\Release\System.Windows.Controls.DataVisualization.Design.Properties.Resources.resources
-H:\ToolkitRelease\Toolkit-release\DataVisualization.Expression.Design\obj\Release\Controls.DataVisualization.Toolkit.Expression.Design.csproj.GenerateResource.Cache
-H:\ToolkitRelease\Toolkit-release\DataVisualization.Expression.Design\obj\Release\System.Windows.Controls.DataVisualization.Toolkit.Expression.Design.dll
-H:\ToolkitRelease\Toolkit-release\DataVisualization.Expression.Design\obj\Release\System.Windows.Controls.DataVisualization.Toolkit.Expression.Design.pdb
