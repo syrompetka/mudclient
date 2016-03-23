@@ -1,31 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GroupStatusMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the GroupStatusMessageDeserializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
+﻿namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
 {
     using System;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
-
-    using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.GroupWidget.Messages;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using System.Threading;
-    using Adan.Client.Common.Utils;
-    using System.Collections.Generic;
+    using Messages;
+    using Common.Utils;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="GroupStatusMessage"/> messages.
@@ -67,37 +50,20 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                 string str = _builder.ToString();
                 _builder.Clear();
 
-                Task.Factory.StartNew(() =>
+                try
+                {
+                    using (var stringReader = new StringReader(str))
                     {
-                        try
-                        {
-                            using (var stringReader = new StringReader(str))
-                            {
-                                var message = (GroupStatusMessage)_serializer.Deserialize(stringReader);
-                                var monstersCount = new Dictionary<string, int>();
-
-                                foreach (var mate in message.GroupMates)
-                                {
-                                    if (monstersCount.ContainsKey(mate.Name))
-                                    {
-                                        monstersCount[mate.Name]++;
-                                        mate.TargetName = string.Format("{0}.{1}", monstersCount[mate.Name], mate.TargetName);
-                                    }
-                                    else
-                                    {
-                                        monstersCount.Add(mate.Name, 1);
-                                    }
-                                }
-
-                                PushMessageToConveyor(message);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorLogger.Instance.Write(string.Format("Error deserialize group message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
-                            PushMessageToConveyor(new ErrorMessage(ex.Message));
-                        }
-                    });
+                        var message = (GroupStatusMessage)_serializer.Deserialize(stringReader);
+                        PushMessageToConveyor(message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error deserialize group message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
+                    PushMessageToConveyor(new ErrorMessage(ex.Message));
+                    _builder.Clear();
+                }
             }
         }
 

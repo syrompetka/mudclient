@@ -19,20 +19,18 @@ namespace Adan.Client.Controls
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
-    using Messages;
     using System.Windows.Input;
-    using Adan.Client.Common.Settings;
-    using Adan.Client.Common.Model;
-    using Adan.Client.Common.Commands;
+    using Common.Settings;
+    using Common.Model;
+    using Common.Commands;
 
     /// <summary>
     /// Control to contain all text and allow scrolling.
     /// </summary>
-    public partial class MainOutputWindow : UserControl, IScrollInfo
+    public partial class MainOutputWindow : IScrollInfo
     {
-        private MainWindow _mainWindow;
-        private RootModel _rootModel;
+        private readonly MainWindow _mainWindow;
+        private readonly RootModel _rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainOutputWindow"/> class.
@@ -43,7 +41,7 @@ namespace Adan.Client.Controls
 
             _mainWindow = mainWindow;
             _rootModel = rootModel;
-            
+            txtCommandInput.RootModel = rootModel;
             Loaded += (o, e) => txtCommandInput.Focus();
         }
 
@@ -60,7 +58,7 @@ namespace Adan.Client.Controls
             if (e.Handled)
                 return;
 
-            var hotkeyCommand = new HotkeyCommand()
+            var hotkeyCommand = new HotkeyCommand
             {
                 Key = e.Key == Key.System ? e.SystemKey : e.Key,
                 ModifierKeys = Keyboard.Modifiers,

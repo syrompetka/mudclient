@@ -43,6 +43,7 @@
     <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -109,6 +110,9 @@
     <Compile Include="Commands\SendToWindowCommand.cs" />
     <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
+    <Compile Include="Controls\MainOutputWindow.xaml.cs">
+      <DependentUpon>MainOutputWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
       <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
     </Compile>
@@ -288,6 +292,10 @@
     <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
+    <Page Include="Controls\MainOutputWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\MainOutputWindowNative.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -439,12 +447,12 @@
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
-      <ProductName>Клиентский профиль Microsoft .NET Framework 4 %28x86 и x64%29</ProductName>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
-      <ProductName>Клиентский профиль .NET Framework 3.5 SP1</ProductName>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">

@@ -7,6 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Globalization;
+
 namespace Adan.Client.Common.Controls
 {
     #region Namespace Imports
@@ -20,8 +24,6 @@ namespace Adan.Client.Common.Controls
     using System.Windows.Media;
     using System.Windows.Media.TextFormatting;
     using System.Windows.Threading;
-    using System.Diagnostics;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -29,7 +31,6 @@ namespace Adan.Client.Common.Controls
 
     using TextFormatting;
     using Themes;
-    using System.ComponentModel;
 
     #endregion
 
@@ -49,19 +50,13 @@ namespace Adan.Client.Common.Controls
         private readonly TextRunCache _textRunCache = new TextRunCache();
         private readonly Stack<TextLine> _linesToRenderStack = new Stack<TextLine>();
 
+        private readonly Stopwatch _fpsStopWatch = new Stopwatch();
+
         private readonly DispatcherTimer _doubleClickTimer;
 
         private int _currentLineNumber;
         private int _currentNumberOfLinesInView;
         private double _lineHeight;
-
-#if DEBUG
-        private TimeSpan _renderTime;
-        /// <summary>
-        /// 
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-#endif
 
         #endregion
 
@@ -77,33 +72,12 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
+            _fpsStopWatch.Start();
         }
 
         #endregion
 
         #region Properties
-
-#if DEBUG
-        /// <summary>
-        /// 
-        /// </summary>
-        public TimeSpan RenderTime
-        {
-            get
-            {
-                return _renderTime;
-            }
-            set
-            {
-                _renderTime = value;
-                if (PropertyChanged != null)
-                {
-                    var e = new PropertyChangedEventArgs("RenderTime");
-                    PropertyChanged(this, e);
-                }
-            }
-        }
-#endif
 
         /// <summary>
         /// Gets or sets the lines overflow percent before cleanup.
@@ -678,13 +652,8 @@ namespace Adan.Client.Common.Controls
         {
             Assert.ArgumentNotNull(drawingContext, "drawingContext");
 
-#if DEBUG
-            Stopwatch sw = new Stopwatch();
-            sw.Start();
-#endif
-
-            base.OnRender(drawingContext);
-            drawingContext.DrawRectangle(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), new Pen(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
+            //base.OnRender(drawingContext);
+            //drawingContext.DrawRectangle(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), new Pen(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
             var renderedLines = 0;
             if (_selectionSettings.NeedUpdate)
             {
@@ -715,6 +684,7 @@ namespace Adan.Client.Common.Controls
                     {
                         var line = _linesToRenderStack.Pop();
                         line.Draw(drawingContext, new Point(0, currentHeight - line.Height), InvertAxes.None);
+
                         _lineHeight = line.Height;
                         drawnChars += line.Length;
                         if (_selectionSettings.NeedUpdate)
@@ -732,6 +702,9 @@ namespace Adan.Client.Common.Controls
                 }
             }
 
+            var fps = 1000.0/_fpsStopWatch.ElapsedMilliseconds;
+            drawingContext.DrawText(new FormattedText(fps.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 22, Brushes.White), new Point(ActualWidth - 40, 5));
+            _fpsStopWatch.Restart();
             _currentNumberOfLinesInView = renderedLines;
             if (_selectionSettings.NeedUpdate)
             {
@@ -742,11 +715,6 @@ namespace Adan.Client.Common.Controls
                 _selectionSettings.NeedUpdate = false;
                 InvalidateVisual();
             }
-
-#if DEBUG
-            sw.Stop();
-            RenderTime = sw.Elapsed;
-#endif
         }
 
         /// <summary>
