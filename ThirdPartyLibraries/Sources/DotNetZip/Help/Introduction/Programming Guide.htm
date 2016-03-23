@@ -1,0 +1,255 @@
+<html>
+<head>
+<title>DotNetZip Programming Guide</title>
+<style>
+p,body,a,tr,td
+             { font-family: Verdana, Arial, Helvetica; font-size: 10pt }
+h1,h2,h3,h4,h5,h6
+             { font-family: Verdana, Arial, Helvetica; font-weight: normal; font-style: normal; }
+h1           { font-size: 20pt }
+h2           { font-size: 18pt; font-weight:bold; color: navy }
+h3           { font-size: 16pt; font-weight:bold; color: #483d8b }
+h4           { font-size: 14pt; font-weight:bold; color:#C71585; margin-bottom:2px; }
+</style>
+</head>
+
+<!-- @SortOrder 35 --> 
+
+<body>
+<h1>DotNetZip's Model for a Zip archive</h1>
+
+<p> DotNetZip exposes two alternative <em>models</em> for reading (and
+extracting) or
+writing zip
+archives. Each one offers a way of
+representing the zip archive in a software program. 
+</p>
+
+<h2>The ZipFile Class</h2>
+
+<p>The ZipFile class is the primary model.  Of the two alternatives in
+DotNetZip, it is the easier to use, and it is the more capable. If
+you're not sure which option to choose, the ZipFile class is probably
+the right choice for you.  </p>
+
+<p> The ZipFile class is a container that holds entries, each
+represented by the ZipEntry class.  Each entry corresponds to a file or
+directory stored in the zip file.  
+</p>
+
+<p>
+When creating a zip file, you can create entries in the zip file  from one of
+various sources.  The most obvious source is a filesystem file itself -
+you do this by invoking ZipFile.AddFile(), passing the name of the file
+to include into the Zip archive.  When you later call ZipFile.Save(),
+the data from each filesystem file added this way is read, compressed, and then written
+into the zipfile. 
+</p>
+
+<pre lang="cs" numberLines="true" outlining="true"
+  title="AddFile">
+  using (ZipFile zip = new ZipFile())
+  {
+    zip.AddFile("ReadMe.txt");
+    zip.AddFile("Resume.doc");
+    zip.AddFile("Portrait.png");
+    zip.Save("Package.zip");
+  }
+</pre>
+
+<p>An alternative source for entry content is a string or byte array.  A
+  zip entry can be created using either of these as the source for
+  content. 
+</p>
+
+
+<pre lang="cs" numberLines="true" outlining="true"
+  title="AddEntry(String and byte array)">
+  byte[] buffer = ... ;
+  using (ZipFile zip = new ZipFile())
+  {
+    zip.AddEntry("ReadMe.txt", "This will be the content of " + 
+                "the Readme file in the zip archive.");
+    zip.AddFile("Data.bin", buffer);
+    zip.Save("Bundle.zip");
+  }
+</pre>
+
+<p>Obviously you can mix-and-match the sources for entries  - you can
+  add some entries directly from filesystem files, you can add entries
+  from strings or buffers - and save all those entries into a single
+  ZipFile.
+</p>
+
+<p>
+  Now, suppose you have a stream opened, and you'd like to store the contents
+  of that stream into a zip file.  To do that, call
+  ZipFile.AddEntry(string name, Stream stream).
+</p>
+
+<pre lang="cs" numberLines="true" outlining="true"
+  title="AddEntry(Stream)">
+  using (ZipFile zip = new ZipFile())
+  {
+    zip.AddEntry("NameOfEntry.bin", "", stream1);
+    zip.Save("Archive.zip");
+  }
+</pre>
+
+<p>
+  If your application (your code) is able to access the data
+  for a ZipEntry, but not via a stream, or a byte array, or a string. It
+  is accessible in some other form. By calling the ZipFile.AddEntry()
+  method that accepts a WriteDelegate, the application can write the
+  data directly into the ZipEntry. The obvious scenario here is saving
+  a DataSet into a ZipEntry.
+</p>
+
+
+<pre lang="cs" numberLines="true" outlining="true"
+  title="AddEntry(Stream)">
+private void WriteEntry (String filename, Stream output)
+{
+    DataSet ds1 = ObtainDataSet();
+    ds1.WriteXml(output);
+}
+
+private void Run()
+{
+    Using zip = New ZipFile
+    {
+        zip.AddEntry(zipEntryName, WriteEntry);
+        zip.Save(zipFileName);
+    }
+}
+</pre>
+
+<p>There are some other options in the ZipFile class.  For example, if
+  you'd like to compress an entire folder, and all the files contained
+  within it, you can do so easily with the ZipFile.AddDirectory()
+  method.  It works just like adding a file with the AddFile() method,
+  except 
+</p>
+
+<h3>ZipFile Properties</h3>
+
+<h4>Properties that affect each ZipEntry</h4>
+
+<p>
+  There are various properties on the ZipFile class that govern how
+  entries are added to the zip archive.  Here's a summary of the most
+  important ones.  In each of the following, the value of the property
+  is <em>copied</em> to ZipEntry objects as they are added to the
+  ZipFile, therefore you must set the property prior to calling AddFile,
+  AddEntry, and so on.
+</p>
+
+
+<table border='1'>
+<tr>
+<td style='color:white;Background:Navy;'><strong>Property</strong></td>
+<td style='color:white;Background:Navy;'><strong>Purpose</strong></td>
+</tr>
+
+<tr>
+<td>Encryption</td>
+<td>sets the encryption to be used on ZipEntry objects. Use this to
+  encrypt individual entries in the zip.  You can use
+  either PKZip encryption or the stronger AES encryption. </td>
+</tr>
+
+<tr>
+<td>Password</td>
+<td>sets the password to be used on ZipEntry objects. If you set the
+  Password property and don't bother to set the Encryption property,
+  PKZip encryption will be used as a default.  </td>
+</tr>
+
+<tr>
+<td>CompressionLevel</td>
+<td>normally each entry is compressed using the default compression
+  level. In most cases, this is just fine. If you like, you can tweak
+  this up or down, to get greater compression (and longer run-times to
+  compress) or less compression (faster compression times). </td>
+</tr>
+
+</table>
+
+
+<h4>Properties that apply to the entire ZipFile </h4>
+
+<p>
+  There are other properties on the ZipFile class that apply to the
+  entire ZipFile instance. Some of these properties are copied to the
+  ZipEntry items, as described above.  But in general the recommendation
+  is to set these just once, before adding any entries, and use the same
+  setting all of the entries in the zip archive.  
+</p>
+
+
+<table border='1'>
+<tr>
+<td style='color:white;Background:Navy;'><strong>Property</strong></td>
+<td style='color:white;Background:Navy;'><strong>Purpose</strong></td>
+</tr>
+
+<tr>
+<td>ProvisionalAlternateEncoding</td>
+<td>sets the text encoding to be used for the filenames and comments
+  used on the various ZipEntry items in the zip file. The default is
+  IBM437.  If you need Unicode filenames, then use UTF-8. You can use
+  other code pages but interoperability is not guaranteed. </td>
+</tr>
+
+<tr>
+<td>EmitTimesInUnixFormatWhenSaving</td>
+<td>
+  There are various options, not mutually exclusive, for emitting
+  timestamps into zip files, for each entry. One option is to emit them
+  in a format that is preferred by Unix systems. Setting this property
+  to true makes that happen.
+   </td>
+</tr>
+
+<tr>
+<td>EmitTimesInWindowsFormatWhenSaving</td>
+<td>
+  Setting this property to true tells DotNetZip to emit the timestamp in
+  a format preferred by Windows systems when saving the zip file.
+   </td>
+</tr>
+
+
+<tr>
+<td>UseZip64WhenSaving</td>
+<td>
+  Setting this property tells DotNetZip to use ZIP64 extensions or not,
+  when saving. ZIP64 is necessary when the size of the zip file exceeds 4gb, or when
+  there are more than 65534 entries in the zip file. 
+</td>
+</tr>
+
+
+<tr>
+<td>MaxOutputSegmentSize</td>
+<td>
+  DotNetZip can save to segmented or spanned zip files.  This property,
+  when non-zero, sets the maximum segment size for each zipfile
+  segment.  The minimum value here is 65536.  
+</td>
+</tr>
+</table>
+
+
+
+<hr/>
+
+<h2>ZipInputStream and ZipOutputStream</h2>
+
+<h3>ZipInputStream for reading Zip files</h3>
+
+<h3>ZipOutputStream for writing Zip files</h3>
+
+
+</body>
+</html>

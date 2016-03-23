@@ -23,7 +23,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <DocumentationFile />
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Prefer32Bit>false</Prefer32Bit>
@@ -49,9 +48,8 @@
     <Reference Include="ICSharpCode.AvalonEdit">
       <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
-      <HintPath>..\packages\DotNetZip.1.9.8\lib\net20\Ionic.Zip.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Ionic.Zlib">
+      <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zlib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -246,19 +244,15 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">
-      <Link>Dictionary.xml</Link>
-      <SubType>Designer</SubType>
-    </CodeAnalysisDictionary>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

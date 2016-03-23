@@ -45,8 +45,6 @@ namespace Adan.Client
 
         private readonly IList<LayoutContent> _allWidgets = new List<LayoutContent>();
         private readonly IList<OutputWindow> _outputWindows = new List<OutputWindow>();
-        private double _nonFullScreenWindowWidth;
-        private double _nonFullScreenWindowHeight;
         private WindowState _nonFullScreenWindowState;
 
         #endregion
@@ -907,17 +905,13 @@ namespace Adan.Client
             if (WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
-                ResizeMode = ResizeMode.CanResizeWithGrip;
                 WindowState = _nonFullScreenWindowState;
-                Width = _nonFullScreenWindowWidth;
-                Height = _nonFullScreenWindowHeight;
                 _mainMenu.Visibility = Visibility.Visible;
             }
             else
             {
-                _nonFullScreenWindowHeight = Height;
-                _nonFullScreenWindowWidth = Width;
                 _nonFullScreenWindowState = WindowState;
+                WindowState = System.Windows.WindowState.Normal;
                 WindowStyle = WindowStyle.None;
                 WindowState = WindowState.Maximized;
                 _mainMenu.Visibility = Visibility.Collapsed;
