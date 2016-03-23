@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextTrigger.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the TextTrigger type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Model
+﻿namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
@@ -21,8 +12,6 @@ namespace Adan.Client.Common.Model
     using Messages;
 
     using Utils.PatternMatching;
-    using Adan.Client.Common.Settings;
-    using System.Diagnostics;
 
     /// <summary>
     /// Trigger that handles text messages from server.
@@ -31,7 +20,7 @@ namespace Adan.Client.Common.Model
     public class TextTrigger : TriggerBase
     {
         [NonSerialized]
-        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat<string>(string.Empty, 10));
+        private readonly IList<string> _matchingResults = new List<string>(Enumerable.Repeat(string.Empty, 10));
 
         [NonSerialized]
         private PatternToken _rootPatternToken;
@@ -42,13 +31,12 @@ namespace Adan.Client.Common.Model
         [NonSerialized]
         private string _matchingPattern;
 
-        private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
+        private readonly Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextTrigger"/> class.
         /// </summary>
         public TextTrigger()
-            : base()
         {
             MatchingPattern = string.Empty;
             _context = new ActionExecutionContext();
@@ -196,22 +184,14 @@ namespace Adan.Client.Common.Model
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public override string GetPatternString()
         {
             return MatchingPattern;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public override string UndoInfo()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append("#Триггер: ").Append("#action {").Append(GetPatternString()).Append("} ");
             switch (Operation)
             {
@@ -226,10 +206,6 @@ namespace Adan.Client.Common.Model
             return sb.ToString();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
         public override void Undo(RootModel rootModel)
         {
             if (Group != null && Operation != UndoOperation.None)

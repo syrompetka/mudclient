@@ -1,32 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RoomMonstersMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the RoomMonstersMessageDeserializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
+﻿namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
 {
     using System;
-    using System.Linq;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
-
-    using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Common.Utils;
-    using Adan.Client.Plugins.GroupWidget.Messages;
-    using System.Diagnostics;
-    using System.Threading.Tasks;
-    using System.Threading;
-    using System.Collections.Generic;
+    using Common.Utils;
+    using Messages;
 
     /// <summary>
     /// <see cref="MessageDeserializer"/> to deserializer <see cref="RoomMonstersMessage"/> messages.
@@ -69,37 +51,20 @@ namespace Adan.Client.Plugins.GroupWidget.MessageDeserializers
                 string str = _builder.ToString();
                 _builder.Clear();
 
-                Task.Factory.StartNew(() =>
+                try
+                {
+                    using (var stringReader = new StringReader(str))
                     {
-                        try
-                        {
-                            using (var stringReader = new StringReader(str.ToString()))
-                            {
-                                var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
-                                var monstersCount = new Dictionary<string, int>();
-
-                                foreach (var monster in message.Monsters)
-                                {
-                                    if (monstersCount.ContainsKey(monster.Name))
-                                    {
-                                        monstersCount[monster.Name]++;
-                                        monster.TargetName = string.Format("{0}.{1}", monstersCount[monster.Name], monster.TargetName);
-                                    }
-                                    else
-                                    {
-                                        monstersCount.Add(monster.Name, 1);
-                                    }
-                                }
-
-                                PushMessageToConveyor(message);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            ErrorLogger.Instance.Write(string.Format("Error deserialize mosters message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
-                            PushMessageToConveyor(new ErrorMessage(ex.Message));
-                        }
-                    });
+                        var message = (RoomMonstersMessage)_serializer.Deserialize(stringReader);
+                        PushMessageToConveyor(message);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error deserialize mosters message: {0}\r\n{1}\r\n{2}", str, ex.Message, ex.StackTrace));
+                    _builder.Clear();
+                    PushMessageToConveyor(new ErrorMessage(ex.Message));
+                }
             }
         }
 

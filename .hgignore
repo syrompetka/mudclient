@@ -28,3 +28,8 @@ Adan.Client.Setup/Release/
 Adan.Client.Map/obj/
 Adan.Client.v12.suo
 Adan.Client.sln.DotSettings.user
+packages
+ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock/obj/
+ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock.Themes.Expression/bin/
+ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock.Themes.Expression/obj/
+ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock/bin/

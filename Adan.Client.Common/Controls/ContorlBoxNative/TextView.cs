@@ -1,8 +1,6 @@
 ﻿using Adan.Client.Common.Themes;
 using Adan.Client.Common.Utils;
-using Adan.Client.Messages;
 using System;
-using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
@@ -14,7 +12,7 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
     /// </summary>
     public class TextView : UserControl
     {      
-        private TextBoxNative _parent;
+        private readonly TextBoxNative _parent;
         private SafeLogFont _logFont;
 
         /// <summary>
@@ -23,15 +21,15 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
         public TextView(TextBoxNative parent)
         {
             _parent = parent;
-            this.BackColor = Color.Black;
+            BackColor = Color.Black;
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.Opaque | ControlStyles.UserPaint, true);
             
-            this.FontChanged += TextView_FontChanged;
+            FontChanged += TextView_FontChanged;
         }
 
         private void TextView_FontChanged(object sender, EventArgs e)
         {
-            _logFont = new SafeLogFont(this.Font);
+            _logFont = new SafeLogFont(Font);
         }
 
         /// <summary>
@@ -58,7 +56,7 @@ namespace Adan.Client.Common.Controls.ContorlBoxNative
                 if (nCount < 0 || nLine < 0 || nCount + nLine > _parent.Messages.Count)
                     return;
 
-                RECT rect = new RECT();
+                var rect = new RECT();
                 for (int i = nCount + nLine - 1; i >= nCount; i--)
                 {
                     int xShift = 0;

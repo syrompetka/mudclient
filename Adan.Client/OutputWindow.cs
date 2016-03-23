@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -13,30 +10,23 @@ using Adan.Client.Common.Model;
 using Adan.Client.Common.Networking;
 using Adan.Client.Common.Settings;
 using Adan.Client.Controls;
-using Adan.Client.Properties;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 using Xceed.Wpf.AvalonDock.Layout;
 
 namespace Adan.Client
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class OutputWindow : IDisposable
     {
-        private Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
-        private object _messageQueueLockObject = new object();
+        private readonly Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
+        private readonly object _messageQueueLockObject = new object();
         private RootModel _rootModel;
-        private MainOutputWindowNative _window;
-        private object _loggingLockObject = new object();
-        private StreamWriter _streamWriter;
-        private bool _isLogging;
-        
+        private readonly MainOutputWindow _window;
+
         /// <summary>
         /// 
         /// </summary>
-        public OutputWindow(MainWindow MainWindowEx, string name)
+        public OutputWindow(MainWindow mainWindow, string name)
         {
             Name = name;
 
@@ -45,23 +35,15 @@ namespace Adan.Client
 
             RootModel = new RootModel(conveyor, SettingsHolder.Instance.GetProfile(name));
             conveyor.RootModel = RootModel;
-
             conveyor.MessageReceived += HandleMessage;
 
-            _window = new MainOutputWindowNative(MainWindowEx, _rootModel);
+            _window = new MainOutputWindow(mainWindow, _rootModel);
             VisibleControl = _window;
             
-            _window._txtCommandInput.RootModel = RootModel;
-            _window._txtCommandInput.LoadHistory(RootModel.Profile);
-            _window._txtCommandInput.GotFocus += txtCommandInput_GotFocus;
-            _window._txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
-
-            IsLogging = false;
-        }
-
-        private void txtCommandInput_GotFocus(object sender, RoutedEventArgs e)
-        {
-            PluginHost.Instance.OutputWindowChanged(this);
+//            _window._txtCommandInput.RootModel = RootModel;
+//            _window._txtCommandInput.LoadHistory(RootModel.Profile);
+//            _window._txtCommandInput.GotFocus += txtCommandInput_GotFocus;
+//            _window._txtCommandInput.GotKeyboardFocus += txtCommandInput_GotFocus;
         }
 
         /// <summary>
@@ -100,22 +82,6 @@ namespace Adan.Client
         /// <summary>
         /// 
         /// </summary>
-        public bool IsLogging
-        {
-            get
-            {
-                return _isLogging;
-            }
-            set
-            {
-                _isLogging = value;
-                _rootModel.IsLogging = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         public Control VisibleControl
         {
             get;
@@ -142,7 +108,7 @@ namespace Adan.Client
         /// </summary>
         public void Focus()
         {
-            _window._txtCommandInput.Focus();
+            _window.txtCommandInput.Focus();
         }
 
         /// <summary>
@@ -150,65 +116,7 @@ namespace Adan.Client
         /// </summary>
         public void Save()
         {
-            _window._txtCommandInput.SaveCurrentHistory(RootModel.Profile);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logName"></param>
-        public void StartLogging(string logName)
-        {
-            try
-            {
-                var fullLogPath = Path.Combine(GetLogsFolder(), logName + ".log");
-                var directoryPath = Path.GetDirectoryName(fullLogPath);
-
-                if (!Directory.Exists(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-
-                var fileStream = new FileStream(fullLogPath, FileMode.Append, FileAccess.Write);
-
-                _streamWriter = new StreamWriter(fileStream, Encoding.Unicode) { AutoFlush = true };
-
-                RootModel.PushMessageToConveyor(new InfoMessage(string.Format(Resources.LoggingStarted, fullLogPath)));
-
-                IsLogging = true;
-            }
-            catch (IOException ex)
-            {
-                RootModel.PushMessageToConveyor(new ErrorMessage(string.Format("# {0}", ex.Message)));
-                IsLogging = false;
-                _streamWriter = null;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void StopLogging()
-        {
-            if (IsLogging)
-            {
-                if (_streamWriter != null)
-                {
-                    lock (_loggingLockObject)
-                    {
-                        try
-                        {
-                            _streamWriter.Close();
-                        }
-                        catch (Exception)
-                        { }
-                        _streamWriter = null;
-                    }
-                }
-
-                IsLogging = false;
-                RootModel.PushMessageToConveyor(new InfoMessage(Resources.LoggingStopped));
-            }
+            //_window._txtCommandInput.SaveCurrentHistory(RootModel.Profile);
         }
 
         /// <summary>
@@ -228,19 +136,6 @@ namespace Adan.Client
             if (disposing)
             {
                 RootModel.MessageConveyor.Dispose();
-                if (_streamWriter != null)
-                {
-                    lock (_loggingLockObject)
-                    {
-                        try
-                        {
-                            _streamWriter.Close();
-                        }
-                        catch (Exception)
-                        { }
-                        _streamWriter = null;
-                    }
-                }
             }
         }
 
@@ -265,27 +160,6 @@ namespace Adan.Client
                     else
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
                 }
-
-                if (IsLogging)
-                {
-                    Task.Factory.StartNew(() =>
-                    {
-                        lock (_loggingLockObject)
-                        {
-                            if (IsLogging)
-                            {
-                                if (_streamWriter != null)
-                                {
-                                    try
-                                    {
-                                        _streamWriter.WriteLine(message.InnerText);
-                                    }
-                                    catch (Exception) { }
-                                }
-                            }
-                        }
-                    });
-                }
             }
         }
 
@@ -302,26 +176,6 @@ namespace Adan.Client
             {
                 _window.AddMessages(messages);
             }
-        }
-
-        [NotNull]
-        private string GetLogsFolder()
-        {
-            var path = Path.Combine(SettingsHolder.Instance.Folder, "Logs");
-
-            if (!Directory.Exists(path))
-            {
-                try
-                {
-                    Directory.CreateDirectory(path);
-                }
-                catch (Exception)
-                {
-                    return string.Empty;
-                }
-            }
-
-            return path;
         }
     }
 }

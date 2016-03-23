@@ -21,7 +21,7 @@
             </ScrollViewer>
         </Grid>
         <Grid Grid.Row="1">
-            <Controls:TextBoxWithHistory x:Name="_txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True"/>
+            <Controls:TextBoxWithHistory x:Name="_txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True" TextChanged="_txtCommandInput_TextChanged"/>
         </Grid>
     </Grid>
 </UserControl>
