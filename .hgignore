@@ -28,8 +28,9 @@ Adan.Client.Setup/Release/
 Adan.Client.Map/obj/
 Adan.Client.v12.suo
 Adan.Client.sln.DotSettings.user
+Adan.Client2010.v12.suo
+Adan.Client/Adan.Client.csproj.DotSettings.user
+Adan.Client.Plugins.GroupWidget/Adan.Client.Plugins.GroupWidget.csproj.DotSettings.user
+.vs/Adan.Client2010/v14/.suo
+Adan.Client141230.vspx
 packages
-ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock/obj/
-ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock.Themes.Expression/bin/
-ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock.Themes.Expression/obj/
-ThirdPartyLibraries/Sources/AvalonDock/Version2.0/Xceed.Wpf.AvalonDock/bin/
