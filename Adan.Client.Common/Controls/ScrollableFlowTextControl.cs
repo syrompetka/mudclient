@@ -1,22 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScrollableFlowTextControl.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Interaction logic for ScrollableFlowTextControl.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-
+﻿
 namespace Adan.Client.Common.Controls
 {
     #region Namespace Imports
 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -30,7 +20,6 @@ namespace Adan.Client.Common.Controls
     using Messages;
 
     using TextFormatting;
-    using Themes;
 
     #endregion
 
@@ -50,7 +39,6 @@ namespace Adan.Client.Common.Controls
         private readonly TextRunCache _textRunCache = new TextRunCache();
         private readonly Stack<TextLine> _linesToRenderStack = new Stack<TextLine>();
 
-        private readonly Stopwatch _fpsStopWatch = new Stopwatch();
 
         private readonly DispatcherTimer _doubleClickTimer;
 
@@ -72,7 +60,6 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
-            _fpsStopWatch.Start();
         }
 
         #endregion
@@ -702,9 +689,6 @@ namespace Adan.Client.Common.Controls
                 }
             }
 
-            var fps = 1000.0/_fpsStopWatch.ElapsedMilliseconds;
-            drawingContext.DrawText(new FormattedText(fps.ToString(CultureInfo.InvariantCulture), CultureInfo.InvariantCulture, FlowDirection.LeftToRight, new Typeface("Consolas"), 22, Brushes.White), new Point(ActualWidth - 40, 5));
-            _fpsStopWatch.Restart();
             _currentNumberOfLinesInView = renderedLines;
             if (_selectionSettings.NeedUpdate)
             {

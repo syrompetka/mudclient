@@ -24,7 +24,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Bin\Plugins\Adan.Client.Plugins.StuffDatabase.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\Adan.Client\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -35,7 +34,6 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\Bin\Plugins\Adan.Client.Plugins.StuffDatabase.XML</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\Adan.Client\MSBuild\CodeAnalysis.ruleset</CodeAnalysisRuleSet>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
@@ -84,11 +82,6 @@
     <Compile Include="Model\WandOrStaffSpell.cs" />
     <Compile Include="Model\WeaponStats.cs" />
     <Compile Include="Model\WearingAffect.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\Adan.Client\Dictionary.xml">
-      <Link>Dictionary.xml</Link>
-    </CodeAnalysisDictionary>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">

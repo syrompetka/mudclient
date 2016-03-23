@@ -1,0 +1,162 @@
+Tue, 21 Jul 2009  15:52
+
+from
+http://nssdcftp.gsfc.nasa.gov/staging/pds/rings/RPX_0002/SOFTWARE/UNZIP532/PROGINFO/EXTRA.FLD
+
+
+         -Extended Timestamp Extra Field:
+          ==============================
+
+          The following is the layout of the extended-timestamp extra block.
+          (Last Revision 970118)
+
+          Local-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (time)  0x5455        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+          Flags         Byte            info bits
+          (ModTime)     Long            time of last modification (UTC/GMT)
+          (AcTime)      Long            time of last access (UTC/GMT)
+          (CrTime)      Long            time of original creation (UTC/GMT)
+
+          Central-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (time)  0x5455        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+          Flags         Byte            info bits (refers to local header!)
+          (ModTime)     Long            time of last modification (UTC/GMT)
+
+          The central-header extra field contains the modification time only,
+          or no timestamp at all.  TSize is used to flag its presence or
+          absence.  But note:
+
+              If "Flags" indicates that Modtime is present in the local header
+              field, it MUST be present in the central header field, too!
+              This correspondence is required because the modification time
+              value may be used to support trans-timezone freshening and
+              updating operations with zip archives.
+
+          The time values are in standard Unix signed-long format, indicating
+          the number of seconds since 1 January 1970 00:00:00.  The times
+          are relative to Coordinated Universal Time (UTC), also sometimes
+          referred to as Greenwich Mean Time (GMT).  To convert to local time,
+          the software must know the local timezone offset from UTC/GMT.
+
+          The lower three bits of Flags in both headers indicate which time-
+          stamps are present in the LOCAL extra field:
+
+                bit 0           if set, modification time is present
+                bit 1           if set, access time is present
+                bit 2           if set, creation time is present
+                bits 3-7        reserved for additional timestamps; not set
+
+          Those times that are present will appear in the order indicated, but
+          any combination of times may be omitted.  (Creation time may be
+          present without access time, for example.)  TSize should equal
+          (1 + 4*(number of set bits in Flags)), as the block is currently
+          defined.  Other timestamps may be added in the future.
+
+
+
+
+         -Info-ZIP Unix Extra Field (type 1):
+          ==================================
+
+          The following is the layout of the old Info-ZIP extra block for
+          Unix.  It has been replaced by the extended-timestamp extra block
+          (0x5455) and the Unix type 2 extra block (0x7855).
+          (Last Revision 970118)
+
+          Local-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (Unix1) 0x5855        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+          ModTime       Long            time of last modification (UTC/GMT)
+          AcTime        Long            time of last access (UTC/GMT)
+          UID           Short           Unix user ID
+          GID           Short           Unix group ID
+
+          Central-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (Unix1) 0x5855        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+          ModTime       Long            time of last modification (GMT/UTC)
+          AcTime        Long            time of last access (GMT/UTC)
+
+          The file modification and access times are in standard Unix signed-
+          long format, indicating the number of seconds since 1 January 1970
+          00:00:00.  The times are relative to Coordinated Universal Time
+          (UTC), also sometimes referred to as Greenwich Mean Time (GMT).  To
+          convert to local time, the software must know the local timezone
+          offset from UTC/GMT.  The modification time may be used by non-Unix
+          systems to support inter-timezone freshening and updating of zip
+          archives.
+
+          The local-header extra block may optionally contain UID and GID
+          info for the file.  The local-header TSize value is the only
+          indication of this.  Note that Unix UIDs and GIDs are usually
+          specific to a particular machine, and they generally require root
+          access to restore.
+
+          This extra field type is obsolete, but it has been in use since
+          mid-1994.  Therefore future archiving software should continue to
+          support it.  Some guidelines:
+
+              An archive member should either contain the old "Unix1"
+              extra field block or the new extra field types "time" and/or
+              "Unix2".
+
+              If both the old "Unix1" block type and one or both of the new
+              block types "time" and "Unix2" are found, the "Unix1" block
+              should be considered invalid and ignored.
+
+              Unarchiving software should recognize both old and new extra
+              field block types, but the info from new types overrides the
+              old "Unix1" field.
+
+              Archiving software should recognize "Unix1" extra fields for
+              timestamp comparison but never create it for updated, freshened
+              or new archive members.  When copying existing members to a new
+              archive, any "Unix1" extra field blocks should be converted to
+              the new "time" and/or "Unix2" types.
+
+
+         -Info-ZIP Unix Extra Field (type 2):
+          ==================================
+
+          The following is the layout of the new Info-ZIP extra block for
+          Unix.  (Last Revision 960922)
+
+          Local-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (Unix2) 0x7855        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+          UID           Short           Unix user ID
+          GID           Short           Unix group ID
+
+          Central-header version:
+
+          Value         Size            Description
+          -----         ----            -----------
+  (Unix2) 0x7855        Short           tag for this extra block type
+          TSize         Short           total data size for this block
+
+          The data size of the central-header version is zero; it is used
+          solely as a flag that UID/GID info is present in the local-header
+          extra field.  If additional fields are ever added to the local
+          version, the central version may be extended to indicate this.
+
+          Note that Unix UIDs and GIDs are usually specific to a particular
+          machine, and they generally require root access to restore.
+
+
