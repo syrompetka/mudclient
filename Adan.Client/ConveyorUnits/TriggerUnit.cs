@@ -11,13 +11,9 @@ namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-
-    using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
     using Common.Model;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>

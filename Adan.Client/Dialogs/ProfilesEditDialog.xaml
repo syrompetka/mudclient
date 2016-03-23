@@ -48,12 +48,18 @@
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,0,0,5">
             <Button HorizontalAlignment="Left" Command="{Binding Path=EditProfileCommand}" CommandParameter="{Binding ElementName=ProfilesEditorWindow, Path=.}"  MinWidth="50">Edit</Button>
         </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button HorizontalAlignment="Left" Command="{Binding Path=AddProfileCommand}" CommandParameter="{Binding ElementName=txtNewProfileName, Path=Text}" MinWidth="50">Add</Button>
-            <Button HorizontalAlignment="Left" Margin="5,0,0,0" Command="{Binding Path=DeleteProfileCommand}" CommandParameter="{Binding ElementName=lstProfiles, Path=SelectedItem}" MinWidth="50">Delete</Button>
-        </StackPanel>
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">
-            <Button Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="2" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
-        </StackPanel>
+        <Grid Grid.Row="3">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0"  HorizontalAlignment="Left" Command="{Binding Path=AddProfileCommand}" CommandParameter="{Binding ElementName=txtNewProfileName, Path=Text}" MinWidth="50">Add</Button>
+            <Button Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0" Command="{Binding Path=DeleteProfileCommand}" CommandParameter="{Binding ElementName=lstProfiles, Path=SelectedItem}" MinWidth="50">Delete</Button>
+            <Button Grid.Column="2"  Click="HandleCloseClick" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" MinWidth="50">Close</Button>
+        </Grid>
     </Grid>
 </Window>

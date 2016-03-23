@@ -1,17 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SettingsHolder.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the Settings type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Settings
+﻿namespace Adan.Client.Common.Settings
 {
-    using Adan.Client.Common.Controls;
+    using Controls;
     using Model;
-    using Common.Themes;
+    using Themes;
     using CSLib.Net.Annotations;
     using System;
     using System.Collections.Generic;
@@ -26,10 +17,10 @@ namespace Adan.Client.Common.Settings
     public class SettingsHolder
     {
         #region Constants and Fields
-        private static SettingsHolder _instance = new SettingsHolder();
+        private static readonly SettingsHolder _instance = new SettingsHolder();
 
         private SettingsFolder _settingsFolder;
-        private IList<ProfileHolder> _profiles;
+        private readonly IList<ProfileHolder> _profiles;
         private IList<string> _allProfiles;
         private string _folder;
 
@@ -87,7 +78,9 @@ namespace Adan.Client.Common.Settings
             get
             {
                 if (_allProfiles == null)
+                {
                     _allProfiles = new List<string>();
+                }
 
                 return _allProfiles;
             }
@@ -179,7 +172,9 @@ namespace Adan.Client.Common.Settings
                     {
                         var defaultGroup = Settings.GlobalGroups.FirstOrDefault(g => g.IsBuildIn);
                         foreach (var hk in Settings.GlobalHotkeys)
+                        {
                             defaultGroup.Hotkeys.Add(hk);
+                        }
 
                         Settings.GlobalHotkeys.Clear();
                     }
@@ -336,10 +331,14 @@ namespace Adan.Client.Common.Settings
         public void SetProfile(string name)
         {
             if (ProfilesChanged != null)
+            {
                 ProfilesChanged(this, new ProfileChangedEventArgs(name, name=="Global"));
+            }
 
             if (name == "Global")
+            {
                 SaveCommonSettings();
+            }
             else
             {
                 var profile = _profiles.FirstOrDefault(p => p.Name == name);

@@ -36,7 +36,6 @@ namespace Adan.Client.Common.Model
         [NonSerialized]
         private PatternToken _rootPatternToken;
 
-        private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Highlight"/> class.
@@ -152,9 +151,6 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(textMessage, "textMessage");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            var messageBlocks = textMessage.MessageBlocks;
-            //int position = 0;
-            //ClearMatchingResults();
             string text = textMessage.InnerText;
 
             if (string.IsNullOrEmpty(textMessage.InnerText))
@@ -178,29 +174,20 @@ namespace Adan.Client.Common.Model
             }
             else
             {
-                var varReplace = rootModel.ReplaceVariables(TextToHighlight);
-                if (!varReplace.IsAllVariables)
-                    return;
+                int position = 0;
+                ClearMatchingResults();
 
-                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value), ".*"));
+                var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
 
-                var match = rExp.Match(textMessage.InnerText);
-                while (match.Success)
+                while (res.IsSuccess)
                 {
-                    textMessage.HighlightText(match.Index, match.Length, ForegroundColor, BackgroundColor);
-                    match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
+                    textMessage.HighlightText(res.StartPosition, res.EndPosition - res.StartPosition, ForegroundColor,
+                        BackgroundColor);
+                    position = res.EndPosition;
+                    ClearMatchingResults();
+                    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
                 }
             }
-
-            //var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-
-            //while (res.IsSuccess)
-            //{
-            //    textMessage.HighlightText(res.StartPosition, res.EndPosition - res.StartPosition, ForegroundColor, BackgroundColor);
-            //    position = res.EndPosition;
-            //    ClearMatchingResults();
-            //    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-            //}
         }
 
         /// <summary>

@@ -64,12 +64,18 @@
                 </StackPanel>
             </ListBoxItem>
         </ListBox>
-        <StackPanel Grid.Row="1" HorizontalAlignment="Left" Orientation="Horizontal" Margin="0,0,0,5">
-            <Button Padding="4" Command="{Binding Path=EditOptionsCommand}" CommandParameter="{Binding ElementName=ProfileOptionsWindow, Path=.}" IsEnabled="{Binding Path=CanImportProfile}" MinWidth="50">Edit</Button>
-            <Button Padding="4" Command="{Binding Path=ImportProfileCommand}" IsEnabled="{Binding Path=CanImportProfile}" MinWidth="50">Import</Button>
-        </StackPanel>
-        <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,5">
-            <Button Click="HandleCloseClick" HorizontalAlignment="Right" Grid.Row="2" IsCancel="True"  MinWidth="50">Close</Button>
-        </StackPanel>
+        <Grid Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Command="{Binding Path=EditOptionsCommand}" CommandParameter="{Binding ElementName=ProfileOptionsWindow, Path=.}" IsEnabled="{Binding Path=CanEditProfile}" MinWidth="50">Edit</Button>
+            <Button Grid.Column="1" Command="{Binding Path=ImportProfileCommand}" IsEnabled="{Binding Path=CanImportProfile}" MinWidth="50" HorizontalAlignment="Left" Margin="5,0,0,0" >Import</Button>
+            <Button Grid.Column="2" Click="HandleCloseClick" HorizontalAlignment="Right" IsCancel="True"  MinWidth="50">Close</Button>
+        </Grid>
     </Grid>
 </Window>

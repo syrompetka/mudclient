@@ -134,36 +134,17 @@
             }
             else
             {
-                //var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-                //if (!res.IsSuccess)
-                //{
-                //    return;
-                //}
-
-                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
-                if (!varReplace.IsAllVariables)
-                    return;
-
-                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value),
-                    m =>
-                    {
-                        return string.Format("(?<{0}>.*)", int.Parse(m.Value[1].ToString()) + 1);
-                    }));
-
-                Match match = rExp.Match(textMessage.InnerText);
-                if (!match.Success)
-                    return;
-
-                for (int i = 0; i <= 10; i++)
+                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+                if (!res.IsSuccess)
                 {
-                    Context.Parameters[i] = match.Groups[(i + 1).ToString()].Value;
+                    return;
                 }
 
-                //for (int i = 0; i < 10; i++)
-                //{
-                //    if (i < _matchingResults.Count)
-                //        Context.Parameters[i] = _matchingResults[i];
-                //}
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i < _matchingResults.Count)
+                        Context.Parameters[i] = _matchingResults[i];
+                }
             }
 
             Context.CurrentMessage = message;

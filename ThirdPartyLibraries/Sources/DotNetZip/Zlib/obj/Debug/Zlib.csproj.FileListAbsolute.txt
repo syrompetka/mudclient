@@ -1,6 +1,0 @@
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\bin\Debug\Ionic.Zlib.XML
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\bin\Debug\Ionic.Zlib.dll
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\bin\Debug\Ionic.Zlib.pdb
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Debug\ResolveAssemblyReference.cache
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Debug\Ionic.Zlib.dll
-C:\Projects\Adan.Client\ThirdPartyLibraries\Sources\DotNetZip\Zlib\obj\Debug\Ionic.Zlib.pdb

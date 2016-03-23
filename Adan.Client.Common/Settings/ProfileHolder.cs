@@ -164,8 +164,6 @@ namespace Adan.Client.Common.Settings
             if (!File.Exists(file))
                 return;
 
-            //Task.Factory.StartNew(() =>
-            //    {
             RootModel rootModel = new RootModel(profile);
                     try
                     {
@@ -186,11 +184,7 @@ namespace Adan.Client.Common.Settings
                     }
                     catch 
                     {
-                        return;
                     }
-
-                    //SettingsHolder.Instance.SetProfile(rootModel.Profile);
-                //});
         }
 
         /// <summary>

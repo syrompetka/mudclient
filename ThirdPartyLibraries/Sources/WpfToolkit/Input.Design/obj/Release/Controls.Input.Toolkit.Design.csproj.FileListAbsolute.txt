@@ -1,3 +1,0 @@
-H:\ToolkitRelease\Toolkit-release\Input.Design\obj\Release\ResolveAssemblyReference.cache
-H:\ToolkitRelease\Toolkit-release\Input.Design\obj\Release\System.Windows.Controls.Input.Design.Properties.Resources.resources
-H:\ToolkitRelease\Toolkit-release\Input.Design\obj\Release\Controls.Input.Toolkit.Design.csproj.GenerateResource.Cache

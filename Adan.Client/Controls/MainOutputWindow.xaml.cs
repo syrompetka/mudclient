@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainOutputWindow.xaml.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Interaction logic for MainOutputWindow.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Controls
+﻿namespace Adan.Client.Controls
 {
     using System.Collections.Generic;
     using System.Windows;
@@ -30,7 +21,6 @@ namespace Adan.Client.Controls
     public partial class MainOutputWindow : IScrollInfo
     {
         private readonly MainWindow _mainWindow;
-        private readonly RootModel _rootModel;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainOutputWindow"/> class.
@@ -38,11 +28,20 @@ namespace Adan.Client.Controls
         public MainOutputWindow(MainWindow mainWindow, RootModel rootModel)
         {
             InitializeComponent();
-
+            
             _mainWindow = mainWindow;
-            _rootModel = rootModel;
+            RootModel = rootModel;
             txtCommandInput.RootModel = rootModel;
-            Loaded += (o, e) => txtCommandInput.Focus();
+            txtCommandInput.GotFocus += HandleGotFocus;
+            txtCommandInput.GotKeyboardFocus += HandleGotFocus;
+            txtCommandInput.LoadHistory(rootModel.Profile);
+        }
+
+
+        public RootModel RootModel
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -65,7 +64,7 @@ namespace Adan.Client.Controls
                 Handled = false,
             };
 
-            _rootModel.PushCommandToConveyor(hotkeyCommand);
+            RootModel.PushCommandToConveyor(hotkeyCommand);
 
             if (hotkeyCommand.Handled)
             {
@@ -427,6 +426,16 @@ namespace Adan.Client.Controls
 
         #region Methods
 
+        public void SaveCurrentHistory(ProfileHolder profile)
+        {
+            txtCommandInput.SaveCurrentHistory(profile);
+        }
+
+        public void LoadHistory(ProfileHolder profile)
+        {
+            txtCommandInput.LoadHistory(profile);
+        }
+
         private void CheckIsScrolling()
         {
             if (secondaryScrollOutput.VerticalOffset < secondaryScrollOutput.ExtentHeight)
@@ -449,6 +458,12 @@ namespace Adan.Client.Controls
                 }
             }
         }
+
+        private void HandleGotFocus(object sender, RoutedEventArgs e)
+        {
+            PluginHost.Instance.OutputWindowChanged(RootModel);
+        }
+
         #endregion
     }
 }

@@ -1,5 +1,0 @@
-<Modules>
-  <Module PersistentId="9606A078-7135-4CE7-879E-39FCF527F1A3" ModuleId="WPFToolkit" />
-  <Module PersistentId="066FB4E3-8F9C-42D0-9982-8B1F238FAF63" ModuleId="Controls.DataVisualization.Toolkit" />
-  <Module PersistentId="EBC9989D-BD05-4818-A5ED-71C7812F383E" ModuleId="Controls.Input.Toolkit.Design" />
-</Modules>

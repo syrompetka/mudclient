@@ -39,18 +39,15 @@ using Xceed.Wpf.AvalonDock.Themes;
 
 namespace Adan.Client
 {
-    /// <summary>
-    /// Логика взаимодействия для MainWindowEx.xaml
-    /// </summary>
-    public partial class MainWindow : Window
+    public partial class MainWindow
     {
         #region Constants and Fields
 
-        private WindowState nonFullScreenWindowState;
-        private IList<LayoutContent> _allWidgets = new List<LayoutContent>();
-        private IList<OutputWindow> _outputWindows = new List<OutputWindow>();
-        private double nonFullScreenWindowWidth;
-        private double nonFullScreenWindowHeight;
+        private readonly IList<LayoutContent> _allWidgets = new List<LayoutContent>();
+        private readonly IList<OutputWindow> _outputWindows = new List<OutputWindow>();
+        private double _nonFullScreenWindowWidth;
+        private double _nonFullScreenWindowHeight;
+        private WindowState _nonFullScreenWindowState;
 
         #endregion
 
@@ -438,7 +435,7 @@ namespace Adan.Client
             OutputWindow outputWindowToSelect = null;
             if (string.IsNullOrEmpty(name))
             {
-                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                var activeContent = _dockManager.ActiveContent as MainOutputWindow;
                 if (activeContent != null)
                 {
                     var currentWindow = _outputWindows.FirstOrDefault(x => x.Uid == activeContent.RootModel.Uid);
@@ -594,7 +591,7 @@ namespace Adan.Client
 
         private void _dockManager_ActiveContentChanged(object sender, EventArgs e)
         {
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
                 var dockContent = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
@@ -639,7 +636,7 @@ namespace Adan.Client
             var hotkey = SettingsHolder.Instance.Settings.GlobalGroups.Where(g => g.IsEnabled).SelectMany(g => g.Hotkeys).FirstOrDefault(hot => hot.Key == hotkeyCommand.Key && hot.ModifierKeys == hotkeyCommand.ModifierKeys);
             if (hotkey != null)
             {
-                var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+                var activeContent = _dockManager.ActiveContent as MainOutputWindow;
                 if (activeContent != null)
                 {
                     var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
@@ -698,7 +695,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
                 var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
@@ -728,7 +725,7 @@ namespace Adan.Client
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
-            var activeContent = _dockManager.ActiveContent as MainOutputWindowNative;
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
             if (activeContent != null)
             {
                 var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
@@ -910,17 +907,17 @@ namespace Adan.Client
             if (WindowStyle == WindowStyle.None)
             {
                 WindowStyle = WindowStyle.SingleBorderWindow;
-                WindowState = nonFullScreenWindowState;
                 ResizeMode = ResizeMode.CanResizeWithGrip;
-                Width = nonFullScreenWindowWidth;
-                Height = nonFullScreenWindowHeight;
+                WindowState = _nonFullScreenWindowState;
+                Width = _nonFullScreenWindowWidth;
+                Height = _nonFullScreenWindowHeight;
                 _mainMenu.Visibility = Visibility.Visible;
             }
             else
             {
-                nonFullScreenWindowHeight = Height;
-                nonFullScreenWindowWidth = Width;
-                nonFullScreenWindowState = WindowState;
+                _nonFullScreenWindowHeight = Height;
+                _nonFullScreenWindowWidth = Width;
+                _nonFullScreenWindowState = WindowState;
                 WindowStyle = WindowStyle.None;
                 WindowState = WindowState.Maximized;
                 _mainMenu.Visibility = Visibility.Collapsed;
@@ -940,17 +937,14 @@ namespace Adan.Client
             base.OnClosing(e);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public void SaveAllSettings()
         {
             try
             {
-                //if (WindowStyle == WindowStyle.None)
-                //{
-                //    ToggleFullScreenMode();
-                //}
+                if (WindowStyle == WindowStyle.None)
+                {
+                    ToggleFullScreenMode();
+                }
 
                 var layoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings");
                 if (!Directory.Exists(layoutFullPath))

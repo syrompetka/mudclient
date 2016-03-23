@@ -261,11 +261,7 @@ namespace Adan.Client.Common.Conveyor
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="line"></param>
-        /// <param name="rootModel"></param>
+
         public static void ImportJMC(string line, RootModel rootModel)
         {
             var command = new TextCommand(line);

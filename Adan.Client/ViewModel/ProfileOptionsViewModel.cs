@@ -76,6 +76,7 @@ namespace Adan.Client.ViewModel
                 {
                     _selectedOption = value;
                     OnPropertyChanged("SelectedOption");
+                    OnPropertyChanged("CanEditProfile");
                 }
             }
         }
@@ -129,7 +130,7 @@ namespace Adan.Client.ViewModel
         /// Can profile be imported or not
         /// </summary>
         public bool CanImportProfile { get { return Profile != null;  } }
-
+        public bool CanEditProfile { get { return SelectedOption != null; } }
         private void EditProfile([NotNull] object obj)
         {
             Assert.ArgumentNotNull(obj, "obj");
