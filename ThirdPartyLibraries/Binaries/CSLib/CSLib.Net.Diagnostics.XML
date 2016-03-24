@@ -1,0 +1,949 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CSLib.Net.Diagnostics</name>
+    </assembly>
+    <members>
+        <member name="T:CSLib.Net.Diagnostics.Assert">
+            <summary>
+            Defines assertion methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.ArgumentNotNull(System.Object,System.String)">
+            <summary>
+            Asserts that the specified argument is not <c>null</c>.
+            </summary>
+            <param name="argument">
+            An argument value to check.
+            </param>
+            <param name="argumentName">
+            A name of an argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.ArgumentNotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument is not <c>null</c> or empty.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.ArgumentNotNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.CalledFromStaticContext(System.Type)">
+            <summary>
+            Asserts that the method was called by static method of <paramref name="ownerType"/>.
+            </summary>
+            <param name="ownerType">
+            Type for check.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.Fail(System.String,System.Object[])">
+            <summary>
+            Emits the specified error message.
+            </summary>
+            <param name="messageFormat">
+            The message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsFalse(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts whether the specified condition is <c>false</c>.
+            </summary>
+            <param name="condition">
+            The evaluation condition.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing a message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNotNull(System.Object,System.String,System.Object[])">
+            <summary>
+            Asserts whether specified object is not <c>null</c>.
+            </summary>
+            <param name="value">
+            An <see cref="T:System.Object"/> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNotNullOrEmpty(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is not <c>null</c> or empty.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message format to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNotNullOrWhiteSpace(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNull(System.Object,System.String,System.Object[])">
+            <summary>
+            Asserts whether specified object is <c>null</c>.
+            </summary>
+            <param name="value">
+            An <see cref="T:System.Object"/> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNullOrEmpty(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is <c>null</c> or empty.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsNullOrWhiteSpace(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsOfType(System.Object,System.Type,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified object is of specified type.
+            </summary>
+            <param name="instance">
+            An instance of a <see cref="T:System.Object"/>.
+            </param>
+            <param name="type">
+            An instance of a <see cref="T:System.Type"/>.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite detail message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.IsTrue(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts whether the specified condition is <c>true</c>.
+            </summary>
+            <param name="condition">
+            The evaluation condition.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing a message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Assert.ValidIdentifier(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts the identifier validity.
+            </summary>
+            <param name="identifier">
+            An identifier to check.
+            </param>
+            <param name="detailMessageFormat">
+            A <see cref="T:System.String"/> containing composite detail message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.AssertExtensions">
+            <summary>
+            Defines various assertion extension methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertArgumentNotNull(System.Object,System.String)">
+            <summary>
+            Generates assert if specified method argument is <c>null</c>.
+            </summary>
+            <param name="argument">
+            An argument value to check.
+            </param>
+            <param name="argumentName">
+            A name of an argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertArgumentNotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertArgumentNotNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsFalse(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts whether the specified condition is <c>false</c>.
+            </summary>
+            <param name="condition">
+            The evaluation condition.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing a message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNotNull(System.Object,System.String,System.Object[])">
+            <summary>
+            Asserts whether specified object is not <c>null</c>.
+            </summary>
+            <param name="value">
+            An <see cref="T:System.Object"/> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNotNullOrEmpty(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is not <c>null</c> or empty.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message format to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNotNullOrWhiteSpace(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNull(System.Object,System.String,System.Object[])">
+            <summary>
+            Asserts whether specified object is <c>null</c>.
+            </summary>
+            <param name="value">
+            An <see cref="T:System.Object"/> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNullOrEmpty(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is <c>null</c> or empty.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsNullOrWhiteSpace(System.String,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified string is <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            A <see cref="T:System.String"/> value to check.
+            </param>
+            <param name="messageFormat">
+            A message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsOfType(System.Object,System.Type,System.String,System.Object[])">
+            <summary>
+            Asserts that the specified object is of specified type.
+            </summary>
+            <param name="instance">
+            An instance of a <see cref="T:System.Object"/>.
+            </param>
+            <param name="type">
+            An instance of a <see cref="T:System.Type"/>.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.AssertExtensions.AssertIsTrue(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Asserts whether the specified condition is <c>true</c>.
+            </summary>
+            <param name="condition">
+            The evaluation condition.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing a message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.AssertionHelper">
+            <summary>
+            Contains assert helper methods.
+            </summary>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.CollectionAssert">
+            <summary>
+            Defines collections assertion methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.AllElementsAreUnique``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains only unique items.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.Contains``1(System.Collections.Generic.IEnumerable{``0},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains a specified item.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="item">
+            An item to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains an item defined by the predicate.
+            </summary>
+            <typeparam name="T">The type of collection items.</typeparam>
+            <param name="collection">A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format string.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.ContainsKey``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> contains a specified key.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.IsEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that the specified collection is empty.
+            </summary>
+            <typeparam name="T">
+            Collection items type.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.IsNotEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that the specified collection is not empty.
+            </summary>
+            <typeparam name="T">
+            Collection items type.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.NotContains``1(System.Collections.Generic.IEnumerable{``0},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> doesn't contain a specified item.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="item">
+            An item to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.NotContains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> doesn't contain an item defined by the predicate.
+            </summary>
+            <typeparam name="T">The type of collection items.</typeparam>
+            <param name="collection">A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format string.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.NotContains``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> doesn't contain a specified key-value pair.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="value">
+            A value to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssert.NotContainsKey``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> doesn't contain a specified key.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.CollectionAssertExtensions">
+            <summary>
+            Defines various collection assertion extension methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AllElementsAreUnique``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains only unique items.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertContains``1(System.Collections.Generic.IEnumerable{``0},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains a specified item.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="item">
+            An item to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertContains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> contains an item defined by the predicate.
+            </summary>
+            <typeparam name="T">The type of collection items.</typeparam>
+            <param name="collection">A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format string.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertContainsKey``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> contains a specified key.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertIsEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that the specified collection is empty.
+            </summary>
+            <typeparam name="T">
+            Collection items type.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertIsNotEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Asserts that the specified collection is not empty.
+            </summary>
+            <typeparam name="T">
+            Collection items type.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> message to display.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertNotContains``1(System.Collections.Generic.IEnumerable{``0},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> doesn't contain a specified item.
+            </summary>
+            <typeparam name="T">
+            The type of collection items.
+            </typeparam>
+            <param name="collection">
+            A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.
+            </param>
+            <param name="item">
+            An item to check.
+            </param>
+            <param name="messageFormat">
+            A composite format string.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertNotContains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> doesn't contain an item defined by the predicate.
+            </summary>
+            <typeparam name="T">The type of collection items.</typeparam>
+            <param name="collection">A <see cref="T:System.Collections.Generic.IEnumerable`1">collection</see> to check.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format string.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertNotContains``2(System.Collections.Generic.IDictionary{``0,``1},``0,``1,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> doesn't contain a specified key-value pair.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="value">
+            A value to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionAssertExtensions.AssertNotContainsKey``2(System.Collections.Generic.IDictionary{``0,``1},``0,System.String,System.Object[])">
+            <summary>
+            Asserts that a specified <see cref="T:System.Collections.Generic.IDictionary`2"/> doesn't contain a specified key.
+            </summary>
+            <typeparam name="TKey">
+            The type of the key.
+            </typeparam>
+            <typeparam name="TValue">
+            The type of the value.
+            </typeparam>
+            <param name="dictionary">
+            A <see cref="T:System.Collections.Generic.IDictionary`2"/> to check.
+            </param>
+            <param name="key">
+            A key to check.
+            </param>
+            <param name="messageFormat">
+            A <see cref="T:System.String"/> containing composite message format.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.Validate">
+            <summary>
+            Defines validation methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.ArgumentNotNull(System.Object,System.String)">
+            <summary>
+            Validates that the specified argument is not <c>null</c>.
+            </summary>
+            <param name="argument">An argument value to check.</param>
+            <param name="argumentName">A name of an argument.</param>
+            <exception cref="T:System.ArgumentNullException"><paramref name="argument"/> is <c>null</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.ArgumentNotNullOrEmpty(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+            <exception cref="T:System.ArgumentNullException">Argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.ArgumentNotNullOrWhiteSpace(System.String,System.String)">
+            <summary>
+            Asserts that the specified argument value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value to check.
+            </param>
+            <param name="argumentName">
+            Name of the argument.
+            </param>
+            <exception cref="T:System.ArgumentNullException">Argument is <c>null</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.IsNotNull(System.Object,System.String,System.Object[])">
+            <summary>
+            Validates that the specified value is not <c>null</c>.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="messageFormat">A composite format <see cref="T:System.String"/>.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+            <exception cref="T:System.InvalidOperationException"><c>InvalidOperationException</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.IsNotNullOrEmpty(System.String,System.String,System.Object[])">
+            <summary>
+            Validates that the specified value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="messageFormat">A composite format <see cref="T:System.String"/>.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+            <exception cref="T:System.InvalidOperationException"><c>InvalidOperationException</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.IsNotNullOrWhiteSpace(System.String,System.String,System.Object[])">
+            <summary>
+            Validates that the specified value is not <c>null</c> or white space.
+            </summary>
+            <param name="value">The value to check.</param>
+            <param name="messageFormat">A composite format <see cref="T:System.String"/>.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+            <exception cref="T:System.InvalidOperationException"><c>InvalidOperationException</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.IsFalse(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Validates that the specified value is <c>false</c>.
+            </summary>
+            <param name="value">
+            The value to validate.
+            </param>
+            <param name="messageFormat">
+            The message format.
+            </param>
+            <param name="messageArguments">
+            The message arguments.
+            </param>
+            <exception cref="T:System.InvalidOperationException"><c>InvalidOperationException</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.IsTrue(System.Boolean,System.String,System.Object[])">
+            <summary>
+            Validates that the specified value is <c>true</c>.
+            </summary>
+            <param name="value">
+            The value to validate.
+            </param>
+            <param name="messageFormat">
+            The message format.
+            </param>
+            <param name="messageArguments">
+            The message arguments.
+            </param>
+            <exception cref="T:System.InvalidOperationException"><c>InvalidOperationException</c>.</exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.Validate.ThrowException(System.String,System.Object[])">
+            <summary>
+            Throws the exception.
+            </summary>
+            <param name="messageFormat">
+            The message format.
+            </param>
+            <param name="messageArguments">
+            The message arguments.
+            </param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+        <member name="T:CSLib.Net.Diagnostics.CollectionValidate">
+            <summary>
+            Contains collection validation methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionValidate.IsEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Validates that the specified collection is empty.
+            </summary>
+            <typeparam name="TItem">
+            The type of the item.
+            </typeparam>
+            <param name="collection">
+            The collection to validate.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionValidate.NotContains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Validates that the specified collection does not contain items defined by the predicate.
+            </summary>
+            <typeparam name="TItem">The type of the item.</typeparam>
+            <param name="collection">The collection to validate.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format <see cref="T:System.String"/>.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionValidate.Contains``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Validates that the specified collection contains items defined by the predicate.
+            </summary>
+            <typeparam name="TItem">The type of the item.</typeparam>
+            <param name="collection">The collection to validate.</param>
+            <param name="predicate">The predicate.</param>
+            <param name="messageFormat">A composite format <see cref="T:System.String"/>.</param>
+            <param name="messageArguments">An array of message arguments to format.</param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionValidate.IsNotEmpty``1(System.Collections.Generic.IEnumerable{``0},System.String,System.Object[])">
+            <summary>
+            Validates that the specified collection is not empty.
+            </summary>
+            <typeparam name="TItem">
+            The type of the item.
+            </typeparam>
+            <param name="collection">
+            The collection to validate.
+            </param>
+            <param name="messageFormat">
+            A composite format <see cref="T:System.String"/>.
+            </param>
+            <param name="messageArguments">
+            An array of message arguments to format.
+            </param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+        <member name="M:CSLib.Net.Diagnostics.CollectionValidate.ThrowException(System.String,System.Object[])">
+            <summary>
+            Throws the exception.
+            </summary>
+            <param name="messageFormat">
+            The message format.
+            </param>
+            <param name="messageArguments">
+            The message arguments.
+            </param>
+            <exception cref="T:System.InvalidOperationException">
+            <c>InvalidOperationException</c>.
+            </exception>
+        </member>
+    </members>
+</doc>

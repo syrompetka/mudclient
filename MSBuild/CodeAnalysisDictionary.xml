@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Recognized>
+	<Word>Adan</Word>
+	<Word>MCCP</Word>
+    </Recognized>
+  </Words>
+  <Acronyms>
+     <CasingExceptions>
+     </CasingExceptions>
+  </Acronyms>
+</Dictionary>

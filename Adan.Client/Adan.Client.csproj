@@ -1,0 +1,487 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{735142A1-9BB3-4708-B25F-0774352386B9}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Adan.Client</RootNamespace>
+    <AssemblyName>Adan.Client</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;NATIVE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+    <DocumentationFile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSLib.Net.Annotations">
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="CSLib.Net.Diagnostics">
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="CSLib.Net.Extensions">
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationFramework.Aero" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xaml">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="UIAutomationProvider" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="Xceed.Wpf.AvalonDock, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Aero, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.Themes.Aero.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Expression, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.Themes.Expression.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.Metro, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.Themes.Metro.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Xceed.Wpf.AvalonDock.Themes.VS2010, Version=2.0.0.0, Culture=neutral, PublicKeyToken=3e4669d2f30244f4, processorArchitecture=MSIL">
+      <HintPath>..\packages\AvalonDock.2.0.2000\lib\net40\Xceed.Wpf.AvalonDock.Themes.VS2010.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ApplicationDefinition Include="App.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </ApplicationDefinition>
+    <Compile Include="CommandSerializers\TextCommandSerializer.cs" />
+    <Compile Include="Commands\ConnectCommand.cs" />
+    <Compile Include="Commands\DisconnectCommand.cs" />
+    <Compile Include="Commands\SendToWindowCommand.cs" />
+    <Compile Include="Commands\ShowMainOutputCommand.cs" />
+    <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
+    <Compile Include="Controls\MainOutputWindow.xaml.cs">
+      <DependentUpon>MainOutputWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
+      <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\NumberTextBox.cs" />
+    <Compile Include="Controls\OneCharTextBox.cs" />
+    <Compile Include="Controls\TextBoxWithHistory.cs" />
+    <Compile Include="ConveyorUnits\AliasUnit.cs" />
+    <Compile Include="ConveyorUnits\CapForLineCommandUnit.cs" />
+    <Compile Include="ConveyorUnits\CommandMultiplierUnit.cs" />
+    <Compile Include="ConveyorUnits\CommandRepeaterUnit.cs" />
+    <Compile Include="ConveyorUnits\CommandSeparatorUnit.cs" />
+    <Compile Include="ConveyorUnits\CommandsFromUserLineUnits.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ConveyorUnits\ConnectionUnit.cs" />
+    <Compile Include="ConveyorUnits\HighlightUnit.cs" />
+    <Compile Include="ConveyorUnits\HotkeyUnit.cs" />
+    <Compile Include="ConveyorUnits\LoggingUnit.cs" />
+    <Compile Include="ConveyorUnits\ProtocolVersionUnit.cs" />
+    <Compile Include="ConveyorUnits\SendToWindowUnit.cs" />
+    <Compile Include="ConveyorUnits\ShowMainOutputUnit.cs" />
+    <Compile Include="ConveyorUnits\SubstitutionUnit.cs" />
+    <Compile Include="ConveyorUnits\ToggleFullScreenModeUnit.cs" />
+    <Compile Include="ConveyorUnits\TriggerUnit.cs" />
+    <Compile Include="ConveyorUnits\VariableReplaceUnit.cs" />
+    <Compile Include="Dialogs\AboutDialog.xaml.cs">
+      <DependentUpon>AboutDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AliasEditDialog.xaml.cs">
+      <DependentUpon>AliasEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\AliasesEditDialog.xaml.cs">
+      <DependentUpon>AliasesEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ConnectionDialog.xaml.cs">
+      <DependentUpon>ConnectionDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\Fonts\FontChooser.xaml.cs">
+      <DependentUpon>FontChooser.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GlobalHotkeyEditDialog.xaml.cs">
+      <DependentUpon>GlobalHotkeyEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GlobalHotkeysEditDialog.xaml.cs">
+      <DependentUpon>GlobalHotkeysEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\GroupsEditDialog.xaml.cs">
+      <DependentUpon>GroupsEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HighlightEditDialog.xaml.cs">
+      <DependentUpon>HighlightEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HighlightsEditDialog.xaml.cs">
+      <DependentUpon>HighlightsEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HotkeyEditDialog.xaml.cs">
+      <DependentUpon>HotkeyEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\HotkeysEditDialog.xaml.cs">
+      <DependentUpon>HotkeysEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\PluginInitializationStatusDialog.xaml.cs">
+      <DependentUpon>PluginInitializationStatusDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfilesChooseDialog.xaml.cs">
+      <DependentUpon>ProfilesChooseDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfilesEditDialog.xaml.cs">
+      <DependentUpon>ProfilesEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\ProfileOptionsEditDialog.xaml.cs">
+      <DependentUpon>ProfileOptionsEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SubstitutionEditDialog.xaml.cs">
+      <DependentUpon>SubstitutionEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\SubstitutionsEditDialog.xaml.cs">
+      <DependentUpon>SubstitutionsEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TriggerEditDialog.xaml.cs">
+      <DependentUpon>TriggerEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TriggersEditDialog.xaml.cs">
+      <DependentUpon>TriggersEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\TriggerTemplateSelector.cs" />
+    <Compile Include="Controls\Fonts\FontFamilyListItem.cs" />
+    <Compile Include="Controls\Fonts\FontSizeListItem.cs" />
+    <Compile Include="Controls\Fonts\NameDictionaryHelper.cs" />
+    <Compile Include="Controls\Fonts\TypeFaceListItem.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
+    <Compile Include="Messages\CommandRepeatMessage.cs" />
+    <Compile Include="Messages\ProtocolVersionMessage.cs" />
+    <Compile Include="Messages\StartLoggingMessage.cs" />
+    <Compile Include="Messages\StopLoggingMessage.cs" />
+    <Compile Include="Model\ActionDescriptions\ClearVariableValueActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\ConditionalActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\DisableGroupActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\EnableGroupActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\OutputToMainWindowActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\SendTextActionDescription.cs">
+      <ExcludeFromStyleCop>True</ExcludeFromStyleCop>
+    </Compile>
+    <Compile Include="Model\ActionDescriptions\SendToWindowActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\SetVariableValueActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\ShowOutputWindowActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\StartLogActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\StopLogActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\ToggleFullScreenModeActionDescription.cs" />
+    <Compile Include="Model\ActionParameters\ConstantStringParameter.cs" />
+    <Compile Include="Model\ActionParameters\MathOperation.cs" />
+    <Compile Include="Model\ActionParameters\MathExpressionParameter.cs" />
+    <Compile Include="Model\ActionParameters\TriggerOrCommandParameter.cs" />
+    <Compile Include="Model\ActionParameters\VariableReferenceParameter.cs" />
+    <Compile Include="Model\Actions\ClearVariableValueAction.cs" />
+    <Compile Include="Model\Actions\ConditionalAction.cs" />
+    <Compile Include="Model\Actions\DisableGroupAction.cs" />
+    <Compile Include="Model\Actions\EnableGroupAction.cs" />
+    <Compile Include="Model\Actions\ActionCondition.cs" />
+    <Compile Include="Model\Actions\OutputToMainWindowAction.cs" />
+    <Compile Include="Model\Actions\SendTextAction.cs" />
+    <Compile Include="Model\Actions\SendTextOneParameterAction.cs" />
+    <Compile Include="Model\Actions\SendToWindowAction.cs" />
+    <Compile Include="Model\Actions\SetVariableValueAction.cs" />
+    <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />
+    <Compile Include="Model\Actions\StartLogAction.cs" />
+    <Compile Include="Model\Actions\StopLogAction.cs" />
+    <Compile Include="Model\Actions\ToggleFullScreenModeAction.cs" />
+    <Compile Include="Model\LayoutContainerStyleSelector.cs" />
+    <Compile Include="Model\ParameterDescriptions\ConstantStringParameterDescription.cs" />
+    <Compile Include="Model\ParameterDescriptions\MathExpressionParameterDescription.cs" />
+    <Compile Include="Model\ParameterDescriptions\TriggerOrCommandParameterDescription.cs" />
+    <Compile Include="Model\ParameterDescriptions\VariableReferenceParameterDescription.cs" />
+    <Compile Include="OutputWindow.cs" />
+    <Compile Include="PluginHost.cs" />
+    <Compile Include="ViewModel\ActionParameters\ConstantStringParameterViewModel.cs" />
+    <Compile Include="ViewModel\ActionParameters\ExtensionMethods.cs" />
+    <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
+    <Compile Include="ViewModel\ActionParameters\TriggerOrCommandParameterViewModel.cs" />
+    <Compile Include="ViewModel\ActionParameters\VariableReferenceParameterViewModel.cs" />
+    <Compile Include="ViewModel\Actions\ConditionalActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\DisableGroupActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\EnableGroupActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\ExtensionMethods.cs" />
+    <Compile Include="ViewModel\Actions\OutputToMainWindowActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\SendTextActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\SendToWindowActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\SetVariableValueActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\ShowOutputWindowActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\StartLogActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\ClearVariableValueActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\StopLogActionViewModel.cs" />
+    <Compile Include="ViewModel\AliasesViewModel.cs" />
+    <Compile Include="ViewModel\AliasViewModel.cs" />
+    <Compile Include="ViewModel\ConnectionDialogViewModel.cs" />
+    <Compile Include="ViewModel\ConnectionStatusModel.cs" />
+    <Compile Include="ViewModel\FontChooserViewModel.cs" />
+    <Compile Include="ViewModel\GlobalHotkeysViewModel.cs" />
+    <Compile Include="ViewModel\GlobalHotkeyViewModel.cs" />
+    <Compile Include="ViewModel\GroupViewModel.cs" />
+    <Compile Include="ViewModel\GroupsViewModel.cs" />
+    <Compile Include="ViewModel\HighlightsViewModel.cs" />
+    <Compile Include="ViewModel\HighlightViewModel.cs" />
+    <Compile Include="ViewModel\HotkeysViewModel.cs" />
+    <Compile Include="ViewModel\HotkeyViewModel.cs" />
+    <Compile Include="ViewModel\OptionsViewModel.cs" />
+    <Compile Include="ViewModel\ProfileChooseViewModel.cs" />
+    <Compile Include="ViewModel\ProfileOptionsViewModel.cs" />
+    <Compile Include="ViewModel\ProfilesEditViewModel.cs" />
+    <Compile Include="ViewModel\ProfileViewModel.cs" />
+    <Compile Include="ViewModel\SubstitutionsViewModel.cs" />
+    <Compile Include="ViewModel\SubstitutionViewModel.cs" />
+    <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
+    <Compile Include="ViewModel\TriggersViewModel.cs" />
+    <Compile Include="ViewModel\TriggerViewModel.cs" />
+    <Page Include="Controls\MainOutputWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\MainOutputWindowNative.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AboutDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AliasEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\AliasesEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ConnectionDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\Fonts\FontChooser.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GlobalHotkeyEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GlobalHotkeysEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\GroupsEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\HighlightEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\HighlightsEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\HotkeyEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\HotkeysEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\OptionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\PluginInitializationStatusDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfilesChooseDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfilesEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\ProfileOptionsEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SubstitutionEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\SubstitutionsEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TriggerEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\TriggersEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Compile Include="App.xaml.cs">
+      <DependentUpon>App.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="MainWindow.xaml.cs">
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Page Include="Resources\CommonTemplates.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources\Developer.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\ExpressionDark.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\Icons.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="MessageDeserializers\TextMessageDeserializer.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">
+      <Project>{B9D6E795-44B4-4998-AAE5-EA3CB547563D}</Project>
+      <Name>Adan.Client.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(SolutionDir)MSBuild\Common.targets" />
+</Project>

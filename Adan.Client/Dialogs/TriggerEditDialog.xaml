@@ -1,0 +1,95 @@
+﻿<Window x:Class="Adan.Client.Dialogs.TriggerEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        xmlns:Controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+        ResizeMode="NoResize" 
+        ShowInTaskbar="False" 
+        WindowStartupLocation="CenterOwner" 
+        WindowStyle="ToolWindow" 
+        Width="750"
+        Height="550"
+        Title="Trigger editor"
+        Style="{StaticResource DefaultWindowStyle}">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Label>Matching pattern:</Label>
+            <TextBox Text="{Binding Path=MatchingPattern}" />
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Actions:</Label>
+            <ScrollViewer CanContentScroll="False" Grid.Row="1">
+            <Controls:ActionEditorControl DataContext="{Binding Path=ActionsViewModel}" VerticalAlignment="Stretch"/>
+            </ScrollViewer>
+        </Grid>
+
+        <Grid Grid.Row="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <Label Grid.Row="0" Grid.Column="0" Padding="5">Group name:</Label>
+            <ComboBox Grid.Row="1" Grid.Column="0" Padding="5" Width="150" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" SelectedValue="{Binding Path=TriggersGroup}" />
+            <Label Grid.Row="0" Grid.Column="1">Priority:</Label>
+            <ComboBox Grid.Row="1" Grid.Column="1" Margin="5,0,0,0" HorizontalAlignment="Left" Width="50" SelectedValue="{Binding Path=Priority}" SelectedValuePath="Content">
+                <ComboBoxItem>
+                    <System:Int32>0</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>1</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>2</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>3</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>4</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>5</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>6</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>7</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>8</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>9</System:Int32>
+                </ComboBoxItem>
+                <ComboBoxItem>
+                    <System:Int32>10</System:Int32>
+                </ComboBoxItem>
+            </ComboBox>
+            <CheckBox Grid.Column="2" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=StopProcessingTriggersForMessage}">Stop processing trigger for this message.</CheckBox>
+            <CheckBox Grid.Column="3" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=DoNotDisplayOriginalMessage}">Do not display original message.</CheckBox>
+            <CheckBox Grid.Column="4" Grid.Row="1" VerticalAlignment="Center" Margin="5,0,0,0" IsChecked="{Binding Path=IsRegExp}">IsRegExp</CheckBox>
+        </Grid>
+        <StackPanel HorizontalAlignment="Right" Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+            <Button HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Click="HandleOkClicked">Ok</Button>
+            <Button HorizontalAlignment="Right" IsCancel="True" Margin="5,0,0,0" MinWidth="50">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>CSLib.Net.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:CSLib.Net.Extensions.EnumExtensions">
+            <summary>
+            Defines <see cref="T:System.Enum"/> class extension methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Extensions.EnumExtensions.HasFlag(System.Enum,System.Enum)">
+            <summary>
+            Determines whether the specified value has flag.
+            </summary>
+            <param name="value">The current flags value.</param>
+            <param name="valueToCheck">The flag value to check.</param>
+            <returns>
+            <c>true</c> if the specified value has flag; otherwise, <c>false</c>.
+            </returns>
+            <exception cref="T:System.ArgumentException">The specified enum value types do not match.</exception>
+        </member>
+        <member name="T:CSLib.Net.Extensions.StringExtensions">
+            <summary>
+            Defines String class extension methods.
+            </summary>
+        </member>
+        <member name="M:CSLib.Net.Extensions.StringExtensions.IsNullOrWhiteSpace(System.String)">
+            <summary>
+            Determines whether the specified string value is <c>null</c> or white space.
+            </summary>
+            <param name="value">
+            The value.
+            </param>
+            <returns>
+            <c>true</c> if the specified string value is <c>null</c> or white space; otherwise, <c>false</c>.
+            </returns>
+        </member>
+    </members>
+</doc>
