@@ -57,6 +57,7 @@ namespace Adan.Client
         {
             InitializeComponent();
 
+            //Load all types for deserialization
             var types = new List<Type>
                             {
                                 typeof(SendTextAction),
@@ -78,6 +79,7 @@ namespace Adan.Client
                                 typeof(ToggleFullScreenModeAction),
                             };
 
+            //Load plugins
             foreach (var plugin in PluginHost.Instance.AllPlugins)
             {
                 foreach (var customType in plugin.CustomSerializationTypes)
@@ -87,6 +89,7 @@ namespace Adan.Client
                 }
             }
 
+            //Load settings
             Settings settings = Settings.Default;
             settings.Reload();
 
@@ -116,11 +119,14 @@ namespace Adan.Client
             RootModel.AllActionDescriptions = actionDescriptions;
             RootModel.AllParameterDescriptions = parameterDescriptions;
 
+            //Initialize conveyor with all serializations
             MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
 
+            //Initialize conveyor with all deserializations
             MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
             MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
 
+            //Initialize conveyor with message handlers. Handlers added in order processing
             MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
             MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
             MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
@@ -135,6 +141,7 @@ namespace Adan.Client
             MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
             MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
 
+            //Initialize themes and add their to menu
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
                 var menuItem = new MenuItem
@@ -156,6 +163,7 @@ namespace Adan.Client
                 .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
             initializationDalog.ShowDialog();
 
+            //Initialize plugins
             foreach (var plugin in PluginHost.Instance.Plugins)
             {
                 if (plugin.HasOptions)
@@ -171,11 +179,13 @@ namespace Adan.Client
                 }
             }
 
+            //Add remaining message handlers which should to process message last
             MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit());
             MessageConveyor.AddConveyorUnit(new CommandRepeaterUnit());
             MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
             MessageConveyor.AddConveyorUnit(new ConnectionUnit());
 
+            //Initialize window's position
             Top = SettingsHolder.Instance.Settings.MainWindowTop;
             Left = SettingsHolder.Instance.Settings.MainWindowLeft;
             Width = SettingsHolder.Instance.Settings.MainWindowWidth;
@@ -672,7 +682,7 @@ namespace Adan.Client
                 Owner = this,
             };
 
-            globalProfileDialog.Show();
+            globalProfileDialog.ShowDialog();
             SettingsHolder.Instance.SaveCommonSettings();
         }
 

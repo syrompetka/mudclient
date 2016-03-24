@@ -23,9 +23,10 @@ namespace Adan.Client.Controls
             if (textBox == null)
                 return;
 
-            if(e.Key != Key.LeftAlt && e.Key != Key.RightAlt && e.Key != Key.LeftCtrl && 
-                e.Key != Key.LeftCtrl && e.Key != Key.LeftShift && e.Key != Key.LeftShift &&
-                e.Key != Key.System)
+            if(e.Key != Key.LeftAlt && e.Key != Key.RightAlt 
+                && e.Key != Key.LeftCtrl && e.Key != Key.RightCtrl
+                && e.Key != Key.LeftShift && e.Key != Key.RightShift
+                && e.Key != Key.System)
                 textBox.Text = String.Empty;
 
             base.OnKeyDown(e);
