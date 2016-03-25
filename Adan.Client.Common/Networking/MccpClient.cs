@@ -127,17 +127,20 @@
 
                 try
                 {
-                    int bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
+                    int bytesDecompresed = 1;
+                    while (bytesDecompresed > 0)
+                    {
+                        bytesDecompresed = _zlibDecompressionStream.Read(_unpackBuffer, 0, _unpackBuffer.Length);
 
-                    if (bytesDecompresed < 0)
-                    {
-                        _compressionInProgress = false;
-                        _zlibDecompressionStream.Dispose();
-                        _zlibDecompressionStream = null;
-                    }
-                    else
-                    {
-                        BytesDecompressed += (uint)bytesDecompresed;
+                        if (bytesDecompresed < 0)
+                        {
+                            _compressionInProgress = false;
+                            _zlibDecompressionStream.Dispose();
+                            _zlibDecompressionStream = null;
+                            return;
+                        }
+
+                        BytesDecompressed += (uint) bytesDecompresed;
                         ProcessData(_unpackBuffer, 0, bytesDecompresed);
                     }
                 }
@@ -206,7 +209,7 @@
                 // negotiation packet received IAC WILL COMPRESS
                 // will send responce IAC DO COMPRESS
                 _compressionEnabled = true;
-                base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoNotCode, TelnetConstants.CompressCode }, 0, 3);
+                base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CompressCode }, 0, 3);
                 return 3;
             }
             
