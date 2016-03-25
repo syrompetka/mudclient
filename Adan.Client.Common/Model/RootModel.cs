@@ -305,14 +305,11 @@
         /// Gets variables
         /// </summary>
         [NotNull]
-        public ConcurrentBag<Variable> Variables
+        public List<Variable> Variables
         {
             get
             {
-                //lock (_profileLockObject)
-                {
-                    return (ConcurrentBag<Variable>)Profile.Variables;
-                }
+                return (List<Variable>)Profile.Variables;
             }
         }
 
@@ -498,7 +495,7 @@
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
             if (v != null)
             {
-                if (!Variables.TryTake(out v))
+                if (!Variables.Remove(v))
                 {
                     this.PushMessageToConveyor(new ErrorMessage(string.Format("#Error delete variable: ${0}", v)));
                     return;
