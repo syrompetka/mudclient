@@ -27,7 +27,7 @@
         </CheckBox>
         <StackPanel HorizontalAlignment="Right" Grid.Row="2" Orientation="Horizontal" Margin="0,5,0,0">
             <Button HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Click="HandleOkClicked">Ok</Button>
-            <Button HorizontalAlignment="Right" IsCancel="True" Margin="5,0,0,0" MinWidth="50">Cancel</Button>
+            <Button HorizontalAlignment="Right" Margin="5,0,0,0" MinWidth="50" Click="HandleCancelClicked">Cancel</Button>
         </StackPanel>
     </Grid>
 </Window>

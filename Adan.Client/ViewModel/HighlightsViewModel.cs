@@ -129,11 +129,11 @@ namespace Adan.Client.ViewModel
 
             var highlightToAdd = new HighlightViewModel(Groups, Groups.First(g => g.IsBuildIn), new Highlight());
             var highlightEditDialog = new HighlightEditDialog { DataContext = highlightToAdd, Owner = (Window)obj };
-            var dialogResult = highlightEditDialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
-            {
-                highlightToAdd.HighlightGroup.AddHighlight(highlightToAdd);
-            }
+            highlightEditDialog.Show();
+            highlightEditDialog.Closed += (s, e) => {
+                if (highlightEditDialog.Save)
+                    highlightToAdd.HighlightGroup.AddHighlight(highlightToAdd);
+            };
         }
 
         private void DeleteHighlightCommandExecute([CanBeNull] object obj)
@@ -166,25 +166,25 @@ namespace Adan.Client.ViewModel
 
             var originalHighlight = SelectedHighlight;
             var highlightEditDialog = new HighlightEditDialog { DataContext = originalHighlight.Clone(), Owner = (Window)obj };
-            var dialogResult = highlightEditDialog.ShowDialog();
-            if (!dialogResult.HasValue || !dialogResult.Value)
-            {
-                return;
-            }
+            highlightEditDialog.Show();
+            highlightEditDialog.Closed += (s, e) => {
+                if (!highlightEditDialog.Save)
+                    return;
 
-            var changedHighlight = (HighlightViewModel)highlightEditDialog.DataContext;
-            if (originalHighlight.HighlightGroup == changedHighlight.HighlightGroup)
-            {
-                var originalIndex = originalHighlight.HighlightGroup.Highlights.IndexOf(originalHighlight);
-                originalHighlight.HighlightGroup.InsertHighlight(originalIndex, (HighlightViewModel)highlightEditDialog.DataContext);
-            }
-            else
-            {
-                changedHighlight.HighlightGroup.AddHighlight(changedHighlight);
-            }
+                var changedHighlight = (HighlightViewModel)highlightEditDialog.DataContext;
+                if (originalHighlight.HighlightGroup == changedHighlight.HighlightGroup)
+                {
+                    var originalIndex = originalHighlight.HighlightGroup.Highlights.IndexOf(originalHighlight);
+                    originalHighlight.HighlightGroup.InsertHighlight(originalIndex, changedHighlight);
+                }
+                else
+                {
+                    changedHighlight.HighlightGroup.AddHighlight(changedHighlight);
+                }
 
-            originalHighlight.HighlightGroup.RemoveHighlight(originalHighlight);
-            SelectedHighlight = (HighlightViewModel)highlightEditDialog.DataContext;
+                originalHighlight.HighlightGroup.RemoveHighlight(originalHighlight);
+                SelectedHighlight = (HighlightViewModel)highlightEditDialog.DataContext;
+            };
         }
 
         #endregion

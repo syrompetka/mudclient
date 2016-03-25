@@ -129,11 +129,12 @@ namespace Adan.Client.ViewModel
 
             var substitutionToAdd = new SubstitutionViewModel(Groups, Groups.First(g => g.IsBuildIn), new Substitution());
             var substitutionEditDialog = new SubstitutionEditDialog { DataContext = substitutionToAdd, Owner = (Window)obj };
-            var dialogResult = substitutionEditDialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
+            substitutionEditDialog.Show();
+            substitutionEditDialog.Closed += (s, e) =>
             {
-                substitutionToAdd.SubstitutionGroup.AddSubstitution(substitutionToAdd);
-            }
+                if (substitutionEditDialog.Save)
+                    substitutionToAdd.SubstitutionGroup.AddSubstitution(substitutionToAdd);
+            };
         }
 
         private void DeleteSubstitutionCommandExecute([CanBeNull] object obj)
@@ -166,25 +167,27 @@ namespace Adan.Client.ViewModel
 
             var originalSubstitution = SelectedSubstitution;
             var substitutionEditDialog = new SubstitutionEditDialog { DataContext = originalSubstitution.Clone(), Owner = (Window)obj };
-            var dialogResult = substitutionEditDialog.ShowDialog();
-            if (!dialogResult.HasValue || !dialogResult.Value)
+            substitutionEditDialog.Show();
+            substitutionEditDialog.Closed += (object sender, System.EventArgs e) =>
             {
-                return;
-            }
+                if (!substitutionEditDialog.Save)
+                    return;
 
-            var changedSubstitution = (SubstitutionViewModel)substitutionEditDialog.DataContext;
-            if (originalSubstitution.SubstitutionGroup == changedSubstitution.SubstitutionGroup)
-            {
-                var originalIndex = originalSubstitution.SubstitutionGroup.Substitutions.IndexOf(originalSubstitution);
-                originalSubstitution.SubstitutionGroup.InsertSubstitution(originalIndex, (SubstitutionViewModel)substitutionEditDialog.DataContext);
-            }
-            else
-            {
-                changedSubstitution.SubstitutionGroup.AddSubstitution(changedSubstitution);
-            }
+                var changedSubstitution = (SubstitutionViewModel)substitutionEditDialog.DataContext;
+                if (originalSubstitution.SubstitutionGroup == changedSubstitution.SubstitutionGroup)
+                {
+                    var originalIndex = originalSubstitution.SubstitutionGroup.Substitutions.IndexOf(originalSubstitution);
+                    originalSubstitution.SubstitutionGroup.InsertSubstitution(originalIndex, (SubstitutionViewModel)substitutionEditDialog.DataContext);
+                }
+                else
+                {
+                    changedSubstitution.SubstitutionGroup.AddSubstitution(changedSubstitution);
+                }
 
-            originalSubstitution.SubstitutionGroup.RemoveSubstitution(originalSubstitution);
-            SelectedSubstitution = (SubstitutionViewModel)substitutionEditDialog.DataContext;
+                originalSubstitution.SubstitutionGroup.RemoveSubstitution(originalSubstitution);
+                SelectedSubstitution = (SubstitutionViewModel)substitutionEditDialog.DataContext;
+
+            };
         }
 
         #endregion

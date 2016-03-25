@@ -142,11 +142,12 @@ namespace Adan.Client.ViewModel
             commandAlias.Actions.Add(new SendTextAction());
             var aliasToAdd = new AliasViewModel(Groups, Groups.First(g => g.IsBuildIn), commandAlias, _actionDescriptions);
             var aliasEditDialog = new AliasEditDialog { DataContext = aliasToAdd, Owner = (Window)obj };
-            var dialogResult = aliasEditDialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
+            aliasEditDialog.Show();
+            aliasEditDialog.Closed += (s, e) =>
             {
-                aliasToAdd.AliasGroup.AddAlias(aliasToAdd);
-            }
+                if (aliasEditDialog.Save)
+                    aliasToAdd.AliasGroup.AddAlias(aliasToAdd);
+            };
         }
 
         private void DeleteAliasCommandExecute([CanBeNull] object obj)
@@ -179,25 +180,26 @@ namespace Adan.Client.ViewModel
 
             var originalAlias = SelectedAlias;
             var aliasEditDialog = new AliasEditDialog { DataContext = originalAlias.Clone(), Owner = (Window)obj };
-            var dialogResult = aliasEditDialog.ShowDialog();
-            if (!dialogResult.HasValue || !dialogResult.Value)
+            aliasEditDialog.Show();
+            aliasEditDialog.Closed += (s, e) =>
             {
-                return;
-            }
+                if (!aliasEditDialog.Save)
+                    return;
 
-            var changedAlias = (AliasViewModel)aliasEditDialog.DataContext;
-            if (originalAlias.AliasGroup == changedAlias.AliasGroup)
-            {
-                var originalIndex = originalAlias.AliasGroup.Aliases.IndexOf(originalAlias);
-                originalAlias.AliasGroup.InsertAlias(originalIndex, (AliasViewModel)aliasEditDialog.DataContext);
-            }
-            else
-            {
-                changedAlias.AliasGroup.AddAlias(changedAlias);
-            }
+                var changedAlias = (AliasViewModel)aliasEditDialog.DataContext;
+                if (originalAlias.AliasGroup == changedAlias.AliasGroup)
+                {
+                    var originalIndex = originalAlias.AliasGroup.Aliases.IndexOf(originalAlias);
+                    originalAlias.AliasGroup.InsertAlias(originalIndex, (AliasViewModel)aliasEditDialog.DataContext);
+                }
+                else
+                {
+                    changedAlias.AliasGroup.AddAlias(changedAlias);
+                }
 
-            originalAlias.AliasGroup.RemoveAlias(originalAlias);
-            SelectedAlias = (AliasViewModel)aliasEditDialog.DataContext;
+                originalAlias.AliasGroup.RemoveAlias(originalAlias);
+                SelectedAlias = (AliasViewModel)aliasEditDialog.DataContext;
+            };
         }
 
         #endregion
