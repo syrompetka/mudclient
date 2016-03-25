@@ -21,7 +21,7 @@ namespace Adan.Client.Common.Settings
         #region Constants and Fields
 
         private List<Group> _groups;
-        private ConcurrentBag<Variable> _variables;
+        private List<Variable> _variables;
         private string _name;
         private List<string> _commandsHistory;
 
@@ -88,7 +88,7 @@ namespace Adan.Client.Common.Settings
         /// The variables.
         /// </value>
         [NotNull]
-        public ConcurrentBag<Variable> Variables
+        public List<Variable> Variables
         {
             get
             {
@@ -196,7 +196,7 @@ namespace Adan.Client.Common.Settings
             return new ProfileHolder(this.Name)
                 {
                     _groups = new List<Group>(this.Groups),
-                    _variables = new ConcurrentBag<Variable>(this.Variables),
+                    _variables = new List<Variable>(this.Variables),
                     CommonSettings = this.CommonSettings,
                     CommandsHistory = new List<string>(this.CommandsHistory),
                 };
@@ -316,7 +316,7 @@ namespace Adan.Client.Common.Settings
             var variablesFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Variables.xml");
             if (!File.Exists(variablesFileFullPath))
             {
-                Variables = new ConcurrentBag<Variable>();
+                Variables = new List<Variable>();
                 return;
             }
 
@@ -324,14 +324,14 @@ namespace Adan.Client.Common.Settings
             {
                 try
                 {
-                    var serializer = new XmlSerializer(typeof(ConcurrentBag<Variable>));
-                    Variables = (ConcurrentBag<Variable>)serializer.Deserialize(stream);
+                    var serializer = new XmlSerializer(typeof(List<Variable>));
+                    Variables = (List<Variable>)serializer.Deserialize(stream);
                 }
                 catch (Exception ex)
                 {
                     ErrorLogger.Instance.Write(string.Format("Error read variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
 
-                    Variables = new ConcurrentBag<Variable>();
+                    Variables = new List<Variable>();
                 }
             }
         }
