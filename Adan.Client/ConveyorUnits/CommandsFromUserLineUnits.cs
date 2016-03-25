@@ -507,8 +507,7 @@ namespace Adan.Client.ConveyorUnits
                     trigger.Group = group;
                     trigger.Operation = UndoOperation.Remove;
                     rootModel.UndoStack.Push(trigger);
-                    base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен: " + trigger.ToString()), rootModel);
-                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                    base.PushMessageToConveyor(new InfoMessage("#Триггер добавлен (#undo - отменить): " + trigger.ToString()), rootModel);
                 }
 
                 return true;
@@ -543,8 +542,7 @@ namespace Adan.Client.ConveyorUnits
                             
                             if (!isImport)
                             {
-                                    base.PushMessageToConveyor(new InfoMessage("#Триггер удален: " + trigger.ToString()), rootModel);
-                                    base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                    base.PushMessageToConveyor(new InfoMessage("#Триггер удален (#undo - отменить): " + trigger.ToString()), rootModel);
                             }
                         }
                     }
@@ -572,8 +570,7 @@ namespace Adan.Client.ConveyorUnits
 
                             if (!isImport)
                             {
-                                base.PushMessageToConveyor(new InfoMessage("#Триггер удален: " + trig.ToString()), rootModel);
-                                base.PushMessageToConveyor(new InfoMessage("#Для отмены используйте #undo"), rootModel);
+                                base.PushMessageToConveyor(new InfoMessage("#Триггер удален (#undo - отменить): " + trig.ToString()), rootModel);
                             }
                         }
                     }

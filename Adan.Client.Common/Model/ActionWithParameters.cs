@@ -179,6 +179,15 @@ namespace Adan.Client.Common.Model
                         lastPos = i + 2;
                         i++;
                     }
+                    else if (i < input.Length - 2 && input[i + 1] == '%' && input[i + 2] == number && nest > 0)
+                    {
+                        if (i - lastPos > 0)
+                            sb.Append(input, lastPos, i - lastPos);
+
+                        sb.Append(replacement);
+                        lastPos = i + 3;
+                        i+=2;
+                    }
                 }
                 else if (input[i] == '{')
                 {
