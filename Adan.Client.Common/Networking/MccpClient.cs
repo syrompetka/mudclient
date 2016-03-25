@@ -206,7 +206,7 @@
                 // negotiation packet received IAC WILL COMPRESS
                 // will send responce IAC DO COMPRESS
                 _compressionEnabled = true;
-                base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoCode, TelnetConstants.CompressCode }, 0, 3);
+                base.Send(new[] { TelnetConstants.InterpretAsCommandCode, TelnetConstants.DoNotCode, TelnetConstants.CompressCode }, 0, 3);
                 return 3;
             }
             
