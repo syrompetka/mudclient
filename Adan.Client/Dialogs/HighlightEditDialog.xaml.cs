@@ -13,26 +13,34 @@ namespace Adan.Client.Dialogs
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
+    using System.Windows.Input;
     /// <summary>
     /// Interaction logic for HighlightEditDialog.xaml
     /// </summary>
     public partial class HighlightEditDialog
     {
+        public bool Save { get; private set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="HighlightEditDialog"/> class.
         /// </summary>
         public HighlightEditDialog()
         {
             InitializeComponent();
+            PreviewKeyUp += (s, e) => { if (e.Key == Key.Escape) Close(); };
         }
 
         private void HandleOkClicked([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+            Save = true;
+            Close();
+        }
 
-            DialogResult = true;
+        private void HandleCancelClicked(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }

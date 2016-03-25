@@ -13,7 +13,7 @@ namespace Adan.Client.Dialogs
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
+    using System.Windows.Input;
     /// <summary>
     /// Interaction logic for TriggerEditDialog.xaml
     /// </summary>
@@ -25,14 +25,23 @@ namespace Adan.Client.Dialogs
         public TriggerEditDialog()
         {
             InitializeComponent();
+            PreviewKeyUp += (s, e) => { if (e.Key == Key.Escape) Close(); };
         }
+
+        public bool Save { get; internal set; }
 
         private void HandleOkClicked([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            DialogResult = true;
+            Save = true;
+            Close();
+        }
+
+        private void HandleCancelClicked(object sender, RoutedEventArgs e)
+        {
+            Close();
         }
     }
 }
