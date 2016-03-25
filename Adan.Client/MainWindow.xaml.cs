@@ -682,8 +682,11 @@ namespace Adan.Client
                 Owner = this,
             };
 
-            globalProfileDialog.ShowDialog();
-            SettingsHolder.Instance.SaveCommonSettings();
+            globalProfileDialog.Show();
+            globalProfileDialog.Closed += (s, a) =>
+            {
+                SettingsHolder.Instance.SaveCommonSettings();
+            };
         }
 
         #endregion
