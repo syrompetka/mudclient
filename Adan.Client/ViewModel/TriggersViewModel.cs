@@ -142,11 +142,12 @@ namespace Adan.Client.ViewModel
             textTrigger.Actions.Add(new SendTextAction());
             var triggerToAdd = new TriggerViewModel(Groups, Groups.First(g => g.IsBuildIn), textTrigger, _actionDescriptions);
             var trigerEditDialog = new TriggerEditDialog { DataContext = triggerToAdd, Owner = (Window)obj };
-            var dialogResult = trigerEditDialog.ShowDialog();
-            if (dialogResult.HasValue && dialogResult.Value)
+            trigerEditDialog.Show();
+            trigerEditDialog.Closed += (s, e) =>
             {
-                triggerToAdd.TriggersGroup.AddTrigger(triggerToAdd);
-            }
+                if (trigerEditDialog.Save)
+                    triggerToAdd.TriggersGroup.AddTrigger(triggerToAdd);
+            };
         }
 
         private void DeleteTriggerCommandExecute([CanBeNull] object obj)
@@ -179,25 +180,26 @@ namespace Adan.Client.ViewModel
 
             var originalTrigger = SelectedTrigger;
             var trigerEditDialog = new TriggerEditDialog { DataContext = originalTrigger.Clone(), Owner = (Window)obj };
-            var dialogResult = trigerEditDialog.ShowDialog();
-            if (!dialogResult.HasValue || !dialogResult.Value)
+            trigerEditDialog.Show();
+            trigerEditDialog.Closed += (s, e) =>
             {
-                return;
-            }
+                if (!trigerEditDialog.Save)
+                    return;
 
-            var changedTrigger = (TriggerViewModel)trigerEditDialog.DataContext;
-            if (originalTrigger.TriggersGroup == changedTrigger.TriggersGroup)
-            {
-                var originalIndex = originalTrigger.TriggersGroup.Triggers.IndexOf(originalTrigger);
-                originalTrigger.TriggersGroup.InsertTrigger(originalIndex, (TriggerViewModel)trigerEditDialog.DataContext);
-            }
-            else
-            {
-                changedTrigger.TriggersGroup.AddTrigger(changedTrigger);
-            }
+                var changedTrigger = (TriggerViewModel)trigerEditDialog.DataContext;
+                if (originalTrigger.TriggersGroup == changedTrigger.TriggersGroup)
+                {
+                    var originalIndex = originalTrigger.TriggersGroup.Triggers.IndexOf(originalTrigger);
+                    originalTrigger.TriggersGroup.InsertTrigger(originalIndex, (TriggerViewModel)trigerEditDialog.DataContext);
+                }
+                else
+                {
+                    changedTrigger.TriggersGroup.AddTrigger(changedTrigger);
+                }
 
-            originalTrigger.TriggersGroup.RemoveTrigger(originalTrigger);
-            SelectedTrigger = (TriggerViewModel)trigerEditDialog.DataContext;
+                originalTrigger.TriggersGroup.RemoveTrigger(originalTrigger);
+                SelectedTrigger = (TriggerViewModel)trigerEditDialog.DataContext;
+            };
         }
 
         #endregion

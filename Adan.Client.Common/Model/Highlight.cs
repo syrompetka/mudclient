@@ -114,7 +114,6 @@ namespace Adan.Client.Common.Model
                 else
                 {
                     _textToHighlight = value;
-                    IsRegExp = false;
                 }
 
                 _rootPatternToken = null;

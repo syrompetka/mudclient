@@ -90,7 +90,6 @@ namespace Adan.Client.Common.Model
                 else
                 {
                     _pattern = value;
-                    IsRegExp = false;
                 }
 
                 _rootPatternToken = null;
