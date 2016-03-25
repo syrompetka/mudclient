@@ -183,7 +183,8 @@ namespace Adan.Client.ViewModel
                        {
                            TextToHighlight = TextToHighlight,
                            TextColor = TextColor,
-                           BackgroundColor = BackgroundColor
+                           BackgroundColor = BackgroundColor,
+                           IsRegExp = IsRegExp
                        };
         }
     }
