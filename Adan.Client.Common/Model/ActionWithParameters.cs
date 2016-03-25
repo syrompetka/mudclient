@@ -58,15 +58,6 @@ namespace Adan.Client.Common.Model
             }
         }
 
-        //[NotNull]
-        //private Regex VariableSearchRegex
-        //{
-        //    get
-        //    {
-        //        return _variableSearchRegex ?? (_variableSearchRegex = new Regex(@"\$(\w+)"));
-        //    }
-        //}
-
         /// <summary>
         /// Gets the parameters string.
         /// </summary>
@@ -113,13 +104,6 @@ namespace Adan.Client.Common.Model
                 else
                     res = ReplaceParameters(res, i.ToString()[0], string.Empty);
             }
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    if (context.Parameters.ContainsKey(i))
-            //        res = res.Replace("%" + i, context.Parameters[i]);
-            //    else
-            //        res = res.Replace("%" + i, string.Empty);
-            //}
 
             return ReplaceVariables(res, model);
         }
