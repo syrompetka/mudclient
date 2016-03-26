@@ -26,6 +26,7 @@ namespace Adan.Client.Common.Settings
         private int _commandsHistorySize;
         private int _connectPort;
         private string _connectHostName;
+        private string _colorTheme;
         private bool _autoConnect;
         private bool _isLogCommands;
         private int _scrollBuffer;
@@ -80,6 +81,25 @@ namespace Adan.Client.Common.Settings
             }
         }
 
+        /// <summary>
+        /// Gets or sets the name of the connect host.
+        /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public string ColorTheme
+        {
+            get
+            {
+                return _colorTheme;
+            }
+            set
+            {
+                _colorTheme = value;
+                SettingsChanged("ColorTheme", value);
+            }
+        }
         /// <summary>
         /// 
         /// </summary>

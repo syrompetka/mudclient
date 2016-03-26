@@ -640,7 +640,7 @@ namespace Adan.Client.Common.Controls
             Assert.ArgumentNotNull(drawingContext, "drawingContext");
 
             //base.OnRender(drawingContext);
-            //drawingContext.DrawRectangle(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), new Pen(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
+            drawingContext.DrawRectangle(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), new Pen(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
             var renderedLines = 0;
             if (_selectionSettings.NeedUpdate)
             {

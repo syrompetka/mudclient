@@ -136,6 +136,7 @@
     <Compile Include="Model\Hotkey.cs" />
     <Compile Include="Settings\SettingsHolder.cs" />
     <Compile Include="Settings\SettingsSerializer.cs" />
+    <Compile Include="Themes\LightThemeDescription.cs" />
     <Compile Include="Utils\AnsiColor.cs" />
     <Compile Include="Utils\ColorsQueue.cs" />
     <Compile Include="Utils\ErrorLogger.cs" />

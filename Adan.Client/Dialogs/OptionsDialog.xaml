@@ -51,7 +51,8 @@
             </TabItem>
             <TabItem Header="Font">
                 <Grid>
-
+                    <Label Content="Color theme" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Height="23" Width="87"/>
+                    <ComboBox Padding="5" ItemsSource="{Binding Path=AvailableColorThemes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedTheme}" Margin="102,15,294,0" Height="23" VerticalAlignment="Top" />
                 </Grid>
             </TabItem>
         </TabControl>
