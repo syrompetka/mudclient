@@ -33,6 +33,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Adan.Client.Resources.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.AvalonDock.Themes;
@@ -193,7 +194,7 @@ namespace Adan.Client
             WindowState = SettingsHolder.Instance.Settings.MainWindowState;
 
             _dockManager.ActiveContentChanged += _dockManager_ActiveContentChanged;
-            _dockManager.Theme = new ExpressionDarkTheme();
+            _dockManager.Theme = new AvalonDockDarkTheme();
         }
 
         #endregion
