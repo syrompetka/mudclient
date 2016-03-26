@@ -259,6 +259,7 @@
     <Compile Include="Model\ParameterDescriptions\VariableReferenceParameterDescription.cs" />
     <Compile Include="OutputWindow.cs" />
     <Compile Include="PluginHost.cs" />
+    <Compile Include="Resources\AvalonDock\AvalonDockDarkTheme.cs" />
     <Compile Include="ViewModel\ActionParameters\ConstantStringParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\ExtensionMethods.cs" />
     <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
@@ -403,6 +404,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Resources\AvalonDock\DarkBrushes.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\AvalonDock\DarkTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources\AvalonDock\Theme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Resources\CommonTemplates.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
