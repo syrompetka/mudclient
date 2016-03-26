@@ -634,6 +634,15 @@ namespace Adan.Client
         /// <param name="e"></param>
         public void CheckGlobalHotkeys(KeyEventArgs e)
         {
+
+            // For hotkeys, only Numpad Enter is processed
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                var isExtended = (bool)typeof(KeyEventArgs).InvokeMember("IsExtendedKey", System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, e, null);
+                if (!isExtended)
+                    return;
+            }
+
             var hotkeyCommand = new HotkeyCommand()
             {
                 Key = e.Key == Key.System ? e.SystemKey : e.Key,

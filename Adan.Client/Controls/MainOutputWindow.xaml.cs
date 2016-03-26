@@ -64,7 +64,17 @@
                 Handled = false,
             };
 
-            RootModel.PushCommandToConveyor(hotkeyCommand);
+            // For hotkeys, only Numpad Enter is processed
+            var canPush = true;
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                var isExtended = (bool)typeof(KeyEventArgs).InvokeMember("IsExtendedKey", System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, e, null);
+                if (!isExtended)
+                    canPush = false;
+            }
+
+            if (canPush)
+                RootModel.PushCommandToConveyor(hotkeyCommand);
 
             if (hotkeyCommand.Handled)
             {
