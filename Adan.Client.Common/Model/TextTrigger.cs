@@ -96,6 +96,37 @@
             }
         }
 
+        public bool MatchMessage(TextMessage textMessage, RootModel rootModel)
+        {
+            ClearMatchingResults();
+
+            if (IsRegExp)
+            {
+                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
+                if (!varReplace.IsAllVariables)
+                    return false;
+
+                Regex rExp = new Regex(varReplace.Value);
+                Match match = rExp.Match(textMessage.InnerText);
+
+                if (!match.Success)
+                    return false;
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i + 1 < match.Groups.Count)
+                        _matchingResults[i] = match.Groups[i + 1].ToString();
+                }
+
+                return true;
+            }
+            else
+            {
+                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+                return res.IsSuccess;
+            }
+        }
+
         /// <summary>
         /// Handles the message.
         /// </summary>
@@ -112,41 +143,14 @@
                 return;
             }
 
-            ClearMatchingResults();
+            if (!MatchMessage(textMessage, rootModel))
+                return;
 
-            if (IsRegExp)
+            for (int i = 0; i < 10; i++)
             {
-                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
-                if (!varReplace.IsAllVariables)
-                    return;
-
-                Regex rExp = new Regex(varReplace.Value);
-                Match match = rExp.Match(textMessage.InnerText);
-
-                if (!match.Success)
-                    return;
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i + 1 < match.Groups.Count)
-                        Context.Parameters[i] = match.Groups[i + 1].ToString();
-                }
+                if (i < _matchingResults.Count)
+                    Context.Parameters[i] = _matchingResults[i];
             }
-            else
-            {
-                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-                if (!res.IsSuccess)
-                {
-                    return;
-                }
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i < _matchingResults.Count)
-                        Context.Parameters[i] = _matchingResults[i];
-                }
-            }
-
             Context.CurrentMessage = message;
 
             foreach (var action in Actions)
