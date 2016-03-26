@@ -31,6 +31,9 @@
         [NonSerialized]
         private string _matchingPattern;
 
+        [NonSerialized]
+        private Regex _compiledRegex = null;
+
         private readonly Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
@@ -82,6 +85,11 @@
                 {
                     _matchingPattern = value;
                 }
+
+                if (value.IndexOf("$") == -1)
+                    _compiledRegex = new Regex(_matchingPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                else
+                    _compiledRegex = null;
                 
                 _rootPatternToken = null;
             }
@@ -102,12 +110,18 @@
 
             if (IsRegExp)
             {
-                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
-                if (!varReplace.IsAllVariables)
-                    return false;
+                Match match;
+                if (_compiledRegex != null)
+                    match = _compiledRegex.Match(textMessage.InnerText);
+                else
+                {
+                    var varReplace = rootModel.ReplaceVariables(MatchingPattern);
+                    if (!varReplace.IsAllVariables)
+                        return false;
 
-                Regex rExp = new Regex(varReplace.Value);
-                Match match = rExp.Match(textMessage.InnerText);
+                    Regex rExp = new Regex(varReplace.Value);
+                    match = rExp.Match(textMessage.InnerText);
+                }
 
                 if (!match.Success)
                     return false;
