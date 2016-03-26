@@ -164,6 +164,7 @@ namespace Adan.Client.ViewModel
                     groupEditDialog.Closed += (s, e) =>
                     {
                         OnPropertyChanged("GroupsCount");
+                        SettingsHolder.Instance.GetProfile(_groupsViewModel.Name).Groups = _groupsViewModel.AllGroup;
                         SettingsHolder.Instance.SetProfile(_groupsViewModel.Name);
                     };
                     groupEditDialog.Show();
