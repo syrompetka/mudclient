@@ -17,7 +17,7 @@ namespace Adan.Client.Common.Themes
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Properties;
-
+    using Settings;
     /// <summary>
     /// A singleton class responcible for managing themes.
     /// </summary>
@@ -30,9 +30,10 @@ namespace Adan.Client.Common.Themes
         /// </summary>
         public ThemeManager()
         {
-            var themes = new List<ThemeDescription> { new ExpressionDarkThemeDescription() };
+            var themes = new List<ThemeDescription> { new LightThemeDescription(), new ExpressionDarkThemeDescription() };
             AvailableThemes = themes;
-            SwitchToTheme(themes.Where(theme => theme.Name == Settings.Default.SelectedThemeName).Single());
+            var selectedTheme = SettingsHolder.Instance.Settings.ColorTheme ?? "ExpressionDark";
+            SwitchToTheme(themes.Where(theme => theme.Name == selectedTheme).Single());
             _instance = this;
         }
 
@@ -70,7 +71,7 @@ namespace Adan.Client.Common.Themes
         public ThemeDescription ActiveTheme
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>

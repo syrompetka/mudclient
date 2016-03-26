@@ -858,6 +858,9 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.CommandChar = model.CommandChar;
                 SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
                 SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
+                SettingsHolder.Instance.Settings.ColorTheme = model.SelectedTheme.Name;
+                ThemeManager.Instance.ActiveTheme = model.SelectedTheme;
+
 
                 if (model.StartOfLine)
                     SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;
