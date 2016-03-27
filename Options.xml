@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<SettingsSerializer xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <ConnectPort>4000</ConnectPort>
+  <ConnectHostName>adan.ru</ConnectHostName>
+  <MainOutputs />
+  <ScrollBuffer>5000</ScrollBuffer>
+  <CursorPosition>EndOfLine</CursorPosition>
+  <MainOutputWindowSecondaryScrollHeight>500</MainOutputWindowSecondaryScrollHeight>
+  <CommandChar>35</CommandChar>
+  <CommandDelimiter>59</CommandDelimiter>
+  <AutoClearInput>false</AutoClearInput>
+  <AutoReconnect>false</AutoReconnect>
+  <MinLengthHistory>2</MinLengthHistory>
+  <HistorySize>1000</HistorySize>
+</SettingsSerializer>
+</SettingsSerializer>
