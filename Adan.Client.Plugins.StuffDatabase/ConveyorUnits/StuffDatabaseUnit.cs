@@ -38,6 +38,8 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
     {
         private string _lastShownObjectName = string.Empty;
 
+        private static Regex _whiteSpaceRx = new Regex(@" {2,}", RegexOptions.Compiled); 
+
         /// <summary>
         /// Gets a set of message types that this unit can handle.
         /// </summary>
@@ -75,8 +77,8 @@ namespace Adan.Client.Plugins.StuffDatabase.ConveyorUnits
             {
                 return;
             }
-
-            var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
+            
+            var commandText = _whiteSpaceRx.Replace(textCommand.CommandText.Trim(), " ");
             if (commandText.StartsWith(Resources.LoreHelpCommand + " ", StringComparison.CurrentCultureIgnoreCase)
                 || commandText.Equals(Resources.LoreHelpCommand, StringComparison.CurrentCultureIgnoreCase))
             {
