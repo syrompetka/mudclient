@@ -57,11 +57,10 @@ namespace Adan.Client.Common.Messages
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
         /// </summary>
         /// <param name="text">The text to display.</param>
-        /// <param name="foregroundColor">Color of the foreground.</param>
-        protected TextMessage([NotNull] string text, TextColor foregroundColor)
+        protected TextMessage([NotNull] string text)
         {
             Assert.ArgumentNotNull(text, "text");
-            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text, foregroundColor) };
+            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text) };
             _isInnerTextComputed = true;
             _innerText = text;
         }
@@ -70,10 +69,11 @@ namespace Adan.Client.Common.Messages
         /// Initializes a new instance of the <see cref="TextMessage"/> class.
         /// </summary>
         /// <param name="text">The text to display.</param>
-        protected TextMessage([NotNull] string text)
+        /// <param name="foregroundColor">Color of the foreground.</param>
+        protected TextMessage([NotNull] string text, TextColor foregroundColor)
         {
             Assert.ArgumentNotNull(text, "text");
-            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text) };
+            MessageBlocks = new List<TextMessageBlock> { new TextMessageBlock(text, foregroundColor) };
             _isInnerTextComputed = true;
             _innerText = text;
         }
@@ -133,7 +133,6 @@ namespace Adan.Client.Common.Messages
         public void AppendText(string text)
         {
             MessageBlocks.Add(new TextMessageBlock(text));
-
             UpdateInnerText();
         }
 
@@ -145,7 +144,6 @@ namespace Adan.Client.Common.Messages
         public void AppendText(string text, TextColor foreground)
         {
             MessageBlocks.Add(new TextMessageBlock(text, foreground));
-
             UpdateInnerText();
         }
 
@@ -158,7 +156,6 @@ namespace Adan.Client.Common.Messages
         public void AppendText(string text, TextColor foreground, TextColor background)
         {
             MessageBlocks.Add(new TextMessageBlock(text, foreground, background));
-
             UpdateInnerText();
         }
 
@@ -177,7 +174,6 @@ namespace Adan.Client.Common.Messages
             int count = 0;
             int startBlock = -1;
             int endBlock = -1;
-            int index = start;
             var blocks = new List<TextMessageBlock>();
             for (int i = 0; i < MessageBlocks.Count; ++i)
             {
@@ -190,35 +186,33 @@ namespace Adan.Client.Common.Messages
                 count += MessageBlocks[i].Text.Length;
             }
 
-            var startIndex = start - count;
             if (startBlock == -1)
+                return;
+
+            var indexInStartBlock = start - count;
+            for (int i = startBlock; i < MessageBlocks.Count; ++i)
             {
-                startBlock = MessageBlocks.Count - 1;
-                endBlock = startBlock;
-            }
-            else
-            {
-                for (int i = startBlock + 1; i < MessageBlocks.Count; ++i)
+                if (start + length < count + MessageBlocks[i].Text.Length)
                 {
-                    if (start + length < count + MessageBlocks[i].Text.Length)
-                    {
-                        endBlock = i;
-                        break;
-                    }
-                    count += MessageBlocks[i].Text.Length;
+                    endBlock = i;
+                    break;
                 }
 
-                if (endBlock == -1)
-                    endBlock = MessageBlocks.Count - 1;
+                count += MessageBlocks[i].Text.Length;
             }
-            
-            if(startIndex  > 0)
-            blocks.Add(new TextMessageBlock(MessageBlocks[startBlock].Text.Substring(0, startIndex), MessageBlocks[startBlock].Foreground, MessageBlocks[startBlock].Background));
+
+            if (endBlock == -1)
+                return;
+
+            var indexInEndBlock = start + length - count;
+
+            if (indexInStartBlock > 0)
+                blocks.Add(new TextMessageBlock(MessageBlocks[startBlock].Text.Substring(0, indexInStartBlock), MessageBlocks[startBlock].Foreground, MessageBlocks[startBlock].Background));
 
             blocks.Add(new TextMessageBlock(InnerText.Substring(start, length), foreground, background));
 
-            if (start + length - count < MessageBlocks[endBlock].Text.Length)
-                blocks.Add(new TextMessageBlock(MessageBlocks[endBlock].Text.Substring(start+length - count), MessageBlocks[endBlock].Foreground, MessageBlocks[endBlock].Background));
+            if (indexInEndBlock < MessageBlocks[endBlock].Text.Length)
+                blocks.Add(new TextMessageBlock(MessageBlocks[endBlock].Text.Substring(indexInEndBlock), MessageBlocks[endBlock].Foreground, MessageBlocks[endBlock].Background));
 
             MessageBlocks.RemoveRange(startBlock, endBlock + 1 - startBlock);
             MessageBlocks.InsertRange(startBlock, blocks);
@@ -230,7 +224,7 @@ namespace Adan.Client.Common.Messages
         /// <param name="start"></param>
         /// <param name="length"></param>
         /// <param name="text"></param>
-        public void Substitution(int start, int length, string text)
+        public void Substitute(int start, int length, string text)
         {
             if (MessageBlocks.Count == 0 || start < 0 || length < 0)
                 return;
@@ -238,7 +232,6 @@ namespace Adan.Client.Common.Messages
             int count = 0;
             int startBlock = -1;
             int endBlock = -1;
-            int index = start;
             var blocks = new List<TextMessageBlock>();
             for (int i = 0; i < MessageBlocks.Count; ++i)
             {
@@ -251,35 +244,33 @@ namespace Adan.Client.Common.Messages
                 count += MessageBlocks[i].Text.Length;
             }
 
-            var startIndex = start - count;
             if (startBlock == -1)
+                return;
+
+            var indexInStartBlock = start - count;
+            for (int i = startBlock; i < MessageBlocks.Count; ++i)
             {
-                startBlock = MessageBlocks.Count - 1;
-                endBlock = startBlock;
-            }
-            else
-            {
-                for (int i = startBlock + 1; i < MessageBlocks.Count; ++i)
+                if (start + length < count + MessageBlocks[i].Text.Length)
                 {
-                    if (start + length < count + MessageBlocks[i].Text.Length)
-                    {
-                        endBlock = i;
-                        break;
-                    }
-                    count += MessageBlocks[i].Text.Length;
+                    endBlock = i;
+                    break;
                 }
 
-                if (endBlock == -1)
-                    endBlock = MessageBlocks.Count - 1;
+                count += MessageBlocks[i].Text.Length;
             }
 
-            if (startIndex > 0)
-                blocks.Add(new TextMessageBlock(MessageBlocks[startBlock].Text.Substring(0, startIndex), MessageBlocks[startBlock].Foreground, MessageBlocks[startBlock].Background));
+            if (endBlock == -1)
+                return;
+
+            var indexInEndBlock = start + length - count;
+
+            if (indexInStartBlock > 0)
+                blocks.Add(new TextMessageBlock(MessageBlocks[startBlock].Text.Substring(0, indexInStartBlock), MessageBlocks[startBlock].Foreground, MessageBlocks[startBlock].Background));
 
             blocks.Add(new TextMessageBlock(text, MessageBlocks[startBlock].Foreground, MessageBlocks[startBlock].Background));
 
-            if(start + length - count < MessageBlocks[endBlock].Text.Length)
-                blocks.Add(new TextMessageBlock(MessageBlocks[endBlock].Text.Substring(start + length - count), MessageBlocks[endBlock].Foreground, MessageBlocks[endBlock].Background));
+            if (indexInEndBlock < MessageBlocks[endBlock].Text.Length)
+                blocks.Add(new TextMessageBlock(MessageBlocks[endBlock].Text.Substring(indexInEndBlock), MessageBlocks[endBlock].Foreground, MessageBlocks[endBlock].Background));
 
             MessageBlocks.RemoveRange(startBlock, endBlock + 1 - startBlock);
             MessageBlocks.InsertRange(startBlock, blocks);
