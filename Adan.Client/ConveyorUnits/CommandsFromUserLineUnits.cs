@@ -99,7 +99,7 @@ namespace Adan.Client.ConveyorUnits
 
             var commandText = textCommand.CommandText.Trim();
 
-            if (!commandText.StartsWith(SettingsHolder.Instance.Settings.CommandChar.ToString()))
+            if (commandText.Length > 1 && commandText[0] != SettingsHolder.Instance.Settings.CommandChar)
                 return;
 
             if (this.TriggerCheck(commandText, rootModel, isImport) || this.AliasCheck(commandText, rootModel, isImport)
