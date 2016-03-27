@@ -111,14 +111,24 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
 
-            string str = PostProcessString(TextToOutput + GetParametersString(model, context), model, context);
-            if (OutputEntireMessageKeepingColors)
+            //TODO: Enable OutputEntoreMessageKeepingColors only for triggers?
+            //CurrentMessage work only from triggers
+            var contextMessage = context.CurrentMessage as TextMessage;
+            if (OutputEntireMessageKeepingColors && contextMessage != null)
             {
-                model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
+                model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(contextMessage) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
             }
             else
             {
-                model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str, TextColor, BackgroundColor) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
+                string str = PostProcessString(TextToOutput + GetParametersString(model, context), model, context);
+                if (OutputEntireMessageKeepingColors)
+                {
+                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
+                }
+                else
+                {
+                    model.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str, TextColor, BackgroundColor) { SkipTriggers = true, SkipSubstitution = true, SkipHighlight = true });
+                }
             }
         }
 
