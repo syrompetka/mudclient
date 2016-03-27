@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AffectEnvenom" xml:space="preserve">
+    <value>Envenom: [{0}]</value>
+  </data>
+  <data name="AffectMagicArrows" xml:space="preserve">
+    <value>magic arrows: extra damage by {0} magic {1}d{2} [{3}]</value>
+  </data>
+  <data name="AffectMagicArrowsAir" xml:space="preserve">
+    <value>air</value>
+  </data>
+  <data name="AffectMagicArrowsEarth" xml:space="preserve">
+    <value>earth</value>
+  </data>
+  <data name="AffectMagicArrowsFire" xml:space="preserve">
+    <value>fire</value>
+  </data>
+  <data name="AffectMagicArrowsUnlimited" xml:space="preserve">
+    <value>magic arrows: extra datage by {0} magic {1}d{2}</value>
+  </data>
+  <data name="AffectMagicArrowsWater" xml:space="preserve">
+    <value>water</value>
+  </data>
+  <data name="Affects" xml:space="preserve">
+    <value>Affects</value>
+  </data>
+  <data name="AppliedAffects" xml:space="preserve">
+    <value>Applied affects:</value>
+  </data>
+  <data name="Armor" xml:space="preserve">
+    <value>Armor: {0}</value>
+  </data>
+  <data name="ArmorClass" xml:space="preserve">
+    <value>Armor class(AC): {0}</value>
+  </data>
+  <data name="CanBeWeared" xml:space="preserve">
+    <value>Can be weared</value>
+  </data>
+  <data name="CommonStats" xml:space="preserve">
+    <value>Weight: {0:F0}, Price: {1}, Rent: {2}({3}), Timer: {4}, Offline Timer: {5}, Material: {6}</value>
+  </data>
+  <data name="CraftBookMinLevel" xml:space="preserve">
+    <value>Minimum level: {0}</value>
+  </data>
+  <data name="CraftBookMinSkillLevel" xml:space="preserve">
+    <value>Minimum skill level: {0}%</value>
+  </data>
+  <data name="CraftBookRecipeDescription" xml:space="preserve">
+    <value>Description: {0}</value>
+  </data>
+  <data name="CraftBookRecipeName" xml:space="preserve">
+    <value>Recipe: {0}</value>
+  </data>
+  <data name="IngredientColor" xml:space="preserve">
+    <value>Color: {0}</value>
+  </data>
+  <data name="IngredientPower" xml:space="preserve">
+    <value>Power: {0}</value>
+  </data>
+  <data name="LongTimeFormat" xml:space="preserve">
+    <value>{0} d. {1} h.</value>
+  </data>
+  <data name="LoreCommentsHelp" xml:space="preserve">
+    <value>Use 'lorec &lt;comment&gt;' to add comments for latest object description.</value>
+  </data>
+  <data name="LoreCreated" xml:space="preserve">
+    <value>Descrption of object '{0}' was saved to database.</value>
+  </data>
+  <data name="LoreHelp" xml:space="preserve">
+    <value>Use 'lore &lt;item_name&gt;' command to get saved object description.</value>
+  </data>
+  <data name="LoreUpdated" xml:space="preserve">
+    <value>Descrption of object '{0}' was updated in database.</value>
+  </data>
+  <data name="MinLevel" xml:space="preserve">
+    <value>Minimum level required: {0}</value>
+  </data>
+  <data name="NoFlags" xml:space="preserve">
+    <value>No flags</value>
+  </data>
+  <data name="Object" xml:space="preserve">
+    <value>Object</value>
+  </data>
+  <data name="ObjectAffects" xml:space="preserve">
+    <value>Object affects</value>
+  </data>
+  <data name="ObjectFlags" xml:space="preserve">
+    <value>Object flags</value>
+  </data>
+  <data name="ObjectType" xml:space="preserve">
+    <value>Object type</value>
+  </data>
+  <data name="RestrictionFlags" xml:space="preserve">
+    <value>Restriction flags</value>
+  </data>
+  <data name="ShortTimeFormat" xml:space="preserve">
+    <value>{0} h.</value>
+  </data>
+  <data name="SkillEnhance" xml:space="preserve">
+    <value>{0:+#;-#;#} to skill/spell '{1}'</value>
+  </data>
+  <data name="SkillResist" xml:space="preserve">
+    <value>Resist to skill/spell '{0}' {1}%</value>
+  </data>
+  <data name="SpellBookSpell" xml:space="preserve">
+    <value>Spell: {0}</value>
+  </data>
+  <data name="SpellCastCount" xml:space="preserve">
+    <value>Cast count: {0}</value>
+  </data>
+  <data name="SpellCastCountInfinity" xml:space="preserve">
+    <value>Infinite</value>
+  </data>
+  <data name="SpellMinLevel" xml:space="preserve">
+    <value>Minimum level: {0}</value>
+  </data>
+  <data name="SpellProfession" xml:space="preserve">
+    <value>Required profession: {0}</value>
+  </data>
+  <data name="Spells" xml:space="preserve">
+    <value>Spells</value>
+  </data>
+  <data name="StaffCharges" xml:space="preserve">
+    <value>Maximum {0} charges, {1} charges left.</value>
+  </data>
+  <data name="WeaponPower" xml:space="preserve">
+    <value>Weapon power '{0}d{1}', average {2:F1}.</value>
+  </data>
+  <data name="WeaponSkill" xml:space="preserve">
+    <value>Required skill: '{0}'.</value>
+  </data>
+  <data name="WearABOUT" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="WearARMS" xml:space="preserve">
+    <value>Arms</value>
+  </data>
+  <data name="WearBody" xml:space="preserve">
+    <value>Body</value>
+  </data>
+  <data name="WearDEF1" xml:space="preserve">
+    <value>Def1</value>
+  </data>
+  <data name="WearDEF2" xml:space="preserve">
+    <value>Def2</value>
+  </data>
+  <data name="WearDef3" xml:space="preserve">
+    <value>Def3</value>
+  </data>
+  <data name="WearDWIELD" xml:space="preserve">
+    <value>Wield both hands</value>
+  </data>
+  <data name="WearEARS" xml:space="preserve">
+    <value>Ears</value>
+  </data>
+  <data name="WearEYES" xml:space="preserve">
+    <value>Eyes</value>
+  </data>
+  <data name="WearFEET" xml:space="preserve">
+    <value>Feet</value>
+  </data>
+  <data name="WearFINGER" xml:space="preserve">
+    <value>Finger</value>
+  </data>
+  <data name="WearHANDS" xml:space="preserve">
+    <value>Hands</value>
+  </data>
+  <data name="WearHEAD" xml:space="preserve">
+    <value>Head</value>
+  </data>
+  <data name="WearHOLD" xml:space="preserve">
+    <value>Hold</value>
+  </data>
+  <data name="WearingAffect" xml:space="preserve">
+    <value>Wearing affect: {0}, Level: {1}, Timeout: {2}</value>
+  </data>
+  <data name="WearLEGS" xml:space="preserve">
+    <value>Legs</value>
+  </data>
+  <data name="WearNECK" xml:space="preserve">
+    <value>Neck</value>
+  </data>
+  <data name="WearSHIELD" xml:space="preserve">
+    <value>Shield</value>
+  </data>
+  <data name="WearWAIST" xml:space="preserve">
+    <value>Waist</value>
+  </data>
+  <data name="WearWIELD" xml:space="preserve">
+    <value>Wield</value>
+  </data>
+  <data name="WearWRIST" xml:space="preserve">
+    <value>Wrist</value>
+  </data>
+  <data name="LoreGetHelp" xml:space="preserve">
+    <value>User 'lorehelp' command to get help about stuff database.</value>
+  </data>
+  <data name="LoreCommand" xml:space="preserve">
+    <value>lore</value>
+  </data>
+  <data name="LoreCommentCommand" xml:space="preserve">
+    <value>lorec</value>
+  </data>
+  <data name="LoreHelpCommand" xml:space="preserve">
+    <value>lorehelp</value>
+  </data>
+  <data name="Comments" xml:space="preserve">
+    <value>Comments: {0}</value>
+  </data>
+  <data name="LoreCommentError" xml:space="preserve">
+    <value>Can not add comments to object description. Find required object first. </value>
+  </data>
+  <data name="LoreFoundObject" xml:space="preserve">
+    <value>Found object '{0}':</value>
+  </data>
+  <data name="LoreTooMuchFound" xml:space="preserve">
+    <value>Your query produced too much results. Please use more specific search.</value>
+  </data>
+  <data name="LoreNothingFound" xml:space="preserve">
+    <value>Nothing found.</value>
+  </data>
+</root>

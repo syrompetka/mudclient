@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="Adan.Client.Controls.MainOutputWindowExx"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:AvalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:Controls="clr-namespace:Adan.Client.Controls"
+             xmlns:Controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+             mc:Ignorable="d"
+             Focusable="False"
+             FocusManager.FocusedElement="{Binding Path=txtCommandInput}"
+             TextOptions.TextFormattingMode="Display"
+             TextElement.FontSize="14"
+             TextElement.FontFamily="Consolas, Lucida Console"
+             >
+    <Grid Focusable="False">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0" Name="scrollGridRow"></RowDefinition>
+            <RowDefinition Height="0" Name="splitterGridRow"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"></ColumnDefinition>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Row="0">
+            <AvalonEdit:TextEditor Foreground="White" Background="Black" IsReadOnly="True"
+                                   x:Name="secondScrollOutput" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                                         Focusable="False" HorizontalAlignment="Stretch"
+                                                         VerticalAlignment="Stretch">
+            </AvalonEdit:TextEditor>
+        </Grid>
+        <GridSplitter Name="gridSplitter"  Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
+        <Grid Grid.Row="2">
+            <AvalonEdit:TextEditor Foreground="White" Background="Black" IsReadOnly="True"
+                                   x:Name="mainScrollOutput" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled"
+                                                         Focusable="False" HorizontalAlignment="Stretch">
+            </AvalonEdit:TextEditor>
+        </Grid>
+        <Grid Grid.Row="3">
+            <Controls:TextBoxWithHistory x:Name="txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True"/>
+        </Grid>
+    </Grid>
+</UserControl>
