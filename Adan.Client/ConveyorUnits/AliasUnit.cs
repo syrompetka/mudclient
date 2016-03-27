@@ -94,10 +94,23 @@ namespace Adan.Client.ConveyorUnits
 
                     _context.Parameters[1] = _context.Parameters[0];
 
-                    var aliasContainsParams = alias.Actions.OfType<SendTextAction>().Any(a => a.CommandText.Contains("%0") || a.CommandText.Contains("%1"));
+                    //var aliasContainsParams = alias.Actions.OfType<SendTextAction>().Any(a => a.CommandText.Contains("%0") || a.CommandText.Contains("%1"));
+                    var aliasContainsParams = false;
+                    int lastSendTextAction = -1;
+                    for(var i = 0; i < alias.Actions.Count; ++i)
+                    {
+                        var act = alias.Actions[i] as SendTextAction;
+                        if(act != null)
+                        {
+                            lastSendTextAction = i;
+                            if (act.CommandText.Contains("%0") || act.CommandText.Contains("%1"))
+                                aliasContainsParams = true;
+                        }                            
+                    }
+
                     for (var i = 0; i < alias.Actions.Count; i++)
                     {
-                        if (i == alias.Actions.Count - 1 && !aliasContainsParams)
+                        if (i == lastSendTextAction && !aliasContainsParams)
                         {
                             var sendTextAction = alias.Actions[i] as SendTextAction;
                             (new SendTextAction() { CommandText = sendTextAction.CommandText + " " + _context.Parameters[0] }).Execute(rootModel, _context);
@@ -105,7 +118,6 @@ namespace Adan.Client.ConveyorUnits
                         else
                             alias.Actions[i].Execute(rootModel, _context);
                     }
-                    
 
                     textCommand.Handled = true;
                     return;
