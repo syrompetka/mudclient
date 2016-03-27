@@ -33,7 +33,7 @@ namespace Adan.Client.Common.Themes
             _textColors[TextColor.Black] = Color.FromRgb(218, 199, 158);
             _textColors[TextColor.Red] = Color.FromRgb(192, 0, 0);
             _textColors[TextColor.Green] = Color.FromRgb(0, 100, 0);
-            _textColors[TextColor.Yellow] = Color.FromRgb(192, 192, 0);
+            _textColors[TextColor.Yellow] = Color.FromRgb(115, 73, 6);
             _textColors[TextColor.Blue] = Color.FromRgb(0, 0, 64);
             _textColors[TextColor.Cyan] = Color.FromRgb(0, 64, 64);
             _textColors[TextColor.Magenta] = Color.FromRgb(192, 0, 192);
