@@ -27,6 +27,8 @@ namespace Adan.Client.Map.ConveyorUnits
     {
         private readonly RouteManager _routeManager;
 
+        private readonly char[] _splitChars = new char[] { ' ' };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteUnit"/> class.
         /// </summary>
@@ -76,9 +78,8 @@ namespace Adan.Client.Map.ConveyorUnits
             {
                 return;
             }
-
-            var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
-            var splittedCommands = commandText.Split(' ');
+            
+            var splittedCommands = textCommand.CommandText.Split(_splitChars, System.StringSplitOptions.RemoveEmptyEntries);
 
             if (splittedCommands.Length < 2)
             {

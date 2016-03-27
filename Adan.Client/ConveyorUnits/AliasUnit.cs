@@ -26,6 +26,7 @@ namespace Adan.Client.ConveyorUnits
     {
         private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
 
+        private readonly Regex _whiteSpaceRegex = new Regex(@" {2, }", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
@@ -75,7 +76,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            var commandText = Regex.Replace(textCommand.CommandText.Trim(), @"\s+", " ");
+            var commandText = _whiteSpaceRegex.Replace(textCommand.CommandText.Trim(), " ");
             foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var alias in group.Aliases)
