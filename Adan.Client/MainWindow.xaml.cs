@@ -73,7 +73,6 @@ namespace Adan.Client
                                 typeof(VariableReferenceParameter),
                                 typeof(MathExpressionParameter),
                                 typeof(ConstantStringParameter),
-                                typeof(SendTextOneParameterAction),
                                 typeof(ShowOutputWindowAction),
                                 typeof(SendToWindowAction),
                                 typeof(ToggleFullScreenModeAction),

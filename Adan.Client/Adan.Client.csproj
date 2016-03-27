@@ -245,7 +245,6 @@
     <Compile Include="Model\Actions\ActionCondition.cs" />
     <Compile Include="Model\Actions\OutputToMainWindowAction.cs" />
     <Compile Include="Model\Actions\SendTextAction.cs" />
-    <Compile Include="Model\Actions\SendTextOneParameterAction.cs" />
     <Compile Include="Model\Actions\SendToWindowAction.cs" />
     <Compile Include="Model\Actions\SetVariableValueAction.cs" />
     <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />

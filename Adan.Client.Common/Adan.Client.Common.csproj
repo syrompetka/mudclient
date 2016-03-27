@@ -127,7 +127,6 @@
     <Compile Include="Messages\ChangeEchoModeMessage.cs" />
     <Compile Include="Model\ActionBase.cs" />
     <Compile Include="Model\ActionExecutionContext.cs" />
-    <Compile Include="Model\ActionWithOneParameterOrDefault.cs" />
     <Compile Include="Model\Affect.cs" />
     <Compile Include="Model\CharacterStatus.cs" />
     <Compile Include="Model\CommandAlias.cs" />
