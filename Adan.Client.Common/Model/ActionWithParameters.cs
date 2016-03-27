@@ -24,7 +24,7 @@ namespace Adan.Client.Common.Model
     public abstract class ActionWithParameters : ActionBase
     {
         private StringBuilder _parametersStringBuilder;
-       // private Regex _variableSearchRegex;
+        // private Regex _variableSearchRegex;
         private List<ActionParameterBase> _parameters;
 
         /// <summary>
@@ -96,16 +96,15 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
 
-            var res = valueToProcess;
-            for (int i = 0; i < 10; i++)
-            {
-                if (context.Parameters.ContainsKey(i))
-                    res = ReplaceParameters(res, i.ToString()[0], context.Parameters[i]);
-                else
-                    res = ReplaceParameters(res, i.ToString()[0], string.Empty);
-            }
-
-            return ReplaceVariables(res, model);
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    if (context.Parameters.ContainsKey(i))
+            //        res = ReplaceParameters(res, i.ToString()[0], context.Parameters[i]);
+            //    else
+            //        res = ReplaceParameters(res, i.ToString()[0], string.Empty);
+            //}
+            
+            return ReplaceVariables(ReplaceParameters(valueToProcess, context), model);
         }
 
         /// <summary>
@@ -115,7 +114,7 @@ namespace Adan.Client.Common.Model
         /// <param name="rootModel"></param>
         /// <returns></returns>
         [NotNull]
-        protected string ReplaceVariables([NotNull] string input, [NotNull] RootModel rootModel)
+        protected virtual string ReplaceVariables([NotNull] string input, [NotNull] RootModel rootModel)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -159,7 +158,7 @@ namespace Adan.Client.Common.Model
             return sb.ToString();
         }
 
-        private string ReplaceParameters(string input, char number, string replacement)
+        protected virtual string ReplaceParameters(string input, ActionExecutionContext context)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -170,23 +169,27 @@ namespace Adan.Client.Common.Model
             {
                 if (input[i] == '%')
                 {
-                    if (input[i + 1] == number && nest == 0)
+                    if (i < input.Length - 2 && input[i + 1] == '%' && char.IsDigit(input[i + 2]))
                     {
                         if (i - lastPos > 0)
                             sb.Append(input, lastPos, i - lastPos);
 
-                        sb.Append(replacement);
+                        if (nest > 0)
+                            sb.Append(GetParameter((int)Char.GetNumericValue(input[i + 2]), context));
+                        else
+                            sb.Append(input, i, 3);
+
+                        lastPos = i + 3;
+                        i += 2;
+                    }
+                    else if (nest == 0 && char.IsDigit(input[i + 1]))
+                    {
+                        if (i - lastPos > 0)
+                            sb.Append(input, lastPos, i - lastPos);
+
+                        sb.Append(GetParameter((int)Char.GetNumericValue(input[i + 1]), context));
                         lastPos = i + 2;
                         i++;
-                    }
-                    else if (i < input.Length - 2 && input[i + 1] == '%' && input[i + 2] == number && nest > 0)
-                    {
-                        if (i - lastPos > 0)
-                            sb.Append(input, lastPos, i - lastPos);
-
-                        sb.Append(replacement);
-                        lastPos = i + 3;
-                        i+=2;
                     }
                 }
                 else if (input[i] == '{')
@@ -205,6 +208,11 @@ namespace Adan.Client.Common.Model
                 sb.Append(input, lastPos, input.Length - lastPos);
 
             return sb.ToString();
+        }
+
+        protected string GetParameter(int num, ActionExecutionContext context)
+        {
+            return context.Parameters.ContainsKey(num) ? context.Parameters[num] : string.Empty;
         }
     }
 }
