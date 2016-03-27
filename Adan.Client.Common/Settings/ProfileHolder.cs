@@ -1,4 +1,5 @@
 ﻿using Adan.Client.Common.Conveyor;
+using Adan.Client.Common.Messages;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.Utils;
 using CSLib.Net.Annotations;
@@ -8,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -26,6 +28,11 @@ namespace Adan.Client.Common.Settings
         private List<string> _commandsHistory;
 
         #endregion
+
+        /// <summary>
+        /// This event will be raised when where is a non-critical error with Settings
+        /// </summary>
+        public event EventHandler<SettingsErrorEventArgs> ErrorOccurred;
 
         #region Constructors and Destuctors
 
@@ -281,8 +288,16 @@ namespace Adan.Client.Common.Settings
                 {
                     ErrorLogger.Instance.Write(string.Format("Error read groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
 
-                    Groups = new List<Group>();
-                    Groups.Add(new Group() { Name = "Default", IsBuildIn = true, IsEnabled = true });
+                    var result = MessageBox.Show(
+                        "Произошла ошибка при загрузке " + settingsFileFullPath + ": " + ex.Message + ".\n"
+                        + "Попробуйте сообщить об этой ошибке на форум или исправить ее самостоятельно вручную.\n"
+                        + "В крайнем случае удалите файл, он будет пересоздан (но все триггеры/алиасы/.. будут потеряны).\n"
+                        + "После нажатия ОК клиент будет закрыт.",
+                        "Критическая ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Exclamation);
+
+                    Application.Current.Shutdown();
                 }
             }
         }
@@ -294,7 +309,8 @@ namespace Adan.Client.Common.Settings
                 Directory.CreateDirectory(GetProfileSettingsFolder());
             }
 
-            using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Settings.xml"), FileMode.Create, FileAccess.Write))
+            var settingsFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Settings.xml");
+            using (var stream = File.Open(settingsFileFullPath, FileMode.Create, FileAccess.Write))
             using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
             {
                 streamWriter.Formatting = Formatting.Indented;
@@ -307,6 +323,10 @@ namespace Adan.Client.Common.Settings
                 catch (Exception ex)
                 {
                     ErrorLogger.Instance.Write(string.Format("Error save groups: {0}\r\n{1}", ex.Message, ex.StackTrace));
+
+                    if (ErrorOccurred != null)
+                        ErrorOccurred(this, new SettingsErrorEventArgs("#Ошибка при сохранении " + settingsFileFullPath + ": " + ex.Message + "."));
+
                 }
             }
         }
@@ -330,6 +350,11 @@ namespace Adan.Client.Common.Settings
                 catch (Exception ex)
                 {
                     ErrorLogger.Instance.Write(string.Format("Error read variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
+                    var result = MessageBox.Show(
+                        "Произошла ошибка при загрузке " + variablesFileFullPath + ": " + ex.Message + ". Переменные обнулены.",
+                        "Ошибка",
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning);
 
                     Variables = new List<Variable>();
                 }
@@ -343,7 +368,8 @@ namespace Adan.Client.Common.Settings
                 Directory.CreateDirectory(GetProfileSettingsFolder());
             }
 
-            using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Variables.xml"), FileMode.Create, FileAccess.Write))
+            var fileFullPath = Path.Combine(GetProfileSettingsFolder(), "Variables.xml");
+            using (var stream = File.Open(fileFullPath, FileMode.Create, FileAccess.Write))
             using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
             {
                 streamWriter.Formatting = Formatting.Indented;
@@ -356,6 +382,9 @@ namespace Adan.Client.Common.Settings
                 catch (Exception ex)
                 {
                     ErrorLogger.Instance.Write(string.Format("Error save variables: {0}\r\n{1}", ex.Message, ex.StackTrace));
+
+                    if (ErrorOccurred != null)
+                        ErrorOccurred(this, new SettingsErrorEventArgs("#Ошибка при сохранении " + fileFullPath + ": " + ex.Message + "."));
                 }
             }
         }
