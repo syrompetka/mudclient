@@ -45,7 +45,7 @@ namespace Adan.Client.Common.Themes
             _textColors[TextColor.BrightBlue] = Color.FromRgb(97, 142, 248);
             _textColors[TextColor.BrightCyan] = Color.FromRgb(0, 136, 136);
             _textColors[TextColor.BrightMagenta] = Color.FromRgb(255, 0, 255);
-            _textColors[TextColor.BrightWhite] = Color.FromRgb(0, 0, 0);
+            _textColors[TextColor.BrightWhite] = Color.FromRgb(13, 31, 56);
 
             _textColors[TextColor.RepeatCommandTextColor] = Color.FromRgb(64, 64, 64);
 
