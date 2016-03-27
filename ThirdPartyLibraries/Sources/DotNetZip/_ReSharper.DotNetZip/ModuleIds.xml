@@ -1,0 +1,13 @@
+<Modules>
+  <Module PersistentId="System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" ModuleId="System.Windows.Forms" />
+  <Module PersistentId="9816BA86-9250-4C00-A912-25F07F8677D1" ModuleId="Zlib" />
+  <Module PersistentId="D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A" ModuleId="Zip Partial DLL" />
+  <Module PersistentId="49A128D3-C3F2-46B1-8F7A-EECD209EA860" ModuleId="Zip Reduced" />
+  <Module PersistentId="1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF" ModuleId="ZipTreeView" />
+  <Module PersistentId="F4024C01-1133-4A5A-B421-22EA8CA89EA5" ModuleId="ReadZip" />
+  <Module PersistentId="276B8174-A24E-4257-9969-42D692F8CAC2" ModuleId="ConvertZipToSfx" />
+  <Module PersistentId="A22C89E0-B5D4-4881-A61F-4B1FD82F2453" ModuleId="UnZip" />
+  <Module PersistentId="6BCCF138-2EFB-464C-B872-E3079F0A4708" ModuleId="Win Forms App" />
+  <Module PersistentId="2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D" ModuleId="WinForms-TreeViewZip" />
+  <Module PersistentId="95D9690B-3B37-4800-A511-6FB21436638B" ModuleId="QuickUnzip" />
+</Modules>

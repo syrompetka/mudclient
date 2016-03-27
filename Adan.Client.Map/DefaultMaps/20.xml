@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfAdditionalRoomParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <AdditionalRoomParameters RoomId="2000" RoomAlias="ворота" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2001" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2002" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2003" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2004" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2005" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2006" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2007" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2008" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2009" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2010" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2011" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2012" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2013" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2014" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2015" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2016" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2017" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2018" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2019" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2020" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2021" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2022" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2023" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2024" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2025" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2026" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2027" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2028" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2029" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2030" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2031" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2032" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2033" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2034" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2035" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="WeaponShop">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2036" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="FoodShop">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2037" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="LeatherShop">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2038" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="MiscShop">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2039" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="MagicShop">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2040" RoomAlias="банк" HasBeenVisited="true" Color="Default" Icon="Bank">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2041" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2042" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Post">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2043" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Horse">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2044" RoomAlias="рента" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2045" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2048" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Archer">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2049" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Warrior">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2050" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Mage">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2051" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="DarkKnight">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2052" RoomAlias="гк" HasBeenVisited="true" Color="Default" Icon="Cleric">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2053" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Barbarian">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2054" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Thief">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2055" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2056" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2057" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2059" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2060" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2061" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2062" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2063" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2064" RoomAlias="квестер" HasBeenVisited="true" Color="Default" Icon="Quester">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2065" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Doska">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2066" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Doska">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2067" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2068" RoomAlias="склад" HasBeenVisited="true" Color="Default" Icon="Sklad">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2069" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="Druid">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2070" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2071" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2072" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2073" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2074" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2075" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2076" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2077" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2078" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2079" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2080" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2081" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2082" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2083" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2084" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2085" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2086" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+  <AdditionalRoomParameters RoomId="2087" RoomAlias="" HasBeenVisited="true" Color="Default" Icon="None">
+    <ActionsToExecuteOnRoomEntry />
+  </AdditionalRoomParameters>
+</ArrayOfAdditionalRoomParameters>

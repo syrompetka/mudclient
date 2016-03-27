@@ -1,0 +1,32 @@
+
+
+time         condition
+-------------------------------------------------------
+2:21         BEST compression, ZlibStream  1024, ZipEntry 0x2200
+2:10         BEST compression, ZlibStream 16384, ZipEntry 0x2200
+2:06         BEST compression, ZlibStream 16384, ZipEntry 0x4400
+
+0:57         ?????  I changed CLS-compliance in zlib but nothing else of import.????
+             not sure why it would be so fast here.
+
+
+   -- Introduced UI tweaking of compression level -- 
+
+
+1:09  ???    compression: DEFAULT, ZlibStream 16384, ZipEntry(0x4400)
+2:04  42%    compression: BEST,    ZlibStream 16384, ZipEntry(0x4400)       
+0:51  45%    compression: FASTEST, ZlibStream 16384, ZipEntry(0x4400)   
+1:09  ??%    compression: DEFAULT, ZlibStream 16384, ZipEntry(0x4400)   
+
+0:50  ??%    compression: NONE,    ZlibStream 16384, ZipEntry(0x4400)   
+
+1:37  42%    compression: LEVEL8,  ZlibStream 16384, ZipEntry(0x4400)   
+1:07  42%    compression: DEFAULT, ZlibStream 16384, ZipEntry(0x4400)   
+
+   -- Introduced new Notes.xml file in fodder -- 
+
+1:06  42%    compression: DEFAULT, ZlibStream 16384, ZipEntry(0x4400) 
+
+???????%    compression: BEST,    ZlibStream 16384, ZipEntry(0x4400) 
+
+

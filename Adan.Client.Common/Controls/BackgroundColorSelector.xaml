@@ -1,0 +1,235 @@
+﻿<UserControl x:Class="Adan.Client.Common.Controls.BackgroundColorSelector"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:Themes="clr-namespace:Adan.Client.Common.Themes" mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300" Name="colorSelector" xmlns:my="clr-namespace:Adan.Client.Common.Utils">
+    <UserControl.Resources>
+        <my:BackgroundTextColorToBrushConverter x:Key="BackgroundTextColorToBrushConverter" />
+    </UserControl.Resources>
+    <Grid>
+        <ComboBox  SelectedValuePath="Tag" SelectedValue="{Binding ElementName=colorSelector,Path=SelectedColor, Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}" Validation.ErrorTemplate="{x:Null}">
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.None"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Default" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Black"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Black" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Blue"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Blue" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Cyan"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Cyan" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Green"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Green" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Magenta"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Magenta" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Red"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Red" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.Yellow"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Yellow" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.White"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="White" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightBlack"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright black" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightBlue"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright blue" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightCyan"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright cyan" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightGreen"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright green" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightMagenta"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright magenta" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightRed"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright red" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightWhite"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright white" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+            <ComboBoxItem>
+                <ComboBoxItem.Tag>
+                    <x:Static Member="Themes:TextColor.BrightYellow"/>
+                </ComboBoxItem.Tag>
+                <Grid Margin="0,0,0,2" HorizontalAlignment="Stretch">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+                    <Border Grid.Column="0" BorderThickness="1" CornerRadius="2" BorderBrush="Black" Width="30" Height="18" VerticalAlignment="Stretch" Background="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType=ComboBoxItem, AncestorLevel=1}, Converter={StaticResource BackgroundTextColorToBrushConverter}, Path=Tag}"/>
+                    <TextBlock Grid.Column="1" Text="Bright yellow" Margin="5,0,0,0" />
+                </Grid>
+            </ComboBoxItem>
+        </ComboBox>
+    </Grid>
+</UserControl>
