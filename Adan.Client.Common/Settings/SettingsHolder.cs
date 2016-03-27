@@ -25,9 +25,14 @@
         private string _folder;
 
         /// <summary>
-        /// 
+        /// This event will be raised when a profile is changed via SetProfile
         /// </summary>
         public event EventHandler<ProfileChangedEventArgs> ProfilesChanged;
+
+        /// <summary>
+        /// This event will be raised when where is a non-critical error with Settings
+        /// </summary>
+        public event EventHandler<SettingsErrorEventArgs> ErrorOccurred;
 
         #endregion
 
@@ -263,7 +268,9 @@
 
             lock (_profiles)
             {
-                _profiles.Add(new ProfileHolder(name));
+                var newProfile = new ProfileHolder(name);
+                newProfile.ErrorOccurred += (s, e) => { if (this.ErrorOccurred != null) this.ErrorOccurred(s, e); };
+                _profiles.Add(newProfile);
             }
 
             _allProfiles.Add(name);
@@ -311,6 +318,7 @@
                 if (retVal == null)
                 {
                     retVal = new ProfileHolder(name);
+                    retVal.ErrorOccurred += (s, e) => { if (this.ErrorOccurred != null) this.ErrorOccurred(s, e); };
                     _profiles.Add(retVal);
 
                     if (_allProfiles.Contains(name))

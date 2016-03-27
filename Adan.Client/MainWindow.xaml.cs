@@ -37,6 +37,7 @@ using Adan.Client.Resources.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.AvalonDock.Themes;
+using Adan.Client.Common.Messages;
 
 namespace Adan.Client
 {
@@ -95,6 +96,7 @@ namespace Adan.Client
             settings.Reload();
 
             SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
+            SettingsHolder.Instance.ErrorOccurred += HandleSettingsError;
 
             var actionDescriptions = new List<ActionDescription>();
             var parameterDescriptions = new List<ParameterDescription>();
@@ -198,6 +200,23 @@ namespace Adan.Client
         }
 
         #endregion
+
+        private void HandleSettingsError(object sender, SettingsErrorEventArgs e)
+        {
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
+            if (activeContent != null)
+            {
+                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+
+                if (outputWindow != null)
+                    outputWindow.RootModel.PushMessageToConveyor(new ErrorMessage(e.Message));
+            }
+            else if (_outputWindows.Count > 0)
+            {
+                _outputWindows.First().RootModel.PushMessageToConveyor(new ErrorMessage(e.Message));
+            }
+        }
+
 
         #region Layouts
 
