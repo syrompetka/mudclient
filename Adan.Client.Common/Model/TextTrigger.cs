@@ -86,7 +86,7 @@
                     _matchingPattern = value;
                 }
 
-                if (value.IndexOf("$") == -1 || value.IndexOf("$") == value.Length - 1)
+                if (IsRegExp && (value.IndexOf("$") == -1 || value.IndexOf("$") == value.Length - 1))
                     _compiledRegex = new Regex(_matchingPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
                 else
                     _compiledRegex = null;
