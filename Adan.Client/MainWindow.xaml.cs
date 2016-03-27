@@ -846,6 +846,8 @@ namespace Adan.Client
                 ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
                 SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings,
                 AutoConnect = SettingsHolder.Instance.Settings.AutoConnect,
+                SelectedFont = SettingsHolder.Instance.Settings.MUDFontName,
+                SelectedFontSize = SettingsHolder.Instance.Settings.MUDFontSize,
             };
 
             var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
@@ -860,7 +862,8 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
                 SettingsHolder.Instance.Settings.ColorTheme = model.SelectedTheme.Name;
                 ThemeManager.Instance.ActiveTheme = model.SelectedTheme;
-
+                SettingsHolder.Instance.Settings.MUDFontName = model.SelectedFont;
+                SettingsHolder.Instance.Settings.MUDFontSize = model.SelectedFontSize;
 
                 if (model.StartOfLine)
                     SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;

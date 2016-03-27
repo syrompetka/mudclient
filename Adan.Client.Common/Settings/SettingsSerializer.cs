@@ -35,6 +35,8 @@ namespace Adan.Client.Common.Settings
         private bool _autoClearInput;
         private bool _autoReconnect;
         private int _minLengthHistory;
+        private int? _mudFontSize;
+        private string _mudFontName;
 
         /// <summary>
         /// 
@@ -100,9 +102,51 @@ namespace Adan.Client.Common.Settings
                 SettingsChanged("ColorTheme", value);
             }
         }
+
         /// <summary>
-        /// 
+        /// Gets or sets the name of the connect host.
         /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public string MUDFontName
+        {
+            get
+            {
+                return _mudFontName ?? "Consolas";
+            }
+            set
+            {
+                _mudFontName = value;
+                SettingsChanged("MUDFontName", value);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the name of the connect host.
+        /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public int MUDFontSize
+        {
+            get
+            {
+                return _mudFontSize ?? 11;
+            }
+            set
+            {
+                _mudFontSize = value;
+                SettingsChanged("MUDFontSize", value);
+            }
+        }
+        
+        /// <summary>
+                 /// 
+                 /// </summary>
         [NotNull]
         public List<Group> GlobalGroups
         {
