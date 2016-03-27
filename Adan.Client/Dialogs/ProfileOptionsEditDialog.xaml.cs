@@ -19,12 +19,6 @@ namespace Adan.Client.Dialogs
 
             this.profileName = profileName;
             Title += profileName;
-            Closed += ProfileOptionsEditDialog_Closed;
-        }
-
-        private void ProfileOptionsEditDialog_Closed(object sender, EventArgs e)
-        {
-            SettingsHolder.Instance.SetProfile(profileName);
         }
 
         private void HandleItemDoubleClick([NotNull] object sender, [NotNull] RoutedEventArgs e)

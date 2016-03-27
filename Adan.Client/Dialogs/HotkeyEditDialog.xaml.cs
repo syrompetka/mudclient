@@ -45,6 +45,14 @@ namespace Adan.Client.Dialogs
 
             var hotkeyViewModel = (HotkeyViewModel)DataContext;
 
+            // For hotkeys, only Numpad Enter is processed
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                var isExtended = (bool)typeof(KeyEventArgs).InvokeMember("IsExtendedKey", System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, e, null);
+                if (!isExtended)
+                    return;
+            }
+
             hotkeyViewModel.SetHotkey(e.Key == Key.System ? e.SystemKey : e.Key, Keyboard.Modifiers);
 
             e.Handled = true;

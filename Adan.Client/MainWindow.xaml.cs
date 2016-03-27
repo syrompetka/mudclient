@@ -33,9 +33,11 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
+using Adan.Client.Resources.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
 using Xceed.Wpf.AvalonDock.Themes;
+using Adan.Client.Common.Messages;
 
 namespace Adan.Client
 {
@@ -93,6 +95,7 @@ namespace Adan.Client
             settings.Reload();
 
             SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
+            SettingsHolder.Instance.ErrorOccurred += HandleSettingsError;
 
             var actionDescriptions = new List<ActionDescription>();
             var parameterDescriptions = new List<ParameterDescription>();
@@ -192,10 +195,27 @@ namespace Adan.Client
             WindowState = SettingsHolder.Instance.Settings.MainWindowState;
 
             _dockManager.ActiveContentChanged += _dockManager_ActiveContentChanged;
-            _dockManager.Theme = new ExpressionDarkTheme();
+            _dockManager.Theme = new AvalonDockDarkTheme();
         }
 
         #endregion
+
+        private void HandleSettingsError(object sender, SettingsErrorEventArgs e)
+        {
+            var activeContent = _dockManager.ActiveContent as MainOutputWindow;
+            if (activeContent != null)
+            {
+                var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
+
+                if (outputWindow != null)
+                    outputWindow.RootModel.PushMessageToConveyor(new ErrorMessage(e.Message));
+            }
+            else if (_outputWindows.Count > 0)
+            {
+                _outputWindows.First().RootModel.PushMessageToConveyor(new ErrorMessage(e.Message));
+            }
+        }
+
 
         #region Layouts
 
@@ -633,6 +653,15 @@ namespace Adan.Client
         /// <param name="e"></param>
         public void CheckGlobalHotkeys(KeyEventArgs e)
         {
+
+            // For hotkeys, only Numpad Enter is processed
+            if (e.Key == Key.Enter && Keyboard.Modifiers == ModifierKeys.None)
+            {
+                var isExtended = (bool)typeof(KeyEventArgs).InvokeMember("IsExtendedKey", System.Reflection.BindingFlags.GetProperty | System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance, null, e, null);
+                if (!isExtended)
+                    return;
+            }
+
             var hotkeyCommand = new HotkeyCommand()
             {
                 Key = e.Key == Key.System ? e.SystemKey : e.Key,
@@ -835,6 +864,8 @@ namespace Adan.Client
                 ScrollBuffer = SettingsHolder.Instance.Settings.ScrollBuffer.ToString(),
                 SettingsFolder = SettingsHolder.Instance.SettingsFolder == SettingsFolder.DocumentsAndSettings,
                 AutoConnect = SettingsHolder.Instance.Settings.AutoConnect,
+                SelectedFont = SettingsHolder.Instance.Settings.MUDFontName,
+                SelectedFontSize = SettingsHolder.Instance.Settings.MUDFontSize,
             };
 
             var optionsDialog = new OptionsDialog() { DataContext = model, Owner = this };
@@ -847,6 +878,10 @@ namespace Adan.Client
                 SettingsHolder.Instance.Settings.CommandChar = model.CommandChar;
                 SettingsHolder.Instance.Settings.CommandDelimiter = model.CommandDelimiter;
                 SettingsHolder.Instance.Settings.AutoConnect = model.AutoConnect;
+                SettingsHolder.Instance.Settings.ColorTheme = model.SelectedTheme.Name;
+                ThemeManager.Instance.ActiveTheme = model.SelectedTheme;
+                SettingsHolder.Instance.Settings.MUDFontName = model.SelectedFont;
+                SettingsHolder.Instance.Settings.MUDFontSize = model.SelectedFontSize;
 
                 if (model.StartOfLine)
                     SettingsHolder.Instance.Settings.CursorPosition = CursorPositionHistory.StartOfLine;

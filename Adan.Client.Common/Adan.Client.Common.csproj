@@ -102,6 +102,7 @@
     <Compile Include="Controls\GenericTemplateSelector.cs" />
     <Compile Include="Settings\ProfileChangedEventArgs.cs" />
     <Compile Include="Settings\SettingsChangedEventArgs.cs" />
+    <Compile Include="Settings\SettingsErrorEventArgs.cs" />
     <Compile Include="Settings\SettingsFolder.cs" />
     <Compile Include="ConveyorUnits\ConveyorUnit.cs" />
     <Compile Include="Conveyor\MessageConveyor.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Model\Hotkey.cs" />
     <Compile Include="Settings\SettingsHolder.cs" />
     <Compile Include="Settings\SettingsSerializer.cs" />
+    <Compile Include="Themes\LightThemeDescription.cs" />
     <Compile Include="Utils\AnsiColor.cs" />
     <Compile Include="Utils\ColorsQueue.cs" />
     <Compile Include="Utils\ErrorLogger.cs" />

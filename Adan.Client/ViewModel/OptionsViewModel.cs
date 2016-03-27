@@ -5,6 +5,8 @@ using System.Text;
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.ViewModel;
+using Adan.Client.Common.Themes;
+using Adan.Client.Common.Settings;
 
 namespace Adan.Client.ViewModel
 {
@@ -24,6 +26,51 @@ namespace Adan.Client.ViewModel
         private string _scrollBuffer;
         private bool _settingsFolder;
         private bool _autoConnect;
+        private ThemeDescription _selectedTheme;
+        private int _fontSize;
+        private string _fontName;
+
+        public IEnumerable<ThemeDescription> AvailableColorThemes
+        {
+            get { return ThemeManager.Instance.AvailableThemes; }
+        }
+        public IEnumerable<string> AvailableFonts
+        {
+            get { return new[] { "Consolas", "Courier New", "Lucida Console" }; }
+        }
+        public IEnumerable<int> AvailableFontSizes
+        {
+            get { return new[] { 9, 10, 11, 12, 13, 14, 15, 16 }; }
+        }
+
+        public string SelectedFont
+        {
+            get { return _fontName; }
+            set
+            {
+                _fontName = value;
+                OnPropertyChanged("SelectedFont");
+            }
+        }
+        public int SelectedFontSize
+        {
+            get { return _fontSize; }
+            set
+            {
+                _fontSize = value;
+                OnPropertyChanged("SelectedFontSize");
+            }
+        }
+
+        public ThemeDescription SelectedTheme
+        {
+            get { return _selectedTheme ?? ThemeManager.Instance.ActiveTheme; }
+            set
+            {
+                _selectedTheme = value;
+                OnPropertyChanged("SelectedTheme");
+            }
+        }
 
         /// <summary>
         /// 

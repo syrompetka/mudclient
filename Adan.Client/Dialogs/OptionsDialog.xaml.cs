@@ -33,8 +33,5 @@ namespace Adan.Client.Dialogs
             DialogResult = true;
         }
 
-        private void HandleColorClick(object sender, RoutedEventArgs e)
-        {
-        }
     }
 }
