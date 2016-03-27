@@ -57,6 +57,7 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly Regex _regexUndo = new Regex(@"#undo(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _regexTest = new Regex(@"#test (.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Gets a set of message types that this unit can handle.
@@ -98,20 +99,68 @@ namespace Adan.Client.ConveyorUnits
 
             var commandText = textCommand.CommandText.Trim();
 
-            if (!commandText.StartsWith(SettingsHolder.Instance.Settings.CommandChar.ToString()))
+            if (commandText.Length > 1 && commandText[0] != SettingsHolder.Instance.Settings.CommandChar)
                 return;
 
             if (this.TriggerCheck(commandText, rootModel, isImport) || this.AliasCheck(commandText, rootModel, isImport)
-                || this.ConnectCheck(commandText, rootModel, isImport) || this.GroupCheck(commandText, rootModel, isImport)
                 || this.HighLightCheck(commandText, rootModel, isImport) || this.HotkeyCheck(commandText, rootModel, isImport)
-                || this.LogCheck(commandText, rootModel, isImport) || this.ShowmeCheck(commandText, rootModel, isImport)
                 || this.StatusCheck(commandText, rootModel, isImport) || this.SubstitutionCheck(commandText, rootModel, isImport)
-                || this.VariableCheck(commandText, rootModel, isImport) || this.ZapCheck(commandText, rootModel, isImport)
                 || this.UndoCheck(commandText, rootModel, isImport))
+            {
+                if (!isImport)
+                {
+                    SettingsHolder.Instance.SetProfile(rootModel.Profile.Name);
+                    SettingsHolder.Instance.SetProfile("Global");
+                }
+                command.Handled = true;
+                return;
+            }
+
+            if (this.VariableCheck(commandText, rootModel, isImport) || this.ZapCheck(commandText, rootModel, isImport)
+                || this.ConnectCheck(commandText, rootModel, isImport) || this.GroupCheck(commandText, rootModel, isImport)
+                || this.LogCheck(commandText, rootModel, isImport) || this.ShowmeCheck(commandText, rootModel, isImport)
+                || this.TestCheck(commandText, rootModel, isImport))
             {
                 command.Handled = true;
                 return;
             }
+
+        }
+
+        // Тест триггера
+        // Эмулируем как будто строка пришла из мада и смотрим какие триги на нее сработают
+        private bool TestCheck(string commandText, RootModel rootModel, bool isImport)
+        {
+            // Нету такого в jmc
+            if (isImport)
+                return false;
+
+            var match = _regexTest.Match(commandText);
+            if (!match.Success)
+                return false;
+
+            var textToTest = match.Groups[1].ToString();
+            var message = new OutputToMainWindowMessage(textToTest);
+            base.PushMessageToConveyor(message, rootModel);
+
+            message.SkipTriggers = false;
+            base.PushMessageToConveyor(new InfoMessage(string.Format("#Список триггеров, срабатывающих на строку '{0}':", textToTest)), rootModel);
+            var stopped = false;
+            foreach (var trigger in rootModel.EnabledTriggersOrderedByPriority.OfType<TextTrigger>())
+            {
+                if (trigger.MatchMessage(message, rootModel))
+                {
+                    base.PushMessageToConveyor(new InfoMessage(trigger.ToString()), rootModel);
+                    if (!stopped && trigger.StopProcessingTriggersAfterThis)
+                    {
+                        base.PushMessageToConveyor(new InfoMessage("# ^--- После этого триггера строка дальше не будет обрабатываться (из-за флага StopProcessingTriggersAfterThis)!"), rootModel);
+                        stopped = true;
+                    }
+                }
+            }
+
+            return true;
+
         }
 
         private bool UndoCheck(string commandText, RootModel rootModel, bool isImport)

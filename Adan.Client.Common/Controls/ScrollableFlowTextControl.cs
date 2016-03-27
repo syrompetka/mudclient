@@ -20,7 +20,7 @@ namespace Adan.Client.Common.Controls
     using Messages;
 
     using TextFormatting;
-
+    using Settings;
     #endregion
 
     /// <summary>
@@ -60,6 +60,13 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
+            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) => {
+                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
+                {
+                    _textRunCache.Invalidate();
+                    InvalidateVisual();
+                }
+            };
         }
 
         #endregion
@@ -640,7 +647,7 @@ namespace Adan.Client.Common.Controls
             Assert.ArgumentNotNull(drawingContext, "drawingContext");
 
             //base.OnRender(drawingContext);
-            //drawingContext.DrawRectangle(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), new Pen(ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
+            drawingContext.DrawRectangle(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), new Pen(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
             var renderedLines = 0;
             if (_selectionSettings.NeedUpdate)
             {

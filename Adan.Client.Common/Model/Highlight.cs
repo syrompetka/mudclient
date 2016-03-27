@@ -34,6 +34,9 @@ namespace Adan.Client.Common.Model
         private string _textToHighlight;
 
         [NonSerialized]
+        private Regex _compiledRegex = null;
+
+        [NonSerialized]
         private PatternToken _rootPatternToken;
 
 
@@ -116,6 +119,11 @@ namespace Adan.Client.Common.Model
                     _textToHighlight = value;
                 }
 
+                if (IsRegExp && (value.IndexOf("$") == -1 || value.IndexOf("$") == value.Length - 1))
+                    _compiledRegex = new Regex(_textToHighlight, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                else
+                    _compiledRegex = null;
+
                 _rootPatternToken = null;
             }
         }
@@ -157,14 +165,20 @@ namespace Adan.Client.Common.Model
 
             if (IsRegExp)
             {
-                var varReplace = rootModel.ReplaceVariables(TextToHighlight);
-                if (!varReplace.IsAllVariables)
-                    return;
+                Regex rExp;
+                if (_compiledRegex != null)
+                    rExp = _compiledRegex;
+                else
+                {
 
-                Regex rExp = new Regex(varReplace.Value);
+                    var varReplace = rootModel.ReplaceVariables(TextToHighlight);
+                    if (!varReplace.IsAllVariables)
+                        return;
+
+                    rExp = new Regex(varReplace.Value);
+                }
 
                 Match match = rExp.Match(textMessage.InnerText);
-
                 while (match.Success)
                 {
                     textMessage.HighlightText(match.Index, match.Length, ForegroundColor, BackgroundColor);

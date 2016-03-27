@@ -26,6 +26,7 @@ namespace Adan.Client.Common.Settings
         private int _commandsHistorySize;
         private int _connectPort;
         private string _connectHostName;
+        private string _colorTheme;
         private bool _autoConnect;
         private bool _isLogCommands;
         private int _scrollBuffer;
@@ -34,6 +35,8 @@ namespace Adan.Client.Common.Settings
         private bool _autoClearInput;
         private bool _autoReconnect;
         private int _minLengthHistory;
+        private int? _mudFontSize;
+        private string _mudFontName;
 
         /// <summary>
         /// 
@@ -81,8 +84,69 @@ namespace Adan.Client.Common.Settings
         }
 
         /// <summary>
-        /// 
+        /// Gets or sets the name of the connect host.
         /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public string ColorTheme
+        {
+            get
+            {
+                return _colorTheme;
+            }
+            set
+            {
+                _colorTheme = value;
+                SettingsChanged("ColorTheme", value);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the name of the connect host.
+        /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public string MUDFontName
+        {
+            get
+            {
+                return _mudFontName ?? "Consolas";
+            }
+            set
+            {
+                _mudFontName = value;
+                SettingsChanged("MUDFontName", value);
+            }
+        }
+
+
+        /// <summary>
+        /// Gets or sets the name of the connect host.
+        /// </summary>
+        /// <value>
+        /// The name of the connect host.
+        /// </value>
+        [NotNull]
+        public int MUDFontSize
+        {
+            get
+            {
+                return _mudFontSize ?? 11;
+            }
+            set
+            {
+                _mudFontSize = value;
+                SettingsChanged("MUDFontSize", value);
+            }
+        }
+        
+        /// <summary>
+                 /// 
+                 /// </summary>
         [NotNull]
         public List<Group> GlobalGroups
         {

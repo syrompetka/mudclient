@@ -31,6 +31,9 @@
         [NonSerialized]
         private string _matchingPattern;
 
+        [NonSerialized]
+        private Regex _compiledRegex = null;
+
         private readonly Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
         /// <summary>
@@ -82,6 +85,11 @@
                 {
                     _matchingPattern = value;
                 }
+
+                if (IsRegExp && (value.IndexOf("$") == -1 || value.IndexOf("$") == value.Length - 1))
+                    _compiledRegex = new Regex(_matchingPattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                else
+                    _compiledRegex = null;
                 
                 _rootPatternToken = null;
             }
@@ -93,6 +101,43 @@
             get
             {
                 return _context ?? (_context = new ActionExecutionContext());
+            }
+        }
+
+        public bool MatchMessage(TextMessage textMessage, RootModel rootModel)
+        {
+            ClearMatchingResults();
+
+            if (IsRegExp)
+            {
+                Match match;
+                if (_compiledRegex != null)
+                    match = _compiledRegex.Match(textMessage.InnerText);
+                else
+                {
+                    var varReplace = rootModel.ReplaceVariables(MatchingPattern);
+                    if (!varReplace.IsAllVariables)
+                        return false;
+
+                    Regex rExp = new Regex(varReplace.Value);
+                    match = rExp.Match(textMessage.InnerText);
+                }
+
+                if (!match.Success)
+                    return false;
+
+                for (int i = 0; i < 10; i++)
+                {
+                    if (i + 1 < match.Groups.Count)
+                        _matchingResults[i] = match.Groups[i + 1].ToString();
+                }
+
+                return true;
+            }
+            else
+            {
+                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+                return res.IsSuccess;
             }
         }
 
@@ -112,41 +157,14 @@
                 return;
             }
 
-            ClearMatchingResults();
+            if (!MatchMessage(textMessage, rootModel))
+                return;
 
-            if (IsRegExp)
+            for (int i = 0; i < 10; i++)
             {
-                var varReplace = rootModel.ReplaceVariables(MatchingPattern);
-                if (!varReplace.IsAllVariables)
-                    return;
-
-                Regex rExp = new Regex(varReplace.Value);
-                Match match = rExp.Match(textMessage.InnerText);
-
-                if (!match.Success)
-                    return;
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i + 1 < match.Groups.Count)
-                        Context.Parameters[i] = match.Groups[i + 1].ToString();
-                }
+                if (i < _matchingResults.Count)
+                    Context.Parameters[i] = _matchingResults[i];
             }
-            else
-            {
-                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-                if (!res.IsSuccess)
-                {
-                    return;
-                }
-
-                for (int i = 0; i < 10; i++)
-                {
-                    if (i < _matchingResults.Count)
-                        Context.Parameters[i] = _matchingResults[i];
-                }
-            }
-
             Context.CurrentMessage = message;
 
             foreach (var action in Actions)
