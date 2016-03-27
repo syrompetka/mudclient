@@ -26,7 +26,7 @@ namespace Adan.Client.ConveyorUnits
     {
         private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
 
-        private readonly Regex _whiteSpaceRegex = new Regex(@" {2, }", RegexOptions.Compiled);
+        private readonly Regex _whiteSpaceRegex = new Regex(@" {2,}", RegexOptions.Compiled);
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
