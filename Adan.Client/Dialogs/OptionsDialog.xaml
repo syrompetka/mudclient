@@ -49,10 +49,13 @@
                     <CheckBox IsChecked="{Binding Path=SettingsFolder}" Content="Save settings to My Documents" HorizontalAlignment="Left" Margin="10,78,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1" Width="182"/>
                 </Grid>
             </TabItem>
-            <TabItem Header="Font">
+            <TabItem Header="Text">
                 <Grid>
                     <Label Content="Color theme" HorizontalAlignment="Left" Margin="10,15,0,0" VerticalAlignment="Top" Height="23" Width="87"/>
-                    <ComboBox Padding="5" ItemsSource="{Binding Path=AvailableColorThemes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedTheme}" Margin="102,15,294,0" Height="23" VerticalAlignment="Top" />
+                    <ComboBox Padding="5" ItemsSource="{Binding Path=AvailableColorThemes}" DisplayMemberPath="Name" SelectedValue="{Binding Path=SelectedTheme}" Margin="102,15,245,0" Height="23" VerticalAlignment="Top" />
+                    <Label Content="MUD font" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Height="23" Width="87"/>
+                    <ComboBox Padding="5" ItemsSource="{Binding AvailableFonts}" SelectedValue="{Binding SelectedFont}" Height="23" VerticalAlignment="Top" Margin="102,45,245,0" />
+                    <ComboBox Padding="5" ItemsSource="{Binding AvailableFontSizes}" SelectedValue="{Binding SelectedFontSize}" Height="23" VerticalAlignment="Top" Margin="250,45,204,0" />
                 </Grid>
             </TabItem>
         </TabControl>

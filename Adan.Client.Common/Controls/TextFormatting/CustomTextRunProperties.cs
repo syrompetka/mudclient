@@ -16,19 +16,19 @@ namespace Adan.Client.Common.Controls.TextFormatting
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
+    using Settings;
     /// <summary>
     /// Provides a set of properties, such as typeface or foreground brush, that can be applied to a System.Windows.Media.TextFormatting.TextRun object.
     /// </summary>
     public class CustomTextRunProperties : TextRunProperties
     {
         // private readonly Typeface _typeface = new Typeface(new FontFamily(new Uri("pack://application:,,,/"), "/Resources/consola.ttf#Consolas"), FontStyles.Normal, FontWeights.Normal, FontStretches.Normal);
-        private readonly Typeface _typeface = new Typeface("Consolas, Lucida Console");
+        private Typeface _typeface;
         private readonly TextDecorationCollection _textDecorations = new TextDecorationCollection();
         private readonly TextEffectCollection _textEffects = new TextEffectCollection();
         private readonly Brush _foregroundBrush;
         private readonly Brush _backgroundBrush;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomTextRunProperties"/> class.
         /// </summary>
@@ -40,6 +40,13 @@ namespace Adan.Client.Common.Controls.TextFormatting
             Assert.ArgumentNotNull(backgroundBrush, "backgroundBrush");
             _foregroundBrush = foregroundBrush;
             _backgroundBrush = backgroundBrush;
+            _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) => {
+                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
+                {
+                    _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+                }
+            };
         }
 
         /// <summary>
@@ -67,7 +74,7 @@ namespace Adan.Client.Common.Controls.TextFormatting
         {
             get
             {
-                return 14.0;
+                return FontHintingEmSize * 96 / 72;
             }
         }
 
@@ -81,7 +88,7 @@ namespace Adan.Client.Common.Controls.TextFormatting
         {
             get
             {
-                return 14.0;
+                return SettingsHolder.Instance.Settings.MUDFontSize;
             }
         }
 

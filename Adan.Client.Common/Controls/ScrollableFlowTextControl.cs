@@ -20,7 +20,7 @@ namespace Adan.Client.Common.Controls
     using Messages;
 
     using TextFormatting;
-
+    using Settings;
     #endregion
 
     /// <summary>
@@ -60,6 +60,13 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
+            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) => {
+                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
+                {
+                    _textRunCache.Invalidate();
+                    InvalidateVisual();
+                }
+            };
         }
 
         #endregion
