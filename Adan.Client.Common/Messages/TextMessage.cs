@@ -192,7 +192,7 @@ namespace Adan.Client.Common.Messages
             var indexInStartBlock = start - count;
             for (int i = startBlock; i < MessageBlocks.Count; ++i)
             {
-                if (start + length < count + MessageBlocks[i].Text.Length)
+                if (start + length <= count + MessageBlocks[i].Text.Length)
                 {
                     endBlock = i;
                     break;
@@ -250,7 +250,7 @@ namespace Adan.Client.Common.Messages
             var indexInStartBlock = start - count;
             for (int i = startBlock; i < MessageBlocks.Count; ++i)
             {
-                if (start + length < count + MessageBlocks[i].Text.Length)
+                if (start + length <= count + MessageBlocks[i].Text.Length)
                 {
                     endBlock = i;
                     break;
