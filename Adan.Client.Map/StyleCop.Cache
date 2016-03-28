@@ -1,0 +1,501 @@
+<stylecopresultscache>
+  <version>10</version>
+  <sourcecode name="MapControl.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>10/25/2011 01:29:12</timestamp>
+    <milliseconds>331</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutesViewModel.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/25/2012 23:13:01</timestamp>
+    <milliseconds>865</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDescrinationSelectDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/29/2012 18:29:56</timestamp>
+    <milliseconds>970</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteEndDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/28/2012 22:31:04</timestamp>
+    <milliseconds>457</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteEndDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 00:35:06</timestamp>
+    <milliseconds>658</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteStartDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 00:35:01</timestamp>
+    <milliseconds>780</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteStartDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 00:35:06</timestamp>
+    <milliseconds>680</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDescrinationSelectDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 10:34:36</timestamp>
+    <milliseconds>365</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Constants.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:08:24</timestamp>
+    <milliseconds>967</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="CurrentRoomMessage.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:10:03</timestamp>
+    <milliseconds>747</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="CurrentRoomMessageDeserializer.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:36:18</timestamp>
+    <milliseconds>942</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ExitDirection.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:03:24</timestamp>
+    <milliseconds>167</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="MapPlugin.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 00:51:12</timestamp>
+    <milliseconds>307</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="AdditionalRoomParameters.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/19/2012 00:37:16</timestamp>
+    <milliseconds>407</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomColor.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/20/2012 01:21:33</timestamp>
+    <milliseconds>863</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="MapDownloader.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/26/2011 21:37:01</timestamp>
+    <milliseconds>429</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomExit.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:03:54</timestamp>
+    <milliseconds>188</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomIcon.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:22:06</timestamp>
+    <milliseconds>134</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Room.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/17/2012 22:15:00</timestamp>
+    <milliseconds>403</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="GlobalSuppressions.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:29:01</timestamp>
+    <milliseconds>644</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Route.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/29/2012 23:53:29</timestamp>
+    <milliseconds>683</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Zone.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>12/01/2011 10:38:47</timestamp>
+    <milliseconds>671</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ZoneVisual.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/21/2012 14:59:51</timestamp>
+    <milliseconds>713</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RenderConstants.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:26:58</timestamp>
+    <milliseconds>219</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutePathElement.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/24/2012 23:32:30</timestamp>
+    <milliseconds>324</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomExitViewModel.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>11/28/2011 01:16:21</timestamp>
+    <milliseconds>632</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomVisual.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 01:36:33</timestamp>
+    <milliseconds>925</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteUnit.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 00:58:24</timestamp>
+    <milliseconds>597</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Resources.Designer.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 00:41:14</timestamp>
+    <milliseconds>475</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="CommonAssemblyInfo.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/14/2011 12:56:55</timestamp>
+    <milliseconds>799</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ZoneViewModel.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 01:14:28</timestamp>
+    <milliseconds>308</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomViewModel.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 23:41:35</timestamp>
+    <milliseconds>614</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="GeneratedInternalTypeHelper.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:29</timestamp>
+    <milliseconds>630</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name=".NETFramework,Version=v4.0.AssemblyAttributes.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/13/2011 18:12:23</timestamp>
+    <milliseconds>499</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="ZoneManager.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 01:48:46</timestamp>
+    <milliseconds>459</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteManager.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 01:06:47</timestamp>
+    <milliseconds>685</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDeleteDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 10:54:46</timestamp>
+    <milliseconds>895</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDestinationSelectDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 22:58:26</timestamp>
+    <milliseconds>768</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Settings.Designer.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/07/2012 14:04:00</timestamp>
+    <milliseconds>467</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutePointNameEnterDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 00:46:59</timestamp>
+    <milliseconds>717</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoadMapDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/25/2012 00:17:10</timestamp>
+    <milliseconds>730</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomDetailsControl.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/11/2012 23:27:28</timestamp>
+    <milliseconds>480</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutesDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 00:12:48</timestamp>
+    <milliseconds>90</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDeleteDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:26</timestamp>
+    <milliseconds>845</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RouteDestinationSelectDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:26</timestamp>
+    <milliseconds>855</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomContextMenu.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/23/2012 23:33:19</timestamp>
+    <milliseconds>61</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomEditDialog.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/25/2012 00:17:04</timestamp>
+    <milliseconds>247</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="MapControl.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:27</timestamp>
+    <milliseconds>64</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoadMapDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:27</timestamp>
+    <milliseconds>237</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomContextMenu.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:27</timestamp>
+    <milliseconds>287</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomDetailsControl.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:27</timestamp>
+    <milliseconds>304</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoomEditDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:27</timestamp>
+    <milliseconds>379</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutesDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:26</timestamp>
+    <milliseconds>893</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="RoutePointNameEnterDialog.g.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/31/2012 02:42:26</timestamp>
+    <milliseconds>878</milliseconds>
+    <violations />
+  </sourcecode>
+  <sourcecode name="MapControl.xaml.cs" parser="Microsoft.StyleCop.CSharp.CsParser">
+    <settings>
+      <timestamp>10/25/2011 01:27:05</timestamp>
+      <milliseconds>857</milliseconds>
+    </settings>
+    <timestamp>01/30/2012 22:09:03</timestamp>
+    <milliseconds>36</milliseconds>
+    <violations />
+  </sourcecode>
+  <project key="1877538954">
+    <configuration>TRACE;CODE_ANALYSIS</configuration>
+  </project>
+</stylecopresultscache>

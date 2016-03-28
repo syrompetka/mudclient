@@ -1,0 +1,44 @@
+﻿<Window x:Class="Adan.Client.Dialogs.AliasEditDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common" 
+        ResizeMode="NoResize" 
+        ShowInTaskbar="False" 
+        WindowStartupLocation="CenterOwner" 
+        WindowStyle="ToolWindow" 
+        Width="750"
+        Height="550"
+        Title="Alias editor"
+        Style="{StaticResource DefaultWindowStyle}">
+    <Grid Margin="3">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0">
+            <Label>Command:</Label>
+            <TextBox Text="{Binding Path=Command}" />
+        </StackPanel>
+        <Grid Grid.Row="1" Margin="0,5,0,0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0">Actions:</Label>
+            <ScrollViewer CanContentScroll="False" Grid.Row="1">
+                <Controls:ActionEditorControl DataContext="{Binding Path=ActionsViewModel}" VerticalAlignment="Stretch"/>
+            </ScrollViewer>
+        </Grid>
+
+        <StackPanel Grid.Row="2">
+            <Label  Padding="5">Group name:</Label>
+            <ComboBox Padding="5" Width="150" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" SelectedValue="{Binding Path=AliasGroup}" HorizontalAlignment="Left" />
+        </StackPanel>
+        <StackPanel HorizontalAlignment="Right" Grid.Row="3" Orientation="Horizontal" Margin="0,5,0,0">
+            <Button HorizontalAlignment="Right" IsDefault="True" MinWidth="50" Click="HandleOkClicked">Ok</Button>
+            <Button HorizontalAlignment="Right" Margin="5,0,0,0" MinWidth="50" Click="HandleCancelClicked">Cancel</Button>
+        </StackPanel>
+    </Grid>
+</Window>

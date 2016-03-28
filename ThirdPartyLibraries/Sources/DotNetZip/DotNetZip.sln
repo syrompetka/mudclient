@@ -1,0 +1,256 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E1C14695-E75F-4317-919A-5341EA1F9C01}"
+	ProjectSection(SolutionItems) = preProject
+		DotNetZip1.vsmdi = DotNetZip1.vsmdi
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F7D17942-40ED-4243-BE57-591869948298}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{AAE1BA63-9776-4152-8AAD-801D775E188B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip Partial DLL", "Zip Partial DLL\Zip Partial DLL.csproj", "{D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Zip Utilities MSI", "Setup\Setup.vdproj", "{F87C0504-13EA-49A5-8C7B-4E635F107758}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zlib", "Zlib\Zlib.csproj", "{9816BA86-9250-4C00-A912-25F07F8677D1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zlib Tests", "Zlib Tests\Zlib Tests.csproj", "{047A98B2-BC96-41B4-ADD8-2167FB1B6502}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip Tests", "Zip Tests\Zip Tests.csproj", "{549466CE-5CA6-4904-BA44-58141544BE70}"
+	ProjectSection(ProjectDependencies) = postProject
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65} = {98008721-C4DD-4F34-B3AE-A3453E29BB65}
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453} = {A22C89E0-B5D4-4881-A61F-4B1FD82F2453}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip CF Partial DLL", "Zip CF Partial DLL\Zip CF Partial DLL.csproj", "{051C2B3B-8CDF-42CB-9EA2-027232BFC395}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zlib CF DLL", "Zlib CF\Zlib CF DLL.csproj", "{E082D395-52BE-41EE-812B-8B09C51025B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip Full DLL", "Zip Full DLL\Zip Full DLL.csproj", "{4F7A9BBE-5221-46C5-9E47-1E8B547CF258}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip CF Full DLL", "Zip CF Full DLL\Zip CF Full DLL.csproj", "{2E4EC7D1-CD92-4CE8-9066-69E3209F6715}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zip Reduced", "Zip Reduced\Zip Reduced.csproj", "{49A128D3-C3F2-46B1-8F7A-EECD209EA860}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "RuntimeSetup MSI", "RuntimeSetup\RuntimeSetup.vdproj", "{48F1D606-29B3-4114-8BC4-246E7242EA68}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CF-Unzipper", "Examples\CompactFramework\CF-Unzipper\CF-Unzipper.csproj", "{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "QuickUnzip", "Examples\VB\Quick-Unzip\QuickUnzip.vbproj", "{95D9690B-3B37-4800-A511-6FB21436638B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZipDir", "Examples\C#\ZipDir\ZipDir.csproj", "{E04C2A53-3981-44D4-94AF-6AC07D97CDE8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreateZip", "Examples\C#\CreateZip\CreateZip.csproj", "{FB9FC8D7-7897-4802-9694-F379F25C00CB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReadZip", "Examples\C#\ReadZip\ReadZip.csproj", "{F4024C01-1133-4A5A-B421-22EA8CA89EA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnZip", "Tools\UnZip\UnZip.csproj", "{A22C89E0-B5D4-4881-A61F-4B1FD82F2453}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZipIt", "Tools\ZipIt\ZipIt.csproj", "{98008721-C4DD-4F34-B3AE-A3453E29BB65}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertZipToSfx", "Tools\ConvertZipToSfx\ConvertZipToSfx.csproj", "{276B8174-A24E-4257-9969-42D692F8CAC2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Win Forms App", "Tools\WinFormsApp\Win Forms App.csproj", "{6BCCF138-2EFB-464C-B872-E3079F0A4708}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZipTreeView", "Examples\C#\ZipTreeView\ZipTreeView.csproj", "{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF}"
+EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "WinForms-TreeViewZip", "Examples\VB\WinForms-TreeViewZip\WinForms-TreeViewZip\WinForms-TreeViewZip.vbproj", "{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 23
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs04.codeplex.com/
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Tools\\ConvertZipToSfx\\ConvertZipToSfx.csproj
+		SccProjectTopLevelParentUniqueName1 = DotNetZip.sln
+		SccProjectName1 = Tools/ConvertZipToSfx
+		SccLocalPath1 = Tools\\ConvertZipToSfx
+		SccProjectUniqueName2 = Zip\u0020Partial\u0020DLL\\Zip\u0020Partial\u0020DLL.csproj
+		SccProjectName2 = Zip\u0020Partial\u0020DLL
+		SccLocalPath2 = Zip\u0020Partial\u0020DLL
+		SccProjectUniqueName3 = Setup\\Setup.vdproj
+		SccProjectName3 = Setup
+		SccLocalPath3 = Setup
+		SccProjectUniqueName4 = Zlib\\Zlib.csproj
+		SccProjectName4 = Zlib
+		SccLocalPath4 = Zlib
+		SccProjectUniqueName5 = Zlib\u0020Tests\\Zlib\u0020Tests.csproj
+		SccProjectName5 = Zlib\u0020Tests
+		SccLocalPath5 = Zlib\u0020Tests
+		SccProjectUniqueName6 = Zip\u0020Tests\\Zip\u0020Tests.csproj
+		SccProjectName6 = Zip\u0020Tests
+		SccLocalPath6 = Zip\u0020Tests
+		SccProjectUniqueName7 = Zip\u0020CF\u0020Partial\u0020DLL\\Zip\u0020CF\u0020Partial\u0020DLL.csproj
+		SccProjectName7 = Zip\u0020CF\u0020Partial\u0020DLL
+		SccLocalPath7 = Zip\u0020CF\u0020Partial\u0020DLL
+		SccProjectUniqueName8 = Zlib\u0020CF\\Zlib\u0020CF\u0020DLL.csproj
+		SccProjectName8 = Zlib\u0020CF
+		SccLocalPath8 = Zlib\u0020CF
+		SccProjectUniqueName9 = Zip\u0020Full\u0020DLL\\Zip\u0020Full\u0020DLL.csproj
+		SccProjectName9 = Zip\u0020Full\u0020DLL
+		SccLocalPath9 = Zip\u0020Full\u0020DLL
+		SccProjectUniqueName10 = Zip\u0020CF\u0020Full\u0020DLL\\Zip\u0020CF\u0020Full\u0020DLL.csproj
+		SccProjectName10 = Zip\u0020CF\u0020Full\u0020DLL
+		SccLocalPath10 = Zip\u0020CF\u0020Full\u0020DLL
+		SccProjectUniqueName11 = Zip\u0020Reduced\\Zip\u0020Reduced.csproj
+		SccProjectName11 = Zip\u0020Reduced
+		SccLocalPath11 = Zip\u0020Reduced
+		SccProjectUniqueName12 = RuntimeSetup\\RuntimeSetup.vdproj
+		SccProjectName12 = RuntimeSetup
+		SccLocalPath12 = RuntimeSetup
+		SccProjectUniqueName13 = Examples\\CompactFramework\\CF-Unzipper\\CF-Unzipper.csproj
+		SccProjectTopLevelParentUniqueName13 = DotNetZip.sln
+		SccProjectName13 = Examples/CompactFramework/CF-Unzipper
+		SccLocalPath13 = Examples\\CompactFramework\\CF-Unzipper
+		SccProjectUniqueName14 = Examples\\VB\\Quick-Unzip\\QuickUnzip.vbproj
+		SccProjectTopLevelParentUniqueName14 = DotNetZip.sln
+		SccProjectName14 = Examples/VB/Quick-Unzip
+		SccLocalPath14 = Examples\\VB\\Quick-Unzip
+		SccProjectUniqueName15 = Examples\\C#\\ZipDir\\ZipDir.csproj
+		SccProjectTopLevelParentUniqueName15 = DotNetZip.sln
+		SccProjectName15 = Examples/C#/ZipDir
+		SccLocalPath15 = Examples\\C#\\ZipDir
+		SccProjectUniqueName16 = Examples\\C#\\CreateZip\\CreateZip.csproj
+		SccProjectTopLevelParentUniqueName16 = DotNetZip.sln
+		SccProjectName16 = Examples/C#/CreateZip
+		SccLocalPath16 = Examples\\C#\\CreateZip
+		SccProjectUniqueName17 = Examples\\C#\\ReadZip\\ReadZip.csproj
+		SccProjectTopLevelParentUniqueName17 = DotNetZip.sln
+		SccProjectName17 = Examples/C#/ReadZip
+		SccLocalPath17 = Examples\\C#\\ReadZip
+		SccProjectUniqueName18 = Tools\\UnZip\\UnZip.csproj
+		SccProjectTopLevelParentUniqueName18 = DotNetZip.sln
+		SccProjectName18 = Tools/UnZip
+		SccLocalPath18 = Tools\\UnZip
+		SccProjectUniqueName19 = Tools\\ZipIt\\ZipIt.csproj
+		SccProjectTopLevelParentUniqueName19 = DotNetZip.sln
+		SccProjectName19 = Tools/ZipIt
+		SccLocalPath19 = Tools\\ZipIt
+		SccProjectUniqueName20 = Tools\\WinFormsApp\\Win\u0020Forms\u0020App.csproj
+		SccProjectTopLevelParentUniqueName20 = DotNetZip.sln
+		SccProjectName20 = Tools/WinFormsApp
+		SccLocalPath20 = Tools\\WinFormsApp
+		SccProjectUniqueName21 = Examples\\C#\\ZipTreeView\\ZipTreeView.csproj
+		SccProjectTopLevelParentUniqueName21 = DotNetZip.sln
+		SccProjectName21 = Examples/C#/ZipTreeView
+		SccLocalPath21 = Examples\\C#\\ZipTreeView
+		SccProjectUniqueName22 = Examples\\VB\\WinForms-TreeViewZip\\WinForms-TreeViewZip\\WinForms-TreeViewZip.vbproj
+		SccProjectTopLevelParentUniqueName22 = DotNetZip.sln
+		SccProjectName22 = Examples/VB/WinForms-TreeViewZip/WinForms-TreeViewZip
+		SccLocalPath22 = Examples\\VB\\WinForms-TreeViewZip\\WinForms-TreeViewZip
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = DotNetZip1.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B0AD67-44D8-4B3D-BED9-CE1FD6DE2C5A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F87C0504-13EA-49A5-8C7B-4E635F107758}.Debug|Any CPU.ActiveCfg = Debug
+		{F87C0504-13EA-49A5-8C7B-4E635F107758}.Release|Any CPU.ActiveCfg = Release
+		{F87C0504-13EA-49A5-8C7B-4E635F107758}.Release|Any CPU.Build.0 = Release
+		{9816BA86-9250-4C00-A912-25F07F8677D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9816BA86-9250-4C00-A912-25F07F8677D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9816BA86-9250-4C00-A912-25F07F8677D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9816BA86-9250-4C00-A912-25F07F8677D1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{047A98B2-BC96-41B4-ADD8-2167FB1B6502}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{047A98B2-BC96-41B4-ADD8-2167FB1B6502}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{047A98B2-BC96-41B4-ADD8-2167FB1B6502}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{549466CE-5CA6-4904-BA44-58141544BE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{549466CE-5CA6-4904-BA44-58141544BE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{549466CE-5CA6-4904-BA44-58141544BE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{051C2B3B-8CDF-42CB-9EA2-027232BFC395}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{051C2B3B-8CDF-42CB-9EA2-027232BFC395}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{051C2B3B-8CDF-42CB-9EA2-027232BFC395}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{051C2B3B-8CDF-42CB-9EA2-027232BFC395}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E082D395-52BE-41EE-812B-8B09C51025B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E082D395-52BE-41EE-812B-8B09C51025B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E082D395-52BE-41EE-812B-8B09C51025B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E082D395-52BE-41EE-812B-8B09C51025B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F7A9BBE-5221-46C5-9E47-1E8B547CF258}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F7A9BBE-5221-46C5-9E47-1E8B547CF258}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F7A9BBE-5221-46C5-9E47-1E8B547CF258}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F7A9BBE-5221-46C5-9E47-1E8B547CF258}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E4EC7D1-CD92-4CE8-9066-69E3209F6715}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E4EC7D1-CD92-4CE8-9066-69E3209F6715}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E4EC7D1-CD92-4CE8-9066-69E3209F6715}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E4EC7D1-CD92-4CE8-9066-69E3209F6715}.Release|Any CPU.Build.0 = Release|Any CPU
+		{49A128D3-C3F2-46B1-8F7A-EECD209EA860}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{49A128D3-C3F2-46B1-8F7A-EECD209EA860}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{49A128D3-C3F2-46B1-8F7A-EECD209EA860}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{49A128D3-C3F2-46B1-8F7A-EECD209EA860}.Release|Any CPU.Build.0 = Release|Any CPU
+		{48F1D606-29B3-4114-8BC4-246E7242EA68}.Debug|Any CPU.ActiveCfg = Debug
+		{48F1D606-29B3-4114-8BC4-246E7242EA68}.Release|Any CPU.ActiveCfg = Release
+		{48F1D606-29B3-4114-8BC4-246E7242EA68}.Release|Any CPU.Build.0 = Release
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{95D9690B-3B37-4800-A511-6FB21436638B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95D9690B-3B37-4800-A511-6FB21436638B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95D9690B-3B37-4800-A511-6FB21436638B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95D9690B-3B37-4800-A511-6FB21436638B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E04C2A53-3981-44D4-94AF-6AC07D97CDE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E04C2A53-3981-44D4-94AF-6AC07D97CDE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E04C2A53-3981-44D4-94AF-6AC07D97CDE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E04C2A53-3981-44D4-94AF-6AC07D97CDE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9FC8D7-7897-4802-9694-F379F25C00CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9FC8D7-7897-4802-9694-F379F25C00CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9FC8D7-7897-4802-9694-F379F25C00CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9FC8D7-7897-4802-9694-F379F25C00CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4024C01-1133-4A5A-B421-22EA8CA89EA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4024C01-1133-4A5A-B421-22EA8CA89EA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F4024C01-1133-4A5A-B421-22EA8CA89EA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F4024C01-1133-4A5A-B421-22EA8CA89EA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{276B8174-A24E-4257-9969-42D692F8CAC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{276B8174-A24E-4257-9969-42D692F8CAC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{276B8174-A24E-4257-9969-42D692F8CAC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{276B8174-A24E-4257-9969-42D692F8CAC2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6BCCF138-2EFB-464C-B872-E3079F0A4708}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6BCCF138-2EFB-464C-B872-E3079F0A4708}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6BCCF138-2EFB-464C-B872-E3079F0A4708}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6BCCF138-2EFB-464C-B872-E3079F0A4708}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D2E7C1EA-6FF1-4E26-96FC-24F6FB68B61B} = {F7D17942-40ED-4243-BE57-591869948298}
+		{95D9690B-3B37-4800-A511-6FB21436638B} = {F7D17942-40ED-4243-BE57-591869948298}
+		{E04C2A53-3981-44D4-94AF-6AC07D97CDE8} = {F7D17942-40ED-4243-BE57-591869948298}
+		{FB9FC8D7-7897-4802-9694-F379F25C00CB} = {F7D17942-40ED-4243-BE57-591869948298}
+		{F4024C01-1133-4A5A-B421-22EA8CA89EA5} = {F7D17942-40ED-4243-BE57-591869948298}
+		{1BCEC4DE-A73D-49A6-869F-EDA4AB6B41EF} = {F7D17942-40ED-4243-BE57-591869948298}
+		{2E78FB6A-EE17-4EE4-9D8D-BE9AE675C69D} = {F7D17942-40ED-4243-BE57-591869948298}
+		{A22C89E0-B5D4-4881-A61F-4B1FD82F2453} = {AAE1BA63-9776-4152-8AAD-801D775E188B}
+		{98008721-C4DD-4F34-B3AE-A3453E29BB65} = {AAE1BA63-9776-4152-8AAD-801D775E188B}
+		{276B8174-A24E-4257-9969-42D692F8CAC2} = {AAE1BA63-9776-4152-8AAD-801D775E188B}
+		{6BCCF138-2EFB-464C-B872-E3079F0A4708} = {AAE1BA63-9776-4152-8AAD-801D775E188B}
+	EndGlobalSection
+EndGlobal
