@@ -7,9 +7,10 @@ using System.Windows.Threading;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.Messages;
 using Adan.Client.Common.Model;
-using Adan.Client.Common.Networking;
 using Adan.Client.Common.Settings;
 using Adan.Client.Controls;
+using Adan.Client.Messages;
+using Adan.Client.Model;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 using Xceed.Wpf.AvalonDock.Layout;
@@ -18,22 +19,20 @@ namespace Adan.Client
 {
     public class OutputWindow : IDisposable
     {
+        private readonly MainWindow _mainWindow;
         private readonly Queue<TextMessage> _messageQueue = new Queue<TextMessage>();
         private readonly object _messageQueueLockObject = new object();
         private RootModel _rootModel;
         private readonly MainOutputWindow _window;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public OutputWindow(MainWindow mainWindow, string name)
+        public OutputWindow(MainWindow mainWindow, string name, IList<RootModel> allRootModels)
         {
+            _mainWindow = mainWindow;
             Name = name;
 
-            var conveyor = new MessageConveyor(new MccpClient());
 
-            RootModel = new RootModel(conveyor, SettingsHolder.Instance.GetProfile(name));
-            conveyor.RootModel = RootModel;
+            var conveyor = ConveyorFactory.CreateNew(name, allRootModels);
+            RootModel = conveyor.RootModel;
             conveyor.MessageReceived += HandleMessage;
 
             _window = new MainOutputWindow(mainWindow, _rootModel);
@@ -129,7 +128,7 @@ namespace Adan.Client
         {
             if (disposing)
             {
-                RootModel.MessageConveyor.Dispose();
+                RootModel.Dispose();
             }
         }
 
@@ -154,6 +153,21 @@ namespace Adan.Client
                     else
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
                 }
+
+                return;
+            }
+
+            var fullScreenModeMessage = e.Message as ToggleFullScreenModeMessage;
+            if (fullScreenModeMessage != null)
+            {
+                _mainWindow.ToggleFullScreenMode();
+                return;
+            }
+
+            var showOutputWindowMessage = e.Message as ShowOutputWindowMessage;
+            if (showOutputWindowMessage != null)
+            {
+                _mainWindow.ShowOutputWindow(showOutputWindowMessage.WindowName);
             }
         }
 

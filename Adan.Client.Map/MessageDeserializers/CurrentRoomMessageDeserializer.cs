@@ -4,6 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
+    using Common.Conveyor;
     using Common.Utils;
     using Common.MessageDeserializers;
     using Common.Messages;
@@ -18,6 +19,10 @@
         private readonly StringBuilder _builder = new StringBuilder();
         private readonly Encoding _encoding = Encoding.GetEncoding(1251);
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(CurrentRoomMessage));
+
+        public CurrentRoomMessageDeserializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -67,15 +72,6 @@
                     PushMessageToConveyor(new ErrorMessage(ex.Message));
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override MessageDeserializer NewInstance()
-        {
-            return new CurrentRoomMessageDeserializer();
         }
     }
 }

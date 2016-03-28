@@ -7,17 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Adan.Client.Common.Conveyor;
+
 namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-
-    using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-    using Common.Model;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
@@ -28,8 +25,8 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="HighlightUnit"/> class.
         /// </summary>
-        public HighlightUnit()
-            : base()
+        public HighlightUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -57,12 +54,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        public override void HandleMessage(Message message, RootModel rootModel)
+        public override void HandleMessage(Message message)
         {
             Assert.ArgumentNotNull(message, "message");
 
@@ -74,11 +66,11 @@ namespace Adan.Client.ConveyorUnits
 
             if (!textMessage.SkipHighlight)
             {
-                foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+                foreach (var group in Conveyor.RootModel.Groups.Where(g => g.IsEnabled))
                 {
                     foreach (var highlight in group.Highlights)
                     {
-                        highlight.ProcessMessage(textMessage, rootModel);
+                        highlight.ProcessMessage(textMessage, Conveyor.RootModel);
                     }
                 }
             }

@@ -1,32 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PluginBase.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the PluginBase type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Plugins
+﻿namespace Adan.Client.Common.Plugins
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Windows;
-
     using CommandSerializers;
-
     using Conveyor;
-
     using ConveyorUnits;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
     using MessageDeserializers;
-
     using Model;
-    using Adan.Client.Common.ViewModel;
+    using ViewModel;
 
     /// <summary>
     /// Base class for all plugins.
@@ -39,42 +24,6 @@ namespace Adan.Client.Common.Plugins
         public abstract string Name
         {
             get;
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        [NotNull]
-        public virtual IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Empty<ConveyorUnit>();
-            }
-        }
-
-        /// <summary>
-        /// Gets the message deserializers that this plugin exposes.
-        /// </summary>
-        [NotNull]
-        public virtual IEnumerable<MessageDeserializer> MessageDeserializers
-        {
-            get
-            {
-                return Enumerable.Empty<MessageDeserializer>();
-            }
-        }
-
-        /// <summary>
-        /// Gets the command serializers that this plugin exposes.
-        /// </summary>
-        [NotNull]
-        public virtual IEnumerable<CommandSerializer> CommandSerializers
-        {
-            get
-            {
-                return Enumerable.Empty<CommandSerializer>();
-            }
         }
 
         /// <summary>
@@ -162,6 +111,8 @@ namespace Adan.Client.Common.Plugins
                 return string.Empty;
             }
         }
+
+        public abstract void InitializeConveyor(MessageConveyor conveyor);
 
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.

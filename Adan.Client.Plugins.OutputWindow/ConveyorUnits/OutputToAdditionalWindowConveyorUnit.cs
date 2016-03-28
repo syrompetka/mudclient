@@ -1,29 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OutputToAdditionalWindowConveyorUnit.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the OutputToAdditionalWindowConveyorUnit type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
+﻿namespace Adan.Client.Plugins.OutputWindow.ConveyorUnits
 {
-    using System;
     using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
     using System.Text.RegularExpressions;
-    using Adan.Client.Common.Commands;
-    using Adan.Client.Common.Themes;
-    using Adan.Client.Common.Utils;
+    using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.OutputWindow.Messages;
-    using Adan.Client.Common.Model;
+    using Messages;
 
     /// <summary>
     /// A <see cref="ConveyorUnit"/> implementaion to handle <see cref="OutputToAdditionalWindowMessage"/>.
@@ -37,8 +21,8 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="OutputToAdditionalWindowConveyorUnit"/> class.
         /// </summary>
-        public OutputToAdditionalWindowConveyorUnit(AdditionalOutputWindowManager manager)
-            : base()
+        public OutputToAdditionalWindowConveyorUnit(AdditionalOutputWindowManager manager, MessageConveyor conveyor)
+            : base(conveyor)
         {
             _manager = manager;
         }
@@ -64,14 +48,8 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
                 return new[] { BuiltInCommandTypes.TextCommand };
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -96,25 +74,18 @@ namespace Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits
 
                 string str = match.Groups[1].Value;
 
-                rootModel.PushMessageToConveyor(new OutputToAdditionalWindowMessage(str[str.Length - 1] == '}' ? str.Substring(0, str.Length - 1) : str));
-
-                return;
+                Conveyor.PushMessage(new OutputToAdditionalWindowMessage(str[str.Length - 1] == '}' ? str.Substring(0, str.Length - 1) : str));
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        public override void HandleMessage(Message message, RootModel rootModel)
+        public override void HandleMessage(Message message)
         {
             var outputMessage = message as OutputToAdditionalWindowMessage;
             if (outputMessage != null)
             {
                 outputMessage.Handled = true;
 
-                _manager.AddText(rootModel, outputMessage);
+                _manager.AddText(Conveyor.RootModel, outputMessage);
             }
         }
     }

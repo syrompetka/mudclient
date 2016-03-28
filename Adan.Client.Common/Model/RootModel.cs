@@ -9,7 +9,6 @@
     using Plugins;
     using Properties;
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -18,7 +17,7 @@
     /// <summary>
     /// A root object for all model objects.
     /// </summary>
-    public class RootModel
+    public class RootModel:IDisposable
     {
         #region Constants and Fields
 
@@ -26,7 +25,9 @@
 
         private MessageConveyor _conveyor;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
+        private readonly string _name;
         private ProfileHolder _profile;
+        private readonly IList<RootModel> _allModels;
         private readonly object _profileLockObject = new object();
 
         private readonly List<CommandAlias> _aliasList;
@@ -47,7 +48,7 @@
 
         #region Constructors and Destructors
 
-        public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile)
+        public RootModel([NotNull] MessageConveyor conveyor, ProfileHolder profile, IList<RootModel> allModels)
         {
             Assert.ArgumentNotNull(conveyor, "conveyor");
 
@@ -60,7 +61,9 @@
 
             _undoStack = new Stack<IUndo>();
 
+            _name = profile.Name;
             _profile = profile;
+            _allModels = allModels;
             MessageConveyor = conveyor;
 
             GroupStatus = new List<CharacterStatus>();
@@ -75,6 +78,7 @@
         /// <param name="profile"></param>
         public RootModel(ProfileHolder profile)
         {
+            _name = profile.Name;
             _aliasList = new List<CommandAlias>();
             _triggersList = new List<TriggerBase>();
             _highlightList = new List<Highlight>();
@@ -234,10 +238,7 @@
             get;
             set;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        
         public MessageConveyor MessageConveyor
         {
             get
@@ -402,8 +403,10 @@
         {
             Assert.ArgumentNotNull(command, "command");
 
-            if(_conveyor != null)
+            if (_conveyor != null)
+            {
                 _conveyor.PushCommand(command);
+            }
         }
 
         /// <summary>
@@ -414,8 +417,10 @@
         {
             Assert.ArgumentNotNull(message, "message");
 
-            if(_conveyor != null)
+            if (_conveyor != null)
+            {
                 _conveyor.PushMessage(message);
+            }
         }
 
         /// <summary>
@@ -432,12 +437,18 @@
             var v = Variables.FirstOrDefault(var => var.Name == variableName);
 
             if (v != null)
+            {
                 v.Value = value;
+            }
             else
+            {
                 Variables.Add(new Variable() { Name = variableName, Value = value });
+            }
 
-            if(!isSilent)
-                this.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
+            if (!isSilent)
+            {
+                PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueSet, variableName, value)));
+            }
         }
 
         /// <summary>
@@ -608,7 +619,42 @@
         {
             return _enabledTriggersOrderedByPriority = Groups.Where(g => g.IsEnabled).SelectMany(g => g.Triggers).OrderBy(trg => trg.Priority).ToList();
         }
-        
+
+        public void SendToWindow(string name, IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
+        {
+            var rootModel = _allModels.FirstOrDefault(w => w._name == name);
+            if (rootModel == null)
+            {
+                return;
+            }
+
+            foreach (var action in actionsToExecute)
+            {
+                try
+                {
+                    action.Execute(rootModel, actionExecutionContext);
+                }
+                catch (Exception)
+                { }
+            }
+        }
+
+        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
+        {
+            foreach (var rootModel in _allModels)
+            {
+                foreach (var action in actionsToExecute)
+                {
+                    try
+                    {
+                        action.Execute(rootModel, actionExecutionContext);
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
+            }
+        }
         #endregion
 
         private void OnProfileChanged(object sender, ProfileChangedEventArgs e)
@@ -618,6 +664,19 @@
 
             if (e.Name == Profile.Name || e.Global)
                 RecalculatedEnabledTriggersPriorities();
+        }
+
+        public void Dispose()
+        {
+            if (_allModels != null && _allModels.Contains(this))
+            {
+                _allModels.Remove(this);
+            }
+
+            if (MessageConveyor != null)
+            {
+                MessageConveyor.Dispose();
+            }
         }
     }
 

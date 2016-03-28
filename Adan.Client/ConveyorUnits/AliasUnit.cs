@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Adan.Client.Common.Conveyor;
+
 namespace Adan.Client.ConveyorUnits
 {
     using System;
@@ -31,8 +33,8 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
         /// </summary>
-        public AliasUnit()
-            : base()
+        public AliasUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -60,13 +62,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -77,7 +73,7 @@ namespace Adan.Client.ConveyorUnits
             }
 
             var commandText = _whiteSpaceRegex.Replace(textCommand.CommandText.Trim(), " ");
-            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in Conveyor.RootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var alias in group.Aliases)
                 {
@@ -98,15 +94,15 @@ namespace Adan.Client.ConveyorUnits
                     //var aliasContainsParams = alias.Actions.OfType<SendTextAction>().Any(a => a.CommandText.Contains("%0") || a.CommandText.Contains("%1"));
                     var aliasContainsParams = false;
                     int lastSendTextAction = -1;
-                    for(var i = 0; i < alias.Actions.Count; ++i)
+                    for (var i = 0; i < alias.Actions.Count; ++i)
                     {
                         var act = alias.Actions[i] as SendTextAction;
-                        if(act != null)
+                        if (act != null)
                         {
                             lastSendTextAction = i;
                             if (act.CommandText.Contains("%0") || act.CommandText.Contains("%1"))
                                 aliasContainsParams = true;
-                        }                            
+                        }
                     }
 
                     for (var i = 0; i < alias.Actions.Count; i++)
@@ -114,10 +110,15 @@ namespace Adan.Client.ConveyorUnits
                         if (i == lastSendTextAction && !aliasContainsParams)
                         {
                             var sendTextAction = alias.Actions[i] as SendTextAction;
-                            (new SendTextAction() { CommandText = sendTextAction.CommandText + " " + _context.Parameters[0] }).Execute(rootModel, _context);
+                            new SendTextAction
+                            {
+                                CommandText = sendTextAction.CommandText + " " + _context.Parameters[0]
+                            }.Execute(Conveyor.RootModel, _context);
                         }
                         else
-                            alias.Actions[i].Execute(rootModel, _context);
+                        {
+                            alias.Actions[i].Execute(Conveyor.RootModel, _context);
+                        }
                     }
 
                     textCommand.Handled = true;

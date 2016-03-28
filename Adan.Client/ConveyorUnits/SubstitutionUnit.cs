@@ -7,17 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Adan.Client.Common.Conveyor;
+
 namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-
-    using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-    using Common.Model;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
@@ -28,8 +25,8 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="SubstitutionUnit"/> class.
         /// </summary>
-        public SubstitutionUnit()
-            : base()
+        public SubstitutionUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -57,12 +54,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        public override void HandleMessage(Message message, RootModel rootModel)
+        public override void HandleMessage(Message message)
         {
             Assert.ArgumentNotNull(message, "message");
 
@@ -71,11 +63,11 @@ namespace Adan.Client.ConveyorUnits
             {
                 if (!textMessage.SkipSubstitution)
                 {
-                    foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+                    foreach (var group in Conveyor.RootModel.Groups.Where(g => g.IsEnabled))
                     {
                         foreach (var substitution in group.Substitutions)
                         {
-                            substitution.HandleMessage(textMessage, rootModel);
+                            substitution.HandleMessage(textMessage, Conveyor.RootModel);
                         }
                     }
                 }

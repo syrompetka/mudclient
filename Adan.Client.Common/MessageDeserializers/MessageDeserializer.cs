@@ -12,6 +12,11 @@
     /// </summary>
     public abstract class MessageDeserializer
     {
+        protected MessageDeserializer(MessageConveyor conveyor)
+        {
+            Conveyor = conveyor;
+        }
+
         #region Constants and Fields
 
         #endregion
@@ -35,7 +40,7 @@
         public MessageConveyor Conveyor
         {
             get;
-            set;
+            private set;
         }
 
         #endregion
@@ -50,12 +55,6 @@
         /// <param name="data">The get data.</param>
         /// <param name="isComplete">Indicates whether message should be completed or wait for next data.</param>
         public abstract void DeserializeDataFromServer(int offset, int bytesReceived, [NotNull] byte[] data, bool isComplete);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract MessageDeserializer NewInstance();
 
         #endregion
 

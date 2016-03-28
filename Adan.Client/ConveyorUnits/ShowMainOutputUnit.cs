@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
 using Adan.Client.Commands;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.ConveyorUnits;
-using Adan.Client.Common.Model;
 using Adan.Client.Common.Utils;
 
 namespace Adan.Client.ConveyorUnits
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    using Common.Conveyor;
+    using Messages;
+
     public class ShowMainOutputUnit : ConveyorUnit
     {
-        private MainWindow _mainWindow;
+        private readonly Regex _regexShowOutputWindow = new Regex(@"^\#wind?o?w?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private Regex _regexShowOutputWindow = new Regex(@"^\#wind?o?w?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="MainWindowEx"></param>
-        public ShowMainOutputUnit(MainWindow MainWindowEx)
+        public ShowMainOutputUnit(MessageConveyor conveyor):base(conveyor)
         {
-            _mainWindow = MainWindowEx;
         }
 
         /// <summary>
@@ -48,22 +38,16 @@ namespace Adan.Client.ConveyorUnits
         {
             get 
             {
-                return new int[] { BuiltInCommandTypes.ShowMainOutputCommand, BuiltInCommandTypes.TextCommand };
+                return new[] { BuiltInCommandTypes.ShowMainOutputCommand, BuiltInCommandTypes.TextCommand };
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             var showOutputCommand = command as ShowMainOutputCommand;
             if (showOutputCommand != null)
             {
-                _mainWindow.ShowOutputWindow(showOutputCommand.OutputWindowName);
+                PushMessageToConveyor(new ShowOutputWindowMessage(showOutputCommand.OutputWindowName));
                 command.Handled = true;
                 return;
             }
@@ -75,14 +59,17 @@ namespace Adan.Client.ConveyorUnits
                 if (m.Success)
                 {
                     if (m.Groups[1].Length > 0)
-                        _mainWindow.ShowOutputWindow(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]);
+                    {
+                        PushMessageToConveyor(
+                            new ShowOutputWindowMessage(CommandLineParser.GetArgs(m.Groups[1].ToString())[0]));
+                    }
                     else
-                        _mainWindow.ShowOutputWindow(string.Empty);
+                    {
+                        PushMessageToConveyor(new ShowOutputWindowMessage(string.Empty));
+                    }
 
                     command.Handled = true;
                 }
-
-                return;
             }
         }
     }

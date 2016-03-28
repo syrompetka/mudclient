@@ -27,6 +27,11 @@ namespace Adan.Client.Common.CommandSerializers
 
         #region Constructors and Destructors
 
+        protected CommandSerializer(MessageConveyor conveyor)
+        {
+            Conveyor = conveyor;
+        }
+
         #endregion
 
         /// <summary>
@@ -34,8 +39,7 @@ namespace Adan.Client.Common.CommandSerializers
         /// </summary>
         public MessageConveyor Conveyor
         {
-            get;
-            set;
+            get; private set;
         }
 
         #region Public Methods
@@ -45,12 +49,6 @@ namespace Adan.Client.Common.CommandSerializers
         /// </summary>
         /// <param name="command">The command.</param>
         public abstract void SerializeAndSendCommand([NotNull] Command command);
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract CommandSerializer Clone();
 
         #endregion
 

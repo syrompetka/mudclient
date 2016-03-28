@@ -1,30 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextBoxWithHistory.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Interaction logic for TextBoxWithHistory.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Controls
+﻿namespace Adan.Client.Controls
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
     using System.Windows.Controls;
-    using System.Linq;
-    using System.Globalization;
-
-    using Common.Commands;
-    using Common.Conveyor;
-
-    using CSLib.Net.Annotations;
-    using System.Collections.Specialized;
-    using Adan.Client.Common.Messages;
-    using Adan.Client.Common.Settings;
-    using Adan.Client.Common.Controls;
-    using Adan.Client.Common.Model;
     using System.Windows.Input;
+    using Common.Commands;
+    using Common.Controls;
+    using Common.Model;
+    using Common.Settings;
+    using CSLib.Net.Annotations;
 
     /* В WPF при выделении CaretIndex определяет крайнее левое положение выделения, а SelectionLength его длину.
      * При перемещении каретки влево или вправо она передвигается всегда относительно CaretIndex,
@@ -41,23 +26,23 @@ namespace Adan.Client.Controls
         private int _queueSize;
         private List<string> _enteredCommandsQueue;
         private int _currentQueueElementIndex = -1;
-        private bool _selfTextChanges = false;
+        private bool _selfTextChanges;
         private string oldText = String.Empty;
 
-        private int oldCaretIndex = 0;
+        private int oldCaretIndex;
         private int realStartSelection = -1;
-        private int correctCaretIndex = 0;
-        private bool needCorrectCaret = false;
-        private bool isSelected = false;
+        private int correctCaretIndex;
+        private bool needCorrectCaret;
+        private bool isSelected;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextBoxWithHistory"/> class.
         /// </summary>
         public TextBoxWithHistory()
         {
-            this.AcceptsReturn = false;
-            this.AcceptsTab = false;
-            this.AutoWordSelection = false;
+            AcceptsReturn = false;
+            AcceptsTab = false;
+            AutoWordSelection = false;
 
             _queueSize = SettingsHolder.Instance.Settings.CommandsHistorySize;
             _enteredCommandsQueue = new List<string>();
@@ -67,7 +52,7 @@ namespace Adan.Client.Controls
         /// 
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnPreviewKeyDown(System.Windows.Input.KeyEventArgs e)
+        protected override void OnPreviewKeyDown(KeyEventArgs e)
         {
             if (e.Key == Key.Left && Keyboard.Modifiers == ModifierKeys.None && SelectionLength > 0)
             {
@@ -284,7 +269,7 @@ namespace Adan.Client.Controls
         /// 
         /// </summary>
         /// <param name="e"></param>
-        protected override void OnSelectionChanged(System.Windows.RoutedEventArgs e)
+        protected override void OnSelectionChanged(RoutedEventArgs e)
         {
             if (SelectionLength > 0)
             {

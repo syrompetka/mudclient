@@ -13,20 +13,15 @@ namespace Adan.Client.Map
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Windows;
-
     using Common.Conveyor;
-    using Common.ConveyorUnits;
-    using Common.MessageDeserializers;
     using Common.Model;
     using Common.Plugins;
-
+    using Common.ViewModel;
+    using ConveyorUnits;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Map.MessageDeserializers;
-    using Adan.Client.Map.ConveyorUnits;
-    using Adan.Client.Common.ViewModel;
-    using System.Threading.Tasks;
-    using System.Windows.Forms;
+    using MessageDeserializers;
 
     /// <summary>
     /// A plugin to display zone map.
@@ -36,8 +31,6 @@ namespace Adan.Client.Map
     {
         private readonly MapControl _mapControl;
         private ZoneManager _zoneManager;
-        private CurrentRoomMessageDeserializer _messageDeserializer;
-        private RouteUnit _routeUnit;
         private RouteManager _routeManager;
 
         /// <summary>
@@ -67,36 +60,20 @@ namespace Adan.Client.Map
             get
             {
 
-                return Enumerable.Repeat(new WidgetDescription("Map", "Map", _mapControl) 
+                return Enumerable.Repeat(new WidgetDescription("Map", "Map", _mapControl)
                 {
                     Left = (int)SystemParameters.PrimaryScreenWidth - 400,
                     Top = (int)SystemParameters.PrimaryScreenHeight - 400,
-                    Height = 400, 
-                    Width = 400,
+                    Height = 400,
+                    Width = 400
                 }, 1);
             }
         }
 
-        /// <summary>
-        /// Gets the message deserializers that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<MessageDeserializer> MessageDeserializers
+        public override void InitializeConveyor(MessageConveyor conveyor)
         {
-            get
-            {
-                return Enumerable.Repeat(_messageDeserializer, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Repeat(_routeUnit, 1);
-            }
+            conveyor.AddConveyorUnit(new RouteUnit(_routeManager, conveyor));
+            conveyor.AddMessageDeserializer(new CurrentRoomMessageDeserializer(conveyor));
         }
 
         /// <summary>
@@ -104,7 +81,7 @@ namespace Adan.Client.Map
         /// </summary>
         public override void Dispose()
         {
-            if(_zoneManager != null)
+            if (_zoneManager != null)
                 _zoneManager.Dispose();
 
             base.Dispose();
@@ -123,22 +100,20 @@ namespace Adan.Client.Map
             initializationStatusModel.CurrentPluginName = "Map";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
 
-            _messageDeserializer = new CurrentRoomMessageDeserializer();
 
             _routeManager = new RouteManager(MainWindowEx);
             _mapControl.RouteManager = _routeManager;
-            _routeUnit = new RouteUnit(_routeManager);
             _zoneManager = new ZoneManager(_mapControl, MainWindowEx, _routeManager);
             initializationStatusModel.PluginInitializationStatus = "Routes loading";
             _routeManager.LoadRoutes();
 
-            Task.Factory.StartNew(() => 
+            Task.Factory.StartNew(() =>
                 {
                     try
                     {
                         MapDownloader.DownloadMaps();
                     }
-                    catch(Exception) { }
+                    catch (Exception) { }
                 });
         }
 

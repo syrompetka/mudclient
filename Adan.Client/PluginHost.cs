@@ -108,18 +108,14 @@
                 return _widgets;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="outputWindow"></param>
-        public void OutputWindowCreated(OutputWindow outputWindow)
+        
+        public void OutputWindowCreated(RootModel rootModel)
         {
             foreach (var plugin in Plugins)
             {
                 try
                 {
-                    plugin.OnCreatedOutputWindow(outputWindow.RootModel);
+                    plugin.OnCreatedOutputWindow(rootModel);
                 }
                 catch (Exception ex)
                 {
@@ -147,18 +143,14 @@
                 _currentOutputWindow = rootModel.Uid;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="outputWindow"></param>
-        public void OutputWindowClose(OutputWindow outputWindow)
+        
+        public void OutputWindowClose(RootModel rootModel)
         {
             foreach (var plugin in Plugins)
             {
                 try
                 {
-                    plugin.OnClosedOutputWindow(outputWindow.RootModel);
+                    plugin.OnClosedOutputWindow(rootModel);
                 }
                 catch (Exception ex)
                 {
@@ -188,21 +180,17 @@
             }
         }
 
-        /// <summary>
-        /// Initializes the plugins.
-        /// </summary>
-        /// <param name="initializationStatusModel">The initialization status model.</param>
-        /// <param name="MainWindowEx">The main window.</param>
-        public void InitializePlugins([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window MainWindowEx)
+
+        public void InitializePlugins([NotNull] InitializationStatusModel initializationStatusModel, [NotNull] Window mainWindow)
         {
             Assert.ArgumentNotNull(initializationStatusModel, "initializationStatusModel");
-            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
+            Assert.ArgumentNotNull(mainWindow, "MainWindowEx");
 
             foreach (var plugin in AllPlugins)
             {
                 try
                 {
-                    plugin.Initialize(initializationStatusModel, MainWindowEx);
+                    plugin.Initialize(initializationStatusModel, mainWindow);
                     Plugins.Add(plugin);
 
                     foreach (var actionDescription in plugin.CustomActions)
@@ -214,21 +202,6 @@
                     {
                         RootModel.AllParameterDescriptions.Add(actionParameter);
                     }
-
-                    foreach (var conveyorUnit in plugin.ConveyorUnits)
-                    {
-                        MessageConveyor.AddConveyorUnit(conveyorUnit);
-                    }
-
-                    foreach (var commandSerializer in plugin.CommandSerializers)
-                    {
-                        MessageConveyor.AddCommandSerializer(commandSerializer);
-                    }
-
-                    foreach (var messageDeserializer in plugin.MessageDeserializers)
-                    {
-                        MessageConveyor.AddMessageDeserializer(messageDeserializer);
-                    }
                 }
                 catch (Exception ex)
                 {
@@ -239,6 +212,13 @@
             ApplyAdditionalPluginMergeDictionaries();
         }
 
+        public void InitializeConveyor(MessageConveyor conveyor)
+        {
+            foreach (var plugin in AllPlugins)
+            {
+                plugin.InitializeConveyor(conveyor);
+            }
+        }
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>

@@ -1,31 +1,20 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OutputToAdditionalWindowPlugin.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the OutputToAdditionalWindowPlugin type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.OutputWindow
+﻿namespace Adan.Client.Plugins.OutputWindow
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Windows;
-
     using Common.Conveyor;
+    using Common.ConveyorUnits;
     using Common.Model;
     using Common.Plugins;
-
+    using Common.ViewModel;
+    using ConveyorUnits;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.OutputWindow.Models.ConveyorUnits;
-    using Adan.Client.Plugins.OutputWindow.Model.Actions;
-    using Adan.Client.Plugins.OutputWindow.Model;
-    using Adan.Client.Common.ViewModel;
-    using Adan.Client.Common.ConveyorUnits;
+    using Model;
+    using Model.Actions;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.
@@ -33,10 +22,9 @@ namespace Adan.Client.Plugins.OutputWindow
     [Export(typeof(PluginBase))]
     public sealed class OutputToAdditionalWindowPlugin : PluginBase
     {
+        private readonly AdditionalOutputWindow _additionalOutputWindowControl;
         private AdditionalOutputWindowManager _manager;
-        private AdditionalOutputWindow _additionalOutputWindowControl;
         private WidgetDescription _widget;
-        private OutputToAdditionalWindowConveyorUnit _conveyorUnit;
         
         /// <summary>
         /// 
@@ -55,17 +43,6 @@ namespace Adan.Client.Plugins.OutputWindow
         public OutputToAdditionalWindowPlugin()
         {
             _additionalOutputWindowControl = new AdditionalOutputWindow();
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Repeat(_conveyorUnit, 1);
-            }
         }
 
         /// <summary>
@@ -130,10 +107,13 @@ namespace Adan.Client.Plugins.OutputWindow
             {
                 Left = (int)SystemParameters.PrimaryScreenWidth - 400,
                 Height = 300,
-                Width = 400,
+                Width = 400
             };
-            
-            _conveyorUnit = new OutputToAdditionalWindowConveyorUnit(_manager);
+        }
+
+        public override void InitializeConveyor(MessageConveyor conveyor)
+        {
+            conveyor.AddConveyorUnit(new OutputToAdditionalWindowConveyorUnit(_manager, conveyor));
         }
 
         /// <summary>

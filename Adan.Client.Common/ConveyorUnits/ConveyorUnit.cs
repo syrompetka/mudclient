@@ -16,10 +16,17 @@
     /// <summary>
     /// Base class for all conveyor units.
     /// </summary>
-    public abstract class ConveyorUnit
+    public abstract class ConveyorUnit : IDisposable
     {
 
+        protected ConveyorUnit(MessageConveyor conveyor)
+        {
+            Conveyor = conveyor;
+        }
+
         #region Properties
+
+        public MessageConveyor Conveyor { get; private set; }
 
         /// <summary>
         /// Gets a set of message types that this unit can handle.
@@ -47,51 +54,41 @@
         /// Handles the command.
         /// </summary>
         /// <param name="command">The command.</param>
-        /// <param name="rootModel">The root model.</param>
         /// <param name="isImport">if set to <c>true</c> [is import].</param>
-        public virtual void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
+        public virtual void HandleCommand([NotNull] Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        public virtual void HandleMessage([NotNull] Message message, [NotNull] RootModel rootModel)
+        public virtual void HandleMessage([NotNull] Message message)
         {
             Assert.ArgumentNotNull(message, "message");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        protected void PushCommandToConveyor([NotNull] Command command, [NotNull] RootModel rootModel)
+        protected void PushCommandToConveyor([NotNull] Command command)
         {
             Assert.ArgumentNotNull(command, "command");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            rootModel.PushCommandToConveyor(command);
+            
+            Conveyor.PushCommand(command);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        protected void PushMessageToConveyor([NotNull] Message message, [NotNull] RootModel rootModel)
+        protected void PushMessageToConveyor([NotNull] Message message)
         {
             Assert.ArgumentNotNull(message, "message");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            rootModel.PushMessageToConveyor(message);
+            
+            Conveyor.PushMessage(message);
         }
 
         #endregion
+
+        public void Dispose()
+        {
+            Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+        }
     }
 }

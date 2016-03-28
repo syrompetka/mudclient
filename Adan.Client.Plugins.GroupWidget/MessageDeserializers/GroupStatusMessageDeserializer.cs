@@ -4,6 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
+    using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
     using CSLib.Net.Diagnostics;
@@ -18,6 +19,10 @@
         private readonly StringBuilder _builder = new StringBuilder();
         private readonly Encoding _encoding = Encoding.GetEncoding(1251);
         private readonly XmlSerializer _serializer = new XmlSerializer(typeof(GroupStatusMessage));
+
+        public GroupStatusMessageDeserializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -65,15 +70,6 @@
                     _builder.Clear();
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override MessageDeserializer NewInstance()
-        {
-            return new GroupStatusMessageDeserializer();
         }
     }
 }

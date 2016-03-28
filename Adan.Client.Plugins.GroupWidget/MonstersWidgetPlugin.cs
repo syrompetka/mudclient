@@ -1,58 +1,43 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MonstersWidgetPlugin.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the GroupWidgetPlugin type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget
+﻿namespace Adan.Client.Plugins.GroupWidget
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Windows;
-
     using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.MessageDeserializers;
     using Common.Model;
     using Common.Plugins;
-
-    using CSLib.Net.Diagnostics;
-
-    using Properties;
-
-    using ViewModel;
-    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
-    using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
-    using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
-    using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
-    using Adan.Client.Common.ViewModel;
+    using Common.ViewModel;
+    using ConveyorUnits;
     using CSLib.Net.Annotations;
+    using CSLib.Net.Diagnostics;
+    using MessageDeserializers;
+    using Model.ActionParameters;
+    using Model.ParameterDescriptions;
+    using Properties;
+    using ViewModel;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display monsters widget.
     /// </summary>
     [Export(typeof(PluginBase))]
-    public sealed class MonstersWidgetPlugin : PluginBase, IDisposable
+    public sealed class MonstersWidgetPlugin : PluginBase
     {
-        private MonstersWidgetControl _monstersWidgetControl;
-        private RoomMonstersViewModel _viewModel;
+        private readonly MonstersWidgetControl _monstersWidgetControl;
+        private readonly RoomMonstersViewModel _viewModel;
 
         private MonstersManager _monstersManager;
-        private MessageDeserializer _deserializer;
-        private ConveyorUnit _conveyorUnit;
-
+        
         /// <summary>
         /// 
         /// </summary>
         public MonstersWidgetPlugin()
         {
             _viewModel = new RoomMonstersViewModel();
-            _monstersWidgetControl = new MonstersWidgetControl() { DataContext = _viewModel };
+            _monstersWidgetControl = new MonstersWidgetControl { DataContext = _viewModel };
         }
 
         /// <summary>
@@ -77,30 +62,8 @@ namespace Adan.Client.Plugins.GroupWidget
                 {
                     Left = 100,
                     Height = 450,
-                    Width = 300,
+                    Width = 300
                 }, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the message deserializers that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<MessageDeserializer> MessageDeserializers
-        {
-            get
-            {
-                return Enumerable.Repeat(_deserializer, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Repeat(_conveyorUnit, 1);
             }
         }
 
@@ -127,6 +90,12 @@ namespace Adan.Client.Plugins.GroupWidget
             {
                 return Resources.MonstersWidgetOptions;
             }
+        }
+
+        public override void InitializeConveyor(MessageConveyor conveyor)
+        {
+            conveyor.AddConveyorUnit(new RoomMonstersUnit(_monstersWidgetControl, conveyor));
+            conveyor.AddMessageDeserializer(new RoomMonstersMessageDeserializer(conveyor));
         }
 
         /// <summary>
@@ -163,10 +132,7 @@ namespace Adan.Client.Plugins.GroupWidget
 
             initializationStatusModel.CurrentPluginName = Resources.Monsters;
             initializationStatusModel.PluginInitializationStatus = "Initializing";
-
-            _deserializer = new RoomMonstersMessageDeserializer();
             _monstersManager = new MonstersManager(_monstersWidgetControl);
-            _conveyorUnit = new RoomMonstersUnit(_monstersWidgetControl);
         }
 
         /// <summary>

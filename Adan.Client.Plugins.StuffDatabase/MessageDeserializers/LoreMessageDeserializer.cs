@@ -4,6 +4,7 @@
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
+    using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
     using CSLib.Net.Diagnostics;
@@ -15,9 +16,14 @@
     /// </summary>
     public class LoreMessageDeserializer : MessageDeserializer
     {
-        private readonly XmlSerializer _serializer=new XmlSerializer(typeof(LoreMessage));
+        private readonly XmlSerializer _serializer = new XmlSerializer(typeof(LoreMessage));
         private readonly StringBuilder _builder = new StringBuilder();
         private Encoding _encoding;
+
+
+        public LoreMessageDeserializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -66,15 +72,6 @@
                     PushMessageToConveyor(new ErrorMessage(ex.Message));
                 }
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override MessageDeserializer NewInstance()
-        {
-            return new LoreMessageDeserializer();
         }
     }
 }

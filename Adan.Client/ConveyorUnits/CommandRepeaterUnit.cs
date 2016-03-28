@@ -7,16 +7,14 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Adan.Client.Common.Conveyor;
+
 namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
-    using System.Text.RegularExpressions;
-    using Adan.Client.Common.Model;
     using Common.Commands;
-    using Common.Conveyor;
     using Common.ConveyorUnits;
     using Common.Messages;
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
 
@@ -28,8 +26,8 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandRepeaterUnit"/> class.
         /// </summary>
-        public CommandRepeaterUnit()
-            : base()
+        public CommandRepeaterUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -55,13 +53,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -71,7 +63,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            PushMessageToConveyor(new CommandRepeatMessage(textCommand.CommandText), rootModel);
+            PushMessageToConveyor(new CommandRepeatMessage(textCommand.CommandText));
 
             //if (_displayInput)
             //{
@@ -83,12 +75,8 @@ namespace Adan.Client.ConveyorUnits
             //}
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="message"></param>
-        /// <param name="rootModel"></param>
-        public override void HandleMessage(Message message, RootModel rootModel)
+
+        public override void HandleMessage(Message message)
         {
             Assert.ArgumentNotNull(message, "message");
 

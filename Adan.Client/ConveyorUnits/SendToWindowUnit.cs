@@ -1,33 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using Adan.Client.Commands;
-using Adan.Client.Common.Commands;
-using Adan.Client.Common.ConveyorUnits;
-using Adan.Client.Common.Model;
-using Adan.Client.Common.Utils;
-using Adan.Client.Model.Actions;
-
-namespace Adan.Client.ConveyorUnits
+﻿namespace Adan.Client.ConveyorUnits
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+    using Commands;
+    using Common.Commands;
+    using Common.Conveyor;
+    using Common.ConveyorUnits;
+    using Common.Model;
+    using Common.Utils;
+    using Model.Actions;
+
     public class SendToWindowUnit : ConveyorUnit
     {
-        private MainWindow _mainWindow;
         private readonly Regex _regexSendToWindow = new Regex(@"^\#send\s+(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexSendToAllWindow = new Regex(@"^\#sendal?l?\s+(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="MainWindowEx"></param>
-        public SendToWindowUnit(MainWindow MainWindowEx)
+
+        public SendToWindowUnit(MessageConveyor conveyor) : base(conveyor)
         {
-            _mainWindow = MainWindowEx;
         }
 
         /// <summary>
@@ -52,21 +42,20 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             var showOutputCommand = command as SendToWindowCommand;
             if (showOutputCommand != null)
             {
                 if (showOutputCommand.ToAll)
-                    _mainWindow.SendToAllWindows(showOutputCommand.ActionsToExecute, showOutputCommand.ActionExecutionContext);
+                {
+                    Conveyor.RootModel.SendToAllWindows(showOutputCommand.ActionsToExecute, showOutputCommand.ActionExecutionContext);
+                }
                 else
-                    _mainWindow.SendToWindow(showOutputCommand.OutputWindowName, showOutputCommand.ActionsToExecute, showOutputCommand.ActionExecutionContext);
+                {
+                    Conveyor.RootModel.SendToWindow(showOutputCommand.OutputWindowName, showOutputCommand.ActionsToExecute, showOutputCommand.ActionExecutionContext); 
+                    
+                }
 
                 command.Handled = true;
                 return;
@@ -81,7 +70,7 @@ namespace Adan.Client.ConveyorUnits
                     var args = CommandLineParser.GetArgs(m.Groups[1].ToString());
                     if (args.Length > 1)
                     {
-                        _mainWindow.SendToWindow(args[1], Enumerable.Repeat(new SendTextAction { CommandText = args[0] }, 1), ActionExecutionContext.Empty);
+                        Conveyor.RootModel.SendToWindow(args[1], Enumerable.Repeat(new SendTextAction { CommandText = args[0] }, 1), ActionExecutionContext.Empty);
                     }
 
                     command.Handled = true;
@@ -91,13 +80,11 @@ namespace Adan.Client.ConveyorUnits
                 m = _regexSendToAllWindow.Match(textCommand.CommandText);
                 if (m.Success)
                 {
-                    _mainWindow.SendToAllWindows(Enumerable.Repeat(new SendTextAction { CommandText = m.Groups[1].ToString() }, 1), ActionExecutionContext.Empty);
+                    Conveyor.RootModel.SendToAllWindows(Enumerable.Repeat(new SendTextAction { CommandText = m.Groups[1].ToString() }, 1), ActionExecutionContext.Empty);
 
                     command.Handled = true;
                     return;
                 }
-
-                return;
             }
         }
     }

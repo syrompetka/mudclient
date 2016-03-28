@@ -1,30 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RoomMonstersUnit.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the RoomMonstersUnit type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
+﻿namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Windows.Input;
-
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
-    using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
-    using ViewModel;
-    using Adan.Client.Plugins.GroupWidget.Messages;
-    using Adan.Client.Common.Model;
-    using System.Text.RegularExpressions;
+    using Messages;
 
     /// <summary>
     /// <see cref="ConveyorUnit"/> implementation to handle <see cref="RoomMonstersMessage"/> messages.
@@ -33,12 +16,8 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
     {
         private readonly MonstersWidgetControl _monstersWidgetControl;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RoomMonstersUnit"/> class.
-        /// </summary>
-        /// <param name="monstersWidgetControl">The monsters widget control.</param>
-        public RoomMonstersUnit([NotNull] MonstersWidgetControl monstersWidgetControl)
-            : base()
+        public RoomMonstersUnit([NotNull] MonstersWidgetControl monstersWidgetControl, MessageConveyor conveyor)
+            : base(conveyor)
         {
             Assert.ArgumentNotNull(monstersWidgetControl, "monstersWidgetControl");
 
@@ -66,17 +45,10 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
                 return Enumerable.Repeat(BuiltInCommandTypes.TextCommand, 1);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand([NotNull]Command command, [NotNull]RootModel rootModel, bool isImport = false)
+        
+        public override void HandleCommand([NotNull]Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var textCommand = command as TextCommand;
             if (textCommand == null)

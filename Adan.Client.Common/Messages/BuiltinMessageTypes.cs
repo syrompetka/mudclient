@@ -34,10 +34,21 @@ namespace Adan.Client.Common.Messages
         /// </summary>
         public const int LoggingMessage = 4;
 
+
         /// <summary>
         /// Type of message to turn echoing on/off.
         /// </summary>
         public const int EchoModeMessage = 5;
+
+        /// <summary>
+        /// Type of message to toggle full screen mode.
+        /// </summary>
+        public const int ToggleFullScreenModeMessage = 6;
+
+        /// <summary>
+        /// Type of message to show/swith output window.
+        /// </summary>
+        public const int ShowOutputWindowMessage = 7;
 
         /// <summary>
         /// Type of message with protocol version.

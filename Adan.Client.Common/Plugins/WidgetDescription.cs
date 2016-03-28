@@ -10,8 +10,6 @@
 namespace Adan.Client.Common.Plugins
 {
     using System.Windows;
-    using System.Windows.Controls;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 

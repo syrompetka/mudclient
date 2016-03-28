@@ -217,8 +217,10 @@
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
+    <Compile Include="Messages\ShowOutputWindowMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
+    <Compile Include="Messages\ToggleFullScreenModeMessage.cs" />
     <Compile Include="Model\ActionDescriptions\ClearVariableValueActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\ConditionalActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\DisableGroupActionDescription.cs" />
@@ -251,6 +253,7 @@
     <Compile Include="Model\Actions\StartLogAction.cs" />
     <Compile Include="Model\Actions\StopLogAction.cs" />
     <Compile Include="Model\Actions\ToggleFullScreenModeAction.cs" />
+    <Compile Include="Model\ConveyorFactory.cs" />
     <Compile Include="Model\LayoutContainerStyleSelector.cs" />
     <Compile Include="Model\ParameterDescriptions\ConstantStringParameterDescription.cs" />
     <Compile Include="Model\ParameterDescriptions\MathExpressionParameterDescription.cs" />

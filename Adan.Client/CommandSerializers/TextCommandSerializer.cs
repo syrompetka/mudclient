@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextCommandSerializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the TextCommandSerializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.CommandSerializers
+﻿namespace Adan.Client.CommandSerializers
 {
     #region Namespace Imports
 
@@ -16,8 +7,6 @@ namespace Adan.Client.CommandSerializers
     using Common.Commands;
     using Common.CommandSerializers;
     using Common.Conveyor;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     #endregion
@@ -35,6 +24,9 @@ namespace Adan.Client.CommandSerializers
         #endregion
 
         #region Constructors and Destructors
+        public TextCommandSerializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         #endregion
 
@@ -59,16 +51,7 @@ namespace Adan.Client.CommandSerializers
             _buffer[bytesToSend] = 0x0A;
             SendRawDataToServer(0, bytesToSend + 1, _buffer);
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override CommandSerializer Clone()
-        {
-            return new TextCommandSerializer();
-        }
-
         #endregion
+
     }
 }

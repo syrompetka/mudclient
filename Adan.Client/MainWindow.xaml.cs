@@ -1,8 +1,6 @@
 ﻿using Adan.Client.Commands;
-using Adan.Client.CommandSerializers;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.Controls;
-using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.Model;
 using Adan.Client.Common.Plugins;
 using Adan.Client.Common.Settings;
@@ -10,9 +8,7 @@ using Adan.Client.Common.Themes;
 using Adan.Client.Common.Utils;
 using Adan.Client.Common.ViewModel;
 using Adan.Client.Controls;
-using Adan.Client.ConveyorUnits;
 using Adan.Client.Dialogs;
-using Adan.Client.MessageDeserializers;
 using Adan.Client.Model.ActionDescriptions;
 using Adan.Client.Model.ActionParameters;
 using Adan.Client.Model.Actions;
@@ -36,7 +32,6 @@ using System.Windows.Media;
 using Adan.Client.Resources.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
-using Xceed.Wpf.AvalonDock.Themes;
 using Adan.Client.Common.Messages;
 
 namespace Adan.Client
@@ -47,6 +42,8 @@ namespace Adan.Client
 
         private readonly IList<LayoutContent> _allWidgets = new List<LayoutContent>();
         private readonly IList<OutputWindow> _outputWindows = new List<OutputWindow>();
+        private readonly IList<RootModel> _allRootModels = new List<RootModel>();
+
         private WindowState _nonFullScreenWindowState;
 
         #endregion
@@ -121,28 +118,6 @@ namespace Adan.Client
             RootModel.AllActionDescriptions = actionDescriptions;
             RootModel.AllParameterDescriptions = parameterDescriptions;
 
-            //Initialize conveyor with all serializations
-            MessageConveyor.AddCommandSerializer(new TextCommandSerializer());
-
-            //Initialize conveyor with all deserializations
-            MessageConveyor.AddMessageDeserializer(new TextMessageDeserializer());
-            MessageConveyor.AddMessageDeserializer(new ProtocolVersionMessageDeserializer());
-
-            //Initialize conveyor with message handlers. Handlers added in order processing
-            MessageConveyor.AddConveyorUnit(new CommandSeparatorUnit());
-            MessageConveyor.AddConveyorUnit(new CommandsFromUserLineUnit());
-            MessageConveyor.AddConveyorUnit(new VariableReplaceUnit());
-            MessageConveyor.AddConveyorUnit(new CommandMultiplierUnit());
-            MessageConveyor.AddConveyorUnit(new SubstitutionUnit());
-            MessageConveyor.AddConveyorUnit(new TriggerUnit());
-            MessageConveyor.AddConveyorUnit(new AliasUnit());
-            MessageConveyor.AddConveyorUnit(new HotkeyUnit());
-            MessageConveyor.AddConveyorUnit(new HighlightUnit());
-            MessageConveyor.AddConveyorUnit(new LoggingUnit(this));
-            MessageConveyor.AddConveyorUnit(new ShowMainOutputUnit(this));
-            MessageConveyor.AddConveyorUnit(new SendToWindowUnit(this));
-            MessageConveyor.AddConveyorUnit(new ToggleFullScreenModeUnit(this));
-
             //Initialize themes and add their to menu
             foreach (var themeDescription in ThemeManager.Instance.AvailableThemes)
             {
@@ -162,7 +137,7 @@ namespace Adan.Client
             };
 
             Task task = Task.Factory.StartNew(() => PluginHost.Instance.InitializePlugins(initializationDalog.ViewModel, this))
-                .ContinueWith(t => Dispatcher.Invoke((Action)initializationDalog.Close));
+                .ContinueWith(t => Dispatcher.Invoke(initializationDalog.Close));
             initializationDalog.ShowDialog();
 
             //Initialize plugins
@@ -180,12 +155,6 @@ namespace Adan.Client
                         _optionsSeparator.Visibility = Visibility.Visible;
                 }
             }
-
-            //Add remaining message handlers which should to process message last
-            MessageConveyor.AddConveyorUnit(new ProtocolVersionUnit());
-            MessageConveyor.AddConveyorUnit(new CommandRepeaterUnit());
-            MessageConveyor.AddConveyorUnit(new CapForLineCommandUnit());
-            MessageConveyor.AddConveyorUnit(new ConnectionUnit());
 
             //Initialize window's position
             Top = SettingsHolder.Instance.Settings.MainWindowTop;
@@ -270,7 +239,7 @@ namespace Adan.Client
                 }
                 catch (Exception ex) 
                 {
-                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex.ToString()));
+                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex));
                 }
             }
         }
@@ -308,7 +277,7 @@ namespace Adan.Client
             }
             else
             {
-                var outputWindow = new OutputWindow(this, args.Model.Title);
+                var outputWindow = new OutputWindow(this, args.Model.Title, _allRootModels);
                 outputWindow.Uid = args.Model.ContentId;
                 outputWindow.DockContent = args.Model;
 
@@ -333,7 +302,7 @@ namespace Adan.Client
                 if (_windowSeparator.Visibility != Visibility.Visible)
                     _windowSeparator.Visibility = Visibility.Visible;
 
-                PluginHost.Instance.OutputWindowCreated(outputWindow);
+                PluginHost.Instance.OutputWindowCreated(outputWindow.RootModel);
 
                 if (SettingsHolder.Instance.Settings.AutoConnect)
                 {
@@ -353,8 +322,8 @@ namespace Adan.Client
                 Title = widgetDescription.Description,
                 Content = widgetDescription.Control,
                 ContentId = widgetDescription.Name,
-                FloatingHeight = widgetDescription.Height,
-                FloatingWidth = widgetDescription.Width,
+//                FloatingHeight = widgetDescription.Height,
+//                FloatingWidth = widgetDescription.Width,
                 FloatingLeft = widgetDescription.Left,
                 FloatingTop = widgetDescription.Top,                
             };
@@ -397,7 +366,7 @@ namespace Adan.Client
 
         private void CreateOutputWindow(string name, string uid)
         {
-            OutputWindow outputWindow = new OutputWindow(this, name);
+            OutputWindow outputWindow = new OutputWindow(this, name, _allRootModels);
             _outputWindows.Add(outputWindow);
             outputWindow.Uid = uid;
 
@@ -434,7 +403,7 @@ namespace Adan.Client
             if (_windowSeparator.Visibility != Visibility.Visible)
                 _windowSeparator.Visibility = Visibility.Visible;
 
-            PluginHost.Instance.OutputWindowCreated(outputWindow);
+            PluginHost.Instance.OutputWindowCreated(outputWindow.RootModel);
 
             var firstDocumentPane = _dockManager.Layout.Descendents().OfType<LayoutDocumentPane>().FirstOrDefault();
             if (firstDocumentPane != null)
@@ -503,53 +472,7 @@ namespace Adan.Client
                 _dockManager.ActiveContent = outputWindowToSelect.VisibleControl;
             }
         }
-
-        /// <summary>
-        /// Sends to window.
-        /// </summary>
-        /// <param name="name">The name.</param>
-        /// <param name="actionsToExecute">The actions to execute.</param>
-        /// <param name="actionExecutionContext">The action execution context.</param>
-        public void SendToWindow(string name, IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(w => w.Name == name);
-            if (outputWindow == null)
-            {
-                return;
-            }
-
-            foreach (var action in actionsToExecute)
-            {
-                try
-                {
-                    action.Execute(outputWindow.RootModel, actionExecutionContext);
-                }
-                catch (Exception)
-                { }
-            }
-        }
-
-        /// <summary>
-        /// Sends to all windows.
-        /// </summary>
-        /// <param name="actionsToExecute">The actions to execute.</param>
-        /// <param name="actionExecutionContext">The action execution context.</param>
-        public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
-        {
-            foreach (var outputWindow in _outputWindows)
-            {
-                foreach (var action in actionsToExecute)
-                {
-                    try
-                    {
-                        action.Execute(outputWindow.RootModel, actionExecutionContext);
-                    }
-                    catch (Exception)
-                    { }
-                }
-            }
-        }        
-
+        
         private void OnOutputWindowClosed(object sender, EventArgs e)
         {
             var dockable = (LayoutAnchorable)sender;
@@ -558,7 +481,7 @@ namespace Adan.Client
             if (outputWindow != null)
             {
                 outputWindow.Save();
-                PluginHost.Instance.OutputWindowClose(outputWindow);
+                PluginHost.Instance.OutputWindowClose(outputWindow.RootModel);
                 outputWindow.Dispose();
                 _outputWindows.Remove(outputWindow);
 
@@ -904,41 +827,6 @@ namespace Adan.Client
                     SettingsHolder.Instance.Settings.ScrollBuffer = val < 100000 ? val : 100000;
 
                 SettingsHolder.Instance.SaveCommonSettings();
-            }
-        }
-
-        #endregion
-
-        #region Logging
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="logName"></param>
-        /// <param name="rootModel"></param>
-        public void StartLogging(string logName, RootModel rootModel)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
-
-            if (outputWindow != null)
-            {
-                //TODO:
-                //outputWindow.StartLogging(logName);
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
-        public void StopLogging(RootModel rootModel)
-        {
-            var outputWindow = _outputWindows.FirstOrDefault(wind => wind.Uid == rootModel.Uid);
-
-            if (outputWindow != null)
-            {
-                //TODO:
-                //outputWindow.StopLogging();
             }
         }
 

@@ -11,19 +11,12 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Windows.Input;
-
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
-    using Common.Messages;
-
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-
-    using ViewModel;
-    using Adan.Client.Plugins.GroupWidget.Messages;
-    using Adan.Client.Common.Model;
+    using GroupWidget.Messages;
 
     /// <summary>
     /// <see cref="ConveyorUnit"/> implementation to handle <see cref="GroupStatusMessage"/> messages.
@@ -32,12 +25,8 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
     {
         private readonly GroupWidgetControl _groupWidget;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="groupWidget"></param>
-        public GroupStatusUnit([NotNull] GroupWidgetControl groupWidget)
-            : base()
+        public GroupStatusUnit([NotNull] GroupWidgetControl groupWidget, MessageConveyor conveyor)
+            : base(conveyor)
         {
             Assert.ArgumentNotNull(groupWidget, "groupWidget");
 
@@ -66,16 +55,9 @@ namespace Adan.Client.Plugins.GroupWidget.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
+        public override void HandleCommand([NotNull] Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
-            Assert.ArgumentNotNull(rootModel, "rootModel");
 
             var textCommand = command as TextCommand;
             if (textCommand == null)

@@ -9,18 +9,13 @@
 
 namespace Adan.Client.ConveyorUnits
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Commands;
-
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
-    using Common.Messages;
     using Common.Model;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
@@ -31,6 +26,10 @@ namespace Adan.Client.ConveyorUnits
         //private readonly RootModel _rootModel;
         //private readonly ActionExecutionContext _context = new ActionExecutionContext { CurrentMessage = new OutputToMainWindowMessage(string.Empty) };
         private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
+
+        public HotkeyUnit(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         #region Overrides of ConveyorUnit
 
@@ -55,14 +54,8 @@ namespace Adan.Client.ConveyorUnits
                 return new[] { BuiltInCommandTypes.HotkeyCommand };
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -73,7 +66,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            foreach (var group in rootModel.Groups.Where(g => g.IsEnabled))
+            foreach (var group in Conveyor.RootModel.Groups.Where(g => g.IsEnabled))
             {
                 foreach (var hotkey in group.Hotkeys)
                 {
@@ -84,7 +77,7 @@ namespace Adan.Client.ConveyorUnits
 
                     foreach (var action in hotkey.Actions)
                     {
-                        action.Execute(rootModel, _context);
+                        action.Execute(Conveyor.RootModel, _context);
                     }
 
                     hotKeyCommand.Handled = true;

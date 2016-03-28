@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Adan.Client.Commands;
 using Adan.Client.Common.Commands;
+using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.ConveyorUnits;
-using Adan.Client.Common.Model;
-using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
+using Adan.Client.Messages;
 
 namespace Adan.Client.ConveyorUnits
 {
@@ -15,16 +14,11 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public sealed class ToggleFullScreenModeUnit : ConveyorUnit
     {
-        private readonly MainWindow _mainWindow;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ToggleFullScreenModeUnit"/> class.
         /// </summary>
-        /// <param name="MainWindowEx">The main window.</param>
-        public ToggleFullScreenModeUnit([NotNull] MainWindow MainWindowEx)
+        public ToggleFullScreenModeUnit(MessageConveyor conveyor) : base(conveyor)
         {
-            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
-            _mainWindow = MainWindowEx;
         }
 
         /// <summary>
@@ -43,18 +37,12 @@ namespace Adan.Client.ConveyorUnits
             get { return new[] { BuiltInCommandTypes.ToggleFullScreenMode, BuiltInCommandTypes.TextCommand }; }
         }
 
-        /// <summary>
-        /// Handles the command.
-        /// </summary>
-        /// <param name="command">The command.</param>
-        /// <param name="rootModel">The root model.</param>
-        /// <param name="isImport">if set to <c>true</c> [is import].</param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             var toggleCommand = command as ToggleFullScreenModeCommand;
             if (toggleCommand != null)
             {
-                _mainWindow.ToggleFullScreenMode();
+                PushMessageToConveyor(new ToggleFullScreenModeMessage());
                 command.Handled = true;
                 return;
             }
@@ -62,9 +50,9 @@ namespace Adan.Client.ConveyorUnits
             var textCommand = command as TextCommand;
             if (textCommand != null)
             {
-                if(string.Equals(textCommand.CommandText.Trim(), "#togglefullscreen", StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(textCommand.CommandText.Trim(), "#togglefullscreen", StringComparison.OrdinalIgnoreCase))
                 {
-                    _mainWindow.ToggleFullScreenMode();
+                    PushMessageToConveyor(new ToggleFullScreenModeMessage());
                     command.Handled = true;
                 }
             }

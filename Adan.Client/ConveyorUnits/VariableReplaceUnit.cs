@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.ConveyorUnits;
-using Adan.Client.Common.Model;
-using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 
 namespace Adan.Client.ConveyorUnits
@@ -17,13 +12,11 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class VariableReplaceUnit : ConveyorUnit
     {
-        private Regex _variableRegex = new Regex(@"\$(\w+)", RegexOptions.Compiled | RegexOptions.CultureInvariant);
-
         /// <summary>
         /// 
         /// </summary>
-        public VariableReplaceUnit()
-            : base()
+        public VariableReplaceUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -51,13 +44,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -67,7 +54,7 @@ namespace Adan.Client.ConveyorUnits
                 return;
             }
 
-            textCommand.CommandText = rootModel.ReplaceVariables(textCommand.CommandText).Value;
+            textCommand.CommandText = Conveyor.RootModel.ReplaceVariables(textCommand.CommandText).Value;
         }
 
         #endregion

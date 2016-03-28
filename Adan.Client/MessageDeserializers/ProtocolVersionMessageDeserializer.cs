@@ -1,24 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ProtocolVersionMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the ProtocolVersionMessageDeserializer type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.MessageDeserializers
+﻿namespace Adan.Client.MessageDeserializers
 {
     using System;
     using System.IO;
     using System.Text;
     using System.Xml.Serialization;
-
     using Common.Conveyor;
     using Common.MessageDeserializers;
     using Common.Messages;
-
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     using Messages;
@@ -31,6 +19,11 @@ namespace Adan.Client.MessageDeserializers
         private static readonly Encoding _encoding = Encoding.GetEncoding(1251);
 
         private readonly StringBuilder _builder = new StringBuilder();
+
+
+        public ProtocolVersionMessageDeserializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         /// <summary>
         /// Gets the type of deserialized message.
@@ -77,15 +70,6 @@ namespace Adan.Client.MessageDeserializers
 
                 _builder.Clear();
             }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override MessageDeserializer NewInstance()
-        {
-            return new ProtocolVersionMessageDeserializer();
         }
     }
 }

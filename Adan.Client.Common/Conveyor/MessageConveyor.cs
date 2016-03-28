@@ -7,6 +7,8 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+using Adan.Client.Common.Settings;
+
 namespace Adan.Client.Common.Conveyor
 {
     #region Namespace Imports
@@ -14,9 +16,8 @@ namespace Adan.Client.Common.Conveyor
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading.Tasks;
-    using Adan.Client.Common.Model;
-    using Adan.Client.Common.Utils;
+    using Model;
+    using Utils;
     using Commands;
     using CommandSerializers;
     using ConveyorUnits;
@@ -49,52 +50,45 @@ namespace Adan.Client.Common.Conveyor
 
         #region Constants and Fields
 
-        private static IList<CommandSerializer> _commandSerializers;
-        private static IList<MessageDeserializer> _messageDeserializers;
-        private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType;
-        private static IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType;
+        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByMessageType = new Dictionary<int, IList<ConveyorUnit>>();
+        private readonly IDictionary<int, IList<ConveyorUnit>> _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
+        private readonly IList<ConveyorUnit> _allConveyorUnits = new List<ConveyorUnit>();
 
-        private readonly IList<CommandSerializer> _currentCommandSerializers;
-        private readonly IList<MessageDeserializer> _currentMessageDeserializers;
+        private readonly IList<CommandSerializer> _currentCommandSerializers = new List<CommandSerializer>();
+        private readonly IList<MessageDeserializer> _currentMessageDeserializers = new List<MessageDeserializer>();
         private readonly MccpClient _mccpClient;
         private readonly byte[] _buffer = new byte[32767];
-        private RootModel _rootModel;
 
         private int _currentMessageType = BuiltInMessageTypes.TextMessage;
 
         #endregion
-        
+
         #region Constructors and Destructors
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="mccpClient"></param>
-        public MessageConveyor([NotNull] MccpClient mccpClient)
+        private MessageConveyor([NotNull] MccpClient mccpClient)
         {
             Assert.ArgumentNotNull(mccpClient, "mccpClient");
-
-            _currentCommandSerializers = new List<CommandSerializer>(CommandSerializers.Count);
-            foreach (CommandSerializer commandSerializer in CommandSerializers)
-            {
-                var newCommandSerializer = commandSerializer.Clone();
-                newCommandSerializer.Conveyor = this;
-                _currentCommandSerializers.Add(newCommandSerializer);
-            }
-
-            _currentMessageDeserializers = new List<MessageDeserializer>(MessageDeserializers.Count);
-            foreach (MessageDeserializer messageDeserializer in MessageDeserializers)
-            {
-                var newMessageDeserializer = messageDeserializer.NewInstance();
-                newMessageDeserializer.Conveyor = this;
-                _currentMessageDeserializers.Add(newMessageDeserializer);
-            }
 
             _mccpClient = mccpClient;
             _mccpClient.DataReceived += HandleDataReceived;
             _mccpClient.NetworkError += HandleNetworkError;
             _mccpClient.Connected += HandleConnected;
             _mccpClient.Disconnected += HandleDisconnected;
+        }
+
+        public static MessageConveyor CreateNew(string model, ProfileHolder profile, IList<RootModel> allRootModels)
+        {
+            var result = new MessageConveyor(new MccpClient());
+            var rootModel = new RootModel(result, profile, allRootModels);
+            allRootModels.Add(rootModel);
+            result.RootModel = rootModel;
+            return result;
+        }
+
+        public static MessageConveyor CreateNew(RootModel rootModel)
+        {
+            var result = new MessageConveyor(new MccpClient()) { RootModel = rootModel };
+            return result;
         }
 
         #endregion
@@ -104,72 +98,22 @@ namespace Adan.Client.Common.Conveyor
         /// <summary>
         /// 
         /// </summary>
-        public static IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByCommandType
+        public IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByCommandType
         {
             get
             {
-                if (_conveyorUnitsByCommandType == null)
-                    _conveyorUnitsByCommandType = new Dictionary<int, IList<ConveyorUnit>>();
-
                 return _conveyorUnitsByCommandType;
             }
-            set
-            {
-                _conveyorUnitsByCommandType = value;
-            }
         }
 
         /// <summary>
         /// 
         /// </summary>
-        public static IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByMessageType
+        public IDictionary<int, IList<ConveyorUnit>> ConveyorUnitsByMessageType
         {
             get
             {
-                if (_conveyorUnitsByMessageType == null)
-                    _conveyorUnitsByMessageType = new Dictionary<int, IList<ConveyorUnit>>();
-
                 return _conveyorUnitsByMessageType;
-            }
-            set
-            {
-                _conveyorUnitsByMessageType = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static IList<CommandSerializer> CommandSerializers
-        {
-            get
-            {
-                if (_commandSerializers == null)
-                    _commandSerializers = new List<CommandSerializer>();
-
-                return _commandSerializers;
-            }
-            set
-            {
-                _commandSerializers = value;
-            }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public static IList<MessageDeserializer> MessageDeserializers
-        {
-            get
-            {
-                if (_messageDeserializers == null)
-                    _messageDeserializers = new List<MessageDeserializer>();
-
-                return _messageDeserializers;
-            }
-            set
-            {
-                _messageDeserializers = value;
             }
         }
 
@@ -178,14 +122,8 @@ namespace Adan.Client.Common.Conveyor
         /// </summary>
         public RootModel RootModel
         {
-            get
-            {
-                return _rootModel;
-            }
-            set
-            {
-                _rootModel = value;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -214,29 +152,30 @@ namespace Adan.Client.Common.Conveyor
         /// Adds the command serializer.
         /// </summary>
         /// <param name="commandSerializer">The command serializer to add.</param>
-        public static void AddCommandSerializer([NotNull] CommandSerializer commandSerializer)
+        public void AddCommandSerializer([NotNull] CommandSerializer commandSerializer)
         {
             Assert.ArgumentNotNull(commandSerializer, "commandSerializer");
 
-            CommandSerializers.Add(commandSerializer);
+            _currentCommandSerializers.Add(commandSerializer);
         }
 
         /// <summary>
         /// Adds the message deserializer.
         /// </summary>
         /// <param name="messageDeserializer">The message deserializer to add.</param>
-        public static void AddMessageDeserializer([NotNull] MessageDeserializer messageDeserializer)
+        public void AddMessageDeserializer([NotNull] MessageDeserializer messageDeserializer)
         {
             Assert.ArgumentNotNull(messageDeserializer, "messageDeserializer");
 
-            MessageDeserializers.Add(messageDeserializer);
+            _currentMessageDeserializers.Add(messageDeserializer);
+
         }
 
         /// <summary>
         /// Adds the conveyor unit.
         /// </summary>
         /// <param name="conveyorUnit">The conveyor unit.</param>
-        public static void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit)
+        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit)
         {
             Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
 
@@ -259,10 +198,12 @@ namespace Adan.Client.Common.Conveyor
 
                 ConveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
             }
+
+            _allConveyorUnits.Add(conveyorUnit);
         }
 
 
-        public static void ImportJMC(string line, RootModel rootModel)
+        public void ImportJMC(string line, RootModel rootModel)
         {
             var command = new TextCommand(line);
             if (ConveyorUnitsByCommandType.ContainsKey(command.CommandType))
@@ -271,7 +212,7 @@ namespace Adan.Client.Common.Conveyor
                 {
                     try
                     {
-                        conveyorUnit.HandleCommand(command, rootModel, true);
+                        conveyorUnit.HandleCommand(command, true);
                     }
                     catch { }
 
@@ -337,7 +278,7 @@ namespace Adan.Client.Common.Conveyor
                 {
                     foreach (var conveyorUnit in ConveyorUnitsByCommandType[command.CommandType])
                     {
-                        conveyorUnit.HandleCommand(command, _rootModel);
+                        conveyorUnit.HandleCommand(command);
                         if (command.Handled)
                         {
                             break;
@@ -377,7 +318,7 @@ namespace Adan.Client.Common.Conveyor
                 {
                     foreach (var conveyorUnit in ConveyorUnitsByMessageType[message.MessageType])
                     {
-                        conveyorUnit.HandleMessage(message, _rootModel);
+                        conveyorUnit.HandleMessage(message);
                         if (message.Handled)
                         {
                             break;
@@ -426,10 +367,15 @@ namespace Adan.Client.Common.Conveyor
         /// </summary>
         public void Dispose()
         {
-            if(_mccpClient != null)
+            if (_mccpClient != null)
+            {
                 _mccpClient.Dispose();
+            }
 
-            GC.SuppressFinalize(this);
+            foreach (var conveyorUnit in _allConveyorUnits)
+            {
+                conveyorUnit.Dispose();
+            }
         }
 
         #endregion
@@ -442,7 +388,7 @@ namespace Adan.Client.Common.Conveyor
             Assert.ArgumentNotNull(e, "e");
 
             try
-            {                
+            {
                 int offset = e.Offset;
                 int bytesRecieved = e.BytesReceived;
                 byte[] data = e.GetData();
@@ -451,8 +397,8 @@ namespace Adan.Client.Common.Conveyor
                 for (int i = 0; i < bytesRecieved; i++)
                 {
                     // removing double IAC and processing IAC GA
-                    if (i < bytesRecieved - 1 
-                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                    if (i < bytesRecieved - 1
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
                         && data[offset + i + 1] == TelnetConstants.InterpretAsCommandCode)
                     {
                         _buffer[actualBytesReceived] = TelnetConstants.InterpretAsCommandCode;
@@ -461,8 +407,8 @@ namespace Adan.Client.Common.Conveyor
                         continue;
                     }
 
-                    if (i < bytesRecieved - 1 
-                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                    if (i < bytesRecieved - 1
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
                         && data[offset + i + 1] == TelnetConstants.GoAheadCode)
                     {
                         // new line
@@ -473,9 +419,9 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling echo mode on
-                    if (i < bytesRecieved - 2 
-                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
-                        && data[offset + i + 1] == TelnetConstants.WillCode 
+                    if (i < bytesRecieved - 2
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
+                        && data[offset + i + 1] == TelnetConstants.WillCode
                         && data[offset + i + 2] == TelnetConstants.EchoCode)
                     {
                         PushMessage(new ChangeEchoModeMessage(false));
@@ -484,8 +430,8 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling echo mode off
-                    if (i < bytesRecieved - 2 
-                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
+                    if (i < bytesRecieved - 2
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
                         && data[offset + i + 1] == TelnetConstants.WillNotCode
                         && data[offset + i + 2] == TelnetConstants.EchoCode)
                     {
@@ -495,9 +441,9 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling custom message header
-                    if (i < bytesRecieved - 3 
-                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode 
-                        && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode 
+                    if (i < bytesRecieved - 3
+                        && data[offset + i] == TelnetConstants.InterpretAsCommandCode
+                        && data[offset + i + 1] == TelnetConstants.SubNegotiationStartCode
                         && data[offset + i + 2] == TelnetConstants.CustomProtocolCode)
                     {
                         var messageType = data[offset + i + 3];
@@ -509,7 +455,7 @@ namespace Adan.Client.Common.Conveyor
                     }
 
                     // handling custom message footer
-                    if (i < bytesRecieved - 1 
+                    if (i < bytesRecieved - 1
                         && data[offset + i] == TelnetConstants.InterpretAsCommandCode
                         && data[offset + i + 1] == TelnetConstants.SubNegotiationEndCode)
                     {

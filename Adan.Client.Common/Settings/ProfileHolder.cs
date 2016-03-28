@@ -1,10 +1,7 @@
-﻿using Adan.Client.Common.Conveyor;
-using Adan.Client.Common.Messages;
-using Adan.Client.Common.Model;
+﻿using Adan.Client.Common.Model;
 using Adan.Client.Common.Utils;
 using CSLib.Net.Annotations;
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -99,7 +96,7 @@ namespace Adan.Client.Common.Settings
         {
             get
             {
-                if(_variables == null)
+                if (_variables == null)
                     ReadVariables();
 
                 return _variables;
@@ -164,49 +161,16 @@ namespace Adan.Client.Common.Settings
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="file"></param>
-        /// <param name="profile"></param>
-        public static void ImportJmcConfig(string file, ProfileHolder profile)
-        {
-            if (!File.Exists(file))
-                return;
-
-            RootModel rootModel = new RootModel(profile);
-                    try
-                    {
-                        using (var stream = new StreamReader(file, Encoding.Default, false, 1024))
-                        {
-                            string line;
-                            while ((line = stream.ReadLine()) != null)
-                            {
-                                //XML не читает символ \x01B
-                                //TODO: Need FIX IT
-                                if (!line.Contains("\x001B"))
-                                {
-                                    //rootModel.PushCommandToConveyor(new TextCommand(line))
-                                    MessageConveyor.ImportJMC(line, rootModel);
-                                }
-                            }
-                        }
-                    }
-                    catch 
-                    {
-                    }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
         /// <returns></returns>
         public ProfileHolder Clone()
         {
             return new ProfileHolder(this.Name)
-                {
-                    _groups = new List<Group>(this.Groups),
-                    _variables = new List<Variable>(this.Variables),
-                    CommonSettings = this.CommonSettings,
-                    CommandsHistory = new List<string>(this.CommandsHistory),
-                };
+            {
+                _groups = new List<Group>(this.Groups),
+                _variables = new List<Variable>(this.Variables),
+                CommonSettings = this.CommonSettings,
+                CommandsHistory = new List<string>(this.CommandsHistory),
+            };
         }
 
         #endregion
@@ -404,7 +368,7 @@ namespace Adan.Client.Common.Settings
                 try
                 {
                     var serializer = new XmlSerializer(typeof(List<string>));
-                    CommandsHistory = (List<string>) serializer.Deserialize(stream);
+                    CommandsHistory = (List<string>)serializer.Deserialize(stream);
                 }
                 catch (Exception ex)
                 {
@@ -456,8 +420,8 @@ namespace Adan.Client.Common.Settings
                 {
                     Directory.CreateDirectory(dir);
                 }
-                catch (Exception ex) 
-                { 
+                catch (Exception ex)
+                {
                     ErrorLogger.Instance.Write(string.Format("Error create settings directory: {0}\r\n{1}", ex.Message, ex.StackTrace));
                 }
             }

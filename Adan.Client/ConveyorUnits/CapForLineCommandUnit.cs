@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Adan.Client.Common.Commands;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.ConveyorUnits;
-using Adan.Client.Common.Model;
 using Adan.Client.Common.Settings;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
@@ -17,11 +14,8 @@ namespace Adan.Client.ConveyorUnits
     /// </summary>
     public class CapForLineCommandUnit : ConveyorUnit
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        public CapForLineCommandUnit()
-            : base()
+        public CapForLineCommandUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -47,13 +41,7 @@ namespace Adan.Client.ConveyorUnits
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand([NotNull] Command command, [NotNull] RootModel rootModel, bool isImport = false)
+        public override void HandleCommand([NotNull] Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 

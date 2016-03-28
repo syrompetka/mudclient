@@ -1,18 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextMessageDeserializer.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the TextMessage type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.MessageDeserializers
+﻿namespace Adan.Client.MessageDeserializers
 {
     #region Namespace Imports
 
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Text;
@@ -29,7 +19,6 @@ namespace Adan.Client.MessageDeserializers
     /// <summary>
     /// Plain text message processor.
     /// </summary>
-    /// TODO: Проверить работу
     public class TextMessageDeserializer : MessageDeserializer
     {
         #region Constants and Fields
@@ -58,6 +47,11 @@ namespace Adan.Client.MessageDeserializers
         private char _secondEscapeParamChar;
 
         #endregion
+
+
+        public TextMessageDeserializer(MessageConveyor conveyor) : base(conveyor)
+        {
+        }
 
         #region Properties
 
@@ -165,16 +159,7 @@ namespace Adan.Client.MessageDeserializers
                 currentDataBufferPosition++;
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public override MessageDeserializer NewInstance()
-        {
-            return new TextMessageDeserializer();
-        }
-
+        
         #endregion
 
         #region Methods

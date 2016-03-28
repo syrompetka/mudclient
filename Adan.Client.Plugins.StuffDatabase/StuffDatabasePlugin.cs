@@ -1,43 +1,21 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StuffDatabasePlugin.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the StuffDatabasePlugin type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.StuffDatabase
+﻿namespace Adan.Client.Plugins.StuffDatabase
 {
-    using System;
-    using System.Collections.Generic;
     using System.ComponentModel.Composition;
-    using System.Linq;
     using System.Windows;
-
     using Common.Conveyor;
-    using Common.ConveyorUnits;
-    using Common.MessageDeserializers;
     using Common.Model;
     using Common.Plugins;
-
+    using Common.ViewModel;
+    using ConveyorUnits;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.StuffDatabase.MessageDeserializers;
-    using Adan.Client.Plugins.StuffDatabase.ConveyorUnits;
-    using Adan.Client.Common.ViewModel;
+    using MessageDeserializers;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to save stuff stats.
     /// </summary>
     [Export(typeof(PluginBase))]
-    public sealed class StuffDatabasePlugin : PluginBase, IDisposable
+    public sealed class StuffDatabasePlugin : PluginBase
     {
-        private MessageDeserializer _deserializer;
-        private ConveyorUnit _conveyorUnit;
-        
-        /// <summary>
-        /// 
-        /// </summary>
         public override string Name
         {
             get 
@@ -45,27 +23,11 @@ namespace Adan.Client.Plugins.StuffDatabase
                 return "StuffDatabase";
             }
         }
-
-        /// <summary>
-        /// Gets the message deserializers that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<MessageDeserializer> MessageDeserializers
+        
+        public override void InitializeConveyor(MessageConveyor conveyor)
         {
-            get
-            {
-                return Enumerable.Repeat(_deserializer, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Repeat(_conveyorUnit, 1);
-            }
+            conveyor.AddConveyorUnit(new StuffDatabaseUnit(conveyor));
+            conveyor.AddMessageDeserializer(new LoreMessageDeserializer(conveyor));
         }
 
         /// <summary>
@@ -79,9 +41,6 @@ namespace Adan.Client.Plugins.StuffDatabase
 
             initializationStatusModel.CurrentPluginName = "Stuff database";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
-
-            _deserializer = new LoreMessageDeserializer();
-            _conveyorUnit = new StuffDatabaseUnit();
         }
     }
 }

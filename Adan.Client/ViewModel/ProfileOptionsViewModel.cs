@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows;
@@ -9,6 +10,7 @@ using Adan.Client.Common.Settings;
 using Adan.Client.Common.Utils;
 using Adan.Client.Common.ViewModel;
 using Adan.Client.Dialogs;
+using Adan.Client.Model;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
 using Microsoft.Win32;
@@ -234,7 +236,31 @@ namespace Adan.Client.ViewModel
             var result = fileDialog.ShowDialog();
             if (result.HasValue && result.Value)
             {
-                ProfileHolder.ImportJmcConfig(fileDialog.FileName, Profile);
+                if (!File.Exists(fileDialog.FileName))
+                    return;
+
+                RootModel rootModel = new RootModel(Profile);
+                try
+                {
+                    using (var stream = new StreamReader(fileDialog.FileName, Encoding.Default, false, 1024))
+                    {
+                        string line;
+                        while ((line = stream.ReadLine()) != null)
+                        {
+                            //XML не читает символ \x01B
+                            //TODO: Need FIX IT
+                            if (!line.Contains("\x001B"))
+                            {
+                                //rootModel.PushCommandToConveyor(new TextCommand(line))
+                                ConveyorFactory.CreateNew(rootModel).ImportJMC(line, rootModel);
+                            }
+                        }
+                    }
+                }
+                catch
+                {
+                }
+
                 _groupsViewModel = new GroupsViewModel(Profile.Groups, Profile.Name, RootModel.AllActionDescriptions);
             }
         }

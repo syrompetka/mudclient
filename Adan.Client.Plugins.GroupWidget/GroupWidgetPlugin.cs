@@ -1,36 +1,24 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GroupWidgetPlugin.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the GroupWidgetPlugin type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget
+﻿namespace Adan.Client.Plugins.GroupWidget
 {
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition;
     using System.Linq;
     using System.Windows;
-
-    using Adan.Client.Common.Conveyor;
-    using Adan.Client.Common.ConveyorUnits;
-    using Adan.Client.Common.MessageDeserializers;
-    using Adan.Client.Common.Model;
-    using Adan.Client.Common.Plugins;
-    using Adan.Client.Common.ViewModel;
-
-    using CSLib.Net.Diagnostics;
-
-    using Adan.Client.Plugins.GroupWidget.Properties;
-    using Adan.Client.Plugins.GroupWidget.ViewModel;
-    using Adan.Client.Plugins.GroupWidget.MessageDeserializers;
-    using Adan.Client.Plugins.GroupWidget.ConveyorUnits;
-    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
-    using Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions;
+    using Common.Conveyor;
+    using Common.ConveyorUnits;
+    using Common.MessageDeserializers;
+    using Common.Model;
+    using Common.Plugins;
+    using Common.ViewModel;
+    using ConveyorUnits;
     using CSLib.Net.Annotations;
+    using CSLib.Net.Diagnostics;
+    using MessageDeserializers;
+    using Model.ActionParameters;
+    using Model.ParameterDescriptions;
+    using Properties;
+    using ViewModel;
 
     /// <summary>
     /// <see cref="PluginBase"/> implementation to display group widget.
@@ -38,12 +26,10 @@ namespace Adan.Client.Plugins.GroupWidget
     [Export(typeof(PluginBase))]
     public sealed class GroupWidgetPlugin : PluginBase, IDisposable
     {
-        private GroupStatusViewModel _viewModel;
-        private GroupWidgetControl _groupWidgetControl;
+        private readonly GroupStatusViewModel _viewModel;
+        private readonly GroupWidgetControl _groupWidgetControl;
 
         private GroupManager _groupManager;
-        private MessageDeserializer _deserializer;
-        private ConveyorUnit _conveyorUnit;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupWidgetPlugin"/> class.
@@ -51,7 +37,7 @@ namespace Adan.Client.Plugins.GroupWidget
         public GroupWidgetPlugin()
         {
             _viewModel = new GroupStatusViewModel();
-            _groupWidgetControl = new GroupWidgetControl() { DataContext = _viewModel };
+            _groupWidgetControl = new GroupWidgetControl { DataContext = _viewModel };
         }
 
         /// <summary>
@@ -76,30 +62,8 @@ namespace Adan.Client.Plugins.GroupWidget
                 {
                     Left = 400,
                     Height = 450,
-                    Width = 300,
+                    Width = 300
                 }, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the message deserializers that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<MessageDeserializer> MessageDeserializers
-        {
-            get
-            {
-                return Enumerable.Repeat(_deserializer, 1);
-            }
-        }
-
-        /// <summary>
-        /// Gets the conveyor units that this plugin exposes.
-        /// </summary>
-        public override IEnumerable<ConveyorUnit> ConveyorUnits
-        {
-            get
-            {
-                return Enumerable.Repeat(_conveyorUnit, 1);
             }
         }
 
@@ -126,6 +90,12 @@ namespace Adan.Client.Plugins.GroupWidget
             {
                 return Resources.GroupWidgetOptions;
             }
+        }
+
+        public override void InitializeConveyor(MessageConveyor conveyor)
+        {
+            conveyor.AddConveyorUnit(new GroupStatusUnit(_groupWidgetControl, conveyor));
+            conveyor.AddMessageDeserializer(new GroupStatusMessageDeserializer(conveyor));
         }
 
         /// <summary>
@@ -174,9 +144,7 @@ namespace Adan.Client.Plugins.GroupWidget
             initializationStatusModel.CurrentPluginName = Resources.Group;
             initializationStatusModel.PluginInitializationStatus = "Initializing";
 
-            _deserializer = new GroupStatusMessageDeserializer();
             _groupManager = new GroupManager(_groupWidgetControl);
-            _conveyorUnit = new GroupStatusUnit(_groupWidgetControl);
         }
 
         /// <summary>

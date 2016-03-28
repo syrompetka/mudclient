@@ -1,23 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CommandMultiplierUnit.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the CommandMultiplierUnit type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.ConveyorUnits
+﻿namespace Adan.Client.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Adan.Client.Common.Model;
+    using Common.Model;
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
-    using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
     /// <summary>
@@ -30,8 +20,8 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandMultiplierUnit"/> class.
         /// </summary>
-        public CommandMultiplierUnit()
-            : base()
+        public CommandMultiplierUnit(MessageConveyor conveyor)
+            : base(conveyor)
         {
         }
 
@@ -56,14 +46,8 @@ namespace Adan.Client.ConveyorUnits
                 return new[] { BuiltInCommandTypes.TextCommand };
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -88,7 +72,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     for (int i = 0; i < count; i++)
                     {
-                        PushCommandToConveyor(new TextCommand(str), rootModel);
+                        PushCommandToConveyor(new TextCommand(str));
                     }
                 }
             }

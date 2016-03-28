@@ -1,18 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RouteUnit.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the RouteUnit type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Map.ConveyorUnits
+﻿namespace Adan.Client.Map.ConveyorUnits
 {
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
-    using Adan.Client.Common.Model;
     using Common.Commands;
     using Common.Conveyor;
     using Common.ConveyorUnits;
@@ -27,14 +16,13 @@ namespace Adan.Client.Map.ConveyorUnits
     {
         private readonly RouteManager _routeManager;
 
-        private readonly char[] _splitChars = new char[] { ' ' };
+        private readonly char[] _splitChars = { ' ' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteUnit"/> class.
         /// </summary>
-        /// <param name="routeManager">The route manager.</param>
-        public RouteUnit([NotNull] RouteManager routeManager)
-            : base()
+        public RouteUnit([NotNull] RouteManager routeManager, MessageConveyor conveyor)
+            : base(conveyor)
         {
             Assert.ArgumentNotNull(routeManager, "routeManager");
 
@@ -62,14 +50,8 @@ namespace Adan.Client.Map.ConveyorUnits
                 return Enumerable.Repeat(BuiltInCommandTypes.TextCommand, 1);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="command"></param>
-        /// <param name="rootModel"></param>
-        /// <param name="isImport"></param>
-        public override void HandleCommand(Command command, RootModel rootModel, bool isImport = false)
+        
+        public override void HandleCommand(Command command, bool isImport = false)
         {
             Assert.ArgumentNotNull(command, "command");
 
@@ -163,7 +145,6 @@ namespace Adan.Client.Map.ConveyorUnits
                 _routeManager.StopRoutingToDestination();
 
                 command.Handled = true;
-                return;
             }
         }
     }
