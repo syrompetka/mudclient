@@ -107,7 +107,6 @@ namespace Adan.Client.Common.Themes
         {
             if (color == TextColor.None)
             {
-                //return isBackground ? Brushes.Black : _defaultTextColor;
                 return isBackground ? DefaultBackGroundBrush : DefaultTextBrush;
             }
 

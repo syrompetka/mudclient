@@ -12,7 +12,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     using System.Collections.Generic;
 
     using Common.Model;
-
+    using Common.Themes;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
 
@@ -24,16 +24,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="MonsterViewModel"/> class.
         /// </summary>
-        /// <param name="monsterStatus">The monster status.</param>
-        /// <param name="affectsToDisplay">The affects to display.</param>
-        public MonsterViewModel([NotNull] MonsterStatus monsterStatus, [NotNull] IEnumerable<AffectDescription> affectsToDisplay)
-            : base(monsterStatus, affectsToDisplay)
+        public MonsterViewModel([NotNull] MonsterStatus monsterStatus, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number)
+            : base(monsterStatus, affectsToDisplay, number)
         {
             Assert.ArgumentNotNull(monsterStatus, "monsterStatus");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
 
             MonsterStatus = monsterStatus;
         }
+
 
         /// <summary>
         /// Gets the monster status.
@@ -68,6 +67,13 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
         }
 
+        public TextColor PlayerCharacterColor
+        {
+            get
+            {
+                return TextColor.BrightRed;
+            }
+        }
         /// <summary>
         /// Gets or sets a value indicating whether this monster is boss.
         /// </summary>
@@ -94,8 +100,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Updates this view model from model.
         /// </summary>
-        /// <param name="characterStatus">The character status model.</param>
-        public override void UpdateFromModel(CharacterStatus characterStatus)
+        public override void UpdateFromModel(CharacterStatus characterStatus, int position)
         {
             Assert.ArgumentNotNull(characterStatus, "characterStatus");
             var monsterStatus = characterStatus as MonsterStatus;
@@ -105,7 +110,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 Boss = monsterStatus.IsBoss;
             }
 
-            base.UpdateFromModel(characterStatus);
+            base.UpdateFromModel(characterStatus, position);
         }
     }
 }

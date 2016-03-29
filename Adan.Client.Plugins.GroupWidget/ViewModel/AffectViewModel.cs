@@ -22,6 +22,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class AffectViewModel : ViewModelBase
     {
+        private readonly int _priority;
         private string _displayIcon;
         private float _lastServerDuration;
         private bool _isBlinking;
@@ -37,11 +38,11 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="AffectViewModel"/> class.
         /// </summary>
-        /// <param name="affectDescription">The affect description.</param>
-        public AffectViewModel([NotNull] AffectDescription affectDescription)
+        public AffectViewModel([NotNull] AffectDescription affectDescription, int priority)
         {
-            AffectDescription = affectDescription;
             Assert.ArgumentNotNull(affectDescription, "affectDescription");
+            _priority = priority;
+            AffectDescription = affectDescription;
         }
 
         /// <summary>
@@ -199,6 +200,19 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
         }
 
+        public int Priority
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(DisplayIcon))
+                {
+                    return int.MaxValue;
+                }
+
+                return _priority;
+            }
+        }
+
         /// <summary>
         /// Updates from view model from model.
         /// </summary>
@@ -230,7 +244,13 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
 
             var iconIndex = AffectDescription.AffectNames.IndexOf(affect.Name);
+            var oldDisplayIcon = DisplayIcon;
             DisplayIcon = iconIndex >= 0 ? AffectDescription.Icons[iconIndex] : string.Empty;
+            if (string.IsNullOrEmpty(oldDisplayIcon) && !string.IsNullOrEmpty(DisplayIcon))
+            {
+                OnPropertyChanged("Priority");
+            }
+
             RealAffectName = affect.Name;
         }
 
@@ -246,6 +266,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             RoundsLeftVisible = false;
             RealAffectName = string.Empty;
             IsBlinking = false;
+            OnPropertyChanged("Priority");
         }
 
         /// <summary>

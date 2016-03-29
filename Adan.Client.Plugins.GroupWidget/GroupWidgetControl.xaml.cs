@@ -18,8 +18,7 @@ namespace Adan.Client.Plugins.GroupWidget
     using CSLib.Net.Diagnostics;
 
     using ViewModel;
-    using Adan.Client.Plugins.GroupWidget.Messages;
-    using Adan.Client.Common.Model;
+    using Common.Model;
     using System.Collections.Generic;
     using System.Windows.Threading;
     using System.Windows;

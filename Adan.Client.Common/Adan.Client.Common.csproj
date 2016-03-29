@@ -78,6 +78,7 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ContorlBoxNative\TextBoxNative.cs" />
+    <Compile Include="Controls\NumberTextBox.cs" />
     <Compile Include="Controls\ScrollableFlowTextControl.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
     <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />

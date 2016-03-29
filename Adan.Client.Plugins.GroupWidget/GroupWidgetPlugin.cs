@@ -190,13 +190,16 @@
 
             var displayedAffects = Settings.Default.GroupWidgetAffects.Select(af => Constants.AllAffects.First(a => a.Name == af));
             var allAffects = Constants.AllAffects.Except(displayedAffects);
-            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.GroupWidgetOptions, allAffects, displayedAffects);
+            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.GroupWidgetOptions, allAffects, displayedAffects, Settings.Default.GroupWidgetDisplayAffectsCount, Settings.Default.GroupWidgetDisplayNumber, Settings.Default.GroupWidgetDisplayMemTime, true);
             var window = new OptionsDialog { DataContext = optionsViewModel, Owner = parentWindow };
             var result = window.ShowDialog();
 
             if (result.HasValue && result.Value)
             {
                 Settings.Default.GroupWidgetAffects = optionsViewModel.DisplayedAffects.Select(af => af.Name).ToArray();
+                Settings.Default.GroupWidgetDisplayAffectsCount = optionsViewModel.DisplayedAffectsCount;
+                Settings.Default.GroupWidgetDisplayNumber = optionsViewModel.DisplayNumber;
+                Settings.Default.GroupWidgetDisplayMemTime = optionsViewModel.DisplayMemTime;
                 Settings.Default.Save();
                 _viewModel.ReloadDisplayedAffects();
             }

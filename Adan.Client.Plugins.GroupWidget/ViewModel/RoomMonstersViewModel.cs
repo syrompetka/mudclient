@@ -30,7 +30,9 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     {
         private readonly DispatcherTimer _tickingTimer;
 
-        private IList<string> _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
+        private IList<string> _displayedAffectPriorities = new List<string>(Settings.Default.MonsterAffects);
+        private int _displayedAffectCount = Settings.Default.MonsterDisplayAffectsCount;
+        private bool _displayNumber = Settings.Default.MonsterDisplayNumber;
         private MonsterViewModel _selectedMonster;
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
-            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 155;
+            MinimumWidth = (29 * _displayedAffectPriorities.Count) + 26 + 26 + 31 + 60 + 155;
         }
 
         /// <summary>
@@ -56,9 +58,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             private set;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public RootModel RootModel
         {
             get;
@@ -82,7 +81,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedMonster = value;
-                if(RootModel != null)
+                if (RootModel != null)
                     RootModel.SelectedRoomMonster = value != null ? value.MonsterStatus : null;
                 OnPropertyChanged("SelectedMonster");
             }
@@ -98,6 +97,26 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             private set;
         }
 
+        public int DisplayedAffectCount
+        {
+            get { return _displayedAffectCount; }
+            set
+            {
+                _displayedAffectCount = value;
+                OnPropertyChanged("DisplayedAffectCount");
+            }
+        }
+
+        public bool DisplayNumber
+        {
+            get { return _displayNumber; }
+            set
+            {
+                _displayNumber = value;
+                OnPropertyChanged("DisplayNumber");
+            }
+        }
+
         /// <summary>
         /// Updates the model.
         /// </summary>
@@ -111,12 +130,12 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             {
                 if (position < Monsters.Count && Monsters[position].Name == monster.Name)
                 {
-                    Monsters[position].UpdateFromModel(monster);
+                    Monsters[position].UpdateFromModel(monster, position + 1);
                 }
                 else
                 {
-                    var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    Monsters.Insert(position, new MonsterViewModel(monster, affectsList));
+                    var affectsList = _displayedAffectPriorities.Select(af => Constants.AllAffects.First(a => a.Name == af));
+                    Monsters.Insert(position, new MonsterViewModel(monster, affectsList, position + 1) {DisplayNumber = DisplayNumber});
                 }
 
                 position++;
@@ -135,11 +154,13 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         public void ReloadDisplayedAffects()
         {
             Monsters.Clear();
-            _displayedAffectNames = new List<string>(Settings.Default.MonsterAffects);
-            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 155;
+            _displayedAffectPriorities = new List<string>(Settings.Default.MonsterAffects);
+            DisplayNumber = Settings.Default.GroupWidgetDisplayNumber;
+            DisplayedAffectCount = Settings.Default.MonsterDisplayAffectsCount;
+            MinimumWidth = (29 * DisplayedAffectCount) + 26 + 26 + 31 + 60 + 155;
             OnPropertyChanged("MinimumWidth");
         }
-        
+
         private void UpdateTimings()
         {
             foreach (var monster in Monsters)

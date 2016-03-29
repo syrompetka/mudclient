@@ -12,8 +12,7 @@
              MinHeight="30"
              MinWidth="{Binding MinimumWidth}">
     <UserControl.Resources>
-        <ResourceDictionary Source="Resources.xaml"
-                            x:Key="WidgetResources" />
+        <ResourceDictionary Source="Resources.xaml"/>
     </UserControl.Resources>
     <StackPanel>
         <ListBox ItemsSource="{Binding Monsters}"
@@ -129,43 +128,65 @@
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Height="26"
+                    <StackPanel Height="16"
                                 Name="ItemStack"
                                 HorizontalAlignment="Stretch"
                                 Margin="0,0,5,0"
                                 Orientation="Horizontal"
                                 Background="Transparent">
-                        <TextBlock Text="{Binding Name}"
-                                   Width="150"
-                                   FontSize="17"
+                        <TextBlock Text="{Binding Number, StringFormat=\{0\}\.}"
+                                   Width="22"
+                                   FontSize="10pt"
+                                   FontFamily="Lucida Console"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Right"
+                                   Foreground="{DynamicResource GlyphBrush}"
+                                   Visibility="{Binding DisplayNumber, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Margin="0,0,0,0"
+                                    />
+                        <StackPanel Width="140" Orientation="Horizontal">
+                            <TextBlock Text="{Binding Name}"
+                                   FontSize="11pt"
                                    FontFamily="Lucida Console"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Left"
                                    TextTrimming="CharacterEllipsis"
-                                   Foreground="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" />
+                                   Foreground="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" 
+                                   MaxWidth="135"
+                                   Margin="0,0,0,0"/>
+                            <TextBlock Text="*"
+                                   FontSize="11pt"
+                                   FontFamily="Lucida Console"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Left"
+                                   Foreground="{Binding PlayerCharacterColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
+                                   Visibility="{Binding PlayerCharacter, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                   Margin="0,0,0,0"
+                                    />
+                        </StackPanel>
                         <Grid Width="60">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="*" />
-                                <RowDefinition Height="*" />
+                                <RowDefinition Height="12" />
+                                <RowDefinition Height="4" />
                             </Grid.RowDefinitions>
                             <Border Width="60"
                                     HorizontalAlignment="Left"
-                                    Height="13"
+                                    Height="12"
                                     Grid.Row="0"
                                     Background="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
                                     Panel.ZIndex="0" />
                             <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=HitsPercent}"
                                     HorizontalAlignment="Left"
-                                    Height="13"
+                                    Height="12"
                                     Grid.Row="0"
                                     Panel.ZIndex="1">
                                 <Border.Background>
                                     <LinearGradientBrush EndPoint="0.5,1"
                                                          StartPoint="0.5,0">
-                                        <GradientStop Color="#FFBA0202" />
+                                        <GradientStop Color="#FF226E01" />
                                         <GradientStop Color="White"
                                                       Offset="0.5" />
-                                        <GradientStop Color="#FFBA0202"
+                                        <GradientStop Color="#FF226E01"
                                                       Offset="1" />
                                     </LinearGradientBrush>
                                 </Border.Background>
@@ -180,34 +201,26 @@
                                        Panel.ZIndex="1" />
                             <Border Width="60"
                                     HorizontalAlignment="Left"
-                                    Height="13"
+                                    Height="4"
                                     Grid.Row="1"
                                     Background="{Binding MovesColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
                                     Panel.ZIndex="0" />
                             <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=MovesPercent}"
                                     HorizontalAlignment="Left"
-                                    Height="13"
+                                    Height="4"
                                     Grid.Row="1"
                                     Panel.ZIndex="1">
                                 <Border.Background>
                                     <LinearGradientBrush EndPoint="0.5,1"
                                                          StartPoint="0.5,0">
-                                        <GradientStop Color="#FF226E01" />
+                                        <GradientStop Color="#FFBA0202" />
                                         <GradientStop Color="White"
                                                       Offset="0.5" />
-                                        <GradientStop Color="#FF226E01"
+                                        <GradientStop Color="#FFBA0202"
                                                       Offset="1" />
                                     </LinearGradientBrush>
                                 </Border.Background>
                             </Border>
-                            <TextBlock Text="{Binding Path=MovesPercent, StringFormat=\{0\,4:##0\\%\}}"
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       Foreground="Black"
-                                       FontFamily="Lucida Console"
-                                       FontSize="11"
-                                       Grid.Row="1"
-                                       Panel.ZIndex="1" />
                         </Grid>
                         <Image Style="{StaticResource SmallIcon}"
                                Margin="5,0,0,0"
@@ -218,7 +231,7 @@
                                SnapsToDevicePixels="True"
                                Source="{Binding IsAttacked, Converter={StaticResource AttackedToIconConverter}, NotifyOnTargetUpdated=True}">
                         </Image>
-                        <ItemsControl ItemsSource="{Binding Path=Affects}"
+                        <ItemsControl ItemsSource="{Binding Path=AffectsSortedAndFiltered}"
                                       VerticalAlignment="Stretch"
                                       HorizontalAlignment="Stretch">
                             <ItemsControl.ItemsPanel>
@@ -249,8 +262,8 @@
                                             </DataTrigger.ExitActions>
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
-                                    <Grid Width="26"
-                                          Height="26"
+                                    <Grid Width="16"
+                                          Height="16"
                                           Margin="3,0,0,0">
                                         <Grid.ToolTip>
                                             <StackPanel Orientation="Horizontal">

@@ -10,8 +10,9 @@
 namespace Adan.Client.Plugins.GroupWidget.ViewModel
 {
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-
+    using System.ComponentModel;
+    using System.Linq;
+    using System.Windows.Data;
     using Common.Model;
     using Common.Themes;
     using Common.ViewModel;
@@ -33,22 +34,28 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupMateViewModel"/> class.
         /// </summary>
-        /// <param name="groupMate">The group mate.</param>
-        /// <param name="affectsToDisplay">The affects to display.</param>
-        public GroupMateViewModel([NotNull]CharacterStatus groupMate, [NotNull] IEnumerable<AffectDescription> affectsToDisplay)
+        public GroupMateViewModel([NotNull]CharacterStatus groupMate, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number)
         {
             Assert.ArgumentNotNull(groupMate, "groupMate");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
 
             GroupMate = groupMate;
+            Number = number;
             _hitsColor = GetColor(groupMate.HitsPercent);
             _movesColor = GetColor(groupMate.MovesPercent);
-            Affects = new ObservableCollection<AffectViewModel>();
+            Affects = new List<AffectViewModel>(affectsToDisplay.Count());
 
+            int priority = 0;
             foreach (var affectDescription in affectsToDisplay)
             {
-                Affects.Add(new AffectViewModel(affectDescription));
+                Affects.Add(new AffectViewModel(affectDescription, priority));
+                priority++;
             }
+
+            var affectsSortedAndFiltered = (ICollectionViewLiveShaping)CollectionViewSource.GetDefaultView(Affects);
+            affectsSortedAndFiltered.IsLiveSorting = true;
+            ((ICollectionView)affectsSortedAndFiltered).SortDescriptions.Add(new SortDescription() { Direction = ListSortDirection.Ascending, PropertyName = "Priority" });
+            AffectsSortedAndFiltered = (ICollectionView)affectsSortedAndFiltered;
         }
 
         /// <summary>
@@ -61,6 +68,10 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             private set;
         }
 
+        public int Number { get; private set; }
+
+        public bool DisplayNumber { get; set; }
+
         /// <summary>
         /// Gets the name of group mate.
         /// </summary>
@@ -71,6 +82,11 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             {
                 return GroupMate.Name;
             }
+        }
+
+        public TextColor TextColor
+        {
+            get { return TextColor.White; }
         }
 
         /// <summary>
@@ -249,17 +265,19 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// Gets the affects of this character.
         /// </summary>
         [NotNull]
-        public ObservableCollection<AffectViewModel> Affects
+        public IList<AffectViewModel> Affects
         {
             get;
             private set;
         }
 
+        [NotNull]
+        public ICollectionView AffectsSortedAndFiltered { get; private set; }
+
         /// <summary>
         /// Updates this view model from model.
         /// </summary>
-        /// <param name="characterStatus">The character status model.</param>
-        public virtual void UpdateFromModel([NotNull] CharacterStatus characterStatus)
+        public virtual void UpdateFromModel([NotNull] CharacterStatus characterStatus, int position)
         {
             Assert.ArgumentNotNull(characterStatus, "characterStatus");
 
@@ -275,7 +293,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             Position = characterStatus.Position;
             IsAttacked = characterStatus.IsAttacked;
             InSameRoom = characterStatus.InSameRoom;
-
+            Number = position;
             HitsColor = GetColor(HitsPercent);
             MovesColor = GetColor(MovesPercent);
 

@@ -12,6 +12,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using System.Configuration;
     using System.Linq;
     using System.Windows.Threading;
 
@@ -29,6 +30,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     public class GroupStatusViewModel : ViewModelBase
     {
         private readonly DispatcherTimer _tickingTimer;
+        private int _displayedAffectCount = Settings.Default.GroupWidgetDisplayAffectsCount;
+        private bool _displayNumber = Settings.Default.GroupWidgetDisplayNumber;
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
         private GroupMateViewModel _selectedGroupMate;
 
@@ -40,7 +43,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             GroupMates = new ObservableCollection<GroupMateViewModel>();
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
 
-            _tickingTimer =  new DispatcherTimer(DispatcherPriority.Background);
+            _tickingTimer = new DispatcherTimer(DispatcherPriority.Background);
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
@@ -73,6 +76,26 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             private set;
         }
 
+        public int DisplayedAffectCount
+        {
+            get { return _displayedAffectCount; }
+            set
+            {
+                _displayedAffectCount = value;
+                OnPropertyChanged("DisplayedAffectCount");
+            }
+        }
+
+        public bool DisplayNumber
+        {
+            get { return _displayNumber; }
+            set
+            {
+                _displayNumber = value;
+                OnPropertyChanged("DisplayNumber");
+            }
+        }
+
         /// <summary>
         /// Gets or sets the selected group mate.
         /// </summary>
@@ -90,7 +113,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             set
             {
                 _selectedGroupMate = value;
-                if(RootModel != null)
+                if (RootModel != null)
                     RootModel.SelectedGroupMate = value != null ? value.GroupMate : null;
                 OnPropertyChanged("SelectedGroupMate");
             }
@@ -119,12 +142,12 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             {
                 if (position < GroupMates.Count && GroupMates[position].Name == characterStatus.Name)
                 {
-                    GroupMates[position].UpdateFromModel(characterStatus);
+                    GroupMates[position].UpdateFromModel(characterStatus, position + 1);
                 }
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList));
+                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList, position + 1) {DisplayNumber = DisplayNumber});
                 }
 
                 position++;
@@ -133,22 +156,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             for (int i = position; i < GroupMates.Count; i++)
             {
                 GroupMates.RemoveAt(position);
-                //if (!GroupMates[i].IsDeleting)
-                //{
-                //    var groupMateToRemove = GroupMates[i];
-                //    groupMateToRemove.IsDeleting = true;
-
-                //    var timer = new DispatcherTimer(DispatcherPriority.SystemIdle);
-
-                //    timer.Tick += (o, e) =>
-                //                  {
-                //                      timer.Stop();
-                //                      //_rootModel.GroupStatus.Remove(groupMateToRemove.GroupMate);
-                //                      GroupMates.Remove(groupMateToRemove);
-                //                  };
-                //    timer.Interval = TimeSpan.FromSeconds(1);
-                //    timer.Start();
-                //}
             }
         }
 
@@ -160,6 +167,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             GroupMates.Clear();
             _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
             MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
+            DisplayNumber = Settings.Default.GroupWidgetDisplayNumber;
+            DisplayedAffectCount = Settings.Default.GroupWidgetDisplayAffectsCount;
             OnPropertyChanged("MinimumWidth");
         }
 

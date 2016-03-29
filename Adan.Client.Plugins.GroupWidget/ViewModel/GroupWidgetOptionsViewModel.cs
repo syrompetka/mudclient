@@ -23,6 +23,10 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
     /// </summary>
     public class GroupWidgetOptionsViewModel : ViewModelBase
     {
+        private int _displayedAffectsCount;
+        private bool _displayNumber;
+        private bool _displayMemTime;
+        private bool _allowChangeDisplayMemTime;
         private AffectDescription _selectedAvailableAffect;
         private bool _canAddDisplayedAffect;
         private AffectDescription _selectedDisplayedAffect;
@@ -33,12 +37,12 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupWidgetOptionsViewModel"/> class.
         /// </summary>
-        /// <param name="windowTitle">The window title.</param>
-        /// <param name="availableAffects">The avalable affects.</param>
-        /// <param name="displayedAffects">The displayed affects.</param>
-        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects,
-            [NotNull] IEnumerable<AffectDescription> displayedAffects)
+        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects, [NotNull] IEnumerable<AffectDescription> displayedAffects, int displayedAffectsCount, bool displayNumber, bool displayMemTime, bool allowChangeDisplayMemTime)
         {
+            _displayedAffectsCount = displayedAffectsCount;
+            _displayNumber = displayNumber;
+            _displayMemTime = displayMemTime;
+            _allowChangeDisplayMemTime = allowChangeDisplayMemTime;
             Assert.ArgumentNotNullOrWhiteSpace(windowTitle, "windowTitle");
             Assert.ArgumentNotNull(availableAffects, "availableAffects");
             Assert.ArgumentNotNull(displayedAffects, "displayedAffects");
@@ -245,6 +249,47 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get;
             private set;
+        }
+
+        public int DisplayedAffectsCount
+        {
+            get { return _displayedAffectsCount; }
+            set
+            {
+                _displayedAffectsCount = value;
+                OnPropertyChanged("DisplayedAffectsCount");
+            }
+        }
+
+
+        public bool DisplayNumber
+        {
+            get { return _displayNumber; }
+            set
+            {
+                _displayNumber = value;
+                OnPropertyChanged("DisplayNumber");
+            }
+        }
+
+        public bool DisplayMemTime
+        {
+            get { return _displayMemTime; }
+            set
+            {
+                _displayMemTime = value;
+                OnPropertyChanged("DisplayMemTime");
+            }
+        }
+
+        public bool AllowChangeDisplayMemTime
+        {
+            get { return _allowChangeDisplayMemTime; }
+            set
+            {
+                _allowChangeDisplayMemTime = value;
+                OnPropertyChanged("AllowChangeDisplayMemTime");
+            }
         }
 
         private void UpdateCommandsCanExecute()

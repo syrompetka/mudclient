@@ -10,7 +10,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
         Width="510"
         Height="300" 
-        xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common" Style="{StaticResource DefaultWindowStyle}" ShowInTaskbar="False">
+        xmlns:Utils="clr-namespace:Adan.Client.Common.Utils;assembly=Adan.Client.Common"
+        xmlns:controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+        Style="{StaticResource DefaultWindowStyle}" ShowInTaskbar="False">
     <Window.Resources>
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
@@ -39,13 +41,13 @@
                     <Controls:OneCharTextBox Text="{Binding Path=CommandDelimiter}" MaxLength="1" HorizontalAlignment="Left" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Width="21" Margin="115,39,0,0" Grid.Row="1"/>
                     <Label Content="Min string length in history" Grid.Column="1" HorizontalAlignment="Left" Margin="10,4,0,0" VerticalAlignment="Top" Height="13" Width="138"/>
                     <Label Content="History size" Grid.Column="1" HorizontalAlignment="Left" Margin="10,32,0,0" VerticalAlignment="Top" Height="13" Width="67"/>
-                    <Controls:NumberTextBox Text="{Binding Path=MinLengthHistory}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="207,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81"/>
-                    <Controls:NumberTextBox Text="{Binding Path=HistorySize}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Margin="207,32,23,0"/>
+                    <controls:NumberTextBox Text="{Binding Path=MinLengthHistory}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="207,4,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81"/>
+                    <controls:NumberTextBox Text="{Binding Path=HistorySize}" Height="23" TextWrapping="Wrap" VerticalAlignment="Top" Grid.Column="1" Margin="207,32,23,0"/>
                     <CheckBox IsChecked="{Binding Path=AutoClearInput}" Content="Auto clear input" Grid.Column="1" HorizontalAlignment="Left" Margin="10,48,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="107"/>
                     <CheckBox IsChecked="{Binding Path=AutoReconnect}" Content="Auto Reconnect" Grid.Column="1" HorizontalAlignment="Left" Margin="207,78,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="104"/>
                     <CheckBox IsChecked="{Binding Path=AutoConnect}" Content="Auto Connect" Grid.Column="1" HorizontalAlignment="Left" Margin="207,48,0,0" Grid.Row="1" VerticalAlignment="Top" Height="16" Width="104"/>
                     <Label Content="Scroll buffer" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.Row="1" Height="13" Width="67"/>
-                    <Controls:NumberTextBox Text="{Binding Path=ScrollBuffer}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="207,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" Grid.Row="1"/>
+                    <controls:NumberTextBox Text="{Binding Path=ScrollBuffer}" Grid.Column="1" HorizontalAlignment="Left" Height="23" Margin="207,5,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="81" Grid.Row="1"/>
                     <CheckBox IsChecked="{Binding Path=SettingsFolder}" Content="Save settings to My Documents" HorizontalAlignment="Left" Margin="10,78,0,0" Grid.Row="1" VerticalAlignment="Top" Grid.Column="1" Width="182"/>
                 </Grid>
             </TabItem>

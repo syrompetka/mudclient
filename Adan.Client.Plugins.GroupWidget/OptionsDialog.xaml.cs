@@ -9,7 +9,6 @@
 
 namespace Adan.Client.Plugins.GroupWidget
 {
-    using System;
     using System.Windows;
 
     using CSLib.Net.Annotations;

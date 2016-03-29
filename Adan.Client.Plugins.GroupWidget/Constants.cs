@@ -56,10 +56,9 @@ namespace Adan.Client.Plugins.GroupWidget
                                   new AffectDescription("Slowness", Resources.Slowness, "замедление", "Slowness") { IsRoundBased = true },
                                   new AffectDescription("StoneCurse", Resources.StoneCurse, "каменное проклятие", "StoneCurse"),
                                   new AffectDescription("EntsPower", Resources.EntsPower, "сила энтов", "EntsPower") { IsRoundBased = true },
-                                  new AffectDescription("Stun", Resources.Stun, "оглушение", "Stun") { IsRoundBased = true },
+                                  new AffectDescription("Stun", Resources.Stun, new List<string> {"оглушение", "иммуность к оглушению"},new List<string> { "Stun","StunImmune"}) { IsRoundBased = true },
                                   new AffectDescription("Weakness", Resources.Weakness, "слабость", "Weakness"),
                                   new AffectDescription("Tornado", Resources.Tornado, "торнадо", "Tornado") { IsRoundBased = true },
-                                  new AffectDescription("StunImmune", Resources.StunImmune, "иммуность к оглушению", "StunImmune") { IsRoundBased = true },
                               };
 
         /// <summary>
