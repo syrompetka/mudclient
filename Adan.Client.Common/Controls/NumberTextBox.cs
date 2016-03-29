@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Controls;
-
-namespace Adan.Client.Controls
+﻿namespace Adan.Client.Common.Controls
 {
+    using System;
+    using System.Windows.Controls;
+
     /// <summary>
     /// TextBox for only number
     /// </summary>

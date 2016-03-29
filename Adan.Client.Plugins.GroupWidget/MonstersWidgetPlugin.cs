@@ -172,12 +172,14 @@
 
             var displayedAffects = Settings.Default.MonsterAffects.Select(af => Constants.AllAffects.First(a => a.Name == af));
             var allAffects = Constants.AllAffects.Except(displayedAffects);
-            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.MonstersWidgetOptions, allAffects, displayedAffects);
+            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.MonstersWidgetOptions, allAffects, displayedAffects, Settings.Default.MonsterDisplayAffectsCount, Settings.Default.MonsterDisplayNumber, false, false);
             var window = new OptionsDialog { DataContext = optionsViewModel, Owner = parentWindow };
             var result = window.ShowDialog();
             if (result.HasValue && result.Value)
             {
                 Settings.Default.MonsterAffects = optionsViewModel.DisplayedAffects.Select(af => af.Name).ToArray();
+                Settings.Default.MonsterDisplayAffectsCount = optionsViewModel.DisplayedAffectsCount;
+                Settings.Default.MonsterDisplayNumber = optionsViewModel.DisplayNumber;
                 Settings.Default.Save();
                 _viewModel.ReloadDisplayedAffects();
             }

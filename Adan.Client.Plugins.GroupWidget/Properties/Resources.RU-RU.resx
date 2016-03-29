@@ -147,6 +147,15 @@
   <data name="DisplayedAffects" xml:space="preserve">
     <value>Отображаемые аффекты:</value>
   </data>
+  <data name="DisplayedAffectsCount" xml:space="preserve">
+    <value>Количество отображаемых аффектов:</value>
+  </data>
+  <data name="DisplayMemTime" xml:space="preserve">
+    <value>показывать время мема</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>показывать номер монстра/согруппника</value>
+  </data>
   <data name="Duration" xml:space="preserve">
     <value>Длительность:</value>
   </data>

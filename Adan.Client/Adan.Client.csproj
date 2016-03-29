@@ -123,7 +123,6 @@
     <Compile Include="Controls\MainOutputWindowNative.xaml.cs">
       <DependentUpon>MainOutputWindowNative.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\NumberTextBox.cs" />
     <Compile Include="Controls\OneCharTextBox.cs" />
     <Compile Include="Controls\TextBoxWithHistory.cs" />
     <Compile Include="ConveyorUnits\AliasUnit.cs" />

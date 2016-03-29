@@ -54,5 +54,65 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
                 this["MonsterAffects"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool MonsterDisplayNumber {
+            get {
+                return ((bool)(this["MonsterDisplayNumber"]));
+            }
+            set {
+                this["MonsterDisplayNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int MonsterDisplayAffectsCount {
+            get {
+                return ((int)(this["MonsterDisplayAffectsCount"]));
+            }
+            set {
+                this["MonsterDisplayAffectsCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GroupWidgetDisplayNumber {
+            get {
+                return ((bool)(this["GroupWidgetDisplayNumber"]));
+            }
+            set {
+                this["GroupWidgetDisplayNumber"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("5")]
+        public int GroupWidgetDisplayAffectsCount {
+            get {
+                return ((int)(this["GroupWidgetDisplayAffectsCount"]));
+            }
+            set {
+                this["GroupWidgetDisplayAffectsCount"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GroupWidgetDisplayMemTime {
+            get {
+                return ((bool)(this["GroupWidgetDisplayMemTime"]));
+            }
+            set {
+                this["GroupWidgetDisplayMemTime"] = value;
+            }
+        }
     }
 }

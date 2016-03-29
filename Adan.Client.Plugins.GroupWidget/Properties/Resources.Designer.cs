@@ -88,7 +88,7 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Available affects:.
+        ///   Looks up a localized string similar to Available Affects:.
         /// </summary>
         public static string AvailableAffects {
             get {
@@ -142,11 +142,38 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Displayed affects:.
+        ///   Looks up a localized string similar to Displayed Affects:.
         /// </summary>
         public static string DisplayedAffects {
             get {
                 return ResourceManager.GetString("DisplayedAffects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Affects to Display:.
+        /// </summary>
+        public static string DisplayedAffectsCount {
+            get {
+                return ResourceManager.GetString("DisplayedAffectsCount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Mem Time.
+        /// </summary>
+        public static string DisplayMemTime {
+            get {
+                return ResourceManager.GetString("DisplayMemTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Display Number.
+        /// </summary>
+        public static string DisplayNumber {
+            get {
+                return ResourceManager.GetString("DisplayNumber", resourceCulture);
             }
         }
         
@@ -205,7 +232,7 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Group widget options.
+        ///   Looks up a localized string similar to Group Widget Options.
         /// </summary>
         public static string GroupWidgetOptions {
             get {
@@ -250,7 +277,7 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Monsters widget options.
+        ///   Looks up a localized string similar to Monsters Widget Options.
         /// </summary>
         public static string MonstersWidgetOptions {
             get {
