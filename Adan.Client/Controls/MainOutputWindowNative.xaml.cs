@@ -33,7 +33,7 @@ namespace Adan.Client.Controls
             _textBoxNative.TextViewNative.GotFocus += TextViewNative_GotFocus;
             MouseWheelRedirector.Attach(_textBoxNative.TextViewNative);
             _textBoxNative.TextViewNative.MouseWheel += TextViewNative_MouseWheel;
-            //Loaded += (o, e) => _txtCommandInput.Focus();
+            Loaded += (o, e) => _txtCommandInput.Focus();
         }
 
         private void TextViewNative_MouseWheel(object sender, System.Windows.Forms.MouseEventArgs e)

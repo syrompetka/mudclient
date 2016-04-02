@@ -35,8 +35,8 @@
             txtCommandInput.GotFocus += HandleGotFocus;
             txtCommandInput.GotKeyboardFocus += HandleGotFocus;
             txtCommandInput.LoadHistory(rootModel.Profile);
+            secondaryScrollViewer.ScrollChanged += HandleScrollChanged;
         }
-
 
         public RootModel RootModel
         {
@@ -475,5 +475,25 @@
         }
 
         #endregion
+
+        protected override void OnMouseWheel(MouseWheelEventArgs e)
+        {
+            if (e.Delta > 0)
+            {
+                secondaryScrollOutput.MouseWheelUp();
+            }
+
+            if (e.Delta < 0)
+            {
+                secondaryScrollOutput.MouseWheelDown();
+            }
+            e.Handled = true;
+            CheckIsScrolling();
+        }
+
+        private void HandleScrollChanged(object sender, ScrollChangedEventArgs e)
+        {
+            CheckIsScrolling();
+        }
     }
 }

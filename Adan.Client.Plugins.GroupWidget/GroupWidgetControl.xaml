@@ -9,7 +9,8 @@
              d:DesignWidth="300"
              Focusable="False"
              Background="{DynamicResource WidgetBackgroundBrush}"
-             MinHeight="30">
+             MinHeight="22"
+             Width="{Binding Width}">
     <UserControl.Resources>
         <ResourceDictionary Source="Resources.xaml"/>
     </UserControl.Resources>

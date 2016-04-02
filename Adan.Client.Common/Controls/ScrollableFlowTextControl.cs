@@ -21,6 +21,8 @@ namespace Adan.Client.Common.Controls
 
     using TextFormatting;
     using Settings;
+    using Utils;
+
     #endregion
 
     /// <summary>
@@ -60,7 +62,8 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
-            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) => {
+            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) =>
+            {
                 if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
                 {
                     _textRunCache.Invalidate();
@@ -321,6 +324,12 @@ namespace Adan.Client.Common.Controls
             }
 
             _currentLineNumber--;
+
+            if (ScrollOwner != null)
+            {
+                ScrollOwner.InvalidateScrollInfo();
+            }
+
             InvalidateVisual();
         }
 
@@ -335,6 +344,12 @@ namespace Adan.Client.Common.Controls
             }
 
             _currentLineNumber++;
+
+            if (ScrollOwner != null)
+            {
+                ScrollOwner.InvalidateScrollInfo();
+            }
+
             InvalidateVisual();
         }
 
@@ -646,66 +661,78 @@ namespace Adan.Client.Common.Controls
         {
             Assert.ArgumentNotNull(drawingContext, "drawingContext");
 
-            //base.OnRender(drawingContext);
-            drawingContext.DrawRectangle(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), new Pen(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
-            var renderedLines = 0;
-            if (_selectionSettings.NeedUpdate)
+            try
             {
-                _tempSelectionSettings.SelectedMessages.Clear();
-            }
-
-            if (_messages.Count > 0)
-            {
-                var currentHeight = ActualHeight;
-                var lineNumber = _currentLineNumber;
-                while (currentHeight > 0 && lineNumber > 0)
+                if (Visibility != Visibility.Visible)
                 {
-                    _textSource.Message = _messages[lineNumber - 1];
-                    var textStorePosition = 0;
+                    return;
+                }
 
-                    _linesToRenderStack.Clear();
+                drawingContext.DrawRectangle(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), new Pen(Themes.ThemeManager.Instance.ActiveTheme.GetBrushByTextColor(Themes.TextColor.None, true), 0), new Rect(0, 0, ActualWidth, ActualHeight));
+                var renderedLines = 0;
+                if (_selectionSettings.NeedUpdate)
+                {
+                    _tempSelectionSettings.SelectedMessages.Clear();
+                }
 
-                    do
+                if (_messages.Count > 0)
+                {
+                    var currentHeight = ActualHeight;
+                    var lineNumber = _currentLineNumber;
+                    while (currentHeight > 0 && lineNumber > 0)
                     {
-                        var line = _formatter.FormatLine(_textSource, textStorePosition, ActualWidth, _customTextParagraphProperties, null, _textRunCache);
-                        _linesToRenderStack.Push(line);
-                        textStorePosition += line.Length;
-                    }
-                    while (textStorePosition < _messages[lineNumber - 1].InnerText.Length);
+                        _textSource.Message = _messages[lineNumber - 1];
+                        var textStorePosition = 0;
 
-                    var drawnChars = 0;
-                    while (_linesToRenderStack.Count > 0)
-                    {
-                        var line = _linesToRenderStack.Pop();
-                        line.Draw(drawingContext, new Point(0, currentHeight - line.Height), InvertAxes.None);
+                        _linesToRenderStack.Clear();
 
-                        _lineHeight = line.Height;
-                        drawnChars += line.Length;
-                        if (_selectionSettings.NeedUpdate)
+                        do
                         {
-                            ProcessLineForSelection(line, _messages[lineNumber - 1], currentHeight, drawnChars);
+                            var line = _formatter.FormatLine(_textSource, textStorePosition, ActualWidth, _customTextParagraphProperties, null, _textRunCache);
+                            _linesToRenderStack.Push(line);
+                            textStorePosition += line.Length;
+                        }
+                        while (textStorePosition < _messages[lineNumber - 1].InnerText.Length);
+
+                        var drawnChars = 0;
+                        while (_linesToRenderStack.Count > 0)
+                        {
+                            var line = _linesToRenderStack.Pop();
+                            line.Draw(drawingContext, new Point(0, currentHeight - line.Height), InvertAxes.None);
+
+                            _lineHeight = line.Height;
+                            drawnChars += line.Length;
+                            if (_selectionSettings.NeedUpdate)
+                            {
+                                ProcessLineForSelection(line, _messages[lineNumber - 1], currentHeight, drawnChars);
+                            }
+
+                            currentHeight -= line.Height;
+                            line.Dispose();
                         }
 
-                        currentHeight -= line.Height;
-                        line.Dispose();
+                        renderedLines++;
+                        lineNumber--;
+                        _textRunCache.Invalidate();
                     }
+                }
 
-                    renderedLines++;
-                    lineNumber--;
-                    _textRunCache.Invalidate();
+                _currentNumberOfLinesInView = renderedLines;
+                if (_selectionSettings.NeedUpdate)
+                {
+                    _selectionSettings.SelectionEndCharacterNumber = _tempSelectionSettings.SelectionEndCharacterNumber;
+                    _selectionSettings.SelectionStartCharacterNumber = _tempSelectionSettings.SelectionStartCharacterNumber;
+                    _selectionSettings.SelectedMessages.Clear();
+                    _selectionSettings.SelectedMessages.AddRange(_tempSelectionSettings.SelectedMessages);
+                    _selectionSettings.NeedUpdate = false;
+                    InvalidateVisual();
                 }
             }
-
-            _currentNumberOfLinesInView = renderedLines;
-            if (_selectionSettings.NeedUpdate)
+            catch (Exception ex)
             {
-                _selectionSettings.SelectionEndCharacterNumber = _tempSelectionSettings.SelectionEndCharacterNumber;
-                _selectionSettings.SelectionStartCharacterNumber = _tempSelectionSettings.SelectionStartCharacterNumber;
-                _selectionSettings.SelectedMessages.Clear();
-                _selectionSettings.SelectedMessages.AddRange(_tempSelectionSettings.SelectedMessages);
-                _selectionSettings.NeedUpdate = false;
-                InvalidateVisual();
+                    ErrorLogger.Instance.Write(string.Format("Error rendering text {0}", ex));
             }
+
         }
 
         /// <summary>
