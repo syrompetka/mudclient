@@ -15,14 +15,14 @@
     using CSLib.Net.Diagnostics;
     using Model;
     using Model.Actions;
-
+    using System.Windows.Threading;
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.
     /// </summary>
     [Export(typeof(PluginBase))]
     public sealed class OutputToAdditionalWindowPlugin : PluginBase
     {
-        private readonly AdditionalOutputWindow _additionalOutputWindowControl;
+        private AdditionalOutputWindow _additionalOutputWindowControl;
         private AdditionalOutputWindowManager _manager;
         private WidgetDescription _widget;
         
@@ -42,7 +42,6 @@
         /// </summary>
         public OutputToAdditionalWindowPlugin()
         {
-            _additionalOutputWindowControl = new AdditionalOutputWindow();
         }
 
         /// <summary>
@@ -100,7 +99,12 @@
 
             initializationStatusModel.CurrentPluginName = "Additional window";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
-            
+
+            Application.Current.Dispatcher.BeginInvoke((Action)(() =>
+            {
+                _additionalOutputWindowControl = new AdditionalOutputWindow();
+            })).Wait();
+
             _manager = new AdditionalOutputWindowManager(_additionalOutputWindowControl);
 
             _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl)
