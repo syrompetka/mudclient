@@ -9,15 +9,21 @@
              d:DesignWidth="300"
              Focusable="False"
              Background="{DynamicResource WidgetBackgroundBrush}"
-             MinHeight="30"
-             MinWidth="{Binding MinimumWidth}">
+             MinHeight="22"
+             Width="{Binding Width}">
     <UserControl.Resources>
         <ResourceDictionary Source="Resources.xaml"/>
     </UserControl.Resources>
     <StackPanel>
         <ListBox ItemsSource="{Binding Monsters}"
                  Focusable="False"
-                 SelectedValue="{Binding SelectedMonster}">
+                 SelectedValue="{Binding SelectedMonster}"
+                 AlternationCount="2">
+            <ListBox.Template>
+                <ControlTemplate TargetType="{x:Type ListBox}">
+                    <ItemsPresenter SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"/>
+                </ControlTemplate>
+            </ListBox.Template>
             <ListBox.ItemContainerStyle>
                 <Style TargetType="{x:Type ListBoxItem}">
                     <Setter Property="SnapsToDevicePixels"
@@ -31,153 +37,96 @@
                     <Setter Property="Template">
                         <Setter.Value>
                             <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                <ControlTemplate.Resources>
-                                    <Storyboard x:Key="HoverOn">
-                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
-                                                                       Storyboard.TargetName="HoverRectangle"
-                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
-                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
-                                                                  Value="1" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                    <Storyboard x:Key="HoverOff">
-                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
-                                                                       Storyboard.TargetName="HoverRectangle"
-                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
-                                            <SplineDoubleKeyFrame KeyTime="00:00:00.4000000"
-                                                                  Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                    <Storyboard x:Key="SelectedOn">
-                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
-                                                                       Storyboard.TargetName="SelectedRectangle"
-                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
-                                            <SplineDoubleKeyFrame KeyTime="00:00:00.1000000"
-                                                                  Value="1" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                    <Storyboard x:Key="SelectedOff">
-                                        <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
-                                                                       Storyboard.TargetName="SelectedRectangle"
-                                                                       Storyboard.TargetProperty="(UIElement.Opacity)">
-                                            <SplineDoubleKeyFrame KeyTime="00:00:00.4000000"
-                                                                  Value="0" />
-                                        </DoubleAnimationUsingKeyFrames>
-                                    </Storyboard>
-                                </ControlTemplate.Resources>
-                                <Grid SnapsToDevicePixels="true"
-                                      Margin="0,1,0,0">
-                                    <Rectangle x:Name="Background"
-                                               IsHitTestVisible="False"
-                                               Opacity="1"
-                                               Fill="{DynamicResource WidgetBackgroundBrush}"
-                                               RadiusX="1"
-                                               RadiusY="1" />
-                                    <Rectangle x:Name="HoverRectangle"
-                                               IsHitTestVisible="False"
-                                               Opacity="0"
-                                               Fill="#FF060606"
-                                               RadiusX="1"
-                                               RadiusY="1" />
-                                    <Rectangle x:Name="SelectedRectangle"
-                                               IsHitTestVisible="False"
-                                               Opacity="0"
-                                               Fill="#FF1B1B1B"
-                                               RadiusX="1"
-                                               RadiusY="1" />
-                                    <ContentPresenter HorizontalAlignment="Stretch"
+                                <Border BorderThickness="0,0,0,2">
+                                    <StackPanel Background="{TemplateBinding Background}" Orientation="Horizontal">
+                                        <Grid>
+                                            <Border Width="5" VerticalAlignment="Stretch" Background="Black" Name="PART_NotSelectedBorder"/>
+                                            <Border Width="3" VerticalAlignment="Stretch" Background="White" Name="PART_SelectedBorder"/>
+                                        </Grid>
+                                        <ContentPresenter HorizontalAlignment="Stretch"
                                                       VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
-                                                      Margin="5,2,0,2"
+                                                      Margin="0"
                                                       x:Name="contentPresenter" />
-                                </Grid>
+                                    </StackPanel>
+                                </Border>
                                 <ControlTemplate.Triggers>
-                                    <Trigger Property="IsSelected"
-                                             Value="true">
-
-                                        <Trigger.ExitActions>
-                                            <BeginStoryboard x:Name="SelectedOff_BeginStoryboard"
-                                                             Storyboard="{StaticResource SelectedOff}" />
-                                        </Trigger.ExitActions>
-                                        <Trigger.EnterActions>
-                                            <BeginStoryboard x:Name="SelectedOn_BeginStoryboard"
-                                                             Storyboard="{StaticResource SelectedOn}" />
-                                        </Trigger.EnterActions>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Visibility" TargetName="PART_SelectedBorder" Value="Visible"/>
                                     </Trigger>
-                                    <MultiTrigger>
-                                        <MultiTrigger.Conditions>
-                                            <Condition Property="IsMouseOver"
-                                                       Value="True" />
-                                            <Condition Property="Selector.IsSelected"
-                                                       Value="False" />
-                                        </MultiTrigger.Conditions>
+                                    <Trigger Property="IsSelected" Value="False">
+                                        <Setter Property="Visibility" TargetName="PART_SelectedBorder" Value="Collapsed"/>
+                                    </Trigger>
 
-                                        <MultiTrigger.EnterActions>
-                                            <BeginStoryboard Storyboard="{StaticResource HoverOn}" />
-                                        </MultiTrigger.EnterActions>
-                                        <MultiTrigger.ExitActions>
-                                            <BeginStoryboard x:Name="HoverOff_BeginStoryboard"
-                                                             Storyboard="{StaticResource HoverOff}" />
-                                        </MultiTrigger.ExitActions>
-
-                                    </MultiTrigger>
                                 </ControlTemplate.Triggers>
                             </ControlTemplate>
                         </Setter.Value>
                     </Setter>
+                    <Style.Triggers>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                            <Setter Property="Background" Value="Black">
+                            </Setter>
+                        </Trigger>
+                        <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                            <Setter Property="Background">
+                                <Setter.Value>
+                                    <SolidColorBrush Color="#FF1B1B1B"/>
+                                </Setter.Value>
+                            </Setter>
+                        </Trigger>
+
+                    </Style.Triggers>
                 </Style>
             </ListBox.ItemContainerStyle>
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <StackPanel Height="16"
+                    <StackPanel Height="20"
                                 Name="ItemStack"
                                 HorizontalAlignment="Stretch"
-                                Margin="0,0,5,0"
-                                Orientation="Horizontal"
-                                Background="Transparent">
+                                Orientation="Horizontal">
                         <TextBlock Text="{Binding Number, StringFormat=\{0\}\.}"
                                    Width="22"
-                                   FontSize="10pt"
+                                   FontSize="11pt"
                                    FontFamily="Lucida Console"
-                                   VerticalAlignment="Center"
+                                   VerticalAlignment="Bottom"
                                    HorizontalAlignment="Right"
                                    Foreground="{DynamicResource GlyphBrush}"
                                    Visibility="{Binding DisplayNumber, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Margin="0,0,0,0"
+                                   Margin="0,0,0,2"
                                     />
                         <StackPanel Width="140" Orientation="Horizontal">
                             <TextBlock Text="{Binding Name}"
-                                   FontSize="11pt"
+                                   FontSize="12pt"
                                    FontFamily="Lucida Console"
-                                   VerticalAlignment="Center"
+                                   VerticalAlignment="Bottom"
                                    HorizontalAlignment="Left"
                                    TextTrimming="CharacterEllipsis"
                                    Foreground="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" 
                                    MaxWidth="135"
-                                   Margin="0,0,0,0"/>
+                                   Margin="0,0,0,2"/>
                             <TextBlock Text="*"
-                                   FontSize="11pt"
+                                   FontSize="12pt"
                                    FontFamily="Lucida Console"
-                                   VerticalAlignment="Center"
+                                   VerticalAlignment="Bottom"
                                    HorizontalAlignment="Left"
                                    Foreground="{Binding PlayerCharacterColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
                                    Visibility="{Binding PlayerCharacter, Converter={StaticResource BooleanToVisibilityConverter}}"
-                                   Margin="0,0,0,0"
+                                   Margin="0,0,0,2"
                                     />
                         </StackPanel>
                         <Grid Width="60">
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="12" />
-                                <RowDefinition Height="4" />
+                                <RowDefinition Height="14" />
+                                <RowDefinition Height="6" />
                             </Grid.RowDefinitions>
                             <Border Width="60"
                                     HorizontalAlignment="Left"
-                                    Height="12"
+                                    Height="14"
                                     Grid.Row="0"
                                     Background="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
                                     Panel.ZIndex="0" />
                             <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=HitsPercent}"
                                     HorizontalAlignment="Left"
-                                    Height="12"
+                                    Height="14"
                                     Grid.Row="0"
                                     Panel.ZIndex="1">
                                 <Border.Background>
@@ -201,13 +150,13 @@
                                        Panel.ZIndex="1" />
                             <Border Width="60"
                                     HorizontalAlignment="Left"
-                                    Height="4"
+                                    Height="6"
                                     Grid.Row="1"
                                     Background="{Binding MovesColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}"
                                     Panel.ZIndex="0" />
                             <Border Width="{Binding Converter={StaticResource PercentageConverter}, ConverterParameter=60, Path=MovesPercent}"
                                     HorizontalAlignment="Left"
-                                    Height="4"
+                                    Height="6"
                                     Grid.Row="1"
                                     Panel.ZIndex="1">
                                 <Border.Background>
@@ -233,7 +182,7 @@
                         </Image>
                         <ItemsControl ItemsSource="{Binding Path=AffectsSortedAndFiltered}"
                                       VerticalAlignment="Stretch"
-                                      HorizontalAlignment="Stretch">
+                                      Width="{Binding AffectsPanelWidth}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Horizontal" />
@@ -262,8 +211,8 @@
                                             </DataTrigger.ExitActions>
                                         </DataTrigger>
                                     </DataTemplate.Triggers>
-                                    <Grid Width="16"
-                                          Height="16"
+                                    <Grid Width="20"
+                                          Height="20"
                                           Margin="3,0,0,0">
                                         <Grid.ToolTip>
                                             <StackPanel Orientation="Horizontal">
@@ -330,3 +279,4 @@
         </ListBox>
     </StackPanel>
 </UserControl>
+

@@ -1,18 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="GroupStatusViewModel.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the GroupStatusViewModel type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.ViewModel
+﻿namespace Adan.Client.Plugins.GroupWidget.ViewModel
 {
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
-    using System.Configuration;
     using System.Linq;
     using System.Windows.Threading;
 
@@ -41,12 +31,18 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         public GroupStatusViewModel()
         {
             GroupMates = new ObservableCollection<GroupMateViewModel>();
-            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
+            AffectsPanelWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
 
             _tickingTimer = new DispatcherTimer(DispatcherPriority.Background);
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+            AffectsPanelWidth = _displayedAffectCount * 23;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20;
+            if (!DisplayNumber)
+            {
+                Width -= 22;
+            }
         }
 
         /// <summary>
@@ -68,12 +64,20 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         }
 
         /// <summary>
-        /// Gets the minimum width.
+        /// Gets the  width of affects panel.
         /// </summary>
-        public double MinimumWidth
+        public double AffectsPanelWidth
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets the width of control displaying monsters.
+        /// </summary>
+        public double Width
+        {
+            get; private set;
         }
 
         public int DisplayedAffectCount
@@ -147,7 +151,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList, position + 1) {DisplayNumber = DisplayNumber});
+                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList, position + 1, AffectsPanelWidth) { DisplayNumber = DisplayNumber });
                 }
 
                 position++;
@@ -166,10 +170,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             GroupMates.Clear();
             _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
-            MinimumWidth = (29 * _displayedAffectNames.Count) + 26 + 26 + 31 + 60 + 125;
             DisplayNumber = Settings.Default.GroupWidgetDisplayNumber;
             DisplayedAffectCount = Settings.Default.GroupWidgetDisplayAffectsCount;
-            OnPropertyChanged("MinimumWidth");
+            AffectsPanelWidth = _displayedAffectCount * 23;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20;
+            if (!DisplayNumber)
+            {
+                Width -= 22;
+            }
+            OnPropertyChanged("Width");
         }
 
         private void UpdateTimings()

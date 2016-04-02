@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="WidgetDescription.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the WidgetDescription type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Plugins
+﻿namespace Adan.Client.Common.Plugins
 {
     using System.Windows;
     using CSLib.Net.Annotations;
@@ -93,37 +84,31 @@ namespace Adan.Client.Common.Plugins
             private set;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int Height
         {
             get;
             set;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
         public int Width
         {
             get;
             set;
         }
         
-        /// <summary>
-        /// 
-        /// </summary>
         public int Left
         {
             get;
             set;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int Top
+        {
+            get;
+            set;
+        }
+
+        public bool ResizeToContent
         {
             get;
             set;

@@ -117,6 +117,9 @@
     <Compile Include="Commands\SendToWindowCommand.cs" />
     <Compile Include="Commands\ShowMainOutputCommand.cs" />
     <Compile Include="Commands\ToggleFullScreenModeCommand.cs" />
+    <Compile Include="Controls\AutoSizableWidgetWindow.xaml.cs">
+      <DependentUpon>AutoSizableWidgetWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\MainOutputWindow.xaml.cs">
       <DependentUpon>MainOutputWindow.xaml</DependentUpon>
     </Compile>
@@ -125,6 +128,9 @@
     </Compile>
     <Compile Include="Controls\OneCharTextBox.cs" />
     <Compile Include="Controls\TextBoxWithHistory.cs" />
+    <Compile Include="Controls\WidgetWindow.xaml.cs">
+      <DependentUpon>WidgetWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConveyorUnits\AliasUnit.cs" />
     <Compile Include="ConveyorUnits\CapForLineCommandUnit.cs" />
     <Compile Include="ConveyorUnits\CommandMultiplierUnit.cs" />
@@ -261,6 +267,7 @@
     <Compile Include="OutputWindow.cs" />
     <Compile Include="PluginHost.cs" />
     <Compile Include="Resources\AvalonDock\AvalonDockDarkTheme.cs" />
+    <Compile Include="Settings\WidgetLayout.cs" />
     <Compile Include="ViewModel\ActionParameters\ConstantStringParameterViewModel.cs" />
     <Compile Include="ViewModel\ActionParameters\ExtensionMethods.cs" />
     <Compile Include="ViewModel\ActionParameters\MathExpressionParameterViewModel.cs" />
@@ -301,11 +308,19 @@
     <Compile Include="ViewModel\ToggleFullScreenModeActionViewModel.cs" />
     <Compile Include="ViewModel\TriggersViewModel.cs" />
     <Compile Include="ViewModel\TriggerViewModel.cs" />
+    <Page Include="Controls\AutoSizableWidgetWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\MainOutputWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\MainOutputWindowNative.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\WidgetWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

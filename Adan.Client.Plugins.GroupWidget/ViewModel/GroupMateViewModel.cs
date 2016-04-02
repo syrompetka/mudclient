@@ -30,11 +30,12 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         private bool _isDeleting;
         private TextColor _movesColor;
         private TextColor _hitsColor;
+        private int _number;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupMateViewModel"/> class.
         /// </summary>
-        public GroupMateViewModel([NotNull]CharacterStatus groupMate, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number)
+        public GroupMateViewModel([NotNull]CharacterStatus groupMate, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number, double affectsPanelWidth)
         {
             Assert.ArgumentNotNull(groupMate, "groupMate");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
@@ -56,6 +57,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             affectsSortedAndFiltered.IsLiveSorting = true;
             ((ICollectionView)affectsSortedAndFiltered).SortDescriptions.Add(new SortDescription() { Direction = ListSortDirection.Ascending, PropertyName = "Priority" });
             AffectsSortedAndFiltered = (ICollectionView)affectsSortedAndFiltered;
+            AffectsPanelWidth = affectsPanelWidth;
         }
 
         /// <summary>
@@ -68,7 +70,27 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             private set;
         }
 
-        public int Number { get; private set; }
+        public double AffectsPanelWidth
+        {
+            get;
+            private set;
+        }
+
+        public int Number
+        {
+            get
+            {
+                return _number;
+            }
+            private set
+            {
+                if (_number != value)
+                {
+                    _number = value;
+                    OnPropertyChanged("Number");
+                }
+            }
+        }
 
         public bool DisplayNumber { get; set; }
 
@@ -296,7 +318,6 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             Number = position;
             HitsColor = GetColor(HitsPercent);
             MovesColor = GetColor(MovesPercent);
-
             _notProcessedAffects.Clear();
             _notProcessedAffects.AddRange(Affects);
 

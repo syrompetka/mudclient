@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MonsterViewModel.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the MonsterViewModel type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.ViewModel
+﻿namespace Adan.Client.Plugins.GroupWidget.ViewModel
 {
     using System.Collections.Generic;
 
@@ -24,8 +15,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         /// <summary>
         /// Initializes a new instance of the <see cref="MonsterViewModel"/> class.
         /// </summary>
-        public MonsterViewModel([NotNull] MonsterStatus monsterStatus, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number)
-            : base(monsterStatus, affectsToDisplay, number)
+        public MonsterViewModel([NotNull] MonsterStatus monsterStatus, [NotNull] IEnumerable<AffectDescription> affectsToDisplay, int number, double affectsPanelWidth)
+            : base(monsterStatus, affectsToDisplay, number, affectsPanelWidth)
         {
             Assert.ArgumentNotNull(monsterStatus, "monsterStatus");
             Assert.ArgumentNotNull(affectsToDisplay, "affectsToDisplay");
@@ -97,7 +88,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
         }
 
-        /// <summary>
+       /// <summary>
         /// Updates this view model from model.
         /// </summary>
         public override void UpdateFromModel(CharacterStatus characterStatus, int position)

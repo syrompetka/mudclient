@@ -65,7 +65,8 @@ namespace Adan.Client.Map
                     Left = (int)SystemParameters.PrimaryScreenWidth - 400,
                     Top = (int)SystemParameters.PrimaryScreenHeight - 400,
                     Height = 400,
-                    Width = 400
+                    Width = 400,
+                    ResizeToContent = false
                 }, 1);
             }
         }

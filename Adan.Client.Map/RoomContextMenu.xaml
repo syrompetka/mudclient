@@ -8,8 +8,7 @@
              d:DesignHeight="300"
              d:DesignWidth="300">
     <ContextMenu.Resources>
-        <ResourceDictionary Source="Resources.xaml"
-                            x:Key="MapResources" />
+        <ResourceDictionary Source="Resources.xaml"/>
     </ContextMenu.Resources>
     <MenuItem Header="{x:Static  Properties:Resources.RoomIconContext}"
               ItemsSource="{StaticResource IconsList}">

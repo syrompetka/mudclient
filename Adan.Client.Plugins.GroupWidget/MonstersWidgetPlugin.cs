@@ -30,7 +30,7 @@
         private readonly RoomMonstersViewModel _viewModel;
 
         private MonstersManager _monstersManager;
-        
+
         /// <summary>
         /// 
         /// </summary>
@@ -60,9 +60,8 @@
             {
                 return Enumerable.Repeat(new WidgetDescription("MonstersWidget", Resources.Monsters, _monstersWidgetControl)
                 {
-                    Left = 100,
-                    Height = 450,
-                    Width = 300
+                    ResizeToContent = true,
+                    Left = (int)SystemParameters.PrimaryScreenWidth - 400 - 400,
                 }, 1);
             }
         }

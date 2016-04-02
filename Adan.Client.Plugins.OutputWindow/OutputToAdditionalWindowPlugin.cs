@@ -107,7 +107,8 @@
             {
                 Left = (int)SystemParameters.PrimaryScreenWidth - 400,
                 Height = 300,
-                Width = 400
+                Width = 400,
+                ResizeToContent = false
             };
         }
 

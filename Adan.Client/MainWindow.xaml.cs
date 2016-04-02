@@ -13,7 +13,6 @@ using Adan.Client.Model.ActionDescriptions;
 using Adan.Client.Model.ActionParameters;
 using Adan.Client.Model.Actions;
 using Adan.Client.Model.ParameterDescriptions;
-using Adan.Client.Properties;
 using Adan.Client.ViewModel;
 using CSLib.Net.Annotations;
 using CSLib.Net.Diagnostics;
@@ -28,7 +27,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Input;
-using System.Windows.Media;
 using Adan.Client.Resources.AvalonDock;
 using Xceed.Wpf.AvalonDock.Layout;
 using Xceed.Wpf.AvalonDock.Layout.Serialization;
@@ -36,11 +34,14 @@ using Adan.Client.Common.Messages;
 
 namespace Adan.Client
 {
+    using System.Xml.Serialization;
+    using Settings;
+
     public partial class MainWindow
     {
         #region Constants and Fields
 
-        private readonly IList<LayoutContent> _allWidgets = new List<LayoutContent>();
+        private readonly IList<Window> _allWidgets = new List<Window>();
         private readonly IList<OutputWindow> _outputWindows = new List<OutputWindow>();
         private readonly IList<RootModel> _allRootModels = new List<RootModel>();
 
@@ -88,7 +89,7 @@ namespace Adan.Client
             }
 
             //Load settings
-            Settings settings = Settings.Default;
+            Properties.Settings settings = Properties.Settings.Default;
             settings.Reload();
 
             SettingsHolder.Instance.Initialize((SettingsFolder)settings.SettingsFolder, types);
@@ -177,7 +178,9 @@ namespace Adan.Client
                 var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
 
                 if (outputWindow != null)
+                {
                     outputWindow.RootModel.PushMessageToConveyor(new ErrorMessage(e.Message));
+                }
             }
             else if (_outputWindows.Count > 0)
             {
@@ -208,15 +211,12 @@ namespace Adan.Client
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            LoadLayout();
-
             foreach (var widget in PluginHost.Instance.Widgets)
             {
-                if (!_allWidgets.Any(x => x.ContentId == widget.Name))
-                {
-                    CreateWidget(widget);
-                }
+                _allWidgets.Add(CreateWidget(widget));
             }
+
+            LoadLayout();
 
             if (_outputWindows.Count == 0)
             {
@@ -237,9 +237,43 @@ namespace Adan.Client
                     serializer.LayoutSerializationCallback += LayoutSerializationCallback;
                     serializer.Deserialize(layoutFullPath);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
-                    ErrorLogger.Instance.Write(string.Format("Error load layout: {0}", ex));
+                    ErrorLogger.Instance.Write(string.Format("Error loading layout: {0}", ex));
+                }
+            }
+
+            var widgetLayoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "WidgetLayout.xml");
+            if (File.Exists(widgetLayoutFullPath))
+            {
+                try
+                {
+                    using (var stream = File.OpenRead(widgetLayoutFullPath))
+                    {
+
+                        var serializer = new XmlSerializer(typeof(WidgetLayout));
+                        var widgetLayout = (WidgetLayout)serializer.Deserialize(stream);
+                        foreach (var widgetLayoutItem in widgetLayout.Widgets)
+                        {
+                            var widgetWindow = _allWidgets.FirstOrDefault(w => w.Tag != null && w.Tag is WidgetDescription && ((WidgetDescription)w.Tag).Name == widgetLayoutItem.WidgetName);
+                            if (widgetWindow != null)
+                            {
+                                var widgetDescription = (WidgetDescription)widgetWindow.Tag;
+                                widgetWindow.Visibility = widgetLayoutItem.Visible ? Visibility.Visible : Visibility.Collapsed;
+                                widgetWindow.Left = widgetLayoutItem.Left;
+                                widgetWindow.Top = widgetLayoutItem.Top;
+                                if (!widgetDescription.ResizeToContent)
+                                {
+                                    widgetWindow.Height = widgetLayoutItem.Height;
+                                    widgetWindow.Width = widgetLayoutItem.Width;
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ErrorLogger.Instance.Write(string.Format("Error loading widget layout: {0}", ex));
                 }
             }
         }
@@ -248,45 +282,22 @@ namespace Adan.Client
         {
             if (args.Model.ContentId.StartsWith("Plugin"))
             {
-                var widgetDescription = PluginHost.Instance.Widgets.FirstOrDefault(x => x.Name == args.Model.ContentId);
-                if (widgetDescription != null)
-                {
-                    args.Content = widgetDescription.Control;
-                    _allWidgets.Add(args.Model);
-
-                    var menuItem = new MenuItem()
-                    {
-                        Header = widgetDescription.Description,
-                        Tag = args.Model,
-                    };
-
-                    var visibleBinding = new Binding("IsVisible")
-                    {
-                        Source = args.Model,
-                        Mode = BindingMode.OneWay,
-                    };
-
-                    menuItem.SetBinding(MenuItem.IsCheckedProperty, visibleBinding);
-                    menuItem.Click += HandleHideShowWidget;
-                    _viewMenuItem.Items.Add(menuItem);
-                }
-                else
-                {
-                    args.Cancel = true;
-                }
+                args.Cancel = true;
             }
             else
             {
-                var outputWindow = new OutputWindow(this, args.Model.Title, _allRootModels);
-                outputWindow.Uid = args.Model.ContentId;
-                outputWindow.DockContent = args.Model;
+                var outputWindow = new OutputWindow(this, args.Model.Title, _allRootModels)
+                {
+                    Uid = args.Model.ContentId,
+                    DockContent = args.Model
+                };
 
                 _outputWindows.Add(outputWindow);
                 args.Content = outputWindow.VisibleControl;
 
                 args.Model.Closed += OnOutputWindowClosed;
 
-                var menuItem = new MenuItem()
+                var menuItem = new MenuItem
                 {
                     Header = outputWindow.Name,
                     Name = outputWindow.Uid,
@@ -312,41 +323,44 @@ namespace Adan.Client
             }
         }
 
-        private void CreateWidget(WidgetDescription widgetDescription)
+        private Window CreateWidget(WidgetDescription widgetDescription)
         {
-            var anchorable = new LayoutAnchorable()
+            Window widgedWindow;
+            if (widgetDescription.ResizeToContent)
             {
-                CanAutoHide = false,
-                CanFloat = true,
-                CanHide = true,
-                Title = widgetDescription.Description,
-                Content = widgetDescription.Control,
-                ContentId = widgetDescription.Name,
-//                FloatingHeight = widgetDescription.Height,
-//                FloatingWidth = widgetDescription.Width,
-                FloatingLeft = widgetDescription.Left,
-                FloatingTop = widgetDescription.Top,                
-            };
-
-            if (!string.IsNullOrEmpty(widgetDescription.Icon))
-            {
-                try
+                widgedWindow = new AutoSizableWidgetWindow
                 {
-                    anchorable.IconSource = (ImageSource)FindResource(widgetDescription.Icon);
-                }
-                catch (Exception)
-                { }
+                    Title = widgetDescription.Description,
+                    Left = widgetDescription.Left,
+                    Top = widgetDescription.Top,
+                    Content = widgetDescription.Control,
+                    Tag = widgetDescription,
+                };
+            }
+            else
+            {
+                widgedWindow = new WidgetWindow
+                {
+                    Height = widgetDescription.Height,
+                    Width = widgetDescription.Width,
+                    Title = widgetDescription.Description,
+                    Left = widgetDescription.Left,
+                    Top = widgetDescription.Top,
+                    Content = widgetDescription.Control,
+                    Tag = widgetDescription,
+                };
             }
 
+            widgedWindow.Owner = this;
             var menuItem = new MenuItem()
             {
                 Header = widgetDescription.Description,
-                Tag = anchorable,
+                Tag = widgedWindow,
             };
 
             var visibleBinding = new Binding("IsVisible")
             {
-                Source = anchorable,
+                Source = widgedWindow,
                 Mode = BindingMode.OneWay,
             };
 
@@ -354,14 +368,8 @@ namespace Adan.Client
             menuItem.Click += HandleHideShowWidget;
             _viewMenuItem.Items.Add(menuItem);
 
-            _allWidgets.Add(anchorable);
-
-            anchorable.AddToLayout(_dockManager, AnchorableShowStrategy.Most);
-            ((LayoutAnchorablePane)anchorable.Parent).FloatingHeight = widgetDescription.Height;
-            ((LayoutAnchorablePane)anchorable.Parent).FloatingWidth = widgetDescription.Width;
-            ((LayoutAnchorablePane)anchorable.Parent).FloatingLeft = widgetDescription.Left;
-            ((LayoutAnchorablePane)anchorable.Parent).FloatingTop = widgetDescription.Top;
-            anchorable.Float();
+            widgedWindow.Show();
+            return widgedWindow;
         }
 
         private void CreateOutputWindow(string name, string uid)
@@ -370,7 +378,8 @@ namespace Adan.Client
             _outputWindows.Add(outputWindow);
             outputWindow.Uid = uid;
 
-            LayoutAnchorable anchorable = new LayoutAnchorable()
+
+            LayoutAnchorable anchorable = new LayoutAnchorable
             {
                 CanAutoHide = false,
                 CanClose = true,
@@ -387,7 +396,7 @@ namespace Adan.Client
 
             anchorable.Closed += OnOutputWindowClosed;
 
-            var menuItem = new MenuItem()
+            var menuItem = new MenuItem
             {
                 Header = outputWindow.Name,
                 Name = outputWindow.Uid,
@@ -457,7 +466,7 @@ namespace Adan.Client
 
                     outputWindowToSelect = _outputWindows[currentWindowIndex];
                 }
-                else if(_outputWindows.Count > 0)
+                else if (_outputWindows.Count > 0)
                 {
                     outputWindowToSelect = _outputWindows[0];
                 }
@@ -472,7 +481,7 @@ namespace Adan.Client
                 _dockManager.ActiveContent = outputWindowToSelect.VisibleControl;
             }
         }
-        
+
         private void OnOutputWindowClosed(object sender, EventArgs e)
         {
             var dockable = (LayoutAnchorable)sender;
@@ -733,15 +742,15 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             Close();
-        }        
+        }
 
         private void HandleHideShowWidget([NotNull] object sender, [NotNull] RoutedEventArgs e)
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
 
-            var dockContent = (LayoutAnchorable)((MenuItem)sender).Tag;
-            if (!dockContent.IsHidden)
+            var dockContent = (Window)((MenuItem)sender).Tag;
+            if (dockContent.Visibility == Visibility.Visible)
             {
                 dockContent.Hide();
             }
@@ -851,7 +860,7 @@ namespace Adan.Client
                 WindowState = WindowState.Maximized;
                 _mainMenu.Visibility = Visibility.Collapsed;
             }
-        }        
+        }
 
         /// <summary>
         /// Raises the <see cref="E:System.Windows.Window.Closing"/> event.
@@ -892,6 +901,34 @@ namespace Adan.Client
                 ErrorLogger.Instance.Write(string.Format("Error save layout:{0}\r\n{1}", ex.Message, ex.StackTrace));
             }
 
+            var widgetLayoutFullPath = Path.Combine(SettingsHolder.Instance.Folder, "Settings", "WidgetLayout.xml");
+            try
+            {
+                var widgetLayout = new WidgetLayout { Widgets = new List<WidgetLayoutItem>() };
+                foreach (var widget in _allWidgets)
+                {
+                    var widgetDescription = (WidgetDescription)widget.Tag;
+                    var widgetLayoutItem = new WidgetLayoutItem
+                    {
+                        WidgetName = widgetDescription.Name,
+                        Top = widget.Top,
+                        Left = widget.Left,
+                        Height = widget.Height,
+                        Width = widget.Width,
+                        Visible = widget.Visibility == Visibility.Visible,
+                    };
+                    widgetLayout.Widgets.Add(widgetLayoutItem);
+                }
+                using (var stream = File.Open(widgetLayoutFullPath, FileMode.Create))
+                {
+                    var serializer = new XmlSerializer(typeof(WidgetLayout));
+                    serializer.Serialize(stream, widgetLayout);
+                }
+            }
+            catch (Exception ex)
+            {
+                ErrorLogger.Instance.Write(string.Format("Error saving widget layout: {0}", ex));
+            }
             try
             {
                 foreach (var outputWindow in _outputWindows)

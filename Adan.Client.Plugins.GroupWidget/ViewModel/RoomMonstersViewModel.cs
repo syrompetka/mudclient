@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RoomMonstersViewModel.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the GroupStatusViewModel type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.ViewModel
+﻿namespace Adan.Client.Plugins.GroupWidget.ViewModel
 {
     using System;
     using System.Collections.Generic;
@@ -46,16 +37,29 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
-            MinimumWidth = (29 * _displayedAffectPriorities.Count) + 26 + 26 + 31 + 60 + 155;
+            AffectsPanelWidth = _displayedAffectCount * 23;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5;
+            if (!DisplayNumber)
+            {
+                Width -= 22;
+            }
         }
 
         /// <summary>
-        /// Gets the minimum width.
+        /// Gets the Affects panel width.
         /// </summary>
-        public double MinimumWidth
+        public double AffectsPanelWidth
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets the width of control displaying monsters.
+        /// </summary>
+        public double Width
+        {
+            get; private set;
         }
 
         public RootModel RootModel
@@ -135,7 +139,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 else
                 {
                     var affectsList = _displayedAffectPriorities.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    Monsters.Insert(position, new MonsterViewModel(monster, affectsList, position + 1) {DisplayNumber = DisplayNumber});
+                    Monsters.Insert(position, new MonsterViewModel(monster, affectsList, position + 1, AffectsPanelWidth) { DisplayNumber = DisplayNumber });
                 }
 
                 position++;
@@ -157,8 +161,15 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             _displayedAffectPriorities = new List<string>(Settings.Default.MonsterAffects);
             DisplayNumber = Settings.Default.GroupWidgetDisplayNumber;
             DisplayedAffectCount = Settings.Default.MonsterDisplayAffectsCount;
-            MinimumWidth = (29 * DisplayedAffectCount) + 26 + 26 + 31 + 60 + 155;
-            OnPropertyChanged("MinimumWidth");
+            AffectsPanelWidth = 23 * _displayedAffectCount;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5;
+            if (!DisplayNumber)
+            {
+                Width -= 22;
+            }
+
+            OnPropertyChanged("AffectsPanelWidth");
+            OnPropertyChanged("Width");
         }
 
         private void UpdateTimings()

@@ -165,7 +165,7 @@ namespace Adan.Client.Map.Render
         /// </returns>
         protected override Size ArrangeOverride(Size arrangeBounds)
         {
-            return arrangeBounds;
+           return arrangeBounds;
         }
 
         private void RebuildAllRooms()

@@ -60,9 +60,8 @@
             {
                 return Enumerable.Repeat(new WidgetDescription("GroupWidget", Resources.Group, _groupWidgetControl)
                 {
-                    Left = 400,
-                    Height = 450,
-                    Width = 300
+                    ResizeToContent = true,
+                    Left = (int)SystemParameters.PrimaryScreenWidth - 400 - 400 - 400,
                 }, 1);
             }
         }
