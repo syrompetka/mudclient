@@ -28,7 +28,7 @@ namespace Adan.Client.Common.Controls.TextFormatting
         private readonly TextEffectCollection _textEffects = new TextEffectCollection();
         private readonly Brush _foregroundBrush;
         private readonly Brush _backgroundBrush;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomTextRunProperties"/> class.
         /// </summary>
@@ -41,7 +41,8 @@ namespace Adan.Client.Common.Controls.TextFormatting
             _foregroundBrush = foregroundBrush;
             _backgroundBrush = backgroundBrush;
             _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
-            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) => {
+            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) =>
+            {
                 if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
                 {
                     _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
