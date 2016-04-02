@@ -1,0 +1,123 @@
+﻿<Window  x:Class="Adan.Client.Plugins.GroupWidget.OptionsDialog"
+         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+         xmlns:Properties="clr-namespace:Adan.Client.Plugins.GroupWidget.Properties"
+         xmlns:controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+         ResizeMode="NoResize"
+         ShowInTaskbar="False"
+         WindowStartupLocation="CenterOwner"
+         WindowStyle="ToolWindow"
+         Width="500"
+         Height="400"
+         Title="{Binding WindowTitle}"
+         Style="{StaticResource DefaultWindowStyle}">
+    <Window.Resources>
+        <ResourceDictionary Source="Resources.xaml" />
+    </Window.Resources>
+    <Grid Margin="5">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="0" Margin="0,0,0,5">
+            <CheckBox Content="{x:Static Properties:Resources.DisplayNumber}" IsChecked="{Binding DisplayNumber}"/>
+            <CheckBox Content="{x:Static Properties:Resources.DisplayMemTime}" IsChecked="{Binding DisplayMemTime}" Visibility="{Binding AllowChangeDisplayMemTime, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="0,0,0,5">
+            <Label Content="{x:Static Properties:Resources.DisplayedAffectsCount}"/>
+            <controls:NumberTextBox Text="{Binding DisplayedAffectsCount}" VerticalAlignment="Top"/>
+        </StackPanel>
+        <Label Content="{x:Static Properties:Resources.AvailableAffects}"
+               Grid.Row="1"
+               Grid.Column="0" />
+        <Label Content="{x:Static Properties:Resources.DisplayedAffects}"
+               Grid.Row="1"
+               Grid.Column="2" />
+        <ListBox ItemsSource="{Binding AvailableAffects}"
+                 HorizontalAlignment="Stretch"
+                 VerticalAlignment="Stretch"
+                 Grid.Row="2"
+                 Grid.Column="0"
+                 SelectedItem="{Binding SelectedAvailableAffect}"
+                 ItemTemplate="{StaticResource AffectDescriptionTemplate}" />
+        <StackPanel Orientation="Vertical"
+                    Grid.Row="2"
+                    Grid.Column="1"
+                    VerticalAlignment="Center">
+            <Button  Width="22"
+                     Height="22"
+                     Margin="5"
+                     Command="{Binding AddDisplayedAffectCommand}">
+                <ContentControl Style="{StaticResource RightIcon}"
+                                Width="14"
+                                Height="14"/>
+            </Button>
+            <Button  Width="22"
+                     Height="22"
+                     Margin="5"
+                     Command="{Binding RemoveDisplayedAffectCommand}">
+                <ContentControl Style="{StaticResource LeftIcon}"
+                                Width="14"
+                                Height="14" />
+            </Button>
+        </StackPanel>
+        <Grid VerticalAlignment="Stretch"
+              HorizontalAlignment="Stretch"
+              Grid.Row="2"
+              Grid.Column="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+            <ListBox ItemsSource="{Binding DisplayedAffects}"
+                     HorizontalAlignment="Stretch"
+                     VerticalAlignment="Stretch"
+                     Grid.Column="0"
+                     ItemTemplate="{StaticResource AffectDescriptionTemplate}"
+                     SelectedItem="{Binding SelectedDisplayedAffect}"/>
+            <StackPanel Orientation="Vertical"
+                        Grid.Column="1">
+                <Button  Width="22"
+                         Height="22"
+                         Margin="5"
+                         Command="{Binding MoveDisplayedAffectUpCommand}">
+                    <ContentControl Style="{StaticResource UpIcon}"
+                                    Width="14"
+                                    Height="14" />
+                </Button>
+                <Button  Width="22"
+                         Height="22"
+                         Margin="5"
+                         Command="{Binding MoveDisplayedAffectDownCommand}">
+                    <ContentControl Style="{StaticResource DownIcon}"
+                                    Width="14"
+                                    Height="14" />
+                </Button>
+            </StackPanel>
+        </Grid>
+        <StackPanel Orientation="Horizontal"
+                    Grid.Row="4"
+                    Grid.Column="2"
+                    Margin="0,5,0,0"
+                    HorizontalAlignment="Right">
+            <Button MinWidth="50"
+                    IsDefault="True"
+                    Click="HandleOkClicked">
+                <TextBlock Text="{x:Static Properties:Resources.Ok}" />
+            </Button>
+            <Button MinWidth="50"
+                    Margin="5,0,0,0"
+                    IsCancel="True">
+                <TextBlock Text="{x:Static Properties:Resources.Cancel}" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

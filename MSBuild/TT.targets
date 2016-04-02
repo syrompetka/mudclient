@@ -1,0 +1,11 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">                        
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\TextTemplating\v10.0\Microsoft.TextTemplating.targets" />
+    <PropertyGroup>
+      <TransformOnBuild>true</TransformOnBuild>
+    </PropertyGroup>
+    <ItemGroup>
+      <T4ParameterValues Include="SolutionDirectory">
+        <Value>$(SolutionDir)</Value>
+      </T4ParameterValues>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{95218378-19CB-419E-92F1-0D6E2A2897A6}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Adan.Client.Plugins.GroupWidget</RootNamespace>
+    <AssemblyName>Adan.Client.Plugins.GroupWidget</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSLib.Net.Annotations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="CSLib.Net.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="GroupManager.cs" />
+    <Compile Include="Model\ActionParameters\SelectedMonsterParameter.cs" />
+    <Compile Include="Model\GroupHolder.cs" />
+    <Compile Include="Model\MonsterHolder.cs" />
+    <Compile Include="Model\ParameterDescriptions\SelectedMonsterParameterDescription.cs" />
+    <Compile Include="MonstersManager.cs" />
+    <Compile Include="MonstersWidgetPlugin.cs" />
+    <Compile Include="MonstersWidgetControl.xaml.cs">
+      <DependentUpon>MonstersWidgetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ConveyorUnits\RoomMonstersUnit.cs" />
+    <Compile Include="MessageDeserializers\RoomMonstersMessageDeserializer.cs" />
+    <Compile Include="Messages\RoomMonstersMessage.cs" />
+    <Compile Include="OptionsDialog.xaml.cs">
+      <DependentUpon>OptionsDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ParameterDescriptions\SelectedGroupMateParameterDescription.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="ViewModel\AffectDescription.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Messages\GroupStatusMessage.cs" />
+    <Compile Include="MessageDeserializers\GroupStatusMessageDeserializer.cs" />
+    <Compile Include="ConveyorUnits\GroupStatusUnit.cs" />
+    <Compile Include="GroupWidgetControl.xaml.cs">
+      <DependentUpon>GroupWidgetControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GroupWidgetPlugin.cs" />
+    <Compile Include="ViewModel\AffectViewModel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ViewModel\SelectedMonsterParameterViewModel.cs" />
+    <Compile Include="ViewModel\MonsterViewModel.cs" />
+    <Compile Include="ViewModel\RoomMonstersViewModel.cs" />
+    <Compile Include="ViewModel\GroupMateViewModel.cs" />
+    <Compile Include="ViewModel\GroupStatusViewModel.cs" />
+    <Compile Include="ViewModel\GroupWidgetOptionsViewModel.cs" />
+    <Compile Include="Model\ActionParameters\SelectedGroupMateParameter.cs" />
+    <Compile Include="ViewModel\SelectedGroupMateParameterViewModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">
+      <Project>{B9D6E795-44B4-4998-AAE5-EA3CB547563D}</Project>
+      <Name>Adan.Client.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="MonstersWidgetControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="GroupWidgetControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="OptionsDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ParameterEditingTemplates.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\stun-immune.png" />
+    <Resource Include="Images\tornado.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(SolutionDir)MSBuild\Common.targets" />
+</Project>

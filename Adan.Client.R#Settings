@@ -1,0 +1,3 @@
+<Configuration>
+  <SharingSettings AutoUpdateCommonSettings="True" ExternalSettingsFilePath="..\Shared.R#Settings" />
+</Configuration>

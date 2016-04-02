@@ -1,0 +1,267 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B9D6E795-44B4-4998-AAE5-EA3CB547563D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Adan.Client.Common</RootNamespace>
+    <AssemblyName>Adan.Client.Common</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile />
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSLib.Net.Annotations">
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="CSLib.Net.Diagnostics">
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zlib">
+      <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zlib.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommandSerializers\CommandSerializer.cs" />
+    <Compile Include="Commands\BuiltinCommandTypes.cs" />
+    <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\HotkeyCommand.cs" />
+    <Compile Include="Commands\TextCommand.cs" />
+    <Compile Include="Controls\ContorlBoxNative\MouseWheelRedirector.cs" />
+    <Compile Include="Controls\ContorlBoxNative\SafeLogFont.cs" />
+    <Compile Include="Controls\ContorlBoxNative\TextView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ContorlBoxNative\TextBoxNative.cs" />
+    <Compile Include="Controls\NumberTextBox.cs" />
+    <Compile Include="Controls\ScrollableFlowTextControl.cs" />
+    <Compile Include="Controls\TextFormatting\CustomTextParagraphProperties.cs" />
+    <Compile Include="Controls\TextFormatting\CustomTextRunProperties.cs" />
+    <Compile Include="Controls\TextFormatting\MessageTextSource.cs" />
+    <Compile Include="Controls\TextFormatting\TextSelectionSettings.cs" />
+    <Compile Include="Model\IUndo.cs" />
+    <Compile Include="Settings\CommonProfileSettings.cs" />
+    <Compile Include="Controls\ActionEditorControl.xaml.cs">
+      <DependentUpon>ActionEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ActionParametersEditorControl.xaml.cs">
+      <DependentUpon>ActionParametersEditorControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ColorSelector.xaml.cs">
+      <DependentUpon>ColorSelector.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Controls\BackgroundColorSelector.xaml.cs">
+      <DependentUpon>BackgroundColorSelector.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\CursorPositionHistory.cs" />
+    <Compile Include="Controls\GenericTemplateSelector.cs" />
+    <Compile Include="Settings\ProfileChangedEventArgs.cs" />
+    <Compile Include="Settings\SettingsChangedEventArgs.cs" />
+    <Compile Include="Settings\SettingsErrorEventArgs.cs" />
+    <Compile Include="Settings\SettingsFolder.cs" />
+    <Compile Include="ConveyorUnits\ConveyorUnit.cs" />
+    <Compile Include="Conveyor\MessageConveyor.cs" />
+    <Compile Include="Conveyor\MessageReceivedEventArgs.cs" />
+    <Compile Include="Dialogs\OkDialog.xaml.cs">
+      <DependentUpon>OkDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\YesNoDialog.xaml.cs">
+      <DependentUpon>YesNoDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MessageDeserializers\MessageDeserializer.cs" />
+    <Compile Include="Messages\BuiltinMessageTypes.cs" />
+    <Compile Include="Messages\ConnectedMessage.cs" />
+    <Compile Include="Messages\DisconnectedMessage.cs" />
+    <Compile Include="Messages\ErrorMessage.cs" />
+    <Compile Include="Messages\InfoMessage.cs" />
+    <Compile Include="Messages\Message.cs" />
+    <Compile Include="Messages\NetworkErrorMessage.cs" />
+    <Compile Include="Messages\OutputToMainWindowMessage.cs" />
+    <Compile Include="Messages\TextMessage.cs" />
+    <Compile Include="Messages\TextMessageBlock.cs" />
+    <Compile Include="Messages\ChangeEchoModeMessage.cs" />
+    <Compile Include="Model\ActionBase.cs" />
+    <Compile Include="Model\ActionExecutionContext.cs" />
+    <Compile Include="Model\Affect.cs" />
+    <Compile Include="Model\CharacterStatus.cs" />
+    <Compile Include="Model\CommandAlias.cs" />
+    <Compile Include="Model\Group.cs" />
+    <Compile Include="Model\Highlight.cs" />
+    <Compile Include="Model\Hotkey.cs" />
+    <Compile Include="Settings\SettingsHolder.cs" />
+    <Compile Include="Settings\SettingsSerializer.cs" />
+    <Compile Include="Themes\LightThemeDescription.cs" />
+    <Compile Include="Utils\AnsiColor.cs" />
+    <Compile Include="Utils\ColorsQueue.cs" />
+    <Compile Include="Utils\ErrorLogger.cs" />
+    <Compile Include="ViewModel\InitializationStatusModel.cs" />
+    <Compile Include="Model\MonsterStatus.cs" />
+    <Compile Include="Model\PetStatus.cs" />
+    <Compile Include="Model\Position.cs" />
+    <Compile Include="Model\RootModel.cs" />
+    <Compile Include="Model\Substitution.cs" />
+    <Compile Include="Model\TextTrigger.cs" />
+    <Compile Include="Model\Ticker.cs" />
+    <Compile Include="Model\TriggerBase.cs" />
+    <Compile Include="Model\Variable.cs" />
+    <Compile Include="Networking\TelnetConstants.cs" />
+    <Compile Include="Plugins\ActionDescription.cs" />
+    <Compile Include="Model\ActionParameterBase.cs" />
+    <Compile Include="Model\ActionWithParameters.cs" />
+    <Compile Include="Networking\DataReceivedEventArgs.cs" />
+    <Compile Include="Networking\MccpClient.cs" />
+    <Compile Include="Networking\NetworkErrorEventArgs.cs" />
+    <Compile Include="Networking\TelnetClient.cs" />
+    <Compile Include="Plugins\ParameterDescription.cs" />
+    <Compile Include="Plugins\PluginBase.cs" />
+    <Compile Include="Plugins\WidgetDescription.cs" />
+    <Compile Include="Settings\ProfileHolder.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Themes\ExpressionDarkThemeDescription.cs" />
+    <Compile Include="Themes\NormalThemeDescription.cs" />
+    <Compile Include="Themes\TextColor.cs" />
+    <Compile Include="Themes\ThemeManager.cs" />
+    <Compile Include="Themes\ThemeDescription.cs" />
+    <Compile Include="Utils\BackgroundTextColorToBrushConverter.cs" />
+    <Compile Include="Utils\CommandLineParser.cs" />
+    <Compile Include="Utils\DelegateCommand.cs" />
+    <Compile Include="Utils\DelegateCommandWithCanExecute.cs" />
+    <Compile Include="Utils\EqualityToBooleanConverter.cs" />
+    <Compile Include="Utils\FakeXmlParser.cs" />
+    <Compile Include="Utils\InverseBooleanConverter.cs" />
+    <Compile Include="Utils\InverseBooleanToVisibilityConverter.cs" />
+    <Compile Include="Utils\MultiplierConverter.cs" />
+    <Compile Include="Utils\PatternMatching\ConstantStringToken.cs" />
+    <Compile Include="Utils\PatternMatching\FaultToken.cs" />
+    <Compile Include="Utils\PatternMatching\MatchingResult.cs" />
+    <Compile Include="Utils\PatternMatching\PatternToken.cs" />
+    <Compile Include="Utils\PatternMatching\VariableReferenceToken.cs" />
+    <Compile Include="Utils\PatternMatching\WildcardParser.cs" />
+    <Compile Include="Utils\PatternMatching\WildcardToken.cs" />
+    <Compile Include="Utils\PercentageConverter.cs" />
+    <Compile Include="Utils\SecondsToTimeSpanConverter.cs" />
+    <Compile Include="Utils\SwitchCase.cs" />
+    <Compile Include="Utils\SwitchCaseCollection.cs" />
+    <Compile Include="Utils\SwitchConverter.cs" />
+    <Compile Include="Utils\SwitchedContent.cs" />
+    <Compile Include="Utils\TextColorParser.cs" />
+    <Compile Include="Utils\TextColorToBrushConverter.cs" />
+    <Compile Include="Utils\TreeHelper.cs" />
+    <Compile Include="Utils\WildcardStringHelper.cs" />
+    <Compile Include="ViewModel\ActionParametersViewModel.cs" />
+    <Compile Include="ViewModel\ActionParameterViewModelBase.cs" />
+    <Compile Include="ViewModel\ActionsViewModel.cs" />
+    <Compile Include="ViewModel\ActionViewModelBase.cs" />
+    <Compile Include="ViewModel\ActionWithParametersViewModelBase.cs" />
+    <Compile Include="ViewModel\ViewModelBase.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Controls\ActionEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ActionParametersEditorControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Controls\ColorSelector.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\BackgroundColorSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\OkDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\YesNoDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(SolutionDir)MSBuild\Common.targets" />
+</Project>

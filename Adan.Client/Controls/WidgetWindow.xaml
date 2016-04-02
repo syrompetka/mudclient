@@ -1,0 +1,48 @@
+﻿<Window x:Class="Adan.Client.Controls.WidgetWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:controls="clr-namespace:Adan.Client.Controls"
+        WindowStyle="None"
+        ShowInTaskbar="False"
+        Focusable="False"
+        Closing="CancelWindowClosing">
+    <Window.Resources>
+        <Style TargetType="{x:Type controls:WidgetWindow}">
+            <Setter Property="WindowChrome.WindowChrome">
+                <Setter.Value>
+                    <WindowChrome CaptionHeight="12"
+                                   ResizeBorderThickness="2" 
+                                  CornerRadius="2"
+                                  GlassFrameThickness="0"
+                                  />
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type controls:WidgetWindow}">
+                        <Border BorderBrush="{StaticResource NormalBorderBrush}" BorderThickness="2,2,2,2" CornerRadius="2,2,2,2">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="12"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Border Background="{StaticResource ShadeBrush}" Height="12"  CornerRadius="0" HorizontalAlignment="Stretch" Grid.Row="0">
+                                    <TextBlock Foreground="{StaticResource TextBrush}" 
+                                           FontSize="8pt" 
+                                           HorizontalAlignment="Left" 
+                                           VerticalAlignment="Center" 
+                                           Padding="2,0,0,1"
+                                           Text="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=Title}" />
+                                </Border>
+                                <ContentPresenter Content="{TemplateBinding Content}" Grid.Row="1"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <ContentPresenter />
+    </Grid>
+</Window>
