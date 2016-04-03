@@ -1,98 +1,59 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Threading;
-using Adan.Client.Common.Model;
-using Adan.Client.Common.Themes;
-using Adan.Client.Common.Utils;
-using Adan.Client.Plugins.OutputWindow.Messages;
-using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
-using System.Windows;
-using Adan.Client.Common.Messages;
-
+﻿
 namespace Adan.Client.Plugins.OutputWindow
 {
-    /// <summary>
-    /// 
-    /// </summary>
+    using System;
+    using System.Linq;
+    using System.Windows;
+    using Common.Model;
+    using CSLib.Net.Annotations;
+    using CSLib.Net.Diagnostics;
+    using Messages;
+    using ViewModel;
+
     public class AdditionalOutputWindowManager
     {
-        private AdditionalOutputWindow _window;
-        private Dictionary<string, List<TextMessage>> _additionalOutputWindows;
-        private string CurrentUid = String.Empty;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="window"></param>
-        public AdditionalOutputWindowManager(AdditionalOutputWindow window)
+        private readonly AdditionalOutputWindowsViewModel _viewModel;
+        
+        public AdditionalOutputWindowManager(AdditionalOutputWindowsViewModel viewModel)
         {
-            _window = window;
-            _additionalOutputWindows = new Dictionary<string, List<TextMessage>>();
+            _viewModel = viewModel;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
         public void OutputWindowCreated([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            _additionalOutputWindows.Add(rootModel.Uid, new List<TextMessage>());
+            _viewModel.Windows.Add(new OutputWindowViewModel(rootModel) { IsActive = false });
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
         public void OutputWindowClosed([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
-
-            if (_additionalOutputWindows.ContainsKey(rootModel.Uid))
-                _additionalOutputWindows.Remove(rootModel.Uid);
+            var windowToRemove = _viewModel.Windows.FirstOrDefault(w => w.RootModel == rootModel);
+            if (windowToRemove != null)
+            {
+                _viewModel.Windows.Remove(windowToRemove);
+            }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
         public void OutputWindowChanged([NotNull] RootModel rootModel)
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            List<TextMessage> document;
-
-            if (_additionalOutputWindows.TryGetValue(rootModel.Uid, out document))
+            foreach (var outputWindowViewModel in _viewModel.Windows)
             {
-                _window.ChangeOutputWindow(document);
-                CurrentUid = rootModel.Uid;
+                outputWindowViewModel.IsActive = outputWindowViewModel.RootModel == rootModel;
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="rootModel"></param>
-        /// <param name="message"></param>
         public void AddText(RootModel rootModel, OutputToAdditionalWindowMessage message)
         {
-            List<TextMessage> document;
-
-            if (_additionalOutputWindows.TryGetValue(rootModel.Uid, out document))
+            var window = _viewModel.Windows.FirstOrDefault(w => w.RootModel == rootModel);
+            if (window != null && window.TextPresenter != null)
             {
-                document.Add(message);
-                if (CurrentUid == rootModel.Uid)
-                {
-                    Application.Current.Dispatcher.BeginInvoke((Action)(() =>
-                        {
-                            _window.Refresh();
-                            _window.scroll.ScrollToEnd();
-                        }), DispatcherPriority.Background);
-                }
+                Application.Current.Dispatcher.BeginInvoke((Action)(() => window.TextPresenter.AddMessages(Enumerable.Repeat(message, 1))));
+
+
             }
         }
     }
