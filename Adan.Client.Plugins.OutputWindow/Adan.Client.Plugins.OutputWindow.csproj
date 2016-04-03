@@ -60,6 +60,7 @@
     </Compile>
     <Compile Include="AdditionalOutputWindowManager.cs" />
     <Compile Include="Model\Actions\OutputToAdditionalWindowAction.cs" />
+    <Compile Include="ViewModel\AdditionalOutputWindowsViewModel.cs" />
     <Compile Include="ViewModel\OutputToAdditionalWindowActionViewModel.cs" />
     <Compile Include="ConveyorUnits\OutputToAdditionalWindowConveyorUnit.cs" />
     <Compile Include="Messages\OutputToAdditionalWindowMessage.cs" />

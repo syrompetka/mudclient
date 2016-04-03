@@ -1,52 +1,28 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AdditionalOutputWindow.xaml.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Interaction logic for AdditionalOutputWindow.xaml
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using Adan.Client.Common.Messages;
-using CSLib.Net.Annotations;
-using CSLib.Net.Diagnostics;
-using System.Collections.Generic;
-using System.Windows.Controls;
-
-namespace Adan.Client.Plugins.OutputWindow
+﻿namespace Adan.Client.Plugins.OutputWindow
 {
+    using System;
+    using System.Windows;
+    using Common.Controls;
+    using ViewModel;
 
     /// <summary>
     /// Interaction logic for AdditionalOutputWindow.xaml
     /// </summary>
-    public partial class AdditionalOutputWindow : UserControl
+    public partial class AdditionalOutputWindow
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AdditionalOutputWindow"/> class.
         /// </summary>
-        public AdditionalOutputWindow()
+        public AdditionalOutputWindow(AdditionalOutputWindowsViewModel viewModel)
         {
             InitializeComponent();
+            DataContext = viewModel;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="messages"></param>
-        public void ChangeOutputWindow([NotNull] List<TextMessage> messages)
+        
+        private void HandleFlowTextControlInitialized(object sender, EventArgs e)
         {
-            Assert.ArgumentNotNull(messages, "messages");
-
-            _textBoxNative.Messages = messages;
-            _textBoxNative.Refresh();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public void Refresh()
-        {
-            _textBoxNative.Refresh();
+            var viewModel = (OutputWindowViewModel) ((ScrollableFlowTextControl) sender).DataContext;
+            viewModel.TextPresenter = (ScrollableFlowTextControl) sender;
         }
     }
 }

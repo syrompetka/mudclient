@@ -6,7 +6,6 @@
     using System.Linq;
     using System.Windows;
     using Common.Conveyor;
-    using Common.ConveyorUnits;
     using Common.Model;
     using Common.Plugins;
     using Common.ViewModel;
@@ -15,6 +14,7 @@
     using CSLib.Net.Diagnostics;
     using Model;
     using Model.Actions;
+    using ViewModel;
 
     /// <summary>
     /// A <see cref="PluginBase"/> implementation to add additional output window.
@@ -22,10 +22,9 @@
     [Export(typeof(PluginBase))]
     public sealed class OutputToAdditionalWindowPlugin : PluginBase
     {
-        private readonly AdditionalOutputWindow _additionalOutputWindowControl;
-        private AdditionalOutputWindowManager _manager;
-        private WidgetDescription _widget;
-        
+        private readonly AdditionalOutputWindowManager _manager;
+        private readonly WidgetDescription _widget;
+
         /// <summary>
         /// 
         /// </summary>
@@ -42,7 +41,17 @@
         /// </summary>
         public OutputToAdditionalWindowPlugin()
         {
-            _additionalOutputWindowControl = new AdditionalOutputWindow();
+            var viewModel = new AdditionalOutputWindowsViewModel();
+            var additionalOutputWindowControl = new AdditionalOutputWindow(viewModel);
+            _manager = new AdditionalOutputWindowManager(viewModel);
+
+            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", additionalOutputWindowControl)
+            {
+                Left = (int)SystemParameters.PrimaryScreenWidth - 400,
+                Height = 300,
+                Width = 400,
+                ResizeToContent = false
+            };
         }
 
         /// <summary>
@@ -100,16 +109,6 @@
 
             initializationStatusModel.CurrentPluginName = "Additional window";
             initializationStatusModel.PluginInitializationStatus = "Initializing";
-            
-            _manager = new AdditionalOutputWindowManager(_additionalOutputWindowControl);
-
-            _widget = new WidgetDescription("AdditionalOutputWindow", "Additional output", _additionalOutputWindowControl)
-            {
-                Left = (int)SystemParameters.PrimaryScreenWidth - 400,
-                Height = 300,
-                Width = 400,
-                ResizeToContent = false
-            };
         }
 
         public override void InitializeConveyor(MessageConveyor conveyor)

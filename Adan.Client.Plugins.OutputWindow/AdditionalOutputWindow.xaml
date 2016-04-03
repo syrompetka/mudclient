@@ -3,18 +3,41 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:Controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
+             xmlns:controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
              mc:Ignorable="d" 
              d:DesignHeight="300"
              d:DesignWidth="500">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid Grid.Row="0">
-            <ScrollViewer Name="scroll" CanContentScroll="True" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled" Background="Black" FontSize="14">
-                <Controls:TextBoxNative  Name="_textBoxNative" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False"/>
-            </ScrollViewer>
-        </Grid>
+        <ItemsControl Name="windowsContainer" ItemsSource="{Binding Windows}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    </Grid>
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <ScrollViewer  
+                        CanContentScroll="True" 
+                        VerticalScrollBarVisibility="Visible" 
+                        HorizontalScrollBarVisibility="Disabled" 
+                        Background="Black"
+                        Visibility="{Binding IsActive, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        
+                        <controls:ScrollableFlowTextControl 
+                            HorizontalAlignment="Stretch" 
+                            VerticalAlignment="Stretch" 
+                            Initialized="HandleFlowTextControlInitialized"
+                            MaximumLinesToStore="5000"
+                            LinesOverflowPercentBeforeCleanup="10"
+                            AutoScroll="True"
+                            Focusable="False" />
+                    </ScrollViewer>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
     </Grid>
 </UserControl>
