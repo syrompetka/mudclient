@@ -8,8 +8,7 @@
              Background="{DynamicResource WidgetBackgroundBrush}"
              ClipToBounds="True">
     <UserControl.Resources>
-        <ResourceDictionary Source="Resources.xaml"
-                            x:Key="MapResources" />
+        <ResourceDictionary Source="Resources.xaml"/>
     </UserControl.Resources>
     <Grid>
         <Render:ZoneVisual HorizontalAlignment="Stretch"
