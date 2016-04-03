@@ -43,5 +43,10 @@ namespace Adan.Client.Common.Commands
         /// Type of command to toggle full screen mode of the main window.
         /// </summary>
         public const int ToggleFullScreenMode = 6;
+
+        /// <summary>
+        /// Type of command to flush output command queue.
+        /// </summary>
+        public const int FlushOutputQueue = 7;
     }
 }

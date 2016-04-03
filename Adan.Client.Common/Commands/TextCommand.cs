@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextCommand.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the TextCommand type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Commands
+﻿namespace Adan.Client.Common.Commands
 {
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;

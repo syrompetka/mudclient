@@ -1,21 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AliasUnit.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the AliasUnit type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-using Adan.Client.Common.Conveyor;
-
-namespace Adan.Client.ConveyorUnits
+﻿namespace Adan.Client.ConveyorUnits
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Model.Actions;
+    using Common.Conveyor;
     using Common.Commands;
     using Common.ConveyorUnits;
     using Common.Model;
@@ -29,6 +18,8 @@ namespace Adan.Client.ConveyorUnits
         private readonly ActionExecutionContext _context = ActionExecutionContext.Empty;
 
         private readonly Regex _whiteSpaceRegex = new Regex(@" {2,}", RegexOptions.Compiled);
+        // For optimization.
+        private readonly char[] _paramsSeparatorArray = new[] { ' ' };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AliasUnit"/> class.
@@ -77,50 +68,39 @@ namespace Adan.Client.ConveyorUnits
             {
                 foreach (var alias in group.Aliases)
                 {
-                    if (!commandText.StartsWith(alias.Command + " ", StringComparison.CurrentCulture) && !commandText.Equals(alias.Command, StringComparison.OrdinalIgnoreCase))
+                    if (!commandText.StartsWith(alias.Command + " ", StringComparison.OrdinalIgnoreCase) && !commandText.Equals(alias.Command, StringComparison.OrdinalIgnoreCase))
                     {
                         continue;
                     }
 
-                    int ind = commandText.IndexOf(' ');
 
-                    if (ind != -1)
-                        _context.Parameters[0] = commandText.Substring(ind + 1);
-                    else
-                        _context.Parameters[0] = String.Empty;
-
-                    _context.Parameters[1] = _context.Parameters[0];
-
-                    //var aliasContainsParams = alias.Actions.OfType<SendTextAction>().Any(a => a.CommandText.Contains("%0") || a.CommandText.Contains("%1"));
-                    var aliasContainsParams = false;
-                    int lastSendTextAction = -1;
-                    for (var i = 0; i < alias.Actions.Count; ++i)
+                    var parts = commandText.Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
+                    if (parts.Length >= 2)
                     {
-                        var act = alias.Actions[i] as SendTextAction;
-                        if (act != null)
-                        {
-                            lastSendTextAction = i;
-                            if (act.CommandText.Contains("%0") || act.CommandText.Contains("%1"))
-                                aliasContainsParams = true;
-                        }
+                        _context.Parameters[0] = string.Join(" ", parts.Skip(1));
+                    }
+                    else
+                    {
+                        _context.Parameters[0] = string.Empty;
                     }
 
-                    for (var i = 0; i < alias.Actions.Count; i++)
+                    for (int i = 1; i < 10; i++)
                     {
-                        if (i == lastSendTextAction && !aliasContainsParams)
+                        if (i < parts.Length)
                         {
-                            var sendTextAction = alias.Actions[i] as SendTextAction;
-                            new SendTextAction
-                            {
-                                CommandText = sendTextAction.CommandText + " " + _context.Parameters[0]
-                            }.Execute(Conveyor.RootModel, _context);
+                            _context.Parameters[i] = parts[i];
                         }
                         else
                         {
-                            alias.Actions[i].Execute(Conveyor.RootModel, _context);
+                            _context.Parameters[i] = string.Empty;
                         }
                     }
+                    foreach (var actionBase in alias.Actions)
+                    {
+                        actionBase.Execute(Conveyor.RootModel, _context);
+                    }
 
+                    Conveyor.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
                     textCommand.Handled = true;
                     return;
                 }

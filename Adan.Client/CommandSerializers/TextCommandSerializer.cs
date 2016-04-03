@@ -19,6 +19,7 @@
         #region Constants and Fields
 
         private readonly byte[] _buffer = new byte[32767];
+        private int _currentBufferPosition = 0;
         private readonly Encoding _encoding = Encoding.GetEncoding(1251);
 
         #endregion
@@ -41,15 +42,21 @@
             Assert.ArgumentNotNull(command, "command");
 
             var textCommand = command as TextCommand;
-            if (textCommand == null)
+            if (textCommand != null)
             {
+                textCommand.Handled = true;
+                _currentBufferPosition += _encoding.GetBytes(textCommand.CommandText, 0, textCommand.CommandText.Length, _buffer, _currentBufferPosition);
+                _buffer[_currentBufferPosition] = 0x0A;
+                _currentBufferPosition++;
                 return;
             }
 
-            textCommand.Handled = true;
-            var bytesToSend = _encoding.GetBytes(textCommand.CommandText, 0, textCommand.CommandText.Length, _buffer, 0);
-            _buffer[bytesToSend] = 0x0A;
-            SendRawDataToServer(0, bytesToSend + 1, _buffer);
+            var flushCommand = command as FlushOutputQueueCommand;
+            if ((flushCommand != null && _currentBufferPosition > 0) || (_currentBufferPosition > 200))
+            {
+                SendRawDataToServer(0, _currentBufferPosition, _buffer);
+                _currentBufferPosition = 0;
+            }
         }
         #endregion
 

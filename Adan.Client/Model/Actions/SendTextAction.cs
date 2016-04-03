@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SendTextAction.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the SendTextAction type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Model.Actions
+﻿namespace Adan.Client.Model.Actions
 {
     using System;
     using System.Xml.Serialization;

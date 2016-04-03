@@ -637,6 +637,8 @@
                 catch (Exception)
                 { }
             }
+
+            rootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
         }
 
         public void SendToAllWindows(IEnumerable<ActionBase> actionsToExecute, ActionExecutionContext actionExecutionContext)
@@ -653,6 +655,8 @@
                     {
                     }
                 }
+
+                rootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
             }
         }
         #endregion

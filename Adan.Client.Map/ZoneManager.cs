@@ -1,38 +1,28 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ZoneManager.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the ZoneManager type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Map
+﻿namespace Adan.Client.Map
 {
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using System.Threading.Tasks;
+    using System.Timers;
     using System.Windows;
-    using System.Windows.Threading;
     using System.Xml;
     using System.Xml.Serialization;
-    using Adan.Client.Common;
-    using Adan.Client.Common.Messages;
-    using Adan.Client.Common.Settings;
-    using Adan.Client.Common.Utils;
+    using Common.Commands;
     using Common.Model;
+    using Common.Settings;
+    using Common.Utils;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Dialogs;
     using Model;
     using Properties;
+    using SharpAESCrypt;
     using ViewModel;
-    using OperationMode = SharpAESCrypt.OperationMode;
 
     /// <summary>
     /// Class to manage zone loading/saving etc.
@@ -48,7 +38,7 @@ namespace Adan.Client.Map
         private readonly Window _mainWindow;
         private readonly RouteManager _routeManger;
         private readonly ConcurrentDictionary<int, ZoneViewModel> _loadedZones = new ConcurrentDictionary<int, ZoneViewModel>();
-        private readonly System.Timers.Timer _timer;
+        private readonly Timer _timer;
 
         private Dictionary<string, ZoneHolder> _zoneHolders = new Dictionary<string, ZoneHolder>();
         private XmlSerializer _additionalRoomParametersSerializer;
@@ -69,7 +59,7 @@ namespace Adan.Client.Map
             _mainWindow = MainWindowEx;
             _routeManger = routeManger;
             _emptyZone = new ZoneViewModel(new Zone { Id = -1000 }, Enumerable.Empty<AdditionalRoomParameters>()) { ZoomLevel = Settings.Default.MapZoomLevel };
-            _timer = new System.Timers.Timer(5000) { AutoReset = false };
+            _timer = new Timer(5000) { AutoReset = false };
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
 
@@ -83,7 +73,7 @@ namespace Adan.Client.Map
 
         private void MapDownloader_UpgradeComplete(object sender, EventArgs e)
         {
-            if(_mapControl.ViewModel != null)
+            if (_mapControl.ViewModel != null)
             {
                 if (_zoneHolders.ContainsKey(_mapControl.ViewModelUid))
                 {
@@ -92,7 +82,7 @@ namespace Adan.Client.Map
             }
         }
 
-        private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        private void _timer_Elapsed(object sender, ElapsedEventArgs e)
         {
             UnloadUnusedZones();
             _timer.Start();
@@ -152,7 +142,7 @@ namespace Adan.Client.Map
         /// </summary>
         public void Dispose()
         {
-            if(_timer != null)
+            if (_timer != null)
                 _timer.Dispose();
 
             foreach (var zoneViewModel in _loadedZones.Values.ToArray())
@@ -303,12 +293,14 @@ namespace Adan.Client.Map
             if (zone != null)
             {
                 var room = zone.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
-                if (room != null)
+                if (room != null && room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry.Any())
                 {
                     foreach (var action in room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry)
                     {
                         action.Execute(zoneHolder.RootModel, ActionExecutionContext.Empty);
                     }
+
+                    zoneHolder.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
                 }
             }
         }
@@ -325,7 +317,7 @@ namespace Adan.Client.Map
             return Path.Combine(SettingsHolder.Instance.Folder, "Maps", "ZoneVisits");
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "It's ok here.")]
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "It's ok here.")]
         [CanBeNull]
         private ZoneViewModel LoadZone(int zoneId)
         {
@@ -348,7 +340,7 @@ namespace Adan.Client.Map
                         return null;
 
                     loadedZone = LoadZoneFromFile(zoneId.ToString(CultureInfo.InvariantCulture) + ".xml");
-                    
+
                     if (loadedZone == null)
                         return null;
                 }
@@ -436,7 +428,7 @@ namespace Adan.Client.Map
             {
                 using (var inStream = File.OpenRead(Path.Combine(GetZonesFolder(), zoneFileName)))
                 {
-                    var aesStream = new SharpAESCrypt.SharpAESCrypt("A5Ub5T7j5cYg40v", inStream, OperationMode.Decrypt);
+                    var aesStream = new SharpAESCrypt("A5Ub5T7j5cYg40v", inStream, OperationMode.Decrypt);
                     using (var streamReader = new StreamReader(aesStream, Encoding.GetEncoding(20866)))
                     {
                         return (Zone)_zoneSerializer.Deserialize(streamReader);
