@@ -871,7 +871,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             SaveAllSettings();
-
+            PluginHost.Instance.Dispose();
             base.OnClosing(e);
         }
 
