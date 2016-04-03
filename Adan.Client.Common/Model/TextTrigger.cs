@@ -6,7 +6,7 @@
     using System.Xml.Serialization;
     using System.Text;
     using System.Text.RegularExpressions;
-
+    using Commands;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
     using Messages;
@@ -134,11 +134,9 @@
 
                 return true;
             }
-            else
-            {
-                var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
-                return res.IsSuccess;
-            }
+
+            var res = GetRootPatternToken(rootModel).Match(textMessage.InnerText, 0, _matchingResults);
+            return res.IsSuccess;
         }
 
         /// <summary>
@@ -165,12 +163,15 @@
                 if (i < _matchingResults.Count)
                     Context.Parameters[i] = _matchingResults[i];
             }
+
             Context.CurrentMessage = message;
 
             foreach (var action in Actions)
             {
                 action.Execute(rootModel, Context);
             }
+
+            rootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
 
             if (StopProcessingTriggersAfterThis)
             {

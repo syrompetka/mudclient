@@ -80,6 +80,7 @@ namespace Adan.Client.ConveyorUnits
                         action.Execute(Conveyor.RootModel, _context);
                     }
 
+                    Conveyor.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
                     hotKeyCommand.Handled = true;
                     return;
                 }

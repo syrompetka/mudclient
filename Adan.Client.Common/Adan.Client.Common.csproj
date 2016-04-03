@@ -70,6 +70,7 @@
     <Compile Include="CommandSerializers\CommandSerializer.cs" />
     <Compile Include="Commands\BuiltinCommandTypes.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\FlushOutputQueueCommand.cs" />
     <Compile Include="Commands\HotkeyCommand.cs" />
     <Compile Include="Commands\TextCommand.cs" />
     <Compile Include="Controls\ContorlBoxNative\MouseWheelRedirector.cs" />

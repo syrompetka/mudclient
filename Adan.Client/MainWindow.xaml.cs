@@ -624,6 +624,8 @@ namespace Adan.Client
                             { }
 
                         }
+
+                        outputWindow.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
                     }
                 }
 

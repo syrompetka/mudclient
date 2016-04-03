@@ -1,15 +1,5 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ActionExecutionContext.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the ActionExecutionContext type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Common.Model
+﻿namespace Adan.Client.Common.Model
 {
-    using System;
     using System.Collections.Generic;
 
     using CSLib.Net.Annotations;

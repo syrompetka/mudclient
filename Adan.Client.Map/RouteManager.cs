@@ -772,6 +772,8 @@ namespace Adan.Client.Map
                     _rootModel.PushMessageToConveyor(new ErrorMessage(Resources.RoomNavigationError));
                     break;
             }
+
+            _rootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
         }
 
         private void RebuildRouteIndexes()

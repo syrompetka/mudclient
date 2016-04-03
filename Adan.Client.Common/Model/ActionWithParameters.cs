@@ -95,24 +95,10 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(valueToProcess, "valueToProcess");
             Assert.ArgumentNotNull(model, "model");
             Assert.ArgumentNotNull(context, "context");
-
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    if (context.Parameters.ContainsKey(i))
-            //        res = ReplaceParameters(res, i.ToString()[0], context.Parameters[i]);
-            //    else
-            //        res = ReplaceParameters(res, i.ToString()[0], string.Empty);
-            //}
             
             return ReplaceVariables(ReplaceParameters(valueToProcess, context), model);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="input"></param>
-        /// <param name="rootModel"></param>
-        /// <returns></returns>
         [NotNull]
         protected virtual string ReplaceVariables([NotNull] string input, [NotNull] RootModel rootModel)
         {
