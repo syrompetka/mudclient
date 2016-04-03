@@ -10,6 +10,8 @@
 namespace Adan.Client
 {
     using System;
+    using System.Globalization;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Threading;
@@ -29,6 +31,8 @@ namespace Adan.Client
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            Thread.CurrentThread.CurrentCulture=new CultureInfo("RU-RU");
+            Thread.CurrentThread.CurrentUICulture= new CultureInfo("RU-RU");
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
         }
