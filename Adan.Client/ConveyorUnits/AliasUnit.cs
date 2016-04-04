@@ -9,7 +9,7 @@
     using Common.ConveyorUnits;
     using Common.Model;
     using CSLib.Net.Diagnostics;
-
+    using Model.Actions;
     /// <summary>
     /// A <see cref="ConveyorUnit"/> that processes aliases.
     /// </summary>
@@ -73,31 +73,54 @@
                         continue;
                     }
 
-
-                    var parts = commandText.Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length >= 2)
-                    {
-                        _context.Parameters[0] = string.Join(" ", parts.Skip(1));
-                    }
+                    int ind = commandText.IndexOf(' ');
+                    if (ind != -1)
+                        _context.Parameters[0] = commandText.Substring(ind + 1);
                     else
+                        _context.Parameters[0] = String.Empty;
+
+                    var parts = _context.Parameters[0].Split(_paramsSeparatorArray, StringSplitOptions.RemoveEmptyEntries);
+                    for (int i = 1; i < 10; ++i)
                     {
-                        _context.Parameters[0] = string.Empty;
+                        if (i - 1 < parts.Length)
+                            _context.Parameters[i] = parts[i - 1];
+                        else
+                            _context.Parameters[i] = string.Empty;
                     }
 
-                    for (int i = 1; i < 10; i++)
+                    //If we have only 1 parameter then %1 = %0 like in jmc
+                    if (parts.Length < 2)
                     {
-                        if (i < parts.Length)
+                        _context.Parameters[1] = _context.Parameters[0];
+                    }
+                    
+                    var aliasContainsParams = false;
+                    int lastSendTextAction = -1;
+                    for (var i = 0; i < alias.Actions.Count; ++i)
+                    {
+                        var act = alias.Actions[i] as SendTextAction;
+                        if (act != null)
                         {
-                            _context.Parameters[i] = parts[i];
+                            lastSendTextAction = i;
+                            if (act.CommandText.Contains("%0") || act.CommandText.Contains("%1"))
+                                aliasContainsParams = true;
+                        }
+                    }
+
+                    for (var i = 0; i < alias.Actions.Count; i++)
+                    {
+                        if (i == lastSendTextAction && !aliasContainsParams)
+                        {
+                            var sendTextAction = alias.Actions[i] as SendTextAction;
+                            new SendTextAction
+                            {
+                                CommandText = sendTextAction.CommandText + " " + _context.Parameters[0]
+                            }.Execute(Conveyor.RootModel, _context);
                         }
                         else
                         {
-                            _context.Parameters[i] = string.Empty;
+                            alias.Actions[i].Execute(Conveyor.RootModel, _context);
                         }
-                    }
-                    foreach (var actionBase in alias.Actions)
-                    {
-                        actionBase.Execute(Conveyor.RootModel, _context);
                     }
 
                     Conveyor.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
