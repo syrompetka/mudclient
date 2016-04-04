@@ -37,6 +37,8 @@ namespace Adan.Client.Common.Model
         private string _pattern = string.Empty;
         [NonSerialized]
         private string _substituteWith = string.Empty;
+        [NonSerialized]
+        private Regex _compiledRegex = null;
 
         private Regex _wildRegex = new Regex(@"%[0-9]", RegexOptions.Compiled);
 
@@ -91,6 +93,11 @@ namespace Adan.Client.Common.Model
                 {
                     _pattern = value;
                 }
+
+                if (IsRegExp && (value.IndexOf("$") == -1 || value.IndexOf("$") == value.Length - 1))
+                    _compiledRegex = new Regex(_pattern, RegexOptions.Compiled | RegexOptions.CultureInvariant);
+                else
+                    _compiledRegex = null;
 
                 _rootPatternToken = null;
             }
@@ -150,7 +157,7 @@ namespace Adan.Client.Common.Model
             Assert.ArgumentNotNull(textMessage, "message");
             Assert.ArgumentNotNull(rootModel, "rootModel");
 
-            //ClearMatchingResults();
+            ClearMatchingResults();
             string text = textMessage.InnerText;
 
             if (string.IsNullOrEmpty(textMessage.InnerText))
@@ -158,15 +165,19 @@ namespace Adan.Client.Common.Model
 
             if (IsRegExp)
             {
-                var varReplace = rootModel.ReplaceVariables(_pattern);
-                if (!varReplace.IsAllVariables)
-                    return;
+                Regex rExp;
+                if (_compiledRegex != null)
+                {
+                    rExp = _compiledRegex;
+                }
+                else
+                {
+                    var varReplace = rootModel.ReplaceVariables(_pattern);
+                    if (!varReplace.IsAllVariables)
+                        return;
 
-                Regex rExp = new Regex(varReplace.Value);
-                //var matches = rExp.Matches(text);
-
-                //if (matches.Count == 1)
-                    //return;
+                    rExp = new Regex(varReplace.Value);
+                }
 
                 StringBuilder sb = new StringBuilder(text.Length);
                 int offset = 0;
@@ -186,126 +197,37 @@ namespace Adan.Client.Common.Model
                                 return match.Groups[int.Parse(m.Value.Substring(1))].Value;
                             }));
 
-                        //StringBuilder value = new StringBuilder(SubstituteWith);
-                        //for (int k = 1; k < match.Groups.Count; ++k)
-                        //    value.Replace("%" + (k - 1), match.Groups[k].Value);
-
-                        //sb.Append(value);
-
                         match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
                     } while (match.Success);
 
                     if (offset < textMessage.InnerText.Length)
                         sb.Append(text, offset, textMessage.InnerText.Length - offset);
 
-                    //for (int i = 0; i < matches.Count; ++i)
-                    //{
-                    //    if (offset < matches[i].Index)
-                    //        sb.Append(text, offset, matches[i].Index - offset);
-
-                    //    offset = matches[i].Index + matches[i].Length;
-
-                    //    //StringBuilder value = new StringBuilder(SubstituteWith);
-                    //    //for (int k = 1; k < matches[i].Groups.Count; ++k)
-                    //    //    value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
-                    //    sb.Append(_wildRegex.Replace(SubstituteWith,
-                    //        m =>
-                    //        {
-                    //            return matches[i].Groups[m.Value[1]].Value;
-                    //        }));
-
-                    //    //sb.Append(value);
-                    //}
-
+                    //TODO: We have cleared information about color :( Need to do something with this
                     textMessage.Clear();
                     textMessage.AppendText(sb.ToString());
                 }
             }
             else
             {
-                var varReplace = rootModel.ReplaceVariables(_pattern);
-                if (!varReplace.IsAllVariables)
-                    return;
+                int position = 0;
+                ClearMatchingResults();
 
-                Regex rExp = new Regex(_wildRegex.Replace(Regex.Escape(varReplace.Value),
-                    m =>
-                    {
-                        return string.Format("(?<{0}>.*)", int.Parse(m.Value[1].ToString()) + 1);
-                    }));
-                //var matches = rExp.Matches(text);
+                var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
 
-                //if (matches.Count == 0)
-                //    return;
-
-                StringBuilder sb = new StringBuilder(text.Length);
-                int offset = 0;
-
-                Match match = rExp.Match(textMessage.InnerText);
-                if (match.Success)
+                while (res.IsSuccess)
                 {
-                    do
-                    {
-                        if (offset < match.Index)
-                            sb.Append(text, offset, match.Index - offset);
+                    //Actually method TextMessage.Substitute() too heavy if we are substituting more than one substitution in one string
+                    //TODO: Best way build string right here
+                    textMessage.Substitute(res.StartPosition, res.EndPosition - res.StartPosition, GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults));
+                    
+                    position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
+                    ClearMatchingResults();
 
-                        offset = match.Index + match.Length;
+                    if (position > text.Length)
+                        break;
 
-                        sb.Append(_wildRegex.Replace(SubstituteWith,
-                            m =>
-                            {
-                                return match.Groups[(int.Parse(m.Value[1].ToString()) + 1).ToString()].Value;
-                            }));
-
-                        //StringBuilder value = new StringBuilder(SubstituteWith);
-                        //for (int k = 1; k < match.Groups.Count; ++k)
-                        //    value.Replace("%" + (k - 1), match.Groups[k].Value);
-
-                        //sb.Append(value);
-
-                        match = rExp.Match(textMessage.InnerText, match.Index + match.Length);
-                    } while (match.Success);
-                    //for (int i = 0; i < matches.Count; ++i)
-                    //{
-                    //    if (offset < matches[i].Index)
-                    //        sb.Append(text, offset, matches[i].Index - offset);
-
-                    //    offset = matches[i].Index + matches[i].Length;
-
-                    //    sb.Append(_wildRegex.Replace(SubstituteWith,
-                    //        m =>
-                    //        {
-                    //            return matches[i].Groups[m.Value[1]].Value;
-                    //        }));
-
-                    //    //StringBuilder value = new StringBuilder(SubstituteWith);
-                    //    //for (int k = 1; k < matches[i].Groups.Count; ++k)
-                    //    //    value.Replace("%" + (k - 1), matches[i].Groups[k].Value);
-
-                    //    //sb.Append(value);
-                    //}
-
-                    if (offset < textMessage.InnerText.Length)
-                        sb.Append(text, offset, textMessage.InnerText.Length - offset);
-
-                    textMessage.Clear();
-                    textMessage.AppendText(sb.ToString());
-
-                    //ClearMatchingResults();
-                    //int position = 0;
-                    //var res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-                    //while (res.IsSuccess)
-                    //{
-                    //    textMessage.Substitution(res.StartPosition, res.EndPosition - res.StartPosition, SubstituteWith);
-
-                    //    //TODO: Что это за говно?
-                    //    position = res.StartPosition + GetSubstituteWithPatternToken(rootModel).GetValue(_matchingResults).Length;
-                    //    ClearMatchingResults();
-
-                    //    if (position > text.Length)
-                    //        break;
-
-                    //    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
-                    //}
+                    res = GetRootPatternToken(rootModel).Match(text, position, _matchingResults);
                 }
             }
         }
