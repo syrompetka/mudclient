@@ -21,7 +21,6 @@
         <Grid Background="Black"  Grid.Row="0" Focusable="False">
             <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="secondaryScrollViewer" CanContentScroll="True" Focusable="False">
                 <controls1:ScrollableFlowTextControl x:Name="secondaryScrollOutput" 
-                                                     MaximumLinesToStore="5000"
                                                      LinesOverflowPercentBeforeCleanup="10"
                                                      AutoScroll="True"
                                                      Focusable="False" 
@@ -33,7 +32,6 @@
         <GridSplitter Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False" GotFocus="HandleGotFocus"/>
         <Grid  Grid.Row="2" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <controls1:ScrollableFlowTextControl x:Name="mainScrollOutput"  
-                                                 MaximumLinesToStore="5000"
                                                  LinesOverflowPercentBeforeCleanup="30" 
                                                  AutoScroll="True"
                                                  Focusable="False" 

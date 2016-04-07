@@ -62,14 +62,9 @@ namespace Adan.Client.Common.Controls
             _textSource = new MessageTextSource(_selectionSettings);
             _doubleClickTimer = new DispatcherTimer(new TimeSpan(0, 0, 0, 0, 150), DispatcherPriority.Background, (o, e) => ClearTextSelection(), Dispatcher.CurrentDispatcher);
             _doubleClickTimer.Stop();
-            SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) =>
-            {
-                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
-                {
-                    _textRunCache.Invalidate();
-                    InvalidateVisual();
-                }
-            };
+
+            MaximumLinesToStore = Math.Max(SettingsHolder.Instance.Settings.ScrollBuffer, 100);
+            SettingsHolder.Instance.Settings.OnSettingsChanged += HandleSettingsChanged;
         }
 
         #endregion
@@ -907,6 +902,20 @@ namespace Adan.Client.Common.Controls
                 {
                     ScrollOwner.InvalidateScrollInfo();
                 }
+            }
+        }
+
+        private void HandleSettingsChanged(object sender, SettingsChangedEventArgs e)
+        {
+            if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
+            {
+                _textRunCache.Invalidate();
+                InvalidateVisual();
+            }
+
+            if (e.Name == "ScrollBuffer")
+            {
+                MaximumLinesToStore = Math.Max(SettingsHolder.Instance.Settings.ScrollBuffer, 100);
             }
         }
 
