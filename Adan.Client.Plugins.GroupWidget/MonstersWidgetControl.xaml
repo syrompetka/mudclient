@@ -277,6 +277,15 @@
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>
+        <Border Visibility="{Binding MoreItemsAvailable, Converter={StaticResource BooleanToVisibilityConverter}}" 
+                HorizontalAlignment="Stretch" 
+                Height="10">
+            <TextBlock 
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center"
+                Foreground="{DynamicResource GlyphBrush}"
+                Text="..."/>
+        </Border>
     </StackPanel>
 </UserControl>
 

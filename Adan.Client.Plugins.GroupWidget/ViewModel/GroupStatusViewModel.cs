@@ -24,6 +24,7 @@
         private bool _displayNumber = Settings.Default.GroupWidgetDisplayNumber;
         private IList<string> _displayedAffectNames = new List<string>(Settings.Default.GroupWidgetAffects);
         private GroupMateViewModel _selectedGroupMate;
+        private bool _moreItemsAvailable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupStatusViewModel"/> class.
@@ -42,6 +43,13 @@
             if (!DisplayNumber)
             {
                 Width -= 22;
+            }
+
+            DisplayedItemLimit = Settings.Default.GroupWidgetLimitOn ? Settings.Default.GroupWidgetLimit : 9999;
+
+            if (DisplayedItemLimit < 1)
+            {
+                DisplayedItemLimit = 1;
             }
         }
 
@@ -133,6 +141,22 @@
             private set;
         }
 
+        public bool MoreItemsAvailable
+        {
+            get { return _moreItemsAvailable; }
+            set
+            {
+                if (_moreItemsAvailable != value)
+                {
+                    _moreItemsAvailable = value;
+                    OnPropertyChanged("MoreItemsAvailable");
+                }
+            }
+        }
+
+        public int DisplayedItemLimit { get; set; }
+
+
         /// <summary>
         /// Updates the model.
         /// </summary>
@@ -142,8 +166,16 @@
             Assert.ArgumentNotNull(groupMates, "groupMates");
 
             int position = 0;
+            bool moreItemsAvailable = false;
+
             foreach (var characterStatus in groupMates)
             {
+                if (position >= DisplayedItemLimit)
+                {
+                    moreItemsAvailable = true;
+                    break;
+                }
+
                 if (position < GroupMates.Count && GroupMates[position].Name == characterStatus.Name)
                 {
                     GroupMates[position].UpdateFromModel(characterStatus, position + 1);
@@ -161,6 +193,8 @@
             {
                 GroupMates.RemoveAt(position);
             }
+
+            MoreItemsAvailable = moreItemsAvailable;
         }
 
         /// <summary>
@@ -178,8 +212,17 @@
             {
                 Width -= 22;
             }
+
+            DisplayedItemLimit = Settings.Default.GroupWidgetLimitOn ? Settings.Default.GroupWidgetLimit : 9999;
+
+            if (DisplayedItemLimit < 1)
+            {
+                DisplayedItemLimit = 1;
+            }
+            MoreItemsAvailable = false;
             OnPropertyChanged("Width");
         }
+
 
         private void UpdateTimings()
         {

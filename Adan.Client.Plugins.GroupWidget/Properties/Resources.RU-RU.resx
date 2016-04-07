@@ -234,4 +234,7 @@
   <data name="Weakness" xml:space="preserve">
     <value>Слабость</value>
   </data>
+  <data name="LimitDisplayedCountMonstersGroupMates" xml:space="preserve">
+    <value>Ограничить число монстров/согруппников</value>
+  </data>
 </root>

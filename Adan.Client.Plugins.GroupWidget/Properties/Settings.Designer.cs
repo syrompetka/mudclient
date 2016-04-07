@@ -114,5 +114,53 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
                 this["GroupWidgetDisplayMemTime"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsMonsterLimitOn {
+            get {
+                return ((bool)(this["IsMonsterLimitOn"]));
+            }
+            set {
+                this["IsMonsterLimitOn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MonsterLimit {
+            get {
+                return ((int)(this["MonsterLimit"]));
+            }
+            set {
+                this["MonsterLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool GroupWidgetLimitOn {
+            get {
+                return ((bool)(this["GroupWidgetLimitOn"]));
+            }
+            set {
+                this["GroupWidgetLimitOn"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int GroupWidgetLimit {
+            get {
+                return ((int)(this["GroupWidgetLimit"]));
+            }
+            set {
+                this["GroupWidgetLimit"] = value;
+            }
+        }
     }
 }
