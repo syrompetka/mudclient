@@ -46,6 +46,7 @@
 
             _queueSize = SettingsHolder.Instance.Settings.CommandsHistorySize;
             _enteredCommandsQueue = new List<string>();
+            SettingsHolder.Instance.Settings.OnSettingsChanged += OnSettingsChanged;
         }
 
         /// <summary>
