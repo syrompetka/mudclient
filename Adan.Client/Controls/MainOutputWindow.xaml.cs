@@ -1,5 +1,6 @@
 ﻿namespace Adan.Client.Controls
 {
+    using System;
     using System.Collections.Generic;
     using System.Windows;
     using System.Windows.Controls;
@@ -28,7 +29,7 @@
         public MainOutputWindow(MainWindow mainWindow, RootModel rootModel)
         {
             InitializeComponent();
-            
+
             _mainWindow = mainWindow;
             RootModel = rootModel;
             txtCommandInput.RootModel = rootModel;
@@ -453,7 +454,9 @@
                 secondaryScrollOutput.AutoScroll = false;
                 if (scrollGridRow.Height.Value == 0)
                 {
-                    scrollGridRow.Height = new GridLength(SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight);
+                    var scrollHeightPercent = Math.Max(10, Math.Min(80, SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight)) / 100.0f;
+
+                    scrollGridRow.Height = new GridLength(ActualHeight * scrollHeightPercent);
                     splitterRow.Height = new GridLength(5);
                 }
             }
@@ -462,7 +465,7 @@
                 secondaryScrollOutput.AutoScroll = true;
                 if (scrollGridRow.Height.Value > 0)
                 {
-                    SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight = (int)scrollGridRow.Height.Value;
+                    SettingsHolder.Instance.Settings.MainOutputWindowSecondaryScrollHeight = (int)(scrollGridRow.Height.Value / ActualHeight * 100.0f);
                     scrollGridRow.Height = new GridLength(0);
                     splitterRow.Height = new GridLength(0);
                 }
