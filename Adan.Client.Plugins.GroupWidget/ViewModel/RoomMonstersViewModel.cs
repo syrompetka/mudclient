@@ -25,6 +25,7 @@
         private int _displayedAffectCount = Settings.Default.MonsterDisplayAffectsCount;
         private bool _displayNumber = Settings.Default.MonsterDisplayNumber;
         private MonsterViewModel _selectedMonster;
+        private bool _moreItemsAvailable;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RoomMonstersViewModel"/> class.
@@ -42,6 +43,13 @@
             if (!DisplayNumber)
             {
                 Width -= 22;
+            }
+
+
+            DisplayedItemLimit = Settings.Default.IsMonsterLimitOn ? Settings.Default.MonsterLimit : 9999;
+            if (DisplayedItemLimit < 1)
+            {
+                DisplayedItemLimit = 1;
             }
         }
 
@@ -121,6 +129,23 @@
             }
         }
 
+        public bool MoreItemsAvailable
+        {
+            get { return _moreItemsAvailable; }
+            set
+            {
+                if (_moreItemsAvailable != value)
+                {
+                    _moreItemsAvailable = value;
+                    OnPropertyChanged("MoreItemsAvailable");
+                }
+            }
+        }
+
+        public int DisplayedItemLimit { get; set; }
+
+
+
         /// <summary>
         /// Updates the model.
         /// </summary>
@@ -130,8 +155,15 @@
             Assert.ArgumentNotNull(monsters, "monsters");
 
             int position = 0;
+            bool moreItemsAvailable = false;
             foreach (var monster in monsters)
             {
+                if (position >= DisplayedItemLimit)
+                {
+                    moreItemsAvailable = true;
+                    break;
+                }
+
                 if (position < Monsters.Count && Monsters[position].Name == monster.Name)
                 {
                     Monsters[position].UpdateFromModel(monster, position + 1);
@@ -150,6 +182,8 @@
             {
                 Monsters.RemoveAt(position);
             }
+
+            MoreItemsAvailable = moreItemsAvailable;
         }
 
         /// <summary>
@@ -168,7 +202,12 @@
                 Width -= 22;
             }
 
-            OnPropertyChanged("AffectsPanelWidth");
+            DisplayedItemLimit = Settings.Default.IsMonsterLimitOn? Settings.Default.MonsterLimit : 9999;
+            if (DisplayedItemLimit <1)
+            {
+                DisplayedItemLimit = 1;
+            }
+            MoreItemsAvailable = false;
             OnPropertyChanged("Width");
         }
 

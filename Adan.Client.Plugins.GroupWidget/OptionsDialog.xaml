@@ -7,8 +7,8 @@
          ShowInTaskbar="False"
          WindowStartupLocation="CenterOwner"
          WindowStyle="ToolWindow"
-         Width="500"
-         Height="400"
+         Width="550"
+         Height="500"
          Title="{Binding WindowTitle}"
          Style="{StaticResource DefaultWindowStyle}">
     <Window.Resources>
@@ -34,6 +34,8 @@
         <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="0,0,0,5">
             <Label Content="{x:Static Properties:Resources.DisplayedAffectsCount}"/>
             <controls:NumberTextBox Text="{Binding DisplayedAffectsCount}" VerticalAlignment="Top"/>
+            <CheckBox Margin="0,5,0,0" Content="{x:Static Properties:Resources.LimitDisplayedCountMonstersGroupMates}" IsChecked="{Binding ItemLimitOn}"/>
+            <controls:NumberTextBox Margin="0,2,0,0"  Text="{Binding ItemLimit}" VerticalAlignment="Top" IsEnabled="{Binding ItemLimitOn}" />
         </StackPanel>
         <Label Content="{x:Static Properties:Resources.AvailableAffects}"
                Grid.Row="1"

@@ -268,6 +268,15 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Limit displayed monsters/groupmates count.
+        /// </summary>
+        public static string LimitDisplayedCountMonstersGroupMates {
+            get {
+                return ResourceManager.GetString("LimitDisplayedCountMonstersGroupMates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Monsters.
         /// </summary>
         public static string Monsters {

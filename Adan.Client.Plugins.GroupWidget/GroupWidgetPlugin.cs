@@ -189,7 +189,7 @@
 
             var displayedAffects = Settings.Default.GroupWidgetAffects.Select(af => Constants.AllAffects.First(a => a.Name == af));
             var allAffects = Constants.AllAffects.Except(displayedAffects);
-            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.GroupWidgetOptions, allAffects, displayedAffects, Settings.Default.GroupWidgetDisplayAffectsCount, Settings.Default.GroupWidgetDisplayNumber, Settings.Default.GroupWidgetDisplayMemTime, true);
+            var optionsViewModel = new GroupWidgetOptionsViewModel(Resources.GroupWidgetOptions, allAffects, displayedAffects, Settings.Default.GroupWidgetDisplayAffectsCount, Settings.Default.GroupWidgetDisplayNumber, Settings.Default.GroupWidgetDisplayMemTime, true, Settings.Default.GroupWidgetLimitOn, Settings.Default.GroupWidgetLimit);
             var window = new OptionsDialog { DataContext = optionsViewModel, Owner = parentWindow };
             var result = window.ShowDialog();
 
@@ -199,6 +199,9 @@
                 Settings.Default.GroupWidgetDisplayAffectsCount = optionsViewModel.DisplayedAffectsCount;
                 Settings.Default.GroupWidgetDisplayNumber = optionsViewModel.DisplayNumber;
                 Settings.Default.GroupWidgetDisplayMemTime = optionsViewModel.DisplayMemTime;
+
+                Settings.Default.GroupWidgetLimit = optionsViewModel.ItemLimit;
+                Settings.Default.GroupWidgetLimitOn = optionsViewModel.ItemLimitOn;
                 Settings.Default.Save();
                 _viewModel.ReloadDisplayedAffects();
             }

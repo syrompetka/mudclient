@@ -33,11 +33,13 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         private bool _canRemoveDisplayedAffect;
         private bool _canMoveDisplayedAffectUp;
         private bool _canMoveDisplayedAffectDown;
+        private bool _itemLimitOn;
+        private int _itemLimit;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupWidgetOptionsViewModel"/> class.
         /// </summary>
-        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects, [NotNull] IEnumerable<AffectDescription> displayedAffects, int displayedAffectsCount, bool displayNumber, bool displayMemTime, bool allowChangeDisplayMemTime)
+        public GroupWidgetOptionsViewModel([NotNull] string windowTitle, [NotNull] IEnumerable<AffectDescription> availableAffects, [NotNull] IEnumerable<AffectDescription> displayedAffects, int displayedAffectsCount, bool displayNumber, bool displayMemTime, bool allowChangeDisplayMemTime, bool itemLimitOn, int itemLimit)
         {
             _displayedAffectsCount = displayedAffectsCount;
             _displayNumber = displayNumber;
@@ -48,6 +50,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             Assert.ArgumentNotNull(displayedAffects, "displayedAffects");
 
             WindowTitle = windowTitle;
+            ItemLimitOn = itemLimitOn;
+            ItemLimit = itemLimit;
             AvailableAffects = new ObservableCollection<AffectDescription>(availableAffects);
             DisplayedAffects = new ObservableCollection<AffectDescription>(displayedAffects);
             AddDisplayedAffectCommand = new DelegateCommandWithCanExecute(AddDisplayedAffectCommandExecute, AddDisplayedAffectCommandCanExecute);
@@ -64,6 +68,26 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         {
             get;
             private set;
+        }
+
+        public bool ItemLimitOn
+        {
+            get { return _itemLimitOn; }
+            set
+            {
+                _itemLimitOn = value;
+                OnPropertyChanged("ItemLimitOn");
+            }
+        }
+
+        public int ItemLimit
+        {
+            get { return _itemLimit; }
+            set
+            {
+                _itemLimit = value;
+                OnPropertyChanged("ItemLimit");
+            }
         }
 
         /// <summary>

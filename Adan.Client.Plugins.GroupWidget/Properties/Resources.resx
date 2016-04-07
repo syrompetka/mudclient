@@ -234,4 +234,7 @@
   <data name="Weakness" xml:space="preserve">
     <value>Weakness</value>
   </data>
+  <data name="LimitDisplayedCountMonstersGroupMates" xml:space="preserve">
+    <value>Limit displayed monsters/groupmates count</value>
+  </data>
 </root>
