@@ -45,9 +45,6 @@
     <Reference Include="CSLib.Net.Diagnostics">
       <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.AvalonEdit">
-      <HintPath>..\ThirdPartyLibraries\Binaries\AvalonEdit\ICSharpCode.AvalonEdit.dll</HintPath>
-    </Reference>
     <Reference Include="Ionic.Zlib">
       <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zlib.dll</HintPath>
     </Reference>
