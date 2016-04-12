@@ -237,4 +237,16 @@
   <data name="LimitDisplayedCountMonstersGroupMates" xml:space="preserve">
     <value>Limit displayed monsters/groupmates count</value>
   </data>
+  <data name="MonsterNumber" xml:space="preserve">
+    <value>Monster number:</value>
+  </data>
+  <data name="SelectedMonster" xml:space="preserve">
+    <value>selected monster</value>
+  </data>
+  <data name="GroupMateNumber" xml:space="preserve">
+    <value>Groupmate number:</value>
+  </data>
+  <data name="SelectedGroupMate" xml:space="preserve">
+    <value>selected groupmate</value>
+  </data>
 </root>

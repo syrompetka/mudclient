@@ -338,6 +338,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             {
                 notProcessedAffect.OnAffectRemoved();
             }
+
+            GroupMate = characterStatus;
         }
 
         /// <summary>

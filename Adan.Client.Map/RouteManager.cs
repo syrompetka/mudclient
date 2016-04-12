@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RouteManager.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the RouteManager type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Map
+﻿namespace Adan.Client.Map
 {
     using System;
     using System.Collections.Generic;
@@ -18,12 +9,11 @@ namespace Adan.Client.Map
     using System.Windows;
     using System.Xml;
     using System.Xml.Serialization;
-    using Adan.Client.Common;
-    using Adan.Client.Common.Settings;
     using Common.Commands;
     using Common.Dialogs;
     using Common.Messages;
     using Common.Model;
+    using Common.Settings;
     using Common.Themes;
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;

@@ -1,17 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SelectedMonsterParameter.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the SelectedMonsterParameter type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
+﻿namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
 {
     using System;
-    using System.Collections.Generic;
-
+    using System.ComponentModel;
+    using System.Xml.Serialization;
     using Common.Model;
 
     using CSLib.Net.Diagnostics;
@@ -22,6 +13,10 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
     [Serializable]
     public class SelectedMonsterParameter : ActionParameterBase
     {
+        [XmlAttribute]
+        [DefaultValue(0)]
+        public int MonsterNumber { get; set; }
+
         /// <summary>
         /// Gets the parameter value.
         /// </summary>
@@ -34,12 +29,13 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
         {
             Assert.ArgumentNotNull(rootModel, "rootModel");
             Assert.ArgumentNotNull(context, "context");
-            if (rootModel.SelectedRoomMonster == null)
+            
+            if (MonsterNumber == 0)
             {
-                return string.Empty;
+                return rootModel.GetVariableValue("Monster");
             }
 
-            return rootModel.SelectedRoomMonster.TargetName.Replace(' ', '.');
+            return rootModel.GetVariableValue("Monster" + MonsterNumber);
         }
 
         /// <summary>
@@ -48,7 +44,13 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
         /// <returns></returns>
         public override string GetParameterValue()
         {
-            return "#SelectedMonsterName";
+            if (MonsterNumber == 0)
+            {
+                return "$Monster";
+            }
+
+            return "$Monster" + MonsterNumber;
+
         }
     }
 }

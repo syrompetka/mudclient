@@ -30,7 +30,7 @@
       <Value Profile="(Default)">5</Value>
     </Setting>
     <Setting Name="GroupWidgetDisplayMemTime" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
+      <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="IsMonsterLimitOn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>

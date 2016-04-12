@@ -232,6 +232,15 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Groupmate number:.
+        /// </summary>
+        public static string GroupMateNumber {
+            get {
+                return ResourceManager.GetString("GroupMateNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Group Widget Options.
         /// </summary>
         public static string GroupWidgetOptions {
@@ -273,6 +282,15 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         public static string LimitDisplayedCountMonstersGroupMates {
             get {
                 return ResourceManager.GetString("LimitDisplayedCountMonstersGroupMates", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Monster number:.
+        /// </summary>
+        public static string MonsterNumber {
+            get {
+                return ResourceManager.GetString("MonsterNumber", resourceCulture);
             }
         }
         
@@ -345,6 +363,24 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         public static string Renewals {
             get {
                 return ResourceManager.GetString("Renewals", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to selected groupmate.
+        /// </summary>
+        public static string SelectedGroupMate {
+            get {
+                return ResourceManager.GetString("SelectedGroupMate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to selected monster.
+        /// </summary>
+        public static string SelectedMonster {
+            get {
+                return ResourceManager.GetString("SelectedMonster", resourceCulture);
             }
         }
         
