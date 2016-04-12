@@ -89,7 +89,8 @@
                     }
 
                     //If we have only 1 parameter then %1 = %0 like in jmc
-                    if (parts.Length < 2)
+                    var allCommandText = String.Join(";", alias.Actions.OfType<SendTextAction>().Select(a => a.CommandText).ToArray());
+                    if (allCommandText.Contains("%1") && !allCommandText.Contains("%0") && !allCommandText.Contains("%2"))
                     {
                         _context.Parameters[1] = _context.Parameters[0];
                     }
