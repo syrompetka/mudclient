@@ -11,6 +11,7 @@ namespace Adan.Client.Common.Model
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Xml.Serialization;
 
     using CSLib.Net.Annotations;
@@ -125,6 +126,25 @@ namespace Adan.Client.Common.Model
             get;
             set;
         }
+
+        [NotNull]
+        [XmlAttribute]
+        [DefaultValue(-1)]
+        public int MemTime
+        {
+            get;
+            set;
+        }
+
+        [NotNull]
+        [XmlAttribute]
+        [DefaultValue(-1.0f)]
+        public float WaitTime
+        {
+            get;
+            set;
+        }
+
 
         /// <summary>
         /// Gets the affects of this character.

@@ -99,6 +99,7 @@
             {
                 PlayerCharacter = monsterStatus.IsPlayerCharacter;
                 Boss = monsterStatus.IsBoss;
+                MonsterStatus = monsterStatus;
             }
 
             base.UpdateFromModel(characterStatus, position);

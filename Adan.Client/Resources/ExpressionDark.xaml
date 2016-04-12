@@ -10,7 +10,8 @@
                     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                     mc:Ignorable="d"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:Controls="clr-namespace:Adan.Client.Controls">
+                    xmlns:Controls="clr-namespace:Adan.Client.Controls"
+                    xmlns:controls="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common">
 
     <!-- Main Colors -->
 
@@ -2714,6 +2715,41 @@
             </Setter.Value>
         </Setter>
     </Style>
+    <Style TargetType="{x:Type controls:NumberTextBox}">
+        <Setter Property="KeyboardNavigation.TabNavigation"
+                Value="None" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="AllowDrop"
+                Value="true" />
+        <Setter Property="Template"
+                Value="{DynamicResource TextBoxTemplate}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextBrush}" />
+        <Setter Property="Background"
+                Value="{DynamicResource ControlBackgroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="#FF000000" />
+    </Style>
+
+    <Style TargetType="{x:Type Controls:OneCharTextBox}">
+        <Setter Property="KeyboardNavigation.TabNavigation"
+                Value="None" />
+        <Setter Property="FocusVisualStyle"
+                Value="{x:Null}" />
+        <Setter Property="AllowDrop"
+                Value="true" />
+        <Setter Property="Template"
+                Value="{DynamicResource TextBoxTemplate}" />
+        <Setter Property="Foreground"
+                Value="{DynamicResource TextBrush}" />
+        <Setter Property="Background"
+                Value="{DynamicResource ControlBackgroundBrush}" />
+        <Setter Property="BorderBrush"
+                Value="#FF000000" />
+    </Style>
+
+
     <Style TargetType="{x:Type TextBox}">
         <Setter Property="KeyboardNavigation.TabNavigation"
                 Value="None" />

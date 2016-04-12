@@ -17,7 +17,7 @@
     /// <summary>
     /// A root object for all model objects.
     /// </summary>
-    public class RootModel:IDisposable
+    public class RootModel : IDisposable
     {
         #region Constants and Fields
 
@@ -238,7 +238,7 @@
             get;
             set;
         }
-        
+
         public MessageConveyor MessageConveyor
         {
             get
@@ -310,7 +310,7 @@
         {
             get
             {
-                return (List<Variable>)Profile.Variables;
+                return Profile.Variables;
             }
         }
 
@@ -467,9 +467,19 @@
             {
                 return DateTime.Now.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
             }
-            else if (variableName.Equals("TIME", StringComparison.InvariantCultureIgnoreCase))
+            if (variableName.Equals("TIME", StringComparison.InvariantCultureIgnoreCase))
             {
                 return DateTime.Now.ToString("HH:mm:ss", CultureInfo.InvariantCulture);
+            }
+
+            if (variableName.StartsWith("Monster", StringComparison.OrdinalIgnoreCase))
+            {
+                return GetMonsterOrGroupMateTarget(variableName, "Monster", SelectedRoomMonster, RoomMonstersStatus);
+            }
+
+            if (variableName.StartsWith("GroupMate", StringComparison.OrdinalIgnoreCase))
+            {
+                return GetMonsterOrGroupMateTarget(variableName, "GroupMate", SelectedGroupMate, GroupStatus);
             }
 
             var variablesList = new List<Variable>();
@@ -494,6 +504,57 @@
             return variablesList.Count > 0 ? variablesList[variablesList.Count - 1].Value : string.Empty;
         }
 
+        private string GetMonsterOrGroupMateTarget(string variableName, string prefix, CharacterStatus selectedCharacter, IEnumerable<CharacterStatus> characters)
+        {
+            CharacterStatus monsterToProcess = null;
+            var monsterNumberSubstring = variableName.Substring(prefix.Length).Trim();
+            if (!string.IsNullOrEmpty(monsterNumberSubstring))
+            {
+                int monsterNumber;
+                if (!int.TryParse(monsterNumberSubstring, out monsterNumber))
+                {
+                    return string.Empty;
+                }
+
+                if (monsterNumber > characters.Count())
+                {
+                    return string.Empty;
+                }
+
+                monsterToProcess = characters.Skip(monsterNumber - 1).First();
+            }
+            else
+            {
+                monsterToProcess = selectedCharacter;
+            }
+
+            if (monsterToProcess == null)
+            {
+                return string.Empty;
+            }
+
+            int targetNamePrefix = 1;
+            foreach (var monster in characters)
+            {
+                if (monster == monsterToProcess)
+                {
+                    break;
+                }
+
+                if (monster.TargetName == monsterToProcess.TargetName)
+                {
+                    targetNamePrefix++;
+                }
+            }
+
+            if (targetNamePrefix > 1)
+            {
+                return targetNamePrefix + "." + monsterToProcess.TargetName.Replace(" ", ".");
+            }
+
+            return monsterToProcess.TargetName.Replace(" ", ".");
+        }
+
         /// <summary>
         /// Clears the variable value.
         /// </summary>
@@ -513,7 +574,7 @@
                 }
             }
 
-            if(!isSilent)
+            if (!isSilent)
                 this.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.VariableValueClear, variableName)));
         }
 

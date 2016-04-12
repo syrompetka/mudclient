@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SelectedGroupMateParameterDescription.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the SelectedGroupMateParameterDescription type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
+﻿namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
 
 {
     using System.Collections.Generic;
@@ -20,7 +11,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
     using CSLib.Net.Diagnostics;
 
     using ViewModel;
-    using Adan.Client.Plugins.GroupWidget.Model.ActionParameters;
+    using ActionParameters;
 
     /// <summary>
     /// A description of "selected group mate" parameter.
@@ -32,7 +23,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
         /// </summary>
         /// <param name="parameterDescriptions">The parameter descriptions.</param>
         public SelectedGroupMateParameterDescription([NotNull] IEnumerable<ParameterDescription> parameterDescriptions)
-            : base("Selected group mate", parameterDescriptions)
+            : base("Group mate", parameterDescriptions)
         {
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
         }
@@ -57,7 +48,13 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
         {
             Assert.ArgumentNotNull(parameter, "parameter");
 
-            return new SelectedGroupMateParameterViewModel(parameter, this, ParameterDescriptions);
+            var selectedGroupMateParameter = parameter as SelectedGroupMateParameter;
+            if (selectedGroupMateParameter != null)
+            {
+                return new SelectedGroupMateParameterViewModel(selectedGroupMateParameter, this, ParameterDescriptions);
+            }
+
+            return null;
         }
     }
 }

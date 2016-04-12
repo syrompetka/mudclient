@@ -237,4 +237,16 @@
   <data name="LimitDisplayedCountMonstersGroupMates" xml:space="preserve">
     <value>Ограничить число монстров/согруппников</value>
   </data>
+  <data name="MonsterNumber" xml:space="preserve">
+    <value>Номер монстра:</value>
+  </data>
+  <data name="SelectedMonster" xml:space="preserve">
+    <value>выбранный монстр</value>
+  </data>
+  <data name="GroupMateNumber" xml:space="preserve">
+    <value>Номер согруппника:</value>
+  </data>
+  <data name="SelectedGroupMate" xml:space="preserve">
+    <value>выбранный согруппник</value>
+  </data>
 </root>

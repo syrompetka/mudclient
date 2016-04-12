@@ -31,7 +31,7 @@
             <CheckBox Content="{x:Static Properties:Resources.DisplayNumber}" IsChecked="{Binding DisplayNumber}"/>
             <CheckBox Content="{x:Static Properties:Resources.DisplayMemTime}" IsChecked="{Binding DisplayMemTime}" Visibility="{Binding AllowChangeDisplayMemTime, Converter={StaticResource BooleanToVisibilityConverter}}"/>
         </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="0,0,0,5">
+        <StackPanel Orientation="Vertical" Grid.Row="0" Grid.Column="2" VerticalAlignment="Top" Margin="0,2,0,0">
             <Label Content="{x:Static Properties:Resources.DisplayedAffectsCount}"/>
             <controls:NumberTextBox Text="{Binding DisplayedAffectsCount}" VerticalAlignment="Top"/>
             <CheckBox Margin="0,5,0,0" Content="{x:Static Properties:Resources.LimitDisplayedCountMonstersGroupMates}" IsChecked="{Binding ItemLimitOn}"/>

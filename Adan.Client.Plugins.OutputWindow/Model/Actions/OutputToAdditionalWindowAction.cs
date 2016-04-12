@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OutputToAdditionalWindowAction.cs" company="Adamand MUD">
-//   Copyright (c) Adamant MUD
-// </copyright>
-// <summary>
-//   Defines the OutputToAdditionalWindowAction type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace Adan.Client.Plugins.OutputWindow.Model.Actions
+﻿namespace Adan.Client.Plugins.OutputWindow.Model.Actions
 {
     using System;
     using System.Xml.Serialization;
@@ -18,7 +9,7 @@ namespace Adan.Client.Plugins.OutputWindow.Model.Actions
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using Adan.Client.Plugins.OutputWindow.Messages;
+    using Messages;
     using System.Text;
 
     /// <summary>

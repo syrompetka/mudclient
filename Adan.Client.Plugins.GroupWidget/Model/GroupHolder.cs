@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Adan.Client.Common.Conveyor;
 using Adan.Client.Common.Model;
 using Adan.Client.Plugins.GroupWidget.Messages;

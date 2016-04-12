@@ -167,6 +167,10 @@
                 if (position < Monsters.Count && Monsters[position].Name == monster.Name)
                 {
                     Monsters[position].UpdateFromModel(monster, position + 1);
+                    if (SelectedMonster != null && SelectedMonster == Monsters[position])
+                    {
+                        RootModel.SelectedRoomMonster = monster;
+                    }
                 }
                 else
                 {
@@ -180,6 +184,11 @@
             var count = Monsters.Count;
             for (int i = position; i < count; i++)
             {
+                if (SelectedMonster != null && SelectedMonster == Monsters[position])
+                {
+                    SelectedMonster = null;
+                }
+
                 Monsters.RemoveAt(position);
             }
 
@@ -202,8 +211,8 @@
                 Width -= 22;
             }
 
-            DisplayedItemLimit = Settings.Default.IsMonsterLimitOn? Settings.Default.MonsterLimit : 9999;
-            if (DisplayedItemLimit <1)
+            DisplayedItemLimit = Settings.Default.IsMonsterLimitOn ? Settings.Default.MonsterLimit : 9999;
+            if (DisplayedItemLimit < 1)
             {
                 DisplayedItemLimit = 1;
             }

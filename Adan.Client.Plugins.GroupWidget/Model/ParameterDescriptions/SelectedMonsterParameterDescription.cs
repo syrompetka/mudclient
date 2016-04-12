@@ -31,7 +31,7 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
         /// </summary>
         /// <param name="parameterDescriptions">The parameter descriptions.</param>
         public SelectedMonsterParameterDescription([NotNull] IEnumerable<ParameterDescription> parameterDescriptions)
-            : base("Selected monster", parameterDescriptions)
+            : base("Monster", parameterDescriptions)
         {
             Assert.ArgumentNotNull(parameterDescriptions, "parameterDescriptions");
         }
@@ -56,7 +56,14 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ParameterDescriptions
         {
             Assert.ArgumentNotNull(parameter, "parameter");
 
-            return new SelectedMonsterParameterViewModel(parameter, this, ParameterDescriptions);
+            var selectedMonsterParameter = parameter as SelectedMonsterParameter;
+            if (selectedMonsterParameter != null)
+            {
+                return new SelectedMonsterParameterViewModel(selectedMonsterParameter, this, ParameterDescriptions);
+            }
+
+            return null;
+
         }
     }
 }

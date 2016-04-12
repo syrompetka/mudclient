@@ -113,10 +113,22 @@
                         if (i == lastSendTextAction && !aliasContainsParams)
                         {
                             var sendTextAction = alias.Actions[i] as SendTextAction;
-                            new SendTextAction
+                            if (sendTextAction == null)
                             {
-                                CommandText = sendTextAction.CommandText + " " + _context.Parameters[0]
-                            }.Execute(Conveyor.RootModel, _context);
+                                continue;
+                            }
+
+                            if (sendTextAction.Parameters.Any())
+                            {
+                                sendTextAction.Execute(Conveyor.RootModel, _context);
+                            }
+                            else
+                            {
+                                new SendTextAction
+                                {
+                                    CommandText = sendTextAction.CommandText + " " + _context.Parameters[0]
+                                }.Execute(Conveyor.RootModel, _context);
+                            }
                         }
                         else
                         {

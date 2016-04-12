@@ -179,6 +179,11 @@
                 if (position < GroupMates.Count && GroupMates[position].Name == characterStatus.Name)
                 {
                     GroupMates[position].UpdateFromModel(characterStatus, position + 1);
+                    if (SelectedGroupMate != null && SelectedGroupMate == GroupMates[position])
+                    {
+                        RootModel.SelectedGroupMate = characterStatus;
+                    }
+
                 }
                 else
                 {
@@ -191,6 +196,11 @@
 
             for (int i = position; i < GroupMates.Count; i++)
             {
+                if (SelectedGroupMate != null && SelectedGroupMate == GroupMates[position])
+                {
+                    SelectedGroupMate = null;
+                }
+
                 GroupMates.RemoveAt(position);
             }
 

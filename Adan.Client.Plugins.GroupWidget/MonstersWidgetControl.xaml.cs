@@ -93,10 +93,6 @@ namespace Adan.Client.Plugins.GroupWidget
             Application.Current.Dispatcher.BeginInvoke(executeToAct, DispatcherPriority.Background);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="characters"></param>
         public void UpdateModel([NotNull] List<MonsterStatus> characters)
         {
             Assert.ArgumentNotNull(characters, "roomMonstersMessage");

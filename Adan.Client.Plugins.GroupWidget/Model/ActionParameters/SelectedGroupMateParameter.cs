@@ -10,7 +10,8 @@
 namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
 {
     using System;
-
+    using System.ComponentModel;
+    using System.Xml.Serialization;
     using Common.Model;
 
     using CSLib.Net.Diagnostics;
@@ -21,6 +22,10 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
     [Serializable]
     public class SelectedGroupMateParameter : ActionParameterBase
     {
+        [XmlAttribute]
+        [DefaultValue(0)]
+        public int GroupMateNumber { get; set; }
+
         /// <summary>
         /// Gets the parameter value.
         /// </summary>
@@ -34,7 +39,12 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
             Assert.ArgumentNotNull(rootModel, "rootModel");
             Assert.ArgumentNotNull(context, "context");
 
-            return rootModel.SelectedGroupMate != null ? rootModel.SelectedGroupMate.TargetName.Replace(' ', '.') : string.Empty;
+            if (GroupMateNumber == 0)
+            {
+                return rootModel.GetVariableValue("GroupMate");
+            }
+
+            return rootModel.GetVariableValue("GroupMate" + GroupMateNumber);
         }
 
         /// <summary>
@@ -43,7 +53,12 @@ namespace Adan.Client.Plugins.GroupWidget.Model.ActionParameters
         /// <returns></returns>
         public override string GetParameterValue()
         {
-            return "$SelectedGroupMate";
+            if (GroupMateNumber == 0)
+            {
+                return "$GroupMate";
+            }
+
+            return "$GroupMate" + GroupMateNumber;
         }
     }
 }
