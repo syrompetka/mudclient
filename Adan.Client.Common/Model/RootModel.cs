@@ -21,8 +21,6 @@
     {
         #region Constants and Fields
 
-        private static IList<Type> _customSerializationTypes;
-
         private MessageConveyor _conveyor;
         private List<TriggerBase> _enabledTriggersOrderedByPriority;
         private readonly string _name;
@@ -200,25 +198,6 @@
         {
             get;
             set;
-        }
-
-        /// <summary>
-        /// Gets the custom serialization types.
-        /// </summary>
-        [NotNull]
-        public static IList<Type> CustomSerializationTypes
-        {
-            get
-            {
-                if (_customSerializationTypes == null)
-                    _customSerializationTypes = new List<Type>();
-
-                return _customSerializationTypes;
-            }
-            private set
-            {
-                _customSerializationTypes = value;
-            }
         }
 
         /// <summary>

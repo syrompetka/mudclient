@@ -209,7 +209,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "Common.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -275,7 +275,7 @@ namespace Adan.Client.Common.Settings
 
             var settingsFileFullPath = Path.Combine(GetProfileSettingsFolder(), "Settings.xml");
             using (var stream = File.Open(settingsFileFullPath, FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -334,7 +334,7 @@ namespace Adan.Client.Common.Settings
 
             var fileFullPath = Path.Combine(GetProfileSettingsFolder(), "Variables.xml");
             using (var stream = File.Open(fileFullPath, FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
             {
                 streamWriter.Formatting = Formatting.Indented;
 
@@ -387,7 +387,7 @@ namespace Adan.Client.Common.Settings
             }
 
             using (var stream = File.Open(Path.Combine(GetProfileSettingsFolder(), "History.xml"), FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new XmlTextWriter(stream, Encoding.Default))
+            using (var streamWriter = new XmlTextWriter(stream, Encoding.UTF8))
             {
                 streamWriter.Formatting = Formatting.Indented;
 

@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using Adan.Client.Common.Controls;
 using Adan.Client.Common.Model;
 using CSLib.Net.Annotations;
-using System.Xml.Serialization;
-using System.Windows.Media;
 
 namespace Adan.Client.Common.Settings
 {
