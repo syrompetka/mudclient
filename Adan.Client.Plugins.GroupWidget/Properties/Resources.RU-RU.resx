@@ -249,4 +249,7 @@
   <data name="SelectedGroupMate" xml:space="preserve">
     <value>выбранный согруппник</value>
   </data>
+  <data name="HungerThirst" xml:space="preserve">
+    <value>Голод/Жажда</value>
+  </data>
 </root>

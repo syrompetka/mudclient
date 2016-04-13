@@ -249,4 +249,7 @@
   <data name="SelectedGroupMate" xml:space="preserve">
     <value>selected groupmate</value>
   </data>
+  <data name="HungerThirst" xml:space="preserve">
+    <value>Hunger/Thirst</value>
+  </data>
 </root>

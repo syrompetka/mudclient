@@ -512,15 +512,25 @@
                 return string.Empty;
             }
 
+            if (string.IsNullOrEmpty(monsterToProcess.TargetName))
+            {
+                return string.Empty;
+            }
+
             int targetNamePrefix = 1;
+            var monsterFirstWordName = monsterToProcess.TargetName.Split(' ').First();
             foreach (var monster in characters)
             {
                 if (monster == monsterToProcess)
                 {
                     break;
                 }
+                if (string.IsNullOrEmpty(monsterToProcess.TargetName))
+                {
+                    continue;
+                }
 
-                if (monster.TargetName == monsterToProcess.TargetName)
+                if (monster.TargetName.Split(' ').First() == monsterFirstWordName)
                 {
                     targetNamePrefix++;
                 }
@@ -528,10 +538,10 @@
 
             if (targetNamePrefix > 1)
             {
-                return targetNamePrefix + "." + monsterToProcess.TargetName.Replace(" ", ".");
+                return targetNamePrefix + "." + monsterFirstWordName;
             }
 
-            return monsterToProcess.TargetName.Replace(" ", ".");
+            return monsterFirstWordName;
         }
 
         /// <summary>

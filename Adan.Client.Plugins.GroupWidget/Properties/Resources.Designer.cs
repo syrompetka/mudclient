@@ -268,6 +268,15 @@ namespace Adan.Client.Plugins.GroupWidget.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Hunger/Thirst.
+        /// </summary>
+        public static string HungerThirst {
+            get {
+                return ResourceManager.GetString("HungerThirst", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invisibility.
         /// </summary>
         public static string Invisibility {

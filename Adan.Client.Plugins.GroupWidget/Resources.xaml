@@ -6045,6 +6045,94 @@
                 ImageSource="Images/tornado.png" />
     <ImageBrush x:Key="Brush_StunImmune"
                 ImageSource="Images/stun-immune.png" />
+    <VisualBrush x:Key="Brush_Hunger"
+                 Stretch="Uniform">
+        <VisualBrush.Visual>
+            <Grid Height="20"
+                    Width="20">
+                <Path Data="M17.144699,10.883954 L14.37649,19.385341 4.9514986,19.451634 2.4137214,10.060061 z" Height="9.391" Margin="2.415,0,2.855,0.549" Stretch="Fill" VerticalAlignment="Bottom" Fill="#FF783212"/>
+                <Path Data="M5.1174785,12.498567 L6.3371546,12.234525 7.0615665,18.496243 z" Fill="White" HorizontalAlignment="Left" Height="6.261" Margin="5.117,0,0,1.504" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom" Width="1.945"/>
+                <Path Data="M9.269341,14.838109 L10.027561,14.706413 9.5992904,18.553158 z" Fill="White" Height="3.856" Margin="9.269,0,9.973,1.438" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom"/>
+                <Path Data="M12.531519,12.234957 L13.717284,12.564427 11.872142,18.504597 z" Fill="White" HorizontalAlignment="Right" Height="6.261" Margin="0,0,6.282,1.504" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom" Width="1.846"/>
+                <Path Data="M10.323782,0.075931232 L10.092905,1.1303037 C10.190872,0.98331585 10.318159,0.97318841 10.386804,0.6893401 10.45545,0.40549179 10.586158,0.39023144 10.685835,0.24067711 z" Fill="#FF23FF00" HorizontalAlignment="Right" Height="1.054" Margin="0,0.688,9.314,0" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Top" Width="0.593"/>
+                <Path Data="M12.861032,11.477077 C12.267975,11.608802 10.817465,14.311291 9.434129,14.310966 8.0507925,14.310641 6.0394502,10.587663 5.1836304,11.048805 4.3278107,11.509947 3.2064517,13.454051 2.4163191,13.454078 1.6261866,13.454106 0.80114957,10.99396 2.2191085,7.8520837 3.4332996,5.518427 6.0231244,4.3896748 9.8298512,4.3267957 14.547033,4.3867602 16.931856,6.0247713 17.770308,8.7090392 18.295919,11.119189 17.737091,14.277902 16.682815,13.915432 15.628538,13.552961 13.454088,11.345353&#xD;&#xA;12.861032,11.477077 z" Fill="#FF630000" Margin="1.447,4.327,2.029,5.689" Stretch="Fill" StrokeThickness="12"/>
+                <Path Data="M8.6103152,5.1174785 C6.58815,5.3439984 3.8660527,6.60124 3.6020345,7.1279855 2.6192904,8.0338542 1.93077,10.705723 2.1518157,11.937202 3.3558869,9.3452719 5.5595226,7.0890953 8.6103152,5.1174785 z" Fill="White" HorizontalAlignment="Left" Margin="2.111,5.117,0,8.062" Stretch="Fill" Width="6.499"/>
+                <Path Data="M9.9942693,1.2292264 C9.4343874,0.95066776 9.0515373,0.87935211 8.775341,0.93289111 8.3198393,1.0029536 7.9856619,1.4211346 7.8528308,2.4170428 7.973214,3.5931703 8.5551427,4.2205533 9.5992268,4.2984665 10.505598,4.495802 11.802045,3.9279141 11.806384,2.9783166 12.003126,2.7473436 12.168306,1.4934899 11.509521,1.3945015 10.850737,1.2955131 10.499353,1.2843181 9.9942693,1.2292264 z" Fill="Red" Height="4.849" Margin="6.891,0.88,7.243,0" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Top"/>
+                <Path Data="M21.032951,4.030086" Fill="White" HorizontalAlignment="Right" Height="0" Margin="0,4.03,-1.033,0" Stretch="Fill" VerticalAlignment="Top" Width="0"/>
+                <Ellipse Fill="White" Height="2.439" Margin="7.281,1.316,0,0" StrokeThickness="12" VerticalAlignment="Top" RenderTransformOrigin="0.5,0.5" HorizontalAlignment="Left" Width="1.713">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="18.865"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Path Data="M6.4736743,12.854706 L7.1622099,18.619093 7.342903,14.15971 z" Fill="#FF250101" HorizontalAlignment="Left" Height="5.946" Margin="5.902,0,0,1.381" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom" Width="2.136" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="10.244"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M10.026749,14.885034 L10.715359,15.428905 9.6641439,18.437305 z" Fill="#FF320202" Height="4.385" Margin="9.142,0,7.765,1.398" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom" RenderTransformOrigin="0.5,0.5">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-8.749"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Path Data="M13.797358,12.673426 L14.704112,14.957972 11.876675,18.437389 z" Fill="#FF340202" HorizontalAlignment="Right" Height="5.765" Margin="0,0,5.296,1.562" Stretch="Fill" StrokeThickness="12" VerticalAlignment="Bottom" Width="2.828"/>
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
+    <VisualBrush x:Key="Brush_Thirst"
+                 Stretch="Uniform">
+        <VisualBrush.Visual>
+            <Grid Height="20"
+                    Width="20">
+                <Ellipse Fill="#FF179DB2" Margin="3.976,6.754,3.827,1.683"/>
+                <Path Data="M10.014866,1.6220037 C9.7543605,2.9738057 9.168928,4.3409964 8.2033228,5.305206 5.6161163,8.0259838 4.3292806,10.159592 4.0084053,11.857031 L16.11158,11.857031 C15.877652,10.269634 14.590796,8.1649654 11.644757,5.2451893 10.860502,4.158503 10.333032,2.9428239 10.014866,1.6220037 z" Fill="#FF179DB2" Margin="4.007,1.622,3.887,8.144" Stretch="Fill"/>
+                <Ellipse Fill="White" Margin="5.282,6.909,9.868,4.106" RenderTransformOrigin="0.5,0.5">
+                    <Ellipse.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="20.501"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Ellipse.RenderTransform>
+                </Ellipse>
+                <Path Data="M4.007,2.7793696 L4.007,4.1031519" Fill="Red" HorizontalAlignment="Left" Margin="7.789,1.455,0,6.063" Stretch="Fill" Width="0" RenderTransformOrigin="0.5,0.5" StrokeThickness="12">
+                    <Path.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="-50.941"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Path.RenderTransform>
+                </Path>
+                <Rectangle Fill="Red" Margin="-2.267,8.576,-2.081,8.707" StrokeThickness="12" RenderTransformOrigin="0.5,0.5">
+                    <Rectangle.RenderTransform>
+                        <TransformGroup>
+                            <ScaleTransform/>
+                            <SkewTransform/>
+                            <RotateTransform Angle="45.055"/>
+                            <TranslateTransform/>
+                        </TransformGroup>
+                    </Rectangle.RenderTransform>
+                </Rectangle>
+            </Grid>
+        </VisualBrush.Visual>
+    </VisualBrush>
     <GeometryDrawing x:Key="Drawing_Standing"
                      Brush="{StaticResource Brush_Standing}">
         <GeometryDrawing.Geometry>
@@ -6297,7 +6385,18 @@
             <RectangleGeometry Rect="0,0,100,100" />
         </GeometryDrawing.Geometry>
     </GeometryDrawing>
-    
+    <GeometryDrawing x:Key="Drawing_Hunger"
+                     Brush="{StaticResource Brush_Hunger}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
+    <GeometryDrawing x:Key="Drawing_Thirst"
+                     Brush="{StaticResource Brush_Thirst}">
+        <GeometryDrawing.Geometry>
+            <RectangleGeometry Rect="0,0,100,100" />
+        </GeometryDrawing.Geometry>
+    </GeometryDrawing>
     <DrawingImage x:Key="ImageSource_Standing"
                   Drawing="{StaticResource Drawing_Standing}" />
     <DrawingImage x:Key="ImageSource_Sitting"
@@ -6382,6 +6481,11 @@
                   Drawing="{StaticResource Drawing_Tornado}" />
     <DrawingImage x:Key="ImageSource_StunImmune"
                   Drawing="{StaticResource Drawing_StunImmune}" />
+    <DrawingImage x:Key="ImageSource_Hunger"
+                  Drawing="{StaticResource Drawing_Hunger}" />
+    <DrawingImage x:Key="ImageSource_Thirst"
+                  Drawing="{StaticResource Drawing_Thirst}" />
+
     <DrawingBrush Stretch="None"
                   TileMode="Tile"
                   Viewport="0,0,6,4"
@@ -6525,7 +6629,11 @@
         <Utils:SwitchCase  When="Tornado"
                            Then="{StaticResource ImageSource_Tornado}" />
         <Utils:SwitchCase  When="StunImmune"
-                           Then="{StaticResource ImageSource_StunImmune}" />        
+                           Then="{StaticResource ImageSource_StunImmune}" />
+        <Utils:SwitchCase  When="Hunger"
+                           Then="{StaticResource ImageSource_Hunger}" />
+        <Utils:SwitchCase  When="Thirst"
+                           Then="{StaticResource ImageSource_Thirst}" />
     </Utils:SwitchConverter>
 
     <Style x:Key="SmallIcon"
@@ -6534,19 +6642,6 @@
                 Value="20" />
         <Setter Property="Height"
                 Value="20" />
-        <Style.Triggers>
-            <EventTrigger RoutedEvent="Binding.TargetUpdated">
-                <BeginStoryboard>
-                    <Storyboard>
-                        <DoubleAnimation From="0"
-                                         To="1"
-                                         Duration="00:00:00.3"
-                                         Storyboard.TargetProperty="Opacity"
-                                         FillBehavior="Stop" />
-                    </Storyboard>
-                </BeginStoryboard>
-            </EventTrigger>
-        </Style.Triggers>
     </Style>
     <Style x:Key="MediumIcon"
            TargetType="Image">
