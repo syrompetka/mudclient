@@ -59,6 +59,7 @@ namespace Adan.Client.Plugins.GroupWidget
                                   new AffectDescription("Stun", Resources.Stun, new List<string> {"оглушение", "иммуность к оглушению"},new List<string> { "Stun","StunImmune"}) { IsRoundBased = true },
                                   new AffectDescription("Weakness", Resources.Weakness, "слабость", "Weakness"),
                                   new AffectDescription("Tornado", Resources.Tornado, "торнадо", "Tornado") { IsRoundBased = true },
+                                  new AffectDescription("Thirst", Resources.HungerThirst, new List<string> {"жажда", "голод"},new List<string> { "Thirst", "Hunger"}) { IsRoundBased = false },
                               };
 
         /// <summary>
