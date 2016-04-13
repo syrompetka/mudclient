@@ -84,7 +84,6 @@ namespace Adan.Client
                 foreach (var customType in plugin.CustomSerializationTypes)
                 {
                     types.Add(customType);
-                    RootModel.CustomSerializationTypes.Add(customType);
                 }
             }
 
