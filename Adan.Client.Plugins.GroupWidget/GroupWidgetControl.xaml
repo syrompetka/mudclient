@@ -103,6 +103,11 @@
                                    Foreground="{Binding HitsColor, Converter={StaticResource BackgroundTextColorToBrushConverter}}" 
                                    MaxWidth="135"
                                    Margin="0,0,0,2"/>
+                        <Border Margin="1,0,1,0" 
+                                Width="2"
+                                Background="DarkOrange"
+                                VerticalAlignment="Bottom"
+                                Height="{Binding WaitTimeHeight}"/>
                         <Grid Width="60">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="14" />
@@ -267,6 +272,15 @@
                                SnapsToDevicePixels="True"
                                Source="{Binding InSameRoom, Converter={StaticResource InSameRoomToIconConverter}, NotifyOnTargetUpdated=True}"
                                HorizontalAlignment="Right" />
+                        <TextBlock Text="{Binding MemTime}"
+                                   Width="40"
+                                   FontSize="10pt"
+                                   FontFamily="Lucida Console"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   Foreground="{DynamicResource GlyphBrush}"
+                                   Margin="4,0,0,2"
+                                    />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>

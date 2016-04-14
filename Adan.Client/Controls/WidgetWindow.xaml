@@ -5,7 +5,10 @@
         WindowStyle="None"
         ShowInTaskbar="False"
         Focusable="False"
-        Closing="CancelWindowClosing">
+        Closing="CancelWindowClosing"
+        FocusManager.IsFocusScope="False"
+       ShowActivated="False"
+>
     <Window.Resources>
         <Style TargetType="{x:Type controls:WidgetWindow}">
             <Setter Property="WindowChrome.WindowChrome">

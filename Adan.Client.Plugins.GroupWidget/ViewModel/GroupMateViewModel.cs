@@ -177,6 +177,49 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             }
         }
 
+        public string MemTime
+        {
+            get
+            {
+                if (!MemTimeVisibleSetting)
+                {
+                    return string.Empty;
+                }
+
+                if (GroupMate.MemTime < 0)
+                {
+                    return "-----";
+                }
+
+                if (GroupMate.MemTime == 0)
+                {
+                    return string.Empty;
+                }
+
+                var memTimeMinutes = GroupMate.MemTime / 60;
+                var memTimeSeconds = GroupMate.MemTime % 60;
+                return string.Format("{0:00}:{1:00}", memTimeMinutes, memTimeSeconds);
+            }
+        }
+
+        public float WaitTimeHeight
+        {
+            get
+            {
+                if (GroupMate.WaitState > 80)
+                {
+                    return 20;
+                }
+
+                if (GroupMate.WaitState <= 0)
+                {
+                    return 0;
+                }
+
+                return GroupMate.WaitState * 20.0f / 80.0f;
+            }
+        }
+
         /// <summary>
         /// Gets the group mate moves percent.
         /// </summary>
@@ -296,6 +339,8 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
         [NotNull]
         public ICollectionView AffectsSortedAndFiltered { get; private set; }
 
+        public bool MemTimeVisibleSetting { get; set; }
+
         /// <summary>
         /// Updates this view model from model.
         /// </summary>
@@ -311,7 +356,7 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
             HitsPercent = characterStatus.HitsPercent;
 
             MovesPercent = characterStatus.MovesPercent;
-
+            
             Position = characterStatus.Position;
             IsAttacked = characterStatus.IsAttacked;
             InSameRoom = characterStatus.InSameRoom;
@@ -339,7 +384,18 @@ namespace Adan.Client.Plugins.GroupWidget.ViewModel
                 notProcessedAffect.OnAffectRemoved();
             }
 
+            var oldMemTime = GroupMate.MemTime;
+            var oldWaitTime = GroupMate.WaitState;
             GroupMate = characterStatus;
+            if (MemTimeVisibleSetting && oldMemTime != GroupMate.MemTime)
+            {
+                OnPropertyChanged("MemTime");
+            }
+
+            if (oldWaitTime != GroupMate.WaitState)
+            {
+                OnPropertyChanged("WaitTimeHeight");
+            }
         }
 
         /// <summary>

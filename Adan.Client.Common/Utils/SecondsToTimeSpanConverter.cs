@@ -37,14 +37,24 @@ namespace Adan.Client.Common.Utils
             Assert.ArgumentNotNull(value, "value");
             Assert.ArgumentNotNull(targetType, "targetType");
             Assert.ArgumentNotNull(culture, "culture");
-
-            var floatValue = (float)value;
-            if (floatValue == float.PositiveInfinity)
+            if (value is float)
             {
-                return TimeSpan.MaxValue;
+                var floatValue = (float) value;
+                if (floatValue == float.PositiveInfinity)
+                {
+                    return TimeSpan.MaxValue;
+                }
+
+                return floatValue <= 0 ? TimeSpan.Zero : TimeSpan.FromSeconds(floatValue);
             }
 
-            return floatValue <= 0 ? TimeSpan.Zero : TimeSpan.FromSeconds(floatValue);
+            if (value is int)
+            {
+                var intValue = (int)value;
+                return intValue <= 0 ? TimeSpan.Zero : TimeSpan.FromSeconds(intValue);
+            }
+
+            return TimeSpan.MaxValue;
         }
 
         /// <summary>

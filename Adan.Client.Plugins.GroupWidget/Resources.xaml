@@ -6642,6 +6642,11 @@
                 Value="20" />
         <Setter Property="Height"
                 Value="20" />
+        <Setter Property="CacheMode">
+            <Setter.Value>
+                <BitmapCache EnableClearType="False" SnapsToDevicePixels="False" RenderAtScale="1"/>
+            </Setter.Value>
+        </Setter>
     </Style>
     <Style x:Key="MediumIcon"
            TargetType="Image">
@@ -6649,6 +6654,11 @@
                 Value="40" />
         <Setter Property="Height"
                 Value="40" />
+        <Setter Property="CacheMode">
+            <Setter.Value>
+                <BitmapCache EnableClearType="False" SnapsToDevicePixels="False" RenderAtScale="1"/>
+            </Setter.Value>
+        </Setter>
     </Style>
     <DataTemplate x:Key="AffectDescriptionTemplate">
         <StackPanel Orientation="Horizontal"
