@@ -512,25 +512,25 @@
                 return string.Empty;
             }
 
-            if (string.IsNullOrEmpty(monsterToProcess.TargetName))
+            if (string.IsNullOrEmpty(monsterToProcess.Name))
             {
                 return string.Empty;
             }
 
             int targetNamePrefix = 1;
-            var monsterFirstWordName = monsterToProcess.TargetName.Split(' ').First();
+            var monsterFirstWordName = monsterToProcess.Name.Split(' ').First();
             foreach (var monster in characters)
             {
                 if (monster == monsterToProcess)
                 {
                     break;
                 }
-                if (string.IsNullOrEmpty(monsterToProcess.TargetName))
+                if (string.IsNullOrEmpty(monsterToProcess.Name))
                 {
                     continue;
                 }
 
-                if (monster.TargetName.Split(' ').First() == monsterFirstWordName)
+                if (monster.Name.Split(' ').First() == monsterFirstWordName)
                 {
                     targetNamePrefix++;
                 }

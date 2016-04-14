@@ -139,7 +139,7 @@ namespace Adan.Client.Common.Model
         [NotNull]
         [XmlAttribute]
         [DefaultValue(-1.0f)]
-        public float WaitTime
+        public float WaitState
         {
             get;
             set;

@@ -38,11 +38,19 @@
             _tickingTimer.Interval = TimeSpan.FromSeconds(1);
             _tickingTimer.Tick += (o, e) => UpdateTimings();
             _tickingTimer.Start();
+
+            MemTimeVisible = Settings.Default.GroupWidgetDisplayMemTime;
+
             AffectsPanelWidth = _displayedAffectCount * 23;
-            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20 + 44 + 4;
             if (!DisplayNumber)
             {
                 Width -= 22;
+            }
+
+            if (!MemTimeVisible)
+            {
+                Width -= 44;
             }
 
             DisplayedItemLimit = Settings.Default.GroupWidgetLimitOn ? Settings.Default.GroupWidgetLimit : 9999;
@@ -156,6 +164,7 @@
 
         public int DisplayedItemLimit { get; set; }
 
+        public bool MemTimeVisible { get; set; }
 
         /// <summary>
         /// Updates the model.
@@ -188,7 +197,7 @@
                 else
                 {
                     var affectsList = _displayedAffectNames.Select(af => Constants.AllAffects.First(a => a.Name == af));
-                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList, position + 1, AffectsPanelWidth) { DisplayNumber = DisplayNumber });
+                    GroupMates.Insert(position, new GroupMateViewModel(characterStatus, affectsList, position + 1, AffectsPanelWidth) { DisplayNumber = DisplayNumber, MemTimeVisibleSetting = MemTimeVisible });
                 }
 
                 position++;
@@ -217,10 +226,16 @@
             DisplayNumber = Settings.Default.GroupWidgetDisplayNumber;
             DisplayedAffectCount = Settings.Default.GroupWidgetDisplayAffectsCount;
             AffectsPanelWidth = _displayedAffectCount * 23;
-            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20;
+            Width = AffectsPanelWidth + 22 + 140 + 60 + 20 + 20 + 5 + 5 + 20 + 44 + 4;
+            MemTimeVisible = Settings.Default.GroupWidgetDisplayMemTime;
             if (!DisplayNumber)
             {
                 Width -= 22;
+            }
+
+            if (!MemTimeVisible)
+            {
+                Width -= 44;
             }
 
             DisplayedItemLimit = Settings.Default.GroupWidgetLimitOn ? Settings.Default.GroupWidgetLimit : 9999;
