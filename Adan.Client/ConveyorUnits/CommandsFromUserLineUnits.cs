@@ -162,6 +162,9 @@ namespace Adan.Client.ConveyorUnits
 
         private bool UndoCheck(string commandText, bool isImport)
         {
+            if(isImport)
+                return false;
+
             var match = _regexUndo.Match(commandText);
             if (match.Success)
             {
@@ -238,7 +241,6 @@ namespace Adan.Client.ConveyorUnits
                 {
                     if (!isImport)
                     {
-
                         aliasList.Clear();
                         aliasList.AddRange(Conveyor.RootModel.Groups.SelectMany(gr => gr.Aliases
                             .Where(alias => Regex.IsMatch(alias.Command, args[0], RegexOptions.CultureInvariant | RegexOptions.IgnoreCase))));
@@ -262,9 +264,14 @@ namespace Adan.Client.ConveyorUnits
                 }
 
                 string groupName = "Default";
-
-                if (args.Length == 3)
-                    groupName = args[2];
+                
+                if (args.Length >= 3)
+                {
+                    if (!isImport || args[2] != "default")
+                    {
+                        groupName = args[2];
+                    }
+                }
 
                 CommandAlias commandAlias = new CommandAlias()
                 {
@@ -500,13 +507,14 @@ namespace Adan.Client.ConveyorUnits
                             PushMessageToConveyor(new ErrorMessage("#Синтаксическая ошибка: приоритет (3й аргумент) должен быть числом."));
                         return true;
                     }
-                    else if (args.Length == 3)
-                        groupName = args[3];
                 }
 
                 if (args.Length >= 4)
                 {
-                    groupName = args[3];
+                    if (!isImport || args[3] != "default")
+                    {
+                        groupName = args[3];
+                    }
                 }
 
                 TextTrigger trigger = new TextTrigger()
@@ -721,8 +729,13 @@ namespace Adan.Client.ConveyorUnits
 
                 string groupName = "Default";
 
-                if (args.Length == 3)
-                    groupName = args[2];
+                if (args.Length >= 3)
+                {
+                    if (!isImport || args[2] != "default")
+                    {
+                        groupName = args[2];
+                    }
+                }
 
                 var group = Conveyor.RootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
@@ -953,8 +966,13 @@ namespace Adan.Client.ConveyorUnits
 
                 string groupName = "Default";
 
-                if (args.Length == 3)
-                    groupName = args[2];
+                if (args.Length >= 3)
+                {
+                    if (!isImport || args[2] != "default")
+                    {
+                        groupName = args[2];
+                    }
+                }
 
                 var group = Conveyor.RootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
@@ -1188,8 +1206,13 @@ namespace Adan.Client.ConveyorUnits
 
                 string groupName = "Default";
 
-                if (args.Length == 3)
-                    groupName = args[2];
+                if (args.Length >= 3)
+                {
+                    if (!isImport || args[2] != "default")
+                    {
+                        groupName = args[2];
+                    }
+                }
 
                 var group = Conveyor.RootModel.Groups.FirstOrDefault(gr => gr.Name == groupName);
                 if (group == null)
