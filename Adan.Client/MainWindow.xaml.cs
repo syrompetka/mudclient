@@ -538,7 +538,8 @@ namespace Adan.Client
                 {
                     var name = chooseViewModel.SelectedProfile.NameProfile;
 
-                    CreateOutputWindow(name, name + Guid.NewGuid().ToString("N"));
+                    //Name of MenuItem cannot start with number
+                    CreateOutputWindow(name, "a" + Guid.NewGuid().ToString("N"));
                 }
                 catch (Exception ex)
                 {
