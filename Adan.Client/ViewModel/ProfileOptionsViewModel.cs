@@ -240,6 +240,7 @@ namespace Adan.Client.ViewModel
                     return;
 
                 RootModel rootModel = new RootModel(Profile);
+                var conveyor = ConveyorFactory.CreateNew(rootModel);
                 try
                 {
                     using (var stream = new StreamReader(fileDialog.FileName, Encoding.Default, false, 1024))
@@ -251,8 +252,8 @@ namespace Adan.Client.ViewModel
                             //TODO: Need FIX IT
                             if (!line.Contains("\x001B"))
                             {
-                                //rootModel.PushCommandToConveyor(new TextCommand(line))
-                                ConveyorFactory.CreateNew(rootModel).ImportJMC(line, rootModel);
+                                //rootModel.PushCommandToConveyor(new TextCommand(line)).ImportJMC(line, rootModel);
+                                conveyor.ImportJMC(line, rootModel);
                             }
                         }
                     }
@@ -262,6 +263,12 @@ namespace Adan.Client.ViewModel
                 }
 
                 _groupsViewModel = new GroupsViewModel(Profile.Groups, Profile.Name, RootModel.AllActionDescriptions);
+                OnPropertyChanged("AliasesCount");
+                OnPropertyChanged("GroupsCount");
+                OnPropertyChanged("HighlightsCount");
+                OnPropertyChanged("HotkeysCount");
+                OnPropertyChanged("SubstitutionsCount");
+                OnPropertyChanged("TriggersCount");
             }
         }
     }
