@@ -219,7 +219,7 @@ namespace Adan.Client
 
             if (_outputWindows.Count == 0)
             {
-                CreateOutputWindow("Default", "Default" + Guid.NewGuid().ToString("N"));
+                CreateOutputWindow("Default", "a" + Guid.NewGuid().ToString("N"));
             }
 
             _dockManager.ActiveContent = _outputWindows.FirstOrDefault().VisibleControl;
@@ -376,7 +376,6 @@ namespace Adan.Client
             OutputWindow outputWindow = new OutputWindow(this, name, _allRootModels);
             _outputWindows.Add(outputWindow);
             outputWindow.Uid = uid;
-
 
             LayoutAnchorable anchorable = new LayoutAnchorable
             {
@@ -538,7 +537,8 @@ namespace Adan.Client
                 {
                     var name = chooseViewModel.SelectedProfile.NameProfile;
 
-                    CreateOutputWindow(name, name + Guid.NewGuid().ToString("N"));
+                    //Name of MenuItem cannot start with number
+                    CreateOutputWindow(name, "a" + Guid.NewGuid().ToString("N"));
                 }
                 catch (Exception ex)
                 {
@@ -673,7 +673,7 @@ namespace Adan.Client
                 var outputWindow = _outputWindows.FirstOrDefault(x => { return x.Uid == activeContent.RootModel.Uid; });
                 if (outputWindow == null)
                 {
-                    CreateOutputWindow("Default", Guid.NewGuid().ToString("N"));
+                    CreateOutputWindow("Default", "a" + Guid.NewGuid().ToString("N"));
                 }
 
                 outputWindow.RootModel.PushCommandToConveyor(
@@ -687,7 +687,7 @@ namespace Adan.Client
             Assert.ArgumentNotNull(e, "e");
 
             if (_outputWindows.Count == 0)
-                CreateOutputWindow("Default", Guid.NewGuid().ToString("N"));
+                CreateOutputWindow("Default", "a" + Guid.NewGuid().ToString("N"));
 
             foreach (OutputWindow window in _outputWindows)
                 window.RootModel.PushCommandToConveyor(new ConnectCommand(SettingsHolder.Instance.Settings.ConnectHostName, SettingsHolder.Instance.Settings.ConnectPort));
