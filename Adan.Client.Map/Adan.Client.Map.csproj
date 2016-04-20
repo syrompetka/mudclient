@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{BF656B2E-A08B-446C-923A-C3AB523F9387}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Adan.Client.Map</RootNamespace>
+    <AssemblyName>Adan.Client.Map</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\Bin\Plugins\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\Bin\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>
+    </DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CSLib.Net.Annotations, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="CSLib.Net.Diagnostics, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6d598e93639f7b2f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyLibraries\Binaries\CSLib\CSLib.Net.Diagnostics.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.8.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\ThirdPartyLibraries\Binaries\DotNetZip\Ionic.Zip.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpAESCrypt, Version=1.3.0.0, Culture=neutral, PublicKeyToken=da45da0a7b8da0d2, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpAESCrypt.dll.1.3\lib\net20\SharpAESCrypt.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.RU-RU.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Constants.cs" />
+    <Compile Include="Messages\CurrentRoomMessage.cs" />
+    <Compile Include="MessageDeserializers\CurrentRoomMessageDeserializer.cs" />
+    <Compile Include="Dialogs\RouteDeleteDialog.xaml.cs">
+      <DependentUpon>RouteDeleteDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RouteDestinationSelectDialog.xaml.cs">
+      <DependentUpon>RouteDestinationSelectDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RoutePointNameEnterDialog.xaml.cs">
+      <DependentUpon>RoutePointNameEnterDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RoutesDialog.xaml.cs">
+      <DependentUpon>RoutesDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MapControl.xaml.cs">
+      <DependentUpon>MapControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MapDownloader.cs" />
+    <Compile Include="MapPlugin.cs" />
+    <Compile Include="Model\AdditionalRoomParameters.cs" />
+    <Compile Include="Model\ExitDirection.cs" />
+    <Compile Include="Model\Room.cs" />
+    <Compile Include="Model\RoomColor.cs" />
+    <Compile Include="Model\RoomExit.cs" />
+    <Compile Include="Model\RoomIcon.cs" />
+    <Compile Include="Model\Route.cs" />
+    <Compile Include="Model\Zone.cs" />
+    <Compile Include="Model\ZoneHolder.cs" />
+    <Compile Include="Render\RenderConstants.cs" />
+    <Compile Include="Render\RoomVisual.cs" />
+    <Compile Include="Render\ZoneVisual.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RoadMapDialog.xaml.cs">
+      <DependentUpon>RoadMapDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RoomContextMenu.xaml.cs">
+      <DependentUpon>RoomContextMenu.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RoomDetailsControl.xaml.cs">
+      <DependentUpon>RoomDetailsControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Dialogs\RoomEditDialog.xaml.cs">
+      <DependentUpon>RoomEditDialog.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="RouteManager.cs" />
+    <Compile Include="RoutePathElement.cs" />
+    <Compile Include="ConveyorUnits\RouteUnit.cs" />
+    <Compile Include="ViewModel\RoomExitViewModel.cs" />
+    <Compile Include="ViewModel\RoomViewModel.cs" />
+    <Compile Include="ViewModel\ZoneViewModel.cs" />
+    <Compile Include="ZoneManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Adan.Client.Common\Adan.Client.Common.csproj">
+      <Project>{B9D6E795-44B4-4998-AAE5-EA3CB547563D}</Project>
+      <Name>Adan.Client.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Dialogs\RouteDeleteDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RouteDestinationSelectDialog.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Dialogs\RoutePointNameEnterDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RoutesDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MapControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Resources.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RoadMapDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RoomContextMenu.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="RoomDetailsControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dialogs\RoomEditDialog.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DefaultMaps\20.xml" />
+    <Content Include="DefaultMaps\30.xml" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <Import Project="$(SolutionDir)MSBuild\Common.targets" />
+</Project>

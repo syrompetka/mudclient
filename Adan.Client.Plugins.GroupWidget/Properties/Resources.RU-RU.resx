@@ -1,0 +1,255 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Acceleration" xml:space="preserve">
+    <value>Ускорение</value>
+  </data>
+  <data name="Affect" xml:space="preserve">
+    <value>Аффект:</value>
+  </data>
+  <data name="ArmorCurse" xml:space="preserve">
+    <value>Проклятие защиты</value>
+  </data>
+  <data name="AvailableAffects" xml:space="preserve">
+    <value>Доступные аффеты:</value>
+  </data>
+  <data name="Blessing" xml:space="preserve">
+    <value>Благословление/Точность</value>
+  </data>
+  <data name="Blindness" xml:space="preserve">
+    <value>Слепота</value>
+  </data>
+  <data name="Cancel" xml:space="preserve">
+    <value>Отмена</value>
+  </data>
+  <data name="Curse" xml:space="preserve">
+    <value>Проклятие</value>
+  </data>
+  <data name="Disease" xml:space="preserve">
+    <value>Болезнь</value>
+  </data>
+  <data name="DisplayedAffects" xml:space="preserve">
+    <value>Отображаемые аффекты:</value>
+  </data>
+  <data name="DisplayedAffectsCount" xml:space="preserve">
+    <value>Количество отображаемых аффектов:</value>
+  </data>
+  <data name="DisplayMemTime" xml:space="preserve">
+    <value>показывать время мема</value>
+  </data>
+  <data name="DisplayNumber" xml:space="preserve">
+    <value>показывать номер монстра/согруппника</value>
+  </data>
+  <data name="Duration" xml:space="preserve">
+    <value>Длительность:</value>
+  </data>
+  <data name="EntsPower" xml:space="preserve">
+    <value>Сила энтов</value>
+  </data>
+  <data name="Fear" xml:space="preserve">
+    <value>Страх</value>
+  </data>
+  <data name="Flight" xml:space="preserve">
+    <value>Полет</value>
+  </data>
+  <data name="Fresh" xml:space="preserve">
+    <value>Восстановление</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Группа</value>
+  </data>
+  <data name="GroupWidgetOptions" xml:space="preserve">
+    <value>Настройки виджета группы</value>
+  </data>
+  <data name="Healings" xml:space="preserve">
+    <value>Заживления</value>
+  </data>
+  <data name="Hold" xml:space="preserve">
+    <value>Холды</value>
+  </data>
+  <data name="Invisibility" xml:space="preserve">
+    <value>Невидимость</value>
+  </data>
+  <data name="Monsters" xml:space="preserve">
+    <value>Монстры</value>
+  </data>
+  <data name="MonstersWidgetOptions" xml:space="preserve">
+    <value>Настройки виджета монстров</value>
+  </data>
+  <data name="Ok" xml:space="preserve">
+    <value>Ок</value>
+  </data>
+  <data name="Paralysis" xml:space="preserve">
+    <value>Паралич</value>
+  </data>
+  <data name="Poison" xml:space="preserve">
+    <value>Яд</value>
+  </data>
+  <data name="Power" xml:space="preserve">
+    <value>Сила</value>
+  </data>
+  <data name="Protection" xml:space="preserve">
+    <value>Защита</value>
+  </data>
+  <data name="Renewals" xml:space="preserve">
+    <value>Обновления</value>
+  </data>
+  <data name="Shock" xml:space="preserve">
+    <value>Шок</value>
+  </data>
+  <data name="Silence" xml:space="preserve">
+    <value>Молчание</value>
+  </data>
+  <data name="Slowness" xml:space="preserve">
+    <value>Замедление</value>
+  </data>
+  <data name="StoneCurse" xml:space="preserve">
+    <value>Каменное проклятие</value>
+  </data>
+  <data name="Stun" xml:space="preserve">
+    <value>Оглушение</value>
+  </data>
+  <data name="StunImmune" xml:space="preserve">
+    <value>Иммунитет к оглушению</value>
+  </data>
+  <data name="Tornado" xml:space="preserve">
+    <value>Торнадо</value>
+  </data>
+  <data name="Weakness" xml:space="preserve">
+    <value>Слабость</value>
+  </data>
+  <data name="LimitDisplayedCountMonstersGroupMates" xml:space="preserve">
+    <value>Ограничить число монстров/согруппников</value>
+  </data>
+  <data name="MonsterNumber" xml:space="preserve">
+    <value>Номер монстра:</value>
+  </data>
+  <data name="SelectedMonster" xml:space="preserve">
+    <value>выбранный монстр</value>
+  </data>
+  <data name="GroupMateNumber" xml:space="preserve">
+    <value>Номер согруппника:</value>
+  </data>
+  <data name="SelectedGroupMate" xml:space="preserve">
+    <value>выбранный согруппник</value>
+  </data>
+  <data name="HungerThirst" xml:space="preserve">
+    <value>Голод/Жажда</value>
+  </data>
+</root>
