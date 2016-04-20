@@ -5,8 +5,6 @@ namespace Adan.Client.Common.Controls
 
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Globalization;
     using System.Windows;
     using System.Windows.Controls;
     using System.Windows.Controls.Primitives;
@@ -571,7 +569,7 @@ namespace Adan.Client.Common.Controls
             _selectionSettings.NeedUpdate = true;
             _selectionSettings.SetSelectionStartPosition(e.GetPosition(this));
             CaptureMouse();
-            e.Handled = true;
+            //e.Handled = true;
         }
 
         /// <summary>
@@ -690,6 +688,7 @@ namespace Adan.Client.Common.Controls
                         while (textStorePosition < _messages[lineNumber - 1].InnerText.Length);
 
                         var drawnChars = 0;
+                        bool messageSelected = false;
                         while (_linesToRenderStack.Count > 0)
                         {
                             var line = _linesToRenderStack.Pop();
@@ -699,7 +698,7 @@ namespace Adan.Client.Common.Controls
                             drawnChars += line.Length;
                             if (_selectionSettings.NeedUpdate)
                             {
-                                ProcessLineForSelection(line, _messages[lineNumber - 1], currentHeight, drawnChars);
+                                messageSelected = ProcessLineForSelection(line, _messages[lineNumber - 1], currentHeight, drawnChars, messageSelected);
                             }
 
                             currentHeight -= line.Height;
@@ -725,7 +724,10 @@ namespace Adan.Client.Common.Controls
             }
             catch (Exception ex)
             {
-                    ErrorLogger.Instance.Write(string.Format("Error rendering text {0}", ex));
+                _selectionSettings.NeedUpdate = false;
+                _textRunCache.Invalidate();
+                ClearTextSelection();
+                ErrorLogger.Instance.Write(string.Format("Error rendering text {0}", ex));
             }
 
         }
@@ -750,7 +752,7 @@ namespace Adan.Client.Common.Controls
         #region Methods
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Ok")]
-        private void ProcessLineForSelection([NotNull] TextLine line, [NotNull] TextMessage message, double bottomY, int alreadyDrawCharsForMessage)
+        private bool ProcessLineForSelection([NotNull] TextLine line, [NotNull] TextMessage message, double bottomY, int alreadyDrawCharsForMessage, bool messageSelected)
         {
             Assert.ArgumentNotNull(line, "line");
             Assert.ArgumentNotNull(message, "message");
@@ -773,6 +775,26 @@ namespace Adan.Client.Common.Controls
                 selectionRight = _selectionSettings.SelectionStartPosition.X;
             }
 
+            if (selectionBottom > ActualHeight)
+            {
+                selectionBottom = ActualHeight;
+            }
+
+            if (selectionTop < 0)
+            {
+                selectionTop = 0;
+            }
+
+            if (selectionRight > ActualWidth)
+            {
+                selectionRight = ActualWidth;
+            }
+
+            if (selectionLeft < 0)
+            {
+                selectionLeft = 0;
+            }
+
             double lineBottom = bottomY;
             double lineTop = bottomY - line.Height;
 
@@ -782,11 +804,13 @@ namespace Adan.Client.Common.Controls
                 {
                     _tempSelectionSettings.SelectedMessages.Add(message);
                 }
+                return true;
             }
-            else if ((selectionBottom > lineTop && selectionBottom < lineBottom) && (selectionTop > lineTop && selectionTop < lineBottom))
+
+            if ((selectionBottom > lineTop && selectionBottom < lineBottom) && (selectionTop > lineTop && selectionTop < lineBottom))
             {
-                var leftCharIndex = selectionLeft > line.Width ? line.Length : line.GetCharacterHitFromDistance(selectionLeft).FirstCharacterIndex;
-                var rightCharIndex = selectionRight > line.Width ? line.Length : line.GetCharacterHitFromDistance(selectionRight).FirstCharacterIndex;
+                var leftCharIndex = line.GetCharacterHitFromDistance(selectionLeft).FirstCharacterIndex;
+                var rightCharIndex = line.GetCharacterHitFromDistance(selectionRight).FirstCharacterIndex;
                 if (rightCharIndex > leftCharIndex)
                 {
                     _tempSelectionSettings.SelectionStartCharacterNumber = leftCharIndex;
@@ -797,8 +821,11 @@ namespace Adan.Client.Common.Controls
                         _tempSelectionSettings.SelectedMessages.Add(message);
                     }
                 }
+
+                return true;
             }
-            else if (selectionTop > lineTop && selectionTop < lineBottom)
+
+            if (selectionTop > lineTop && selectionTop < lineBottom)
             {
                 double distance = _selectionSettings.SelectionEndPosition.X;
                 if (selectionTop == _selectionSettings.SelectionStartPosition.Y)
@@ -806,15 +833,18 @@ namespace Adan.Client.Common.Controls
                     distance = _selectionSettings.SelectionStartPosition.X;
                 }
 
-                var charIndex = distance > line.Width ? line.Length : line.GetCharacterHitFromDistance(distance).FirstCharacterIndex;
+                var charIndex = line.GetCharacterHitFromDistance(distance).FirstCharacterIndex;
                 _tempSelectionSettings.SelectionStartCharacterNumber = charIndex;
 
                 if (!alreadyAdded)
                 {
                     _tempSelectionSettings.SelectedMessages.Add(message);
                 }
+
+                return true;
             }
-            else if (selectionBottom > lineTop && selectionBottom < lineBottom)
+
+            if (selectionBottom > lineTop && selectionBottom < lineBottom)
             {
                 double distance = _selectionSettings.SelectionEndPosition.X;
                 if (selectionBottom == _selectionSettings.SelectionStartPosition.Y)
@@ -822,21 +852,22 @@ namespace Adan.Client.Common.Controls
                     distance = _selectionSettings.SelectionStartPosition.X;
                 }
 
-                var charIndex = distance > line.Width ? line.Length : line.GetCharacterHitFromDistance(distance).FirstCharacterIndex;
+                var charIndex = line.GetCharacterHitFromDistance(distance).FirstCharacterIndex;
                 _tempSelectionSettings.SelectionEndCharacterNumber = charIndex;
 
                 if (!alreadyAdded)
                 {
                     _tempSelectionSettings.SelectedMessages.Add(message);
                 }
+                return true;
             }
-            else
+
+            if (alreadyAdded && !messageSelected)
             {
-                if (alreadyAdded)
-                {
-                    _tempSelectionSettings.SelectedMessages.Remove(message);
-                }
+                _tempSelectionSettings.SelectedMessages.Remove(message);
             }
+
+            return messageSelected;
         }
 
         private void ClearTextSelection()
@@ -848,40 +879,43 @@ namespace Adan.Client.Common.Controls
 
         private void CopySelectedMessagesToClipboard()
         {
-            string result = string.Empty;
-            if (_selectionSettings.SelectedMessages.Count == 1)
-            {
-                var text = _selectionSettings.SelectedMessages[0].InnerText;
-                if (_selectionSettings.SelectionStartCharacterNumber < text.Length)
-                {
-                    var length = Math.Min(text.Length, _selectionSettings.SelectionEndCharacterNumber);
-                    result = text.Substring(_selectionSettings.SelectionStartCharacterNumber, length - _selectionSettings.SelectionStartCharacterNumber);
-                }
-            }
-
-            if (_selectionSettings.SelectedMessages.Count > 1)
-            {
-                var text = _selectionSettings.SelectedMessages[_selectionSettings.SelectedMessages.Count - 1].InnerText;
-                result = text.Substring(Math.Min(_selectionSettings.SelectionStartCharacterNumber, text.Length));
-
-                for (int i = _selectionSettings.SelectedMessages.Count - 2; i > 0; i--)
-                {
-                    result += "\r\n";
-                    result += _selectionSettings.SelectedMessages[i].InnerText;
-                }
-
-                result += "\r\n";
-                text = _selectionSettings.SelectedMessages[0].InnerText;
-                var length = Math.Min(text.Length, _selectionSettings.SelectionEndCharacterNumber);
-                result += text.Substring(0, length);
-            }
 
             try
             {
+                string result = string.Empty;
+                if (_selectionSettings.SelectedMessages.Count == 1)
+                {
+                    var text = _selectionSettings.SelectedMessages[0].InnerText;
+                    if (_selectionSettings.SelectionStartCharacterNumber < text.Length)
+                    {
+                        var length = Math.Min(text.Length, _selectionSettings.SelectionEndCharacterNumber);
+                        result = text.Substring(_selectionSettings.SelectionStartCharacterNumber, length - _selectionSettings.SelectionStartCharacterNumber);
+                    }
+                }
+
+                if (_selectionSettings.SelectedMessages.Count > 1)
+                {
+                    var text = _selectionSettings.SelectedMessages[_selectionSettings.SelectedMessages.Count - 1].InnerText;
+                    result = text.Substring(Math.Min(_selectionSettings.SelectionStartCharacterNumber, text.Length));
+
+                    for (int i = _selectionSettings.SelectedMessages.Count - 2; i > 0; i--)
+                    {
+                        result += "\r\n";
+                        result += _selectionSettings.SelectedMessages[i].InnerText;
+                    }
+
+                    result += "\r\n";
+                    text = _selectionSettings.SelectedMessages[0].InnerText;
+                    var length = Math.Min(text.Length, _selectionSettings.SelectionEndCharacterNumber);
+                    result += text.Substring(0, length);
+                }
+
                 Clipboard.SetText(result);
             }
-            catch
+            catch (Exception ex)
             {
+                ClearTextSelection();
+                ErrorLogger.Instance.Write(string.Format("Error copying text {0}", ex));
             }
         }
 
