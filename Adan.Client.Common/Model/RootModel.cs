@@ -518,7 +518,7 @@
             }
 
             int targetNamePrefix = 1;
-            var monsterFirstWordName = monsterToProcess.Name.Split(' ').First();
+            var monsterFirstWordName = monsterToProcess.Name;
             foreach (var monster in characters)
             {
                 if (monster == monsterToProcess)
@@ -530,7 +530,7 @@
                     continue;
                 }
 
-                if (monster.Name.Split(' ').First() == monsterFirstWordName)
+                if (monster.Name == monsterFirstWordName)
                 {
                     targetNamePrefix++;
                 }
@@ -538,10 +538,10 @@
 
             if (targetNamePrefix > 1)
             {
-                return targetNamePrefix + "." + monsterFirstWordName;
+                return targetNamePrefix + "." + monsterFirstWordName.Replace(' ','.').Replace('-','.');
             }
 
-            return monsterFirstWordName;
+            return monsterFirstWordName.Replace(' ', '.').Replace('-', '.');
         }
 
         /// <summary>
