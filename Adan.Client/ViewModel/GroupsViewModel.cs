@@ -20,7 +20,6 @@ namespace Adan.Client.ViewModel
 
     using CSLib.Net.Annotations;
     using CSLib.Net.Diagnostics;
-    using System.Collections.Concurrent;
 
     /// <summary>
     /// View model for groups.
