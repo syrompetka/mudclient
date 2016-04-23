@@ -13,7 +13,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
-
+    using System.Text;
     /// <summary>
     /// A root object for all model objects.
     /// </summary>
@@ -480,7 +480,7 @@
                 v = Variables.FirstOrDefault(x => x.Name == searchValue);
             }
 
-            return variablesList.Count > 0 ? variablesList[variablesList.Count - 1].Value : string.Empty;
+            return variablesList.Count > 0 ? variablesList[variablesList.Count - 1].Value : ("$" + variableName);
         }
 
         private string GetMonsterOrGroupMateTarget(string variableName, string prefix, CharacterStatus selectedCharacter, IEnumerable<CharacterStatus> characters)
@@ -569,25 +569,47 @@
 
         public VarReplaceReply ReplaceVariables(string str)
         {
-            bool ret;
             bool allVariables = true;
 
-            do
+            var sb = new StringBuilder();
+
+            int lastPos = 0;
+            int i = 0;
+            while (i < str.Length)
             {
-                ret = false;
-                str = _variableRegex.Replace(str,
-                    m =>
+                if (str[i] == '$')
+                {
+                    if (i - lastPos > 0)
+                        sb.Append(str, lastPos, i - lastPos);
+
+                    i++;
+                    int startPos = i;
+
+                    while (i < str.Length && char.IsLetterOrDigit(str[i]))
+                        i++;
+
+                    var name = str.Substring(startPos, i - startPos);
+                    if (!string.IsNullOrEmpty(name))
                     {
-                        ret = true;
-                        var variable = GetVariableValue(m.Groups[1].Value);
-                        if (string.IsNullOrEmpty(variable))
+                        var replace = GetVariableValue(name);
+                        if (replace == "$" + str)
+                        {
                             allVariables = false;
+                        }
 
-                        return variable;
-                    });
-            } while (ret);
+                        sb.Append(replace);
+                    }
 
-            return new VarReplaceReply(str, allVariables);
+                    lastPos = i;
+                }
+
+                i++;
+            }
+
+            if (lastPos < str.Length)
+                sb.Append(str, lastPos, str.Length - lastPos);
+
+            return new VarReplaceReply(sb.ToString(), allVariables);
         }
 
         /// <summary>
