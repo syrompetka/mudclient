@@ -122,7 +122,12 @@ namespace Adan.Client.Common.Model
                         while (i < input.Length && char.IsLetterOrDigit(input[i]))
                             i++;
 
-                        sb.Append(rootModel.GetVariableValue(input.Substring(startPos, i - startPos)));
+                        var name = input.Substring(startPos, i - startPos);
+                        if (!string.IsNullOrEmpty(name))
+                        {
+                            sb.Append(rootModel.GetVariableValue(name));
+                        }
+
                         lastPos = i;
                     }
                 }

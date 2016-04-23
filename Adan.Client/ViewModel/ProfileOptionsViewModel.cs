@@ -53,7 +53,6 @@ namespace Adan.Client.ViewModel
             ImportProfileCommand = new DelegateCommand(ImportProfile, true);
         }
 
-
         /// <summary>
         /// 
         /// </summary>
@@ -263,6 +262,21 @@ namespace Adan.Client.ViewModel
                 }
 
                 _groupsViewModel = new GroupsViewModel(Profile.Groups, Profile.Name, RootModel.AllActionDescriptions);
+                var profile = SettingsHolder.Instance.GetProfile(Profile.Name);
+                foreach(var newVar in Profile.Variables)
+                {
+                    var v = profile.Variables.FirstOrDefault(var => var.Name == newVar.Name);
+
+                    if (v != null)
+                    {
+                        v.Value = newVar.Value;
+                    }
+                    else
+                    {
+                        profile.Variables.Add(new Variable() { Name = newVar.Name, Value = newVar.Value });
+                    }
+                }
+
                 OnPropertyChanged("AliasesCount");
                 OnPropertyChanged("GroupsCount");
                 OnPropertyChanged("HighlightsCount");
