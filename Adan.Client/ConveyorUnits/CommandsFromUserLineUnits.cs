@@ -1495,32 +1495,8 @@ namespace Adan.Client.ConveyorUnits
                     return true;
                 }
 
-                string varName = args[0];
-                string varValue = args[1];
-
-                do
-                {
-                    if (!varName.StartsWith("$"))
-                        break;
-
-                    string str = Conveyor.RootModel.GetVariableValue(varName);
-                    if (String.IsNullOrEmpty(str))
-                        break;
-
-                    varName = str;
-                } while (true);
-
-                do
-                {
-                    if (!varValue.StartsWith("$"))
-                        break;
-
-                    string str = Conveyor.RootModel.GetVariableValue(varValue);
-                    if (String.IsNullOrEmpty(str))
-                        break;
-
-                    varValue = str;
-                } while (true);
+                string varName = args[0].StartsWith("$") ? Conveyor.RootModel.GetVariableValue(args[0].Substring(1)) : args[0];
+                string varValue = args[1].StartsWith("$") ? Conveyor.RootModel.GetVariableValue(args[1].Substring(1)) : args[1];
 
                 if (!isImport)
                 {
