@@ -48,9 +48,6 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexLog = new Regex(@"#log?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regesStopLog = new Regex(@"#stoplog", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexShowme = new Regex(@"#sho?w?m?e?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _regexTickOn = new Regex(@"#tickon\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _regexTickOff = new Regex(@"#tickoff?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _regexTickSize = new Regex(@"#ticksi?z?e?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexZap = new Regex(@"#za?p?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexConnect = new Regex(@"#conn?e?c?t?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexStatus = new Regex(@"#stat?u?s?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);

@@ -35,3 +35,5 @@ Adan.Client.Plugins.GroupWidget/Adan.Client.Plugins.GroupWidget.csproj.DotSettin
 Adan.Client141230.vspx
 packages
 Adan.Client2010.sln.DotSettings.user
+Adan.Client.Plugins.Ticker/obj/
+Adan.Client.Plugins.Ticker/bin/
