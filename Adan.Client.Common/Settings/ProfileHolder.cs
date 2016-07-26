@@ -13,7 +13,7 @@ using System.Xml.Serialization;
 namespace Adan.Client.Common.Settings
 {
     /// <summary>
-    /// Class how hold settings like triggers, actions etc.
+    /// Class that holds settings like triggers, actions etc.
     /// </summary>
     public class ProfileHolder
     {

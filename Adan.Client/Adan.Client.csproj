@@ -222,7 +222,9 @@
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
+	<Compile Include="Messages\SetStatusMessage.cs" />
     <Compile Include="Messages\ShowOutputWindowMessage.cs" />
+	<Compile Include="Messages\ShowStatusBarMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
     <Compile Include="Messages\ToggleFullScreenModeMessage.cs" />

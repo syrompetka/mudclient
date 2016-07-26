@@ -22,6 +22,7 @@
     public partial class MainOutputWindow : IScrollInfo
     {
         private readonly MainWindow _mainWindow;
+        private bool _isDisplayingStatusBar;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainOutputWindow"/> class.
@@ -37,6 +38,22 @@
             txtCommandInput.GotKeyboardFocus += HandleGotFocus;
             txtCommandInput.LoadHistory(rootModel.Profile);
             secondaryScrollViewer.ScrollChanged += HandleScrollChanged;
+
+            for (byte i = 1; i < 6; i++)
+            {
+                string msg = RootModel.GetVariableValue("statusBar"+ i);
+                string col = RootModel.GetVariableValue("statusBar" + i + "Col");
+                SetStatusBar(i.ToString(), msg, col, false);
+            }
+
+            string displayStatusBar = rootModel.GetVariableValue("DisplayStatusBar");
+            bool shouldDisplay = false;
+            if (displayStatusBar != "")
+            {
+                bool.TryParse(displayStatusBar, out shouldDisplay);
+            }
+
+            DisplayStatusBar(shouldDisplay, false);
         }
 
         public RootModel RootModel
@@ -431,6 +448,151 @@
             Assert.ArgumentNotNull(visual, "visual");
 
             return secondaryScrollOutput.MakeVisible(visual, rectangle);
+        }
+
+        /// <summary>
+        /// Displays/hides status bar.
+        /// </summary>
+        /// <param name="state"></param>
+        public void DisplayStatusBar(bool state, bool verbose)
+        {
+            _isDisplayingStatusBar = state;
+
+            if (_isDisplayingStatusBar)
+            {
+                txtCommandInput.Margin = new Thickness(-1, 0, -1, 17);
+                StatusBar.Visibility = Visibility.Visible;
+
+                if (verbose)
+                {
+                    RootModel.PushMessageToConveyor(new InfoMessage("#Status bar displayed."));
+                }
+                RootModel.SetVariableValue("DisplayStatusBar", _isDisplayingStatusBar.ToString(), true);
+            }
+            else
+            {
+                txtCommandInput.Margin = new Thickness(-1, 0, -1, 0);
+                StatusBar.Visibility = Visibility.Collapsed;
+                StatusBar1.Text = "";
+                StatusBar2.Text = "";
+                StatusBar3.Text = "";
+                StatusBar4.Text = "";
+                StatusBar5.Text = "";
+
+                for (byte i = 1; i < 6; i++)
+                    RootModel.SetVariableValue("statusBar" + i, "", true);
+
+                if (verbose)
+                {
+                    RootModel.PushMessageToConveyor(new InfoMessage("#Status bar hidden."));
+                }
+                RootModel.SetVariableValue("DisplayStatusBar", _isDisplayingStatusBar.ToString(), true);
+            }
+        }
+
+        /// <summary>
+        /// Displays/hides status bar.
+        /// </summary>
+        /// <param name="state"></param>
+        public void SetStatusBar(string idString, string message, string colorString, bool verbose = true)
+        {
+            byte Id;
+            if (!byte.TryParse(idString, out Id))
+            {
+                // should never occur, but just in case
+                return;
+            }
+
+            // If setting a status, but the status bar is hidden - display it.
+            if (!_isDisplayingStatusBar && message != "")
+            {
+                DisplayStatusBar(true, false);
+            }
+
+
+            TextBlock textBlock;
+            if (Id == 1) textBlock = StatusBar1;
+            else if (Id == 2) textBlock = StatusBar2;
+            else if (Id == 3) textBlock = StatusBar3;
+            else if (Id == 4) textBlock = StatusBar4;
+            else if (Id == 5) textBlock = StatusBar5;
+            else
+            {
+                // Notify user that id number is wrong.
+                // Print explanations about correct usage.
+                RootModel.PushMessageToConveyor(new InfoMessage("Incorrect usage of #Status [1|2|3|4|5] {Text} [color].", Common.Themes.TextColor.BrightYellow));
+                RootModel.PushMessageToConveyor(new InfoMessage("Error message: Only numbers between 1 and 5 are accepted.", Common.Themes.TextColor.BrightYellow));
+                RootModel.PushMessageToConveyor(new InfoMessage("Example: #Status 1 {Hello} green", Common.Themes.TextColor.BrightYellow));
+                return;
+            }
+
+            textBlock.Text = message;
+
+            if (colorString == "" || colorString.Length < 2)
+            {
+                textBlock.Foreground = new SolidColorBrush(Color.FromRgb(192, 192, 192)); //#c0c0c0
+            }
+            else
+            {
+                if (colorString.StartsWith("#"))
+                {
+                    if (colorString.Length == 7)
+                    {
+                        Color color = (Color)ColorConverter.ConvertFromString(colorString);
+                        textBlock.Foreground = new SolidColorBrush(color);
+                    }
+                    else
+                    {
+                        //notify user that color is wrong
+                        // print examples of colors
+                        RootModel.PushMessageToConveyor(new InfoMessage("Incorrect usage of #Status [1|2|3|4|5] {Text} [color].", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Error message: Incorrect color. Acceptable formats are: #FFFFFF (hex rgb) or plain color name (e.g. green).", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Example: #Status 1 {Hello} green", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Example: #Status 1 {Hello} #00FF00", Common.Themes.TextColor.BrightYellow));
+                        return;
+                    }
+                }
+                else
+                {
+                    colorString = colorString.ToLower();
+                    colorString = colorString[0].ToString().ToUpper() + colorString.Substring(1);
+                    var colorProperty = typeof(Colors).GetProperty(colorString);
+                    if (colorProperty != null)
+                    {
+                        Color color = (Color)colorProperty.GetValue(this);
+                        textBlock.Foreground = new SolidColorBrush(color);
+                    }
+                    else
+                    {
+                        //notify that color is wrong
+                        // print examples of colors
+                        RootModel.PushMessageToConveyor(new InfoMessage("Incorrect usage of #Status [1|2|3|4|5] {Text} [color].", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Error message: Incorrect color. The color you entered isn't in the color table.", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Example: #Status 1 {Hello} green", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("Example: #Status 1 {Hello} #00FF00", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("For full list of acceptable colors, please refer to: ", Common.Themes.TextColor.BrightYellow));
+                        RootModel.PushMessageToConveyor(new InfoMessage("https://i-msdn.sec.s-msft.com/en-us/library/system.windows.media.colors.43e06ea3-fdb6-448a-bb66-2e032ab1a12a(v=vs.110).jpeg", Common.Themes.TextColor.BrightYellow));
+                        return;
+                    }
+                }
+            }
+
+            if (verbose)
+            {
+                if (message == "")
+                    RootModel.PushMessageToConveyor(new InfoMessage("#StatusBar" + Id + " emptied.", Common.Themes.TextColor.BrightWhite));
+                else
+                    RootModel.PushMessageToConveyor(new InfoMessage("#StatusBar" + Id + ": " + message, Common.Themes.TextColor.BrightWhite));
+            }
+
+            RootModel.SetVariableValue("statusBar" + Id, message, true);
+            RootModel.SetVariableValue("statusBar" + Id + "Col", colorString, true);
+
+            //// If all statuses are empty, hide the status bar.
+            //if (StatusBar1.Text == "" && StatusBar2.Text == "" && StatusBar3.Text == "" && StatusBar4.Text == "" && StatusBar5.Text == "")
+            //{
+            //    DisplayStatusBar(false, false);
+            //}
         }
 
         #endregion
