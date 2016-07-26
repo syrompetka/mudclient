@@ -50,7 +50,9 @@ namespace Adan.Client.ConveyorUnits
         private readonly Regex _regexShowme = new Regex(@"#sho?w?m?e?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexZap = new Regex(@"#za?p?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexConnect = new Regex(@"#conn?e?c?t?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-        private readonly Regex _regexStatus = new Regex(@"#stat?u?s?\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _regexStatusBar = new Regex(@"^#stat{1}u?s? (On|Off){1}$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _regexStatus = new Regex(@"#stat{1}u?s? (\d{1}) \{{1}(.+)\}{1} ([^\s]+)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly Regex _regexStatusSimple = new Regex(@"#stat{1}u?s? (\d{1})\s*(.*)$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private readonly Regex _regexGroup = new Regex(@"#gr?o?u?p?\s*(enable|disable)\s*(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         private readonly Regex _regexUndo = new Regex(@"#undo(.*)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -1434,6 +1436,7 @@ namespace Adan.Client.ConveyorUnits
             return false;
         }
 
+        //@TODO: Check for reserved variable names such as DATE, TIME, Monster, GroupMate, DisplayStatusBar, StatusBar1, etc.
         private bool VariableCheck(string commandText, bool isImport)
         {
             var match = _regexVariable.Match(commandText);
@@ -1492,8 +1495,32 @@ namespace Adan.Client.ConveyorUnits
                     return true;
                 }
 
-                string varName = args[0].StartsWith("$") ? Conveyor.RootModel.GetVariableValue(args[0].Substring(1)) : args[0];
-                string varValue = args[1].StartsWith("$") ? Conveyor.RootModel.GetVariableValue(args[1].Substring(1)) : args[1];
+                string varName = args[0];
+                string varValue = args[1];
+
+                do
+                {
+                    if (!varName.StartsWith("$"))
+                        break;
+
+                    string str = Conveyor.RootModel.GetVariableValue(varName);
+                    if (String.IsNullOrEmpty(str))
+                        break;
+
+                    varName = str;
+                } while (true);
+
+                do
+                {
+                    if (!varValue.StartsWith("$"))
+                        break;
+
+                    string str = Conveyor.RootModel.GetVariableValue(varValue);
+                    if (String.IsNullOrEmpty(str))
+                        break;
+
+                    varValue = str;
+                } while (true);
 
                 if (!isImport)
                 {
@@ -1725,13 +1752,43 @@ namespace Adan.Client.ConveyorUnits
             return false;
         }
 
-        //TODO
         private bool StatusCheck(string commandText)
         {
-            var match = _regexStatus.Match(commandText);
+            // #status on|off
+            var match = _regexStatusBar.Match(commandText);
             if (match.Success)
             {
+                if (match.Groups.Count > 0)
+                {
+                    if (string.Equals(match.Groups[1].Value, "On", StringComparison.OrdinalIgnoreCase))
+                        Conveyor.RootModel.PushMessageToConveyor(new ShowStatusBarMessage(true));
+                    else
+                        Conveyor.RootModel.PushMessageToConveyor(new ShowStatusBarMessage(false));
+                }
                 return true;
+            }
+
+            // #stat 1 {message} color
+            match = _regexStatus.Match(commandText);
+            if (match.Success)
+            {
+                if (match.Groups.Count == 4)
+                {
+                    Conveyor.RootModel.PushMessageToConveyor(new SetStatusMessage(match.Groups[1].Value, match.Groups[2].Value, match.Groups[3].Value));
+                }
+                return true;
+            }
+
+            // #stat 1 message
+            // or
+            // #stat 1
+            match = _regexStatusSimple.Match(commandText);
+            if (match.Success)
+            {
+                if (match.Groups.Count == 3)
+                {
+                    Conveyor.RootModel.PushMessageToConveyor(new SetStatusMessage(match.Groups[1].Value, match.Groups[2].Value));
+                }
             }
 
             return false;

@@ -7,7 +7,7 @@
              xmlns:controls1="clr-namespace:Adan.Client.Common.Controls;assembly=Adan.Client.Common"
              mc:Ignorable="d"
              Focusable="True"
-             FocusManager.FocusedElement="{Binding Path=txtCommandInput}">
+             FocusManager.FocusedElement="{Binding Path=txtCommandInput}" Margin="0" ClipToBounds="False" d:DesignWidth="907" d:DesignHeight="153">
     <Grid TextElement.FontSize="15" Focusable="False">
         <Grid.RowDefinitions>
             <RowDefinition Height="0" Name="scrollGridRow"/>
@@ -18,6 +18,7 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <!-- upper scrollable output window -->
         <Grid Background="Black"  Grid.Row="0" Focusable="False">
             <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="secondaryScrollViewer" CanContentScroll="True" Focusable="False">
                 <controls1:ScrollableFlowTextControl x:Name="secondaryScrollOutput" 
@@ -29,7 +30,8 @@
                                                      GotFocus="HandleGotFocus"/>
             </ScrollViewer>
         </Grid>
-        <GridSplitter Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False" GotFocus="HandleGotFocus"/>
+        <GridSplitter Grid.Row="1" Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Focusable="False" GotFocus="HandleGotFocus" Margin="0"/>
+        <!-- main output window -->
         <Grid  Grid.Row="2" Background="Black" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
             <controls1:ScrollableFlowTextControl x:Name="mainScrollOutput"  
                                                  LinesOverflowPercentBeforeCleanup="30" 
@@ -39,9 +41,47 @@
                                                  VerticalAlignment="Stretch"
                                                  GotFocus="HandleGotFocus"/>
         </Grid>
+        <!-- input box -->
+        <Grid Grid.Row="3" ClipToBounds="True">
+            <Grid>
+                <controls:TextBoxWithHistory x:Name="txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True" Margin="-1,0,-1,0"/>
+            </Grid>
+        </Grid>
+        <!-- status bar -->
+        <Grid x:Name="StatusBar" Grid.Row="4" Focusable="False" Visibility="Collapsed">
 
-        <Grid Grid.Row="3">
-            <controls:TextBoxWithHistory x:Name="txtCommandInput" AutoWordSelection="True" FontSize="16" Focusable="True"/>
+            <Grid Background="#595959" Height="17" VerticalAlignment="Bottom">
+                <Grid Grid.Row="0" HorizontalAlignment="Left"></Grid>
+                <Grid Grid.Row="1" HorizontalAlignment="Right">
+                    <Grid TextElement.FontSize="14" TextElement.FontFamily="Consolas" Height="17" VerticalAlignment="Bottom">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Column="0" Margin="0,0,5,0">
+                            <TextBlock x:Name="StatusBar1" Text="" Height="17" Width="156" Background="Black" Foreground="#c0c0c0" Padding="3,0,0,0" />
+                        </Grid>
+                        <Grid Grid.Column="1" Margin="0,0,5,0">
+                            <TextBlock x:Name="StatusBar2" Text="" Height="17" Width="156" Background="Black" Foreground="#c0c0c0" Padding="3,0,0,0" />
+                        </Grid>
+                        <Grid Grid.Column="2" Margin="0,0,5,0">
+                            <TextBlock x:Name="StatusBar3" Text="" Height="17" Width="156" Background="Black" Foreground="#c0c0c0" Padding="3,0,0,0"/>
+                        </Grid>
+                        <Grid Grid.Column="3" Margin="0,0,5,0" >
+                            <TextBlock x:Name="StatusBar4" Text="" Height="17" Width="156" Background="Black" Foreground="#c0c0c0" Padding="3,0,0,0" />
+                        </Grid>
+                        <Grid Grid.Column="4" Margin="0,0,0,0" >
+                            <TextBlock x:Name="StatusBar5" Text="" Height="17" Width="156" Background="Black" Foreground="#c0c0c0" Padding="3,0,0,0" />
+                        </Grid>
+                    </Grid>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </UserControl>

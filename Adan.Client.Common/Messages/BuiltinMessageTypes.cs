@@ -51,6 +51,16 @@ namespace Adan.Client.Common.Messages
         public const int ShowOutputWindowMessage = 7;
 
         /// <summary>
+        /// Type of message to show/hide status bar.
+        /// </summary>
+        public const int ShowStatusBarMessage = 8;
+
+        /// <summary>
+        /// Type of message to set status.
+        /// </summary>
+        public const int SetStatusMessage = 9;
+
+        /// <summary>
         /// Type of message with protocol version.
         /// </summary>
         public const int ProtocolVersionMessage = 11;

@@ -153,7 +153,6 @@ namespace Adan.Client
                     else
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
                 }
-
                 return;
             }
 
@@ -168,6 +167,18 @@ namespace Adan.Client
             if (showOutputWindowMessage != null)
             {
                 _mainWindow.ShowOutputWindow(showOutputWindowMessage.WindowName);
+            }
+
+            var showStatusBarMessage = e.Message as ShowStatusBarMessage;
+            if (showStatusBarMessage != null)
+            {
+                _window.DisplayStatusBar(showStatusBarMessage.State, true);
+            }
+
+            var setStatusMessage = e.Message as SetStatusMessage;
+            if (setStatusMessage != null)
+            {
+                _window.SetStatusBar(setStatusMessage.Id, setStatusMessage.Msg, setStatusMessage.Color);
             }
         }
 
