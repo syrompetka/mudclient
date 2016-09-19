@@ -29,15 +29,23 @@ namespace Adan.Client.ViewModel
         private ThemeDescription _selectedTheme;
         private int _fontSize;
         private string _fontName;
+        private string _fontWeight;
 
         public IEnumerable<ThemeDescription> AvailableColorThemes
         {
             get { return ThemeManager.Instance.AvailableThemes; }
         }
+
         public IEnumerable<string> AvailableFonts
         {
-            get { return new[] { "Consolas", "Courier New", "Lucida Console" }; }
+            get { return new[] { "Consolas", "Courier New", "Lucida Console", "Fixedsys" }; }
         }
+
+        public IEnumerable<string> AvailableFontWeights
+        {
+            get { return new[] { "Thin", "ExtraLight", "Light", "Normal", "Medium", "DemiBold", "Bold", "ExtraBold", "Black", "ExtraBlack" }; }
+        }
+
         public IEnumerable<int> AvailableFontSizes
         {
             get { return new[] { 9, 10, 11, 12, 13, 14, 15, 16 }; }
@@ -52,6 +60,17 @@ namespace Adan.Client.ViewModel
                 OnPropertyChanged("SelectedFont");
             }
         }
+
+        public string SelectedFontWeight
+        {
+            get { return _fontWeight; }
+            set
+            {
+                _fontWeight = value;
+                OnPropertyChanged("SelectedFontWeight");
+            }
+        }
+
         public int SelectedFontSize
         {
             get { return _fontSize; }
