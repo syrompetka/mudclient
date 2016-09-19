@@ -58,7 +58,9 @@
                     <Label Content="MUD font" HorizontalAlignment="Left" Margin="10,45,0,0" VerticalAlignment="Top" Height="23" Width="87"/>
                     <ComboBox Padding="5" ItemsSource="{Binding AvailableFonts}" SelectedValue="{Binding SelectedFont}" Height="23" VerticalAlignment="Top" Margin="102,45,245,0" />
                     <ComboBox Padding="5" ItemsSource="{Binding AvailableFontSizes}" SelectedValue="{Binding SelectedFontSize}" Height="23" VerticalAlignment="Top" Margin="250,45,204,0" />
-                </Grid>
+                    <Label Content="Weight" HorizontalAlignment="Left" Margin="10,75,0,0" VerticalAlignment="Top" Height="31" Width="87"/>
+                    <ComboBox Padding="5" ItemsSource="{Binding AvailableFontWeights}" SelectedValue="{Binding SelectedFontWeight}" Height="23" Margin="102,75,245,0" VerticalAlignment="Top"/>
+                  </Grid>
             </TabItem>
         </TabControl>
         <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right">

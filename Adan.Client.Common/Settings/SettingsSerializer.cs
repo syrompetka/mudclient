@@ -31,6 +31,7 @@ namespace Adan.Client.Common.Settings
         private int _minLengthHistory;
         private int? _mudFontSize;
         private string _mudFontName;
+        private string _mudFontWeight;
 
         /// <summary>
         /// 
@@ -137,10 +138,27 @@ namespace Adan.Client.Common.Settings
                 SettingsChanged("MUDFontSize", value);
             }
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [NotNull]
+        public string MudFontWeight
+        {
+            get
+            {
+                return _mudFontWeight ?? "Normal";
+            }
+            set
+            {
+                _mudFontWeight = value;
+                SettingsChanged("MUDFontWeight", value);
+            }
+        }
         
         /// <summary>
-                 /// 
-                 /// </summary>
+        /// 
+        /// </summary>
         [NotNull]
         public List<Group> GlobalGroups
         {

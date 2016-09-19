@@ -9,6 +9,7 @@
 
 namespace Adan.Client.Common.Controls.TextFormatting
 {
+    using System;
     using System.Globalization;
     using System.Windows;
     using System.Windows.Media;
@@ -40,14 +41,45 @@ namespace Adan.Client.Common.Controls.TextFormatting
             Assert.ArgumentNotNull(backgroundBrush, "backgroundBrush");
             _foregroundBrush = foregroundBrush;
             _backgroundBrush = backgroundBrush;
-            _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+            //_typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+            var weight = GetFontWeightFromString(SettingsHolder.Instance.Settings.MudFontWeight);
+            _typeface = new Typeface(new FontFamily(SettingsHolder.Instance.Settings.MUDFontName), FontStyles.Normal, weight, FontStretches.Normal);
             SettingsHolder.Instance.Settings.OnSettingsChanged += (s, e) =>
             {
-                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "ColorTheme")
+                if (e.Name == "MUDFontName" || e.Name == "MUDFontSize" || e.Name == "MUDFontWeight" || e.Name == "ColorTheme")
                 {
-                    _typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+                    //_typeface = new Typeface(SettingsHolder.Instance.Settings.MUDFontName);
+                    var fontWeight = GetFontWeightFromString(SettingsHolder.Instance.Settings.MudFontWeight);
+                    _typeface = new Typeface(new FontFamily(SettingsHolder.Instance.Settings.MUDFontName), FontStyles.Normal, fontWeight, FontStretches.Normal);
                 }
             };
+        }
+
+        private FontWeight GetFontWeightFromString(string mudFontWeight)
+        {
+            switch(mudFontWeight)
+            {
+                //"Thin", "ExtraLight", "Light", "Normal", "Medium", "DemiBold", "Bold", "ExtraBold", "Black", "ExtraBlack" 
+                case "Thin":
+                    return FontWeights.Thin;
+                case "ExtraLight":
+                    return FontWeights.ExtraLight;
+                case "Light":
+                    return FontWeights.Light;
+                case "Medium":
+                    return FontWeights.Medium;
+                case "DemiBold":
+                    return FontWeights.DemiBold;
+                case "ExtraBold":
+                    return FontWeights.ExtraBold;
+                case "Black":
+                    return FontWeights.Black;
+                case "ExtraBlack":
+                    return FontWeights.ExtraBlack;
+                case "Normal":
+                default:
+                    return FontWeights.Normal;
+            }
         }
 
         /// <summary>
