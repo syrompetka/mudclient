@@ -62,13 +62,7 @@ namespace Adan.Client.ConveyorUnits
         /// <summary>
         /// Gets a set of message types that this unit can handle.
         /// </summary>
-        public override IEnumerable<int> HandledMessageTypes
-        {
-            get
-            {
-                return new[] { BuiltInMessageTypes.LoggingMessage, BuiltInMessageTypes.TextMessage, BuiltInMessageTypes.ConnectionMessages };
-            }
-        }
+        public override IEnumerable<int> HandledMessageTypes => new[] { BuiltInMessageTypes.LoggingMessage, BuiltInMessageTypes.TextMessage, BuiltInMessageTypes.ConnectionMessages};
 
         /// <summary>
         /// Gets a set of command types that this unit can handle.

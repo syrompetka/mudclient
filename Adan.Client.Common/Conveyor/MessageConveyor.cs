@@ -174,8 +174,7 @@ namespace Adan.Client.Common.Conveyor
         /// <summary>
         /// Adds the conveyor unit.
         /// </summary>
-        /// <param name="conveyorUnit">The conveyor unit.</param>
-        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit)
+        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit, bool addToTop=false)
         {
             Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
 
@@ -198,8 +197,14 @@ namespace Adan.Client.Common.Conveyor
 
                 ConveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
             }
-
-            _allConveyorUnits.Add(conveyorUnit);
+            if (addToTop)
+            {
+                _allConveyorUnits.Insert(0, conveyorUnit);
+            }
+            else
+            {
+                _allConveyorUnits.Add(conveyorUnit);
+            }
         }
 
 

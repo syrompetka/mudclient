@@ -70,10 +70,6 @@
             SettingsHolder.Instance.ProfilesChanged += OnProfileChanged;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="profile"></param>
         public RootModel(ProfileHolder profile)
         {
             _name = profile.Name;
@@ -91,7 +87,22 @@
             GroupStatus = new List<CharacterStatus>();
             RoomMonstersStatus = new List<MonsterStatus>();
         }
+        public RootModel()
+        {
+            _name = "Empty";
+            _aliasList = new List<CommandAlias>();
+            _triggersList = new List<TriggerBase>();
+            _highlightList = new List<Highlight>();
+            _substitutionList = new List<Substitution>();
+            _hotkeyList = new List<Hotkey>();
+            _variableList = new List<Variable>();
 
+            _undoStack = new Stack<IUndo>();
+
+
+            GroupStatus = new List<CharacterStatus>();
+            RoomMonstersStatus = new List<MonsterStatus>();
+        }
         #endregion
 
         #region Properties

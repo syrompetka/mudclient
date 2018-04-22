@@ -493,7 +493,6 @@
         /// <summary>
         /// Displays/hides status bar.
         /// </summary>
-        /// <param name="state"></param>
         public void SetStatusBar(string idString, string message, string colorString, bool verbose = true)
         {
             byte Id;

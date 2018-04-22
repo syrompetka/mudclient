@@ -48,6 +48,13 @@ namespace Adan.Client.Plugins.GroupWidget.Messages
             }
         }
 
+        [XmlAttribute]
+        public bool IsRound
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Gets the player group mates statuses.
         /// </summary>

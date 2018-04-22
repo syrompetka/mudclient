@@ -36,7 +36,7 @@ namespace Adan.Client.Plugins.GroupWidget
                               {
                                   new AffectDescription("Invisibility", Resources.Invisibility, "невидимость", "Invisibility"),
                                   new AffectDescription("Blessing", Resources.Blessing, new List<string> { "благословение", "точность" }, new List<string> { "Blessing", "Accuracy" }),
-                                  new AffectDescription("Poison", Resources.Poison, "яд", "Poison") { IsRoundBased = true },
+                                  new AffectDescription("Poison", Resources.Poison, new List<string> { "яд", "ядовитый выстрел" }, new List<string> { "Poison", "Poison" }) { IsRoundBased = true },
                                   new AffectDescription("Protection", Resources.Protection, "защита", "Protection"),
                                   new AffectDescription("Flight", Resources.Flight, "полет", "Flying"),
                                   new AffectDescription("Acceleration", Resources.Acceleration, "ускорение", "Acceleration") { IsRoundBased = true },

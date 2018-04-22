@@ -1,0 +1,12 @@
+/Bin
+/Adan.Client/obj/
+/Adan.Client.Common/obj/
+/Adan.Client.Plugins.GroupWidget/obj/
+/Adan.Client.Map/obj/
+/Adan.Client.Plugins.OutputWindow/obj/
+/Adan.Client.Plugins.Statistics/obj/
+/Adan.Client.Plugins.StuffDatabase/obj/
+/Adan.Client.Plugins.Ticker/obj/
+/packages/
+/.vs/
+/*.user

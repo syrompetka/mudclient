@@ -15,13 +15,7 @@
     [Export(typeof(PluginBase))]
     public sealed class TickerPlugin : PluginBase
     {
-        public override string Name
-        {
-            get
-            {
-                return "Ticker";
-            }
-        }
+        public override string Name => "Ticker";
 
         public override void InitializeConveyor(MessageConveyor conveyor)
         {
