@@ -10,3 +10,5 @@
 /packages/
 /.vs/
 /*.user
+/Adan.Client.Setup/Debug/
+/Adan.Client.Setup/Release/
