@@ -60,7 +60,7 @@
             _mainWindow = MainWindowEx;
             _routeManger = routeManger;
             _emptyZone = new ZoneViewModel(new Zone { Id = -1000 }, Enumerable.Empty<AdditionalRoomParameters>()) { ZoomLevel = Settings.Default.MapZoomLevel };
-            _timer = new Timer(5000) { AutoReset = false };
+            _timer = new Timer(15000) { AutoReset = false };
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
             if (_mapControl != null)

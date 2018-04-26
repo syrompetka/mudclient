@@ -148,7 +148,7 @@ namespace Adan.Client
 
                 if (Application.Current != null)
                 {
-                    if (_window.IsVisible)
+                    if (_window?.IsVisible==true)
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Normal);
                     else
                         Application.Current.Dispatcher.BeginInvoke((Action)ProcessMessageQueue, DispatcherPriority.Background);
