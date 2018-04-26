@@ -113,17 +113,17 @@ namespace Adan.Client.Map.Model
             set;
         }
 
+        [XmlIgnore]
+        public bool HasChanges
+        {
+            get; set;
+        }
+
         /// <summary>
         /// Gets the actions to execute on room entry.
         /// </summary>
         [NotNull]
-        public List<ActionBase> ActionsToExecuteOnRoomEntry
-        {
-            get
-            {
-                return _actionsToExecuteOnRoomEntry;
-            }
-        }
+        public List<ActionBase> ActionsToExecuteOnRoomEntry => _actionsToExecuteOnRoomEntry;
 
         /// <summary>
         /// Clones this instance.
@@ -140,6 +140,7 @@ namespace Adan.Client.Map.Model
                            Icon = Icon,
                            RoomAlias = RoomAlias,
                            RoomId = RoomId,
+                           HasChanges = HasChanges,
                        };
         }
     }

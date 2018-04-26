@@ -128,13 +128,15 @@
         private void SaveZoneDebugInfo(ZoneViewModel zoneViewModel)
         {
             var zoneMapFileName = Path.Combine(GetZoneVisitsFolder(), zoneViewModel.Id.ToString(CultureInfo.InvariantCulture) + ".map");
-
-            using (var outStream = File.Open(zoneMapFileName, FileMode.Create, FileAccess.Write))
-            using (var streamWriter = new StreamWriter(outStream))
+            if (!File.Exists(zoneMapFileName) || zoneViewModel.AllRooms.Any(r => r.AdditionalRoomParameters.HasChanges))
             {
-                foreach (var room in zoneViewModel.AllRooms)
+                using (var outStream = File.Open(zoneMapFileName, FileMode.Create, FileAccess.Write))
+                using (var streamWriter = new StreamWriter(outStream))
                 {
-                    streamWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3}", room.RoomId, room.XLocation, room.YLocation, room.ZLocation));
+                    foreach (var room in zoneViewModel.AllRooms)
+                    {
+                        streamWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, "{0} {1} {2} {3}", room.RoomId, room.XLocation, room.YLocation, room.ZLocation));
+                    }
                 }
             }
         }
@@ -422,6 +424,10 @@
         private void SaveAdditionalRoomParameters([NotNull] ZoneViewModel zoneViewModel)
         {
             Assert.ArgumentNotNull(zoneViewModel, "zoneViewModel");
+            if (!zoneViewModel.AllRooms.Any(r => r.AdditionalRoomParameters.HasChanges))
+            {
+                return;
+            }
 
             var zoneVisitsFileName = Path.Combine(GetZoneVisitsFolder(), zoneViewModel.Id.ToString(CultureInfo.InvariantCulture) + ".xml");
             using (var outStream = File.Open(zoneVisitsFileName, FileMode.Create, FileAccess.Write))

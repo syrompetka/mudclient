@@ -177,53 +177,9 @@
                     Conveyor.RootModel.SetVariableValue("StatisticsPluginEnabled", "true", true);
                     _isDisabled = true;
                 }
-                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase))
-                {
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("Что именно вы хотите сбросить?", TextColor.BrightWhite));
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("стат сброс зона|сессия|все", TextColor.BrightWhite));
-                }
-                else if (commandArgs.Length == 3 &&
-                    string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
-                    string.Equals(commandArgs[2], "зона", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.ResetStats(StatisticTypes.Zone);
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика последней зоны сброшена.", TextColor.BrightWhite));
-                }
-                else if (commandArgs.Length == 3 &&
-                   string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
-                   string.Equals(commandArgs[2], "сессия", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.ResetStats(StatisticTypes.Session);
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика текущей сессии сброшена.", TextColor.BrightWhite));
-                }
-                else if (commandArgs.Length == 3 &&
-                         string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
-                         string.Equals(commandArgs[2], "все", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.ResetStats(StatisticTypes.Zone);
-                    _statisticsHolder.ResetStats(StatisticTypes.Session);
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика последней зоны сброшена.", TextColor.BrightWhite));
-                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика текущей сессии сброшена.", TextColor.BrightWhite));
-                }
-                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "зона", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Zone);
-                }
-                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "бой", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Fight);
-                }
-                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "сессия", StringComparison.OrdinalIgnoreCase))
-                {
-                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Session);
-                }
-                else if (commandArgs.Length == 1)
-                {
-                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Session);
-                }
                 else if (commandArgs.Length == 2 &&
-                         (string.Equals(commandArgs[1], "справка", StringComparison.OrdinalIgnoreCase) ||
-                          string.Equals(commandArgs[1], "?", StringComparison.OrdinalIgnoreCase)))
+                    (string.Equals(commandArgs[1], "справка", StringComparison.OrdinalIgnoreCase) ||
+                    string.Equals(commandArgs[1], "?", StringComparison.OrdinalIgnoreCase)))
                 {
                     Conveyor.PushMessage(new OutputToMainWindowMessage("Модуль статистики. Возможные команды:", TextColor.BrightWhite));
 
@@ -267,6 +223,61 @@
                         new TextMessageBlock("\"реж цвет полный\".", TextColor.BrightYellow),
 
                     }));
+                }
+                else if(_isDisabled)
+                {
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Модуль сбора статистики отключен.", TextColor.BrightWhite));
+                    Conveyor.PushMessage(new OutputToMainWindowMessage(new[]
+                    {
+                        new TextMessageBlock("Наберите ", TextColor.BrightWhite),
+                        new TextMessageBlock("\"стат справка\"", TextColor.BrightYellow),
+                        new TextMessageBlock(" для подробностей.", TextColor.BrightWhite),
+                    }));
+
+                }
+                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase))
+                {
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Что именно вы хотите сбросить?", TextColor.BrightWhite));
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("стат сброс зона|сессия|все", TextColor.BrightWhite));
+                }
+                else if (commandArgs.Length == 3 &&
+                    string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(commandArgs[2], "зона", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.ResetStats(StatisticTypes.Zone);
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика последней зоны сброшена.", TextColor.BrightWhite));
+                }
+                else if (commandArgs.Length == 3 &&
+                   string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
+                   string.Equals(commandArgs[2], "сессия", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.ResetStats(StatisticTypes.Session);
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика текущей сессии сброшена.", TextColor.BrightWhite));
+                }
+                else if (commandArgs.Length == 3 &&
+                         string.Equals(commandArgs[1], "сброс", StringComparison.OrdinalIgnoreCase) &&
+                         string.Equals(commandArgs[2], "все", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.ResetStats(StatisticTypes.Zone);
+                    _statisticsHolder.ResetStats(StatisticTypes.Session);
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика последней зоны сброшена.", TextColor.BrightWhite));
+                    Conveyor.PushMessage(new OutputToMainWindowMessage("Статистика текущей сессии сброшена.", TextColor.BrightWhite));
+                }
+                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "зона", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Zone);
+                }
+                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "бой", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Fight);
+                }
+                else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "сессия", StringComparison.OrdinalIgnoreCase))
+                {
+                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Session);
+                }
+                else if (commandArgs.Length == 1)
+                {
+                    _statisticsHolder.PrintStatistics(Conveyor, StatisticTypes.Session);
                 }
                 else
                 {

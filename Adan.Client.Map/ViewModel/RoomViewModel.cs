@@ -60,46 +60,24 @@ namespace Adan.Client.Map.ViewModel
         /// Gets the room.
         /// </summary>
         [NotNull]
-        public Room Room
-        {
-            get;
-            private set;
-        }
+        public Room Room { get; }
 
         /// <summary>
         /// Gets the room identifier.
         /// </summary>
-        public int RoomId
-        {
-            get
-            {
-                return Room.Id;
-            }
-        }
+        public int RoomId => Room.Id;
 
         /// <summary>
         /// Gets the name of this room.
         /// </summary>
         [NotNull]
-        public string Name
-        {
-            get
-            {
-                return Room.Name;
-            }
-        }
+        public string Name => Room.Name;
 
         /// <summary>
         /// Gets the description of this room.
         /// </summary>
         [NotNull]
-        public string Description
-        {
-            get
-            {
-                return Room.Description.Replace("\n", string.Empty);
-            }
-        }
+        public string Description => Room.Description.Replace("\n", string.Empty);
 
         /// <summary>
         /// Gets or sets the comments for this room.
@@ -120,6 +98,7 @@ namespace Adan.Client.Map.ViewModel
                 Assert.ArgumentNotNullOrWhiteSpace(value, "value");
 
                 AdditionalRoomParameters.Comments = value;
+                AdditionalRoomParameters.HasChanges = true;
                 OnPropertyChanged("Comments");
             }
         }
@@ -142,6 +121,7 @@ namespace Adan.Client.Map.ViewModel
             {
                 Assert.ArgumentNotNullOrWhiteSpace(value, "value");
                 AdditionalRoomParameters.RoomAlias = value;
+                AdditionalRoomParameters.HasChanges = true;
                 OnPropertyChanged("Alias");
             }
         }
@@ -161,6 +141,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                AdditionalRoomParameters.HasChanges = true;
                 Room.ZLocation = value;
                 OnPropertyChanged("ZLocation");
             }
@@ -178,6 +159,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                AdditionalRoomParameters.HasChanges = true;
                 Room.YLocation = value;
                 OnPropertyChanged("YLocation");
             }
@@ -195,6 +177,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                AdditionalRoomParameters.HasChanges = true;
                 Room.XLocation = value;
                 OnPropertyChanged("XLocation");
             }
@@ -226,6 +209,11 @@ namespace Adan.Client.Map.ViewModel
 
                 if (value)
                 {
+                    if (!AdditionalRoomParameters.HasBeenVisited)
+                    {
+                        AdditionalRoomParameters.HasChanges = true;
+                    }
+
                     AdditionalRoomParameters.HasBeenVisited = true;
                 }
 
@@ -306,38 +294,22 @@ namespace Adan.Client.Map.ViewModel
         /// Gets the exits of this room.
         /// </summary>
         [NotNull]
-        public IEnumerable<RoomExitViewModel> Exits
-        {
-            get;
-            private set;
-        }
+        public IEnumerable<RoomExitViewModel> Exits { get; }
 
         /// <summary>
         /// Gets the zone this room belongs to.
         /// </summary>
         [NotNull]
-        public ZoneViewModel Zone
-        {
-            get;
-            private set;
-        }
+        public ZoneViewModel Zone { get; }
 
         /// <summary>
         /// Gets the actions view model.
         /// </summary>
         [NotNull]
-        public ActionsViewModel ActionsViewModel
-        {
-            get
-            {
-                if (_actionsViewModel == null)
-                {
-                    _actionsViewModel = new ActionsViewModel(AdditionalRoomParameters.ActionsToExecuteOnRoomEntry, _allActionDescriptions, true);
-                }
-
-                return _actionsViewModel;
-            }
-        }
+        public ActionsViewModel ActionsViewModel => _actionsViewModel ??
+                                                    (_actionsViewModel =
+                                                        new ActionsViewModel(AdditionalRoomParameters.ActionsToExecuteOnRoomEntry,
+                                                            _allActionDescriptions, true));
 
         /// <summary>
         /// Gets or sets the color to use to display this room on the map.
@@ -354,6 +326,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                AdditionalRoomParameters.HasChanges = true;
                 AdditionalRoomParameters.Color = value;
                 OnPropertyChanged("Color");
             }
@@ -374,6 +347,7 @@ namespace Adan.Client.Map.ViewModel
 
             set
             {
+                AdditionalRoomParameters.HasChanges = true;
                 AdditionalRoomParameters.Icon = value;
                 OnPropertyChanged("Icon");
             }
@@ -472,6 +446,7 @@ namespace Adan.Client.Map.ViewModel
 
             _actionsViewModel = null;
             AdditionalRoomParameters = roomViewModel.AdditionalRoomParameters;
+            AdditionalRoomParameters.HasChanges = true;
             OnPropertyChanged("Icon");
             OnPropertyChanged("Color");
             OnPropertyChanged("Alias");
