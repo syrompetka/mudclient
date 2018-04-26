@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Adan.Client.Common.Model;
 using Adan.Client.Map.Messages;
 using CSLib.Net.Annotations;
@@ -14,8 +10,7 @@ namespace Adan.Client.Map.Model
     /// </summary>
     public class ZoneHolder
     {
-        private RootModel _rootModel;
-        private ZoneManager _zoneManager;
+        private readonly ZoneManager _zoneManager;
 
         /// <summary>
         /// 
@@ -25,7 +20,7 @@ namespace Adan.Client.Map.Model
         public ZoneHolder(ZoneManager zoneManager, [NotNull] RootModel rootModel)
         {
             _zoneManager = zoneManager;
-            _rootModel = rootModel;
+            RootModel = rootModel;
             Uid = rootModel.Uid;
             ZoneId = -1;
             RoomId = -1;
@@ -71,13 +66,7 @@ namespace Adan.Client.Map.Model
         /// <summary>
         /// 
         /// </summary>
-        public RootModel RootModel
-        {
-            get
-            {
-                return _rootModel;
-            }
-        }
+        public RootModel RootModel { get; }
 
         private void MessageConveyor_MessageReceived(object sender, Common.Conveyor.MessageReceivedEventArgs e)
         {

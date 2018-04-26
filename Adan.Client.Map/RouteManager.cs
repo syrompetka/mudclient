@@ -42,6 +42,7 @@
         private string _currentRouteTarget = string.Empty;
         private IList<Route> _allRoutes = new List<Route>();
 
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteManager"/> class.
         /// </summary>

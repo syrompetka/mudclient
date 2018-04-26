@@ -30,17 +30,20 @@
     public class ZoneManager : IDisposable
     {
         private readonly XmlSerializer _zoneSerializer = new XmlSerializer(typeof(Zone));
-        private readonly XmlSerializer _zoneVisitsSerializer = new XmlSerializer(typeof(List<int>));
 
         private readonly object _syncRoot = new object();
         private readonly ZoneViewModel _emptyZone;
+
+        [CanBeNull]
         private readonly MapControl _mapControl;
+
+        [CanBeNull]
         private readonly Window _mainWindow;
         private readonly RouteManager _routeManger;
         private readonly ConcurrentDictionary<int, ZoneViewModel> _loadedZones = new ConcurrentDictionary<int, ZoneViewModel>();
         private readonly Timer _timer;
 
-        private Dictionary<string, ZoneHolder> _zoneHolders = new Dictionary<string, ZoneHolder>();
+        private readonly Dictionary<string, ZoneHolder> _zoneHolders = new Dictionary<string, ZoneHolder>();
         private XmlSerializer _additionalRoomParametersSerializer;
 
         /// <summary>
@@ -49,10 +52,8 @@
         /// <param name="mapControl">The map control.</param>
         /// <param name="MainWindowEx">The main window.</param>
         /// <param name="routeManger">The route manger.</param>
-        public ZoneManager([NotNull] MapControl mapControl, [NotNull] Window MainWindowEx, [NotNull] RouteManager routeManger)
+        public ZoneManager([CanBeNull] MapControl mapControl, [CanBeNull] Window MainWindowEx, [NotNull] RouteManager routeManger)
         {
-            Assert.ArgumentNotNull(mapControl, "mapControl");
-            Assert.ArgumentNotNull(MainWindowEx, "MainWindowEx");
             Assert.ArgumentNotNull(routeManger, "routeManger");
 
             _mapControl = mapControl;
@@ -62,18 +63,20 @@
             _timer = new Timer(5000) { AutoReset = false };
             _timer.Elapsed += _timer_Elapsed;
             _timer.Start();
-
-            _mapControl.RoadMapShowRequired += ShowRoadMap;
-            _mapControl.RoomEditDialogRequired += ShowRoomEditDialog;
-            _mapControl.NavigateToRoomRequired += NavigateToRoom;
-            _mapControl.RoutesDialogShowRequired += (o, e) => _routeManger.ShowRoutesDialog();
+            if (_mapControl != null)
+            {
+                _mapControl.RoadMapShowRequired += ShowRoadMap;
+                _mapControl.RoomEditDialogRequired += ShowRoomEditDialog;
+                _mapControl.NavigateToRoomRequired += NavigateToRoom;
+                _mapControl.RoutesDialogShowRequired += (o, e) => _routeManger.ShowRoutesDialog();
+            }
 
             MapDownloader.UpgradeComplete += MapDownloader_UpgradeComplete;
         }
 
         private void MapDownloader_UpgradeComplete(object sender, EventArgs e)
         {
-            if (_mapControl.ViewModel != null)
+            if (_mapControl?.ViewModel != null)
             {
                 if (_zoneHolders.ContainsKey(_mapControl.ViewModelUid))
                 {
@@ -106,7 +109,7 @@
             {
                 foreach (var zoneViewModel in _loadedZones.Values.ToList())
                 {
-                    if (zoneViewModel.Id == _mapControl.ViewModel.Id)
+                    if (_mapControl == null || zoneViewModel.Id == _mapControl.ViewModel.Id)
                         continue;
 
                     ZoneViewModel tempVal;
@@ -142,8 +145,7 @@
         /// </summary>
         public void Dispose()
         {
-            if (_timer != null)
-                _timer.Dispose();
+            _timer?.Dispose();
 
             foreach (var zoneViewModel in _loadedZones.Values.ToArray())
             {
@@ -173,19 +175,17 @@
         {
             var uid = rootModel.Uid;
 
+            if (_mapControl == null)
+            {
+                return;
+            }
+
             if (_mapControl.ViewModel == null)
             {
                 _mapControl.ViewModelUid = uid;
                 var zoneViewModel = GetZone(_zoneHolders[uid].ZoneId);
 
-                if (zoneViewModel != null)
-                {
-                    _mapControl.UpdateCurrentZone(zoneViewModel, null);
-                }
-                else
-                {
-                    _mapControl.UpdateCurrentZone(_emptyZone, null);
-                }
+                _mapControl.UpdateCurrentZone(zoneViewModel ?? _emptyZone, null);
 
                 return;
             }
@@ -251,10 +251,7 @@
             {
                 if (!_loadedZones.TryGetValue(zoneId, out result))
                 {
-                    result = LoadZone(zoneId);
-
-                    if (result == null)
-                        result = _emptyZone;
+                    result = LoadZone(zoneId) ?? _emptyZone;
                 }
             }
 
@@ -267,7 +264,7 @@
         /// <param name="zoneHolder"></param>
         public void UpdateControl(ZoneHolder zoneHolder)
         {
-            if (_mapControl.ViewModel != null && _mapControl.ViewModelUid == zoneHolder.Uid)
+            if (_mapControl?.ViewModel != null && _mapControl.ViewModelUid == zoneHolder.Uid)
             {
                 if (_mapControl.ViewModel.Id != zoneHolder.ZoneId)
                 {
@@ -290,18 +287,15 @@
         public void ExecuteRoomAction(ZoneHolder zoneHolder)
         {
             ZoneViewModel zone = GetZone(zoneHolder.ZoneId);
-            if (zone != null)
+            var room = zone?.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
+            if (room != null && room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry.Any())
             {
-                var room = zone.AllRooms.FirstOrDefault(r => r.RoomId == zoneHolder.RoomId);
-                if (room != null && room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry.Any())
+                foreach (var action in room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry)
                 {
-                    foreach (var action in room.AdditionalRoomParameters.ActionsToExecuteOnRoomEntry)
-                    {
-                        action.Execute(zoneHolder.RootModel, ActionExecutionContext.Empty);
-                    }
-
-                    zoneHolder.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
+                    action.Execute(zoneHolder.RootModel, ActionExecutionContext.Empty);
                 }
+
+                zoneHolder.RootModel.PushCommandToConveyor(FlushOutputQueueCommand.Instance);
             }
         }
 
@@ -321,12 +315,12 @@
         [CanBeNull]
         private ZoneViewModel LoadZone(int zoneId)
         {
-            Zone loadedZone;
             ZoneViewModel zoneViewModel = null;
             var zoneVisits = new List<AdditionalRoomParameters>();
 
             lock (_syncRoot)
             {
+                Zone loadedZone;
                 try
                 {
                     ZoneViewModel result;
@@ -391,20 +385,6 @@
                 }
                 catch
                 {
-                    //TODO: Разобраться что это такое
-                    // legacy format support - remove in next version.
-                    //var zoneVisitsFileName = Path.Combine(GetZoneVisitsFolder(), zoneId.ToString(CultureInfo.InvariantCulture) + ".xml");
-                    //if (File.Exists(zoneVisitsFileName))
-                    //{
-                    //    using (var inStream = File.OpenRead(zoneVisitsFileName))
-                    //    {
-                    //        var visits = (List<int>)_zoneVisitsSerializer.Deserialize(inStream);
-                    //        foreach (var visit in visits)
-                    //        {
-                    //            zoneVisits.Add(new AdditionalRoomParameters { RoomId = visit, HasBeenVisited = true });
-                    //        }
-                    //    }
-                    //}
                 }
                 zoneViewModel = new ZoneViewModel(loadedZone, zoneVisits);
                 _loadedZones.TryAdd(zoneId, zoneViewModel);
@@ -457,7 +437,7 @@
                 catch (Exception ex)
                 {
                     //MessageBox.Show(e.Message, "Ошибка", MessageBoxButton.OK);
-                    ErrorLogger.Instance.Write(string.Format("Error save additional room parameters: {0}\r\n{1}", ex.Message, ex.StackTrace));
+                    ErrorLogger.Instance.Write($"Error save additional room parameters: {ex.Message}\r\n{ex.StackTrace}");
                 }
             }
         }
@@ -466,6 +446,11 @@
         {
             Assert.ArgumentNotNull(sender, "sender");
             Assert.ArgumentNotNull(e, "e");
+
+            if (_mapControl == null)
+            {
+                return;
+            }
 
             var zone = LoadZoneFromFile("roads.xml");
 
@@ -545,10 +530,7 @@
         {
             Assert.ArgumentNotNull(roomToNavigateTo, "roomToNavigateTo");
 
-            if (_mapControl.ViewModel.CurrentRoom != null)
-            {
-                _routeManger.NavigateToRoom(roomToNavigateTo);
-            }
+            _routeManger.NavigateToRoom(roomToNavigateTo);
         }
     }
 }

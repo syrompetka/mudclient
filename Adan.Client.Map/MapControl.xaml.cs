@@ -143,14 +143,14 @@ namespace Adan.Client.Map
         {
             Assert.ArgumentNotNull(newZone, "newZone");
 
+            RouteManager?.UpdateCurrentRoom(currentRoom, newZone);
+
             var actionToExecute = (Action)(() =>
             {
                 ViewModel = newZone;
                 NavigateToCurrentRoom(currentRoom);
                 ViewModel.CurrentRoom = currentRoom;
 
-                if (RouteManager != null)
-                    RouteManager.UpdateCurrentRoom(currentRoom, newZone);
             });
 
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
@@ -165,15 +165,14 @@ namespace Adan.Client.Map
         {
             Assert.ArgumentNotNull(newZone, "newZone");
 
+            RouteManager?.UpdateCurrentRoom(newZone.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom), newZone);
+
             var actionToExecute = (Action)(() =>
             {
                 ViewModel = newZone;
                 var room = ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom);
                 NavigateToCurrentRoom(room);
                 ViewModel.CurrentRoom = room;
-
-                if (RouteManager != null)
-                    RouteManager.UpdateCurrentRoom(room, newZone);
             });
 
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, actionToExecute);
@@ -185,14 +184,17 @@ namespace Adan.Client.Map
         /// <param name="currentRoom">The current room.</param>
         public void UpdateCurrentRoom([CanBeNull] RoomViewModel currentRoom)
         {
+            if (ViewModel != null)
+            {
+                RouteManager?.UpdateCurrentRoom(currentRoom, ViewModel);
+            }
+
             var actionToExecute = (Action)(() =>
             {
                 if (ViewModel != null)
                 {
                     NavigateToCurrentRoom(currentRoom);
                     ViewModel.CurrentRoom = currentRoom;
-                    if (RouteManager != null)
-                        RouteManager.UpdateCurrentRoom(currentRoom, ViewModel);
                 }
             });
 
@@ -205,6 +207,10 @@ namespace Adan.Client.Map
         /// <param name="currentRoom"></param>
         public void UpdateCurrentRoom(int currentRoom)
         {
+            if (ViewModel != null)
+            {
+                RouteManager?.UpdateCurrentRoom(ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom), ViewModel);
+            }
             var actionToExecute = (Action)(() =>
             {
                 if (ViewModel != null)
@@ -212,8 +218,6 @@ namespace Adan.Client.Map
                     var room = ViewModel.AllRooms.FirstOrDefault(r => r.RoomId == currentRoom);
                     NavigateToCurrentRoom(room);
                     ViewModel.CurrentRoom = room;
-                    if (RouteManager != null)
-                        RouteManager.UpdateCurrentRoom(room, ViewModel);
                 }
             });
 

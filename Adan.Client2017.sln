@@ -6,6 +6,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client", "Adan.Client\Adan.Client.csproj", "{735142A1-9BB3-4708-B25F-0774352386B9}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BF656B2E-A08B-446C-923A-C3AB523F9387} = {BF656B2E-A08B-446C-923A-C3AB523F9387}
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F} = {4BF1556E-E2F4-4B86-A881-93641D9FAA7F}
 		{95218378-19CB-419E-92F1-0D6E2A2897A6} = {95218378-19CB-419E-92F1-0D6E2A2897A6}
 		{BA29C7B4-6E56-4FF4-9C7F-6C14AE728A8A} = {BA29C7B4-6E56-4FF4-9C7F-6C14AE728A8A}
 		{108164C7-EB17-4478-AD2C-7E54025FF9C5} = {108164C7-EB17-4478-AD2C-7E54025FF9C5}
@@ -32,6 +33,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.Ticker", "Adan.Client.Plugins.Ticker\Adan.Client.Plugins.Ticker.csproj", "{BA29C7B4-6E56-4FF4-9C7F-6C14AE728A8A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.Statistics", "Adan.Client.Plugins.Statistics\Adan.Client.Plugins.Statistics.csproj", "{7C45F2EE-D017-4A8A-AEC3-F2D2BBF6646E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Adan.Client.Plugins.AI", "Adan.Client.Plugins.AI\Adan.Client.Plugins.AI.csproj", "{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +112,14 @@ Global
 		{7C45F2EE-D017-4A8A-AEC3-F2D2BBF6646E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7C45F2EE-D017-4A8A-AEC3-F2D2BBF6646E}.Release|x86.ActiveCfg = Release|Any CPU
 		{7C45F2EE-D017-4A8A-AEC3-F2D2BBF6646E}.Release|x86.Build.0 = Release|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Debug|x86.Build.0 = Debug|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{4BF1556E-E2F4-4B86-A881-93641D9FAA7F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

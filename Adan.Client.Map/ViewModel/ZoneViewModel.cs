@@ -9,13 +9,9 @@
 
 namespace Adan.Client.Map.ViewModel
 {
-    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using System.Threading.Tasks;
-    using System.Windows.Threading;
-    using Adan.Client.Map.Messages;
     using Adan.Client.Map.Properties;
     using Common.Model;
     using Common.ViewModel;
@@ -28,10 +24,8 @@ namespace Adan.Client.Map.ViewModel
     /// </summary>
     public class ZoneViewModel : ViewModelBase
     {
-        private Zone _zone;
+        private readonly Zone _zone;
         private readonly IEnumerable<AdditionalRoomParameters> _additionalRoomParameters;
-        //private readonly ZoneManager _zoneManager;
-        //private RootModel _rootModel;
         private static double _zoomLevel;
         private int _currentLevel;
         private RoomViewModel _currentRoom;
@@ -173,7 +167,7 @@ namespace Adan.Client.Map.ViewModel
         {
             get
             {
-                return CurrentRoom != null ? CurrentRoom.RoomId : (int?)null;
+                return CurrentRoom?.RoomId;
             }
 
             set
@@ -184,8 +178,7 @@ namespace Adan.Client.Map.ViewModel
                     return;
                 }
 
-                //TODO: Почему здесь Single вместо First/FirstOrDefault?
-                CurrentRoom = AllRooms.Single(r => r.RoomId == value.Value);
+                CurrentRoom = AllRooms.FirstOrDefault(r => r.RoomId == value.Value);
             }
         }
 
