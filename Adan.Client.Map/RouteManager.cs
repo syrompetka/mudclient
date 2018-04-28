@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Text;
     using System.Windows;
+    using System.Windows.Threading;
     using System.Xml;
     using System.Xml.Serialization;
     using Common.Commands;
@@ -42,7 +43,7 @@
         private string _currentRouteTarget = string.Empty;
         private IList<Route> _allRoutes = new List<Route>();
 
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteManager"/> class.
         /// </summary>
@@ -233,8 +234,8 @@
             if (_rootModel == null)
             {
                 return false;
-            } 
-            
+            }
+
             if (_currentRoom == null)
             {
                 return false;
@@ -282,8 +283,8 @@
             if (_rootModel == null)
             {
                 return false;
-            } 
-            
+            }
+
             if (_currentRoom == null)
             {
                 return false;
@@ -332,7 +333,7 @@
             string endName = string.Empty;
             if (_rootModel == null)
             {
-                return false; 
+                return false;
             }
 
             if (_currentRoom == null)
@@ -384,8 +385,8 @@
             if (_rootModel == null)
             {
                 return false;
-            } 
-            
+            }
+
             if (_currentlyRecordedRoute == null)
             {
                 return false;
@@ -441,8 +442,8 @@
             if (_rootModel == null)
             {
                 return;
-            } 
-            
+            }
+
             if (_currentlyRecordedRoute == null)
             {
                 return;
@@ -517,7 +518,7 @@
         public void NavigateToRoom([NotNull] RoomViewModel roomToNavigateTo)
         {
             Assert.ArgumentNotNull(roomToNavigateTo, "roomToNavigateTo");
-            
+
             if (_rootModel == null)
             {
                 return;
@@ -638,7 +639,7 @@
                 return;
             }
 
-            if(string.IsNullOrEmpty(_currentRouteTarget))
+            if (string.IsNullOrEmpty(_currentRouteTarget))
             {
                 return;
             }
@@ -652,7 +653,7 @@
         /// </summary>
         public void PrintHelp()
         {
-            if(_rootModel==null)
+            if (_rootModel == null)
             {
                 return;
             }
@@ -899,7 +900,8 @@
                         UpdateCurrentZoneRooms();
                     }
 
-                    newCurrentRoom.IsPartOfRecordedRoute = true;
+                    Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Background, (Action)(() => newCurrentRoom.IsPartOfRecordedRoute = true));
+
                 }
             }
 

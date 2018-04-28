@@ -119,7 +119,6 @@
                     }
 
                 }
-
             }
 
             if (checkForRound || !_isFighting)
@@ -168,13 +167,13 @@
                 if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "вкл", StringComparison.OrdinalIgnoreCase))
                 {
                     Conveyor.PushMessage(new OutputToMainWindowMessage("Модуль сбора статистики включен.", TextColor.BrightWhite));
-                    Conveyor.RootModel.SetVariableValue("StatisticsPluginEnabled", "false", true);
+                    Conveyor.RootModel.SetVariableValue("StatisticsPluginEnabled", "true", true);
                     _isDisabled = false;
                 }
                 else if (commandArgs.Length == 2 && string.Equals(commandArgs[1], "откл", StringComparison.OrdinalIgnoreCase))
                 {
                     Conveyor.PushMessage(new OutputToMainWindowMessage("Модуль сбора статистики отключен.", TextColor.BrightWhite));
-                    Conveyor.RootModel.SetVariableValue("StatisticsPluginEnabled", "true", true);
+                    Conveyor.RootModel.SetVariableValue("StatisticsPluginEnabled", "false", true);
                     _isDisabled = true;
                 }
                 else if (commandArgs.Length == 2 &&
