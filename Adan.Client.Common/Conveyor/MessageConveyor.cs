@@ -174,7 +174,7 @@ namespace Adan.Client.Common.Conveyor
         /// <summary>
         /// Adds the conveyor unit.
         /// </summary>
-        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit, bool addToTop=false)
+        public void AddConveyorUnit([NotNull] ConveyorUnit conveyorUnit, bool addToTop = false)
         {
             Assert.ArgumentNotNull(conveyorUnit, "conveyorUnit");
 
@@ -185,7 +185,14 @@ namespace Adan.Client.Common.Conveyor
                     ConveyorUnitsByMessageType[handledMessageType] = new List<ConveyorUnit>();
                 }
 
-                ConveyorUnitsByMessageType[handledMessageType].Add(conveyorUnit);
+                if (addToTop)
+                {
+                    ConveyorUnitsByMessageType[handledMessageType].Insert(0, conveyorUnit);
+                }
+                else
+                {
+                    ConveyorUnitsByMessageType[handledMessageType].Add(conveyorUnit);
+                }
             }
 
             foreach (var handledCommandType in conveyorUnit.HandledCommandTypes)
@@ -195,7 +202,14 @@ namespace Adan.Client.Common.Conveyor
                     ConveyorUnitsByCommandType[handledCommandType] = new List<ConveyorUnit>();
                 }
 
-                ConveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
+                if (addToTop)
+                {
+                    ConveyorUnitsByCommandType[handledCommandType].Insert(0, conveyorUnit);
+                }
+                else
+                {
+                    ConveyorUnitsByCommandType[handledCommandType].Add(conveyorUnit);
+                }
             }
             if (addToTop)
             {

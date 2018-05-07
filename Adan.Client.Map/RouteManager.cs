@@ -82,17 +82,13 @@
             set;
         }
 
+        public bool SkipNextUpdate { get; set; }
+
         /// <summary>
         /// Gets all routes.
         /// </summary>
         [NotNull]
-        public IEnumerable<Route> AllRoutes
-        {
-            get
-            {
-                return _allRoutes;
-            }
-        }
+        public IEnumerable<Route> AllRoutes => _allRoutes;
 
         /// <summary>
         /// Gets the available destinations.
@@ -122,57 +118,27 @@
         /// <summary>
         /// Gets a value indicating whether this route manager can create new route.
         /// </summary>
-        public bool CanCreateNewRoute
-        {
-            get
-            {
-                return _currentRoom != null && string.IsNullOrEmpty(_currentRouteTarget) && _currentlyRecordedRoute == null;
-            }
-        }
+        public bool CanCreateNewRoute => _currentRoom != null && string.IsNullOrEmpty(_currentRouteTarget) && _currentlyRecordedRoute == null;
 
         /// <summary>
         /// Gets a value indicating whether this route manager can cancel current route recording.
         /// </summary>
-        public bool CanCancelCurrentRouteRecording
-        {
-            get
-            {
-                return _currentlyRecordedRoute != null;
-            }
-        }
+        public bool CanCancelCurrentRouteRecording => _currentlyRecordedRoute != null;
 
         /// <summary>
         /// Gets a value indicating whether this route manager stop current route recording.
         /// </summary>
-        public bool CanStopCurrentRouteRecording
-        {
-            get
-            {
-                return _currentlyRecordedRoute != null;
-            }
-        }
+        public bool CanStopCurrentRouteRecording => _currentlyRecordedRoute != null;
 
         /// <summary>
         /// Gets a value indicating whether this route manager can start route.
         /// </summary>
-        public bool CanStartRoute
-        {
-            get
-            {
-                return string.IsNullOrEmpty(_currentRouteTarget) && _currentlyRecordedRoute == null && AvailableDestinations.Any();
-            }
-        }
+        public bool CanStartRoute => string.IsNullOrEmpty(_currentRouteTarget) && _currentlyRecordedRoute == null && AvailableDestinations.Any();
 
         /// <summary>
         /// Gets a value indicating whether this route manager can stop current route.
         /// </summary>
-        public bool CanStopCurrentRoute
-        {
-            get
-            {
-                return !string.IsNullOrEmpty(_currentRouteTarget);
-            }
-        }
+        public bool CanStopCurrentRoute => !string.IsNullOrEmpty(_currentRouteTarget);
 
         /// <summary>
         /// Loads the routes.
@@ -200,6 +166,13 @@
         public void UpdateCurrentRoom([CanBeNull] RoomViewModel newCurrentRoom, [NotNull] ZoneViewModel newCurrentZone)
         {
             Assert.ArgumentNotNull(newCurrentZone, "newCurrentZone");
+
+            if (SkipNextUpdate)
+            {
+                SkipNextUpdate = false;
+                return;
+            }
+
             if (_rootModel == null)
             {
                 return;
@@ -222,6 +195,19 @@
             }
 
             _isUpdateInProgress = false;
+        }
+
+        public void UpdateCurrentRoomWithNoRoute([NotNull] ZoneViewModel newCurrentZone, [CanBeNull] RoomViewModel newCurrentRoom)
+        {
+            Assert.ArgumentNotNull(newCurrentZone, "newCurrentZone");
+
+            var prevZone = _currentZone;
+            _currentRoom = newCurrentRoom;
+            _currentZone = newCurrentZone;
+            if (prevZone == null || prevZone.Id != _currentZone.Id)
+            {
+                UpdateCurrentZoneRooms();
+            }
         }
 
         /// <summary>
@@ -514,8 +500,7 @@
         /// <summary>
         /// Navigates to specified room.
         /// </summary>
-        /// <param name="roomToNavigateTo">The room to navigate to.</param>
-        public void NavigateToRoom([NotNull] RoomViewModel roomToNavigateTo)
+        public void NavigateToRoom([NotNull] RoomViewModel roomToNavigateTo, IEnumerable<RoomColor> roomColorsToSkip = null, bool firstStepOnly = false)
         {
             Assert.ArgumentNotNull(roomToNavigateTo, "roomToNavigateTo");
 
@@ -530,7 +515,7 @@
             }
 
             var currentRoom = _currentRoom;
-            foreach (var room in FindRouteToRoom(currentRoom, roomToNavigateTo))
+            foreach (var room in FindRouteToRoom(currentRoom, roomToNavigateTo, roomColorsToSkip))
             {
                 var closureRoom = room;
                 var exit = currentRoom.Exits.FirstOrDefault(ex => ex.Room == closureRoom);
@@ -543,6 +528,11 @@
                 GotoDirection(exit.Direction);
 
                 currentRoom = room;
+
+                if (firstStepOnly)
+                {
+                    return;
+                }
             }
         }
 
@@ -625,8 +615,23 @@
             _currentRouteTarget = selectedRouteDestination;
             _rootModel.PushMessageToConveyor(new InfoMessage(string.Format(CultureInfo.InvariantCulture, Resources.RouteStarted, selectedRouteDestination), TextColor.BrightYellow));
             _groupMembersCountOnRouteStart = _rootModel.GroupStatus.Count(g => g.InSameRoom);
+
             UpdateCurrentRoom(_currentRoom, _currentZone);
+
             return true;
+        }
+
+        public bool IsCurrentRoomEndOfDestination([NotNull] string destination)
+        {
+            Assert.ArgumentNotNull(destination, "selectedRouteDestination");
+
+            if (_currentRoom == null)
+            {
+                return false;
+            }
+
+            var route = _allRoutes.FirstOrDefault(r => r.EndName == destination);
+            return route?.EndRoomId == _currentRoom.RoomId;
         }
 
         /// <summary>
@@ -679,13 +684,13 @@
         }
 
         [NotNull]
-        private static string GetMapsFolder()
+        public static string GetMapsFolder()
         {
             return Path.Combine(SettingsHolder.Instance.Folder, "Maps");
         }
 
         [NotNull]
-        private static IEnumerable<RoomViewModel> FindRouteToRoom([NotNull]RoomViewModel currentRoom, [NotNull] RoomViewModel roomToNavigateTo)
+        public static IEnumerable<RoomViewModel> FindRouteToRoom([NotNull]RoomViewModel currentRoom, [NotNull] RoomViewModel roomToNavigateTo, IEnumerable<RoomColor> roomColorsToSkip = null)
         {
             Assert.ArgumentNotNull(currentRoom, "currentRoom");
             Assert.ArgumentNotNull(roomToNavigateTo, "roomToNavigateTo");
@@ -714,6 +719,13 @@
 
                     if (!visitedRooms.Contains(exit.Room))
                     {
+                        bool skipRoom = roomColorsToSkip?.Any(roomColor => exit.Room.Color == roomColor) == true;
+
+                        if (skipRoom)
+                        {
+                            continue;
+                        }
+
                         pathQueue.Enqueue(new RoutePathElement(exit.Room, currentElement));
                         visitedRooms.Add(exit.Room);
                     }
@@ -831,7 +843,7 @@
             {
                 room.IsStartOrEndOfRoute = _routeEndRoomIdentifiers.Contains(room.RoomId);
                 room.IsPartOfRoute = _routeRoomIdentifiers.Contains(room.RoomId);
-                room.IsPartOfRecordedRoute = _currentlyRecordedRoute != null ? _currentlyRecordedRoute.RouteRoomIdentifiers.Contains(room.RoomId) : false;
+                room.IsPartOfRecordedRoute = _currentlyRecordedRoute != null && _currentlyRecordedRoute.RouteRoomIdentifiers.Contains(room.RoomId);
             }
         }
 

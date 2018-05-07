@@ -239,7 +239,7 @@
                 File.Delete(Path.Combine(Folder, "Options.xml"));
             }
 
-            using (var stream = File.OpenWrite(Path.Combine(Folder, "Options.xml")))
+            using (var stream = File.Open(Path.Combine(Folder, "Options.xml"), FileMode.Create, FileAccess.Write))
             {
                 serializer.Serialize(stream, Settings);
             }

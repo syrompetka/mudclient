@@ -62,13 +62,7 @@ namespace Adan.Client.Map.Model
         /// Gets a collection of rooms this zone contains.
         /// </summary>
         [NotNull]
-        public List<Room> Rooms
-        {
-            get
-            {
-                return _rooms;
-            }
-        }
+        public List<Room> Rooms => _rooms;
 
         /// <summary>
         /// Determines whether the specified <see cref="Zone"/> is equal to this instance.
