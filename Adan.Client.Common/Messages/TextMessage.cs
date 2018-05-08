@@ -309,11 +309,7 @@ namespace Adan.Client.Common.Messages
 
             UpdateInnerText();
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        public abstract TextMessage NewInstance();
+        
+        public abstract TextMessage Clone();
     }
 }

@@ -109,10 +109,10 @@
                 {
                     if (_isFighting)
                     {
-                        _messageStack.Push(textMessage);
+                        _messageStack.Push(textMessage.Clone());
                     }
 
-                    _previousTextMessageWindowQueue.Enqueue(textMessage);
+                    _previousTextMessageWindowQueue.Enqueue(textMessage.Clone());
                     if (_previousTextMessageWindowQueue.Count >= 15)
                     {
                         _previousTextMessageWindowQueue.Dequeue();

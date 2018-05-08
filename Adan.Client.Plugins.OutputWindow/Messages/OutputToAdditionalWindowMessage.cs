@@ -77,7 +77,7 @@ namespace Adan.Client.Plugins.OutputWindow.Messages
         /// 
         /// </summary>
         /// <returns></returns>
-        public override TextMessage NewInstance()
+        public override TextMessage Clone()
         {
             return new OutputToAdditionalWindowMessage(this);
         }

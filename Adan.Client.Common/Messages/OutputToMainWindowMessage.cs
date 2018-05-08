@@ -91,7 +91,7 @@ namespace Adan.Client.Common.Messages
         /// 
         /// </summary>
         /// <returns></returns>
-        public override TextMessage NewInstance()
+        public override TextMessage Clone()
         {
             return new OutputToMainWindowMessage(this);
         }
