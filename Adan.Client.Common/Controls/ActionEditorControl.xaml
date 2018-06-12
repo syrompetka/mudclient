@@ -130,7 +130,7 @@
                 <Label>Window name to send commands to:</Label>
                 <ComboBox Width="200"  Text="{Binding Path=OutputWindowName,UpdateSourceTrigger=PropertyChanged}" ItemsSource="{Binding Path=AllGroups}" DisplayMemberPath="Name" IsEditable="True" HorizontalAlignment="Left" Margin="0,0,0,5" IsEnabled="{Binding Path=SendToAllWindows, Converter={StaticResource InverseBooleanConverter}}" />
                 <CheckBox Content="Send to all windows." IsChecked="{Binding Path=SendToAllWindows, Mode=TwoWay}"/>
-                <TextBlock Text="Actions to execute if condition is true:" />
+                <TextBlock Text="Commands to send:" />
                 <Controls:ActionEditorControl DataContext="{Binding Path=ActionsToExecute}" VerticalAlignment="Stretch" />
             </StackPanel>
         </DataTemplate>

@@ -70,11 +70,6 @@
         {
             Assert.ArgumentNotNull(e, "e");
 
-            _mainWindow.CheckGlobalHotkeys(e);
-
-            if (e.Handled)
-                return;
-
             var hotkeyCommand = new HotkeyCommand
             {
                 Key = e.Key == Key.System ? e.SystemKey : e.Key,
