@@ -10,7 +10,7 @@
         <Utils:InverseBooleanConverter x:Key="InverseBooleanConverter" />
     </Window.Resources>
     <Grid>
-        <Label VerticalAlignment="Center" Content="Version 1.6.2"  Margin="10,5,5,10"/>
+        <Label VerticalAlignment="Center" Content="Version 1.6.3"  Margin="10,5,5,10"/>
         <Button VerticalAlignment="Bottom" HorizontalAlignment="Right" IsDefault="True" IsCancel="True" MinWidth="50" Click="HandleOk" Content="OK"/>
     </Grid>
 </Window>

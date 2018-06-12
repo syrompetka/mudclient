@@ -150,12 +150,6 @@ namespace Adan.Client.Common.Model
         /// Gets the affects of this character.
         /// </summary>
         [NotNull]
-        public List<Affect> Affects
-        {
-            get
-            {
-                return _affects;
-            }
-        }
+        public List<Affect> Affects => _affects;
     }
 }

@@ -549,9 +549,9 @@ namespace Adan.Client.Plugins.StuffDatabase.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Body.
         /// </summary>
-        internal static string WearBody {
+        internal static string WearBODY {
             get {
-                return ResourceManager.GetString("WearBody", resourceCulture);
+                return ResourceManager.GetString("WearBODY", resourceCulture);
             }
         }
         
@@ -576,9 +576,9 @@ namespace Adan.Client.Plugins.StuffDatabase.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Def3.
         /// </summary>
-        internal static string WearDef3 {
+        internal static string WearDEF3 {
             get {
-                return ResourceManager.GetString("WearDef3", resourceCulture);
+                return ResourceManager.GetString("WearDEF3", resourceCulture);
             }
         }
         

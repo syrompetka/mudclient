@@ -252,7 +252,7 @@
   <data name="WearARMS" xml:space="preserve">
     <value>Руки</value>
   </data>
-  <data name="WearBody" xml:space="preserve">
+  <data name="WearBODY" xml:space="preserve">
     <value>Тело</value>
   </data>
   <data name="WearDEF1" xml:space="preserve">
@@ -261,7 +261,7 @@
   <data name="WearDEF2" xml:space="preserve">
     <value>Доп. слот 2</value>
   </data>
-  <data name="WearDef3" xml:space="preserve">
+  <data name="WearDEF3" xml:space="preserve">
     <value>Доп. слот 3</value>
   </data>
   <data name="WearDWIELD" xml:space="preserve">

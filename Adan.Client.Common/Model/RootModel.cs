@@ -284,13 +284,7 @@
         /// Gets the groups.
         /// </summary>
         [NotNull]
-        public IEnumerable<Group> Groups
-        {
-            get
-            {
-                return SettingsHolder.Instance.Settings.GlobalGroups.Concat(Profile.Groups);
-            }
-        }
+        public IEnumerable<Group> Groups => Profile.Groups.Concat(SettingsHolder.Instance.Settings.GlobalGroups);
 
         /// <summary>
         /// Gets variables

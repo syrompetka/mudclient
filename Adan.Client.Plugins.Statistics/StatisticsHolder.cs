@@ -278,6 +278,13 @@
                     new TextMessageBlock("\t Максимальный: ", TextColor.White),
                     new TextMessageBlock(stat.MaxRoundDamage.ToString("00.00"), TextColor.BrightWhite),
                 }));
+
+                conveyor.PushMessage(new OutputToMainWindowMessage(new[]
+                {
+                    new TextMessageBlock("   Дамаг cуммарный: ", TextColor.White),
+                    new TextMessageBlock(stat.TotalDamage.ToString(CultureInfo.InvariantCulture), TextColor.BrightWhite),
+                }));
+
             }
 
             if (stat.TotalDamageMessages > 0)
@@ -324,6 +331,12 @@
                     new TextMessageBlock((stat.TotalTankDamage/stat.TotalTankRounds).ToString("00.00"), TextColor.BrightWhite),
                     new TextMessageBlock("\t Максимальный: ", TextColor.White),
                     new TextMessageBlock(stat.MaxTankRoundDamage.ToString("00.00"), TextColor.BrightWhite),
+                }));
+
+                conveyor.PushMessage(new OutputToMainWindowMessage(new[]
+                {
+                    new TextMessageBlock("   Дамаг cуммарный: ", TextColor.White),
+                    new TextMessageBlock(stat.TotalTankDamage.ToString(CultureInfo.InvariantCulture), TextColor.BrightWhite),
                 }));
             }
 

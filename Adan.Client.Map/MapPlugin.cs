@@ -82,8 +82,7 @@ namespace Adan.Client.Map
         /// </summary>
         public override void Dispose()
         {
-            if (_zoneManager != null)
-                _zoneManager.Dispose();
+            _zoneManager?.Dispose();
 
             base.Dispose();
         }

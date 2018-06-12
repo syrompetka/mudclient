@@ -15,9 +15,6 @@
     /// </summary>
     public abstract class PluginBase : IDisposable
     {
-        /// <summary>
-        /// 
-        /// </summary>
         public abstract string Name
         {
             get;
@@ -27,61 +24,31 @@
         /// Gets the widgets of this plugin.
         /// </summary>
         [NotNull]
-        public virtual IEnumerable<WidgetDescription> Widgets
-        {
-            get
-            {
-                return Enumerable.Empty<WidgetDescription>();
-            }
-        }
+        public virtual IEnumerable<WidgetDescription> Widgets => Enumerable.Empty<WidgetDescription>();
 
         /// <summary>
         /// Gets the custom action descriptions of this plugin.
         /// </summary>
         [NotNull]
-        public virtual IEnumerable<ActionDescription> CustomActions
-        {
-            get
-            {
-                return Enumerable.Empty<ActionDescription>();
-            }
-        }
+        public virtual IEnumerable<ActionDescription> CustomActions => Enumerable.Empty<ActionDescription>();
 
         /// <summary>
         /// Gets the custom action parameters descriptions of this plugin.
         /// </summary>
         [NotNull]
-        public virtual IEnumerable<ParameterDescription> CustomActionParameters
-        {
-            get
-            {
-                return Enumerable.Empty<ParameterDescription>();
-            }
-        }
+        public virtual IEnumerable<ParameterDescription> CustomActionParameters => Enumerable.Empty<ParameterDescription>();
 
         /// <summary>
         /// Gets the plugin xaml resources to merge.
         /// </summary>
         [NotNull]
-        public virtual IEnumerable<string> PluginXamlResourcesToMerge
-        {
-            get
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
+        public virtual IEnumerable<string> PluginXamlResourcesToMerge => Enumerable.Empty<string>();
 
         /// <summary>
         /// Gets the custom serialization types of this plugin.
         /// </summary>
         [NotNull]
-        public virtual IEnumerable<Type> CustomSerializationTypes
-        {
-            get
-            {
-                return Enumerable.Empty<Type>();
-            }
-        }
+        public virtual IEnumerable<Type> CustomSerializationTypes => Enumerable.Empty<Type>();
 
         /// <summary>
         /// Gets a value indicating whether this plugin has options dialog.
@@ -89,25 +56,13 @@
         /// <value>
         /// <c>true</c> if this plugin has options dialog; otherwise, <c>false</c>.
         /// </value>
-        public virtual bool HasOptions
-        {
-            get
-            {
-                return false;
-            }
-        }
+        public virtual bool HasOptions => false;
 
         /// <summary>
         /// Gets the options menu item text.
         /// </summary>
         [NotNull]
-        public virtual string OptionsMenuItemText
-        {
-            get
-            {
-                return string.Empty;
-            }
-        }
+        public virtual string OptionsMenuItemText => string.Empty;
 
         public abstract void InitializeConveyor(MessageConveyor conveyor);
 
@@ -125,7 +80,6 @@
         /// <param name="rootModel"></param>
         public virtual void OnCreatedOutputWindow(RootModel rootModel)
         {
-
         }
         
         /// <summary>

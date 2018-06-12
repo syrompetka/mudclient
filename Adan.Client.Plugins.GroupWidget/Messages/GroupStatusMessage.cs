@@ -40,13 +40,7 @@ namespace Adan.Client.Plugins.GroupWidget.Messages
         /// <value>
         /// The type of this message.
         /// </value>
-        public override int MessageType
-        {
-            get
-            {
-                return Constants.GroupStatusMessageType;
-            }
-        }
+        public override int MessageType => Constants.GroupStatusMessageType;
 
         /// <summary>
         /// Gets the player group mates statuses.
@@ -54,12 +48,6 @@ namespace Adan.Client.Plugins.GroupWidget.Messages
         [NotNull]
         [XmlArrayItem(typeof(CharacterStatus), ElementName = "GroupMate")]
         [XmlArrayItem(typeof(PetStatus), ElementName = "Pet")]
-        public List<CharacterStatus> GroupMates
-        {
-            get
-            {
-                return _groupMates;
-            }
-        }
+        public List<CharacterStatus> GroupMates => _groupMates;
     }
 }
