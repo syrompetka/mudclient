@@ -172,13 +172,27 @@ namespace Adan.Client
             var showStatusBarMessage = e.Message as ShowStatusBarMessage;
             if (showStatusBarMessage != null)
             {
-                _window.DisplayStatusBar(showStatusBarMessage.State, true);
+                // for some reason, if called from a trigger, we'll have an exception thrown
+                // due to not being on the UI thread
+                var context = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
+                var token = System.Threading.Tasks.Task.Factory.CancellationToken;
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    _window.DisplayStatusBar(showStatusBarMessage.State, true);
+                }, token, System.Threading.Tasks.TaskCreationOptions.None, context);
             }
 
             var setStatusMessage = e.Message as SetStatusMessage;
             if (setStatusMessage != null)
             {
-                _window.SetStatusBar(setStatusMessage.Id, setStatusMessage.Msg, setStatusMessage.Color);
+                // for some reason, if called from a trigger, we'll have an exception thrown
+                // due to not being on the UI thread
+                var context = System.Threading.Tasks.TaskScheduler.FromCurrentSynchronizationContext();
+                var token = System.Threading.Tasks.Task.Factory.CancellationToken;
+                System.Threading.Tasks.Task.Factory.StartNew(() =>
+                {
+                    _window.SetStatusBar(setStatusMessage.Id, setStatusMessage.Msg, setStatusMessage.Color);
+                }, token, System.Threading.Tasks.TaskCreationOptions.None, context);
             }
         }
 

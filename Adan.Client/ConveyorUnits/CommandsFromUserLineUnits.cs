@@ -98,7 +98,7 @@ namespace Adan.Client.ConveyorUnits
 
             if (commandText.Length > 1 && commandText[0] != SettingsHolder.Instance.Settings.CommandChar)
                 return;
-
+            
             if (TriggerCheck(commandText, isImport) || AliasCheck(commandText, isImport)
                 || HighLightCheck(commandText, isImport) || HotkeyCheck(commandText, isImport)
                 || StatusCheck(commandText) || SubstitutionCheck(commandText, isImport)
@@ -1765,6 +1765,7 @@ namespace Adan.Client.ConveyorUnits
                 {
                     Conveyor.RootModel.PushMessageToConveyor(new SetStatusMessage(match.Groups[1].Value, match.Groups[2].Value));
                 }
+                return true;
             }
 
             return false;

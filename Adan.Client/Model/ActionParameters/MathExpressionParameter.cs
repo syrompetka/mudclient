@@ -107,8 +107,8 @@ namespace Adan.Client.Model.ActionParameters
                         return (leftValueNumeric * rightValueNumertic).ToString(CultureInfo.InvariantCulture);
                     case MathOperation.Division:
                         return rightValueNumertic == 0
-                                   ? (leftValueNumeric / rightValueNumertic).ToString(CultureInfo.InvariantCulture)
-                                   : string.Empty;
+                                   ? string.Empty
+                                   : (leftValueNumeric / rightValueNumertic).ToString(CultureInfo.InvariantCulture);
                 }
             }
             else

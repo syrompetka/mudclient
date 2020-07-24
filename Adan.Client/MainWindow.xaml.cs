@@ -86,6 +86,9 @@ namespace Adan.Client
                     types.Add(customType);
                 }
             }
+            // placing it HERE and not on line 79, because I'm afraid changing the order might break something.
+            // if I place it on line 79, then types from Plugins will be offset by 1
+            types.Add(typeof(StatusAction));
 
             //Load settings
             Properties.Settings settings = Properties.Settings.Default;
@@ -109,6 +112,7 @@ namespace Adan.Client
             actionDescriptions.Add(new ShowOutputWindowActionDescription(actionDescriptions));
             actionDescriptions.Add(new SendToWindowActionDescription(actionDescriptions));
             actionDescriptions.Add(new ToggleFullScreenModeActionDescription(actionDescriptions));
+            actionDescriptions.Add(new StatusActionDescription(parameterDescriptions, actionDescriptions));
 
             parameterDescriptions.Add(new TriggerOrCommandParameterDescription(parameterDescriptions));
             parameterDescriptions.Add(new VariableReferenceParameterDescription(parameterDescriptions));
