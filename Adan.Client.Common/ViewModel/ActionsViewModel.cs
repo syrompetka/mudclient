@@ -282,8 +282,10 @@ namespace Adan.Client.Common.ViewModel
         private static ActionViewModelBase CreateNewActionFromType([NotNull] ActionDescription actionDescription)
         {
             Assert.ArgumentNotNull(actionDescription, "actionDescription");
-            var result = actionDescription.CreateActionViewModel(actionDescription.CreateAction());
-            Assert.IsNotNull(result, "Specified ActionDescription implementation is not correct.");
+            var action = actionDescription.CreateAction();
+            Assert.IsNotNull(action, "ActionDescription failed to create Action.");
+            var result = actionDescription.CreateActionViewModel(action);
+            Assert.IsNotNull(result, "Failed to create ActionViewModel from ActionDescription.");
             return result;
         }
 

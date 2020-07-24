@@ -24,6 +24,18 @@
                 <Controls:ActionParametersEditorControl Grid.Row="2" DataContext="{Binding Path=ParametersModel}" />
             </Grid>
         </DataTemplate>
+        <DataTemplate x:Key="StatusActionViewModelTemplate" DataType="StatusActionViewModel">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <Label Grid.Row="0">Command:</Label>
+                <TextBox Grid.Row="1" Text="{Binding Path=CommandText, UpdateSourceTrigger=PropertyChanged}" />
+                <Controls:ActionParametersEditorControl Grid.Row="2" DataContext="{Binding Path=ParametersModel}" />
+            </Grid>
+        </DataTemplate>
         <DataTemplate x:Key="OutputToMainWindowActionViewModelTemplate" DataType="OutputToMainWindowActionViewModel" >
             <Grid>
                 <Grid.RowDefinitions>

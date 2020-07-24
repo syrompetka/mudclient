@@ -489,7 +489,7 @@
         /// Displays/hides status bar.
         /// </summary>
         public void SetStatusBar(string idString, string message, string colorString, bool verbose = true)
-        {
+        {            
             byte Id;
             if (!byte.TryParse(idString, out Id))
             {
@@ -581,12 +581,6 @@
 
             RootModel.SetVariableValue("statusBar" + Id, message, true);
             RootModel.SetVariableValue("statusBar" + Id + "Col", colorString, true);
-
-            //// If all statuses are empty, hide the status bar.
-            //if (StatusBar1.Text == "" && StatusBar2.Text == "" && StatusBar3.Text == "" && StatusBar4.Text == "" && StatusBar5.Text == "")
-            //{
-            //    DisplayStatusBar(false, false);
-            //}
         }
 
         #endregion

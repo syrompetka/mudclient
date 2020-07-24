@@ -222,9 +222,9 @@
     <Compile Include="MessageDeserializers\ProtocolVersionMessageDeserializer.cs" />
     <Compile Include="Messages\CommandRepeatMessage.cs" />
     <Compile Include="Messages\ProtocolVersionMessage.cs" />
-	<Compile Include="Messages\SetStatusMessage.cs" />
+    <Compile Include="Messages\SetStatusMessage.cs" />
     <Compile Include="Messages\ShowOutputWindowMessage.cs" />
-	<Compile Include="Messages\ShowStatusBarMessage.cs" />
+    <Compile Include="Messages\ShowStatusBarMessage.cs" />
     <Compile Include="Messages\StartLoggingMessage.cs" />
     <Compile Include="Messages\StopLoggingMessage.cs" />
     <Compile Include="Messages\ToggleFullScreenModeMessage.cs" />
@@ -240,6 +240,7 @@
     <Compile Include="Model\ActionDescriptions\SetVariableValueActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\ShowOutputWindowActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StartLogActionDescription.cs" />
+    <Compile Include="Model\ActionDescriptions\StatusActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\StopLogActionDescription.cs" />
     <Compile Include="Model\ActionDescriptions\ToggleFullScreenModeActionDescription.cs" />
     <Compile Include="Model\ActionParameters\ConstantStringParameter.cs" />
@@ -258,6 +259,7 @@
     <Compile Include="Model\Actions\SetVariableValueAction.cs" />
     <Compile Include="Model\Actions\ShowOutputWindowAction.cs" />
     <Compile Include="Model\Actions\StartLogAction.cs" />
+    <Compile Include="Model\Actions\StatusAction.cs" />
     <Compile Include="Model\Actions\StopLogAction.cs" />
     <Compile Include="Model\Actions\ToggleFullScreenModeAction.cs" />
     <Compile Include="Model\ConveyorFactory.cs" />
@@ -286,6 +288,7 @@
     <Compile Include="ViewModel\Actions\ShowOutputWindowActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\StartLogActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\ClearVariableValueActionViewModel.cs" />
+    <Compile Include="ViewModel\Actions\StatusActionViewModel.cs" />
     <Compile Include="ViewModel\Actions\StopLogActionViewModel.cs" />
     <Compile Include="ViewModel\AliasesViewModel.cs" />
     <Compile Include="ViewModel\AliasViewModel.cs" />
